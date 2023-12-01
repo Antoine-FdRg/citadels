@@ -1,0 +1,11 @@
+package com.seinksansdoozebank.fr;
+
+import com.seinksansdoozebank.fr.controller.Game;
+
+public class Launcher {
+    public static void main(String[] args) {
+        Game game = new Game();
+        //TODO créer des joueurs
+        game.run();
+    }
+}
