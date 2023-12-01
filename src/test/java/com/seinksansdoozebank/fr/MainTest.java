@@ -1,4 +1,4 @@
-package fr.cotedazur.univ.polytech.startingpoint;
+package com.seinksansdoozebank.fr;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
