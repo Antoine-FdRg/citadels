@@ -1,5 +1,9 @@
 package com.seinksansdoozebank.fr.model.cards;
 
 public class District {
-    int cost;
+    private int cost;
+
+    public int getCost(){
+        return cost;
+    }
 }
