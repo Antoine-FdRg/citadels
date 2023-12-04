@@ -13,14 +13,14 @@ class DistrictTest {
     private District districtOne;
     private District districtTwo;
     private District districtOneBis;
-    private District districtThree;
+    private District districtTwoBis;
 
     @BeforeEach
     void setup() {
         this.districtOne = new District(1);
         this.districtTwo = new District(2);
         this.districtOneBis = new District(1);
-        this.districtThree = new District(2, "QuartierBis");
+        this.districtTwoBis = new District(2, "QuartierBis");
     }
 
     /**
@@ -44,8 +44,8 @@ class DistrictTest {
      */
     @Test
     void testCompareToCostWithTwoDifferentCosts() {
-        assertEquals(-1, districtOne.compareToCost(districtTwo));
-        assertNotEquals(0, districtOneBis.compareToCost(districtTwo));
+        assertEquals(-1, districtOne.compareTo(districtTwo));
+        assertNotEquals(0, districtOneBis.compareTo(districtTwo));
     }
 
     /**
@@ -53,7 +53,7 @@ class DistrictTest {
      */
     @Test
     void testCompareToCostWithTheSameDistrict() {
-        assertEquals(0, districtOne.compareToCost(districtOneBis));
+        assertEquals(0, districtOne.compareTo(districtOneBis));
     }
 
     /**
@@ -66,7 +66,7 @@ class DistrictTest {
         //With same default name and same cost
         assertTrue(districtOne.equals(districtOneBis));
         //With different name but same name
-        assertFalse(districtTwo.equals(districtThree));
+        assertFalse(districtTwo.equals(districtTwoBis));
     }
 
 }

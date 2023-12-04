@@ -6,6 +6,7 @@ public class District implements Comparable<District> {
 
     /**
      * Constructor
+     *
      * @param cost
      * @param name
      */
@@ -16,6 +17,7 @@ public class District implements Comparable<District> {
 
     /**
      * Constructor with default name
+     *
      * @param cost
      */
     public District(int cost) {
@@ -24,6 +26,7 @@ public class District implements Comparable<District> {
 
     /**
      * getter
+     *
      * @return cost
      */
     public int getCost() {
@@ -38,21 +41,15 @@ public class District implements Comparable<District> {
     }
 
     /**
+     * We use the cost to compare two districts
+     *
      * @param district the object to be compared.
      */
 
-    public int compareToCost(District district) {
-        return Integer.compare(this.cost, district.cost);
-    }
-
-    /**
-     * @param district the object to be compared.
-     */
-    @Override
     public int compareTo(District district) {
-        //TODO must be changed in the future
         return Integer.compare(this.cost, district.cost);
     }
+
 
     /**
      * @param obj
@@ -69,7 +66,7 @@ public class District implements Comparable<District> {
      * @return hascode
      */
     public int hashCode() {
-        return this.cost;
+        return this.cost * this.name.hashCode();
     }
 
 }
