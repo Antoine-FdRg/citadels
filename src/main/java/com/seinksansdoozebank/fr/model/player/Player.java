@@ -5,4 +5,7 @@ public class Player {
     int nbGold;
     Hand hand;
     Citadel citadel;
+    public Player(int nbGold) {
+        this.nbGold = nbGold;
+    }
 }
