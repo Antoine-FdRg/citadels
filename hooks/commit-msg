@@ -5,7 +5,7 @@
 COMMIT_MSG_FILE=$1
 
 # Check for conventional commit format
-if ! grep -E -q '^(feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert)(\([a-zA-Z0-9-]+\))?: .+' "$COMMIT_MSG_FILE"; then
+if ! grep -E -q '^(feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert)(\([a-zA-Z0-9-]+\))?(!)?: .+' "$COMMIT_MSG_FILE"; then
     echo "Error: Commit message does not follow conventional commit format."
     echo "Please use the format: <type>(<scope>): <message>"
     echo "The scope can only contain: [a-zA-Z], [0-9] and '-'"
