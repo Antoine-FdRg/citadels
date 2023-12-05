@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DeckTest {
 
-    private Deck deck;
+    private Deck districtList;
     @BeforeEach
     void setup(){
-        deck= new Deck();
+        districtList= new Deck();
     }
 
     /**
@@ -21,7 +21,7 @@ public class DeckTest {
      */
     @Test
     void deckCreationTest(){
-        assertEquals(65,deck.getDeck().size());
+        assertEquals(65,districtList.getDeck().size());
     }
 
     /**
@@ -30,8 +30,8 @@ public class DeckTest {
     @Test
     void getDistrictCostWIthDeckTest(){
         for(int i=0;i<65;i++){
-            assertTrue(deck.getDistrictWithIndex(i).getCost()>=1);
-            assertTrue(deck.getDistrictWithIndex(i).getCost()<=5);
+            assertTrue(districtList.getDistrictWithIndex(i).getCost()>=1);
+            assertTrue(districtList.getDistrictWithIndex(i).getCost()<=5);
         }
     }
 }
