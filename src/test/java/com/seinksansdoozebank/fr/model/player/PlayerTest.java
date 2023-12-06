@@ -10,22 +10,22 @@ import java.util.List;
 
 class PlayerTest {
     List<District> hand = new ArrayList<>();
-    List<District> citadel = new ArrayList<>();
     Player player;
 
     @BeforeEach
     void setup() {
         hand.add(new District(3));
         hand.add(new District(5));
-        player = new Player(1, 10, hand, citadel);
+        player = new Player(10);
+        player.addDistrictToHand(new District(3));
+        player.addDistrictToHand(new District(5));
     }
 
     @Test
     void testPlay() {
         District playedDistrict = player.play();
-        assertTrue(citadel.contains(playedDistrict));
-        assertFalse(hand.contains(playedDistrict));
-        assertEquals(10 - playedDistrict.getCost(), player.nbGold);
+        assertTrue(hand.contains(playedDistrict));
+        assertEquals(10 - playedDistrict.getCost(), player.getNbGold());
     }
 
     @Test
@@ -37,13 +37,13 @@ class PlayerTest {
     @Test
     void testUpdateGold() {
         // Arrange
-        Player player = new Player(1, 10, new ArrayList<>(), new ArrayList<>());
+        Player player = new Player(10);
 
         // Act
-        player.updateGold(3);
+        player.decreaseGold(3);
 
         // Assert
-        assertEquals(7, player.nbGold);
+        assertEquals(7, player.getNbGold());
     }
 
     @Test
@@ -54,12 +54,21 @@ class PlayerTest {
         List<District> citadel = new ArrayList<>();
 
         // Act
-        Player player = new Player(1, 10, hand, citadel);
+        Player player = new Player(10);
+        player.addDistrictToHand(new District(3));
 
         // Assert
-        assertEquals(1, player.id);
-        assertEquals(10, player.nbGold);
-        assertEquals(hand, player.hand);
-        assertEquals(citadel, player.citadel);
+        assertEquals(2, player.getId());
+        assertEquals(10, player.getNbGold());
+        assertEquals(hand, player.getHand());
+        assertEquals(citadel, player.getCitadel());
+    }
+
+    @Test
+    void testResetIdCounter() {
+        // Test resetting the ID counter for player
+        Player.resetIdCounter();
+        Player newPlayer = new Player(10);
+        assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
     }
 }
