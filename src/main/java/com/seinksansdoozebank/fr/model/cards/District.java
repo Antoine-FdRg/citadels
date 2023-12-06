@@ -7,8 +7,8 @@ public class District implements Comparable<District> {
     /**
      * Constructor
      *
-     * @param cost
-     * @param name
+     * @param cost the cost to build the district
+     * @param name the name of the district
      */
     public District(int cost, String name) {
         this.cost = cost;
@@ -18,7 +18,7 @@ public class District implements Comparable<District> {
     /**
      * Constructor with default name
      *
-     * @param cost
+     * @param cost the cost to build the district
      */
     public District(int cost) {
         this(cost, "Quartier");
@@ -52,7 +52,7 @@ public class District implements Comparable<District> {
 
 
     /**
-     * @param obj
+     * @param obj object to compare
      */
     @Override
     public boolean equals(Object obj) {

@@ -37,4 +37,14 @@ public class Game {
             }
         }
     }
+
+    protected Player getWinner() {
+        Player bestPlayer = players.get(0);
+        for (Player currentPlayer : players) {
+            if (currentPlayer.getScore() > bestPlayer.getScore()) {
+                bestPlayer = currentPlayer;
+            }
+        }
+        return bestPlayer;
+    }
 }
