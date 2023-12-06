@@ -66,8 +66,9 @@ public class Player {
 
     public static void resetIdCounter() {
         counter = 1;
+    }
 
-    public int getScore(){
+    public int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
         return citadel.stream().mapToInt(District::getCost).sum();
     }
