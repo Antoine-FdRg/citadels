@@ -17,7 +17,7 @@ public class Game {
     Cli view;
 
     public Game(int nbPlayers) {
-        view = new Cli();
+        this.view = new Cli();
         this.deck = new Deck();
         players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
