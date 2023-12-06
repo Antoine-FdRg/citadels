@@ -16,6 +16,7 @@ public class Player {
     private final List<District> hand;
     private final List<District> citadel;
     private final Random random = new Random();
+    private boolean isStuck = false;
 
     public Player(int nbGold) {
         this.id = counter++;
@@ -29,10 +30,11 @@ public class Player {
     }
 
     public District play() {
+        int cnt = 0;
         District district = this.chooseDistrict();
-        // TODO : Boucle infinie possible si le joueur n'a pas assez d'or pour acheter un district
-        while (district.getCost() > this.nbGold) {
+        while (district.getCost() > this.nbGold && cnt < 5) {
             district = this.chooseDistrict();
+            cnt++;
         }
         this.hand.remove(district);
         this.citadel.add(district);
@@ -66,6 +68,10 @@ public class Player {
 
     public static void resetIdCounter() {
         counter = 1;
+    }
+
+    public boolean isStuck() {
+        return isStuck;
     }
 
     public int getScore() {
