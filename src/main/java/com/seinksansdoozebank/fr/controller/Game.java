@@ -19,7 +19,7 @@ public class Game {
     public Game(int nbPlayers) {
         this.view = new Cli();
         this.deck = new Deck();
-        players = new ArrayList<>();
+        this.players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
             players.add(new Player(NB_GOLD_INIT));
         }
