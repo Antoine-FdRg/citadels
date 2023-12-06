@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.Cli;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,14 @@ import java.util.List;
 public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
+    private static final int NB_ROUND = 4;
     Deck deck;
     List<Player> players;
 
+    Cli view;
+
     public Game(int nbPlayers) {
+        view = new Cli();
         this.deck = new Deck();
         players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
@@ -22,7 +27,16 @@ public class Game {
     }
 
     public void run() {
-        //TODO issue #5
+        boolean isGameFinished = false;
+        int round = 0;
+        while (!isGameFinished && round < NB_ROUND) {
+            for (Player player : players) {
+                player.play();
+            }
+            isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
+            round++;
+        }
+        view.displayWinner(getWinner().toString());
     }
 
 
