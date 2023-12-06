@@ -9,11 +9,25 @@ public class Game {
     Deck deck;
     List<Player> players;
 
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
     public void run() {
         //TODO issue #5
     }
 
-    private void init(){
+    private void init() {
         //TODO issue #3
+    }
+
+    protected Player getWinner() {
+        Player bestPlayer = players.get(0);
+        for (Player currentPlayer : players) {
+            if (currentPlayer.getScore() > bestPlayer.getScore()) {
+                bestPlayer = currentPlayer;
+            }
+        }
+        return bestPlayer;
     }
 }
