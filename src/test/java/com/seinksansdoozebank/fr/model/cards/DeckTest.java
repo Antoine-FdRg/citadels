@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DeckTest {
+class DeckTest {
 
     private Deck districtList;
     private Deck districtListTest;
@@ -18,15 +18,15 @@ public class DeckTest {
     }
 
     /**
-     * On vérifie que le deck possède bien 65 cartes quartiers lors de sa création
+     * We verify that when the deck is created it has got 65 districts cards
      */
     @Test
-    void deckCreationTest() {
+    void fillDeckTest() {
         assertEquals(65, districtList.getDeck().size());
     }
 
     /**
-     * On vérifie que le coût attribué à chaque quartier est compris entre 1 et 5
+     * We verify that the cost attributed to each district is between 1 and 5
      */
     @Test
     void getDistrictCostWIthDeckTest() {
