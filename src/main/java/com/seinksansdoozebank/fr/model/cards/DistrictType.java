@@ -20,6 +20,19 @@ public enum DistrictType {
                 return name;
         }
 
+        /**
+         * @param name
+         * @return the district type that contains name or null if not
+         */
+        public static DistrictType getDistrictTypeByString(String name){
+                for(DistrictType districtType : DistrictType.values()){
+                        if(name.contains(districtType.getName())){
+                                return districtType;
+                        }
+                }
+                return null;
+        }
+
         @Override
         public String toString() {
                 return this.name;
