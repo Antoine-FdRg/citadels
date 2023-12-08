@@ -16,7 +16,7 @@ class GameTest {
 
     @BeforeEach
     public void setUp() {
-        game = new Game();
+        game = new Game(4);
     }
 
     @Test

@@ -61,4 +61,9 @@ public class Game {
         }
         return bestPlayer;
     }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+
+    }
 }

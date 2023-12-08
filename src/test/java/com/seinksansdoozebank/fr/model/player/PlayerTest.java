@@ -24,7 +24,7 @@ class PlayerTest {
     @Test
     void testPlay() {
         District playedDistrict = player.play();
-        assertFalse(hand.contains(playedDistrict));
+        assertFalse(player.getHand().contains(playedDistrict));
         assertEquals(10 - playedDistrict.getCost(), player.getNbGold());
     }
 
