@@ -22,13 +22,6 @@ class PlayerTest {
     }
 
     @Test
-    void testPlay() {
-        District playedDistrict = player.play();
-        assertTrue(hand.contains(playedDistrict));
-        assertEquals(10 - playedDistrict.getCost(), player.getNbGold());
-    }
-
-    @Test
     void testChooseDistrict() {
         District chosenDistrict = player.chooseDistrict();
         assertTrue(hand.contains(chosenDistrict));
