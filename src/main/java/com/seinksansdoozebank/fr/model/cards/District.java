@@ -1,72 +1,81 @@
 package com.seinksansdoozebank.fr.model.cards;
 
-public class District implements Comparable<District> {
-    int cost;
-    String name;
+public enum District implements Comparable<District> {
 
-    /**
-     * Constructor
-     *
-     * @param cost the cost to build the district
-     * @param name the name of the district
-     */
-    public District(int cost, String name) {
-        this.cost = cost;
+    TEMPLE("Temple", DistrictType.RELIGION, 1, 3),
+    CHURCH("Eglise", DistrictType.RELIGION, 2, 4),
+    MONASTERY("Monastère", DistrictType.RELIGION, 3, 3),
+    CATHEDRAL("Cathédrale", DistrictType.RELIGION, 5, 2),
+    MANOR("Manoir", DistrictType.NOBILITY, 3, 5),
+    CASTLE("Château", DistrictType.NOBILITY, 4, 4),
+    PALACE("Palais", DistrictType.NOBILITY, 5, 2),
+    TAVERN("Taverne", DistrictType.TRADE_AND_CRAFTS, 1, 5),
+    CORNER_SHOP("Echoppe", DistrictType.TRADE_AND_CRAFTS, 2, 3),
+    MARKET_PLACE("Marché", DistrictType.TRADE_AND_CRAFTS, 2, 4),
+    FACTORY("Comptoir", DistrictType.TRADE_AND_CRAFTS, 3, 3),
+    PORT("Port", DistrictType.TRADE_AND_CRAFTS, 4, 3),
+    TOWN_HALL("Hôtel de ville", DistrictType.TRADE_AND_CRAFTS, 5, 2),
+    WATCH8TOWER("Tour de guet", DistrictType.SOLDIERLY, 1, 3),
+    JAIL("Prison", DistrictType.SOLDIERLY, 2, 3),
+    STATION("Caserne", DistrictType.SOLDIERLY, 3, 3),
+    FORTRESS("Forteresse", DistrictType.SOLDIERLY, 5, 2),
+    COURTYARD_OF_MIRACLE("Cour des miracles", DistrictType.PRESTIGE, 2, 1),
+    DONJON("Donjon", DistrictType.PRESTIGE, 3, 2),
+    LABORATORY("Laboratoire", DistrictType.PRESTIGE, 5, 1),
+    MANUFACTURE("Manufacture", DistrictType.PRESTIGE, 5, 1),
+    OBSERVATORY("Observatoire", DistrictType.PRESTIGE, 5, 1),
+    CEMETERY("Cimetière", DistrictType.PRESTIGE, 5, 1),
+    LIBRARY("Bibliothèque", DistrictType.PRESTIGE, 6, 1),
+    SCHOOL_OF_MAGIC("Ecole de magie", DistrictType.PRESTIGE, 6, 1),
+    UNIVERSITY("Université", DistrictType.PRESTIGE, 6, 1),
+    PORT_FOR_DRAGONS("Dracoport", DistrictType.PRESTIGE, 6, 1);
+
+    private final String name;
+    private final DistrictType districtType;
+    private final int cost;
+    private final int numberOfAppearance;
+
+
+    District(String name, DistrictType districtType, int cost, int numberOfAppearance) {
         this.name = name;
+        this.districtType = districtType;
+        this.cost = cost;
+        this.numberOfAppearance = numberOfAppearance;
     }
 
-    /**
-     * Constructor with default name
-     *
-     * @param cost the cost to build the district
-     */
-    public District(int cost) {
-        this(cost, "Quartier");
-    }
-
-    /**
-     * getter
-     *
-     * @return cost
-     */
-    public int getCost() {
-        return cost;
-    }
-
-    /**
-     * @return name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * We use the cost to compare two districts
-     *
-     * @param district the object to be compared.
-     */
-
-    public int compareTo(District district) {
-        return Integer.compare(this.cost, district.cost);
-    }
-
-
-    /**
-     * @param obj object to compare
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof District district) {
-            return this.compareTo(district) == 0 && this.name.equals(district.name);
+    public static District getDistrictWithName(String name) {
+        for (District district : District.values()) {
+            if (name.contains(district.getName())) {
+                return district;
+            }
         }
-        return false;
+        return null;
     }
 
-    /**
-     * @return hascode
-     */
-    public int hashCode() {
-        return this.cost * this.name.hashCode();
+    public static District getDistrictByOrdinal(int ordinal){
+        for (District district : District.values()) {
+            if (district.ordinal()==ordinal) {
+                return district;
+            }
+        }
+        return null;
     }
+
+    public DistrictType getDistrictType() {
+        return districtType;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public int getNumberOfAppearance() {
+        return numberOfAppearance;
+    }
+
 
 }
