@@ -104,5 +104,13 @@ public enum District implements Comparable<District> {
         return numberOfAppearance;
     }
 
+    /**
+     * @return the representation of a district
+     */
+    @Override
+    public String toString(){
+        return "Le quartier choisi est : "+ this.name + ". Il est de type" + this.districtType+ " et il coûte "+this.cost+" pièces d'or pour être construit.";
+    }
+
 
 }
