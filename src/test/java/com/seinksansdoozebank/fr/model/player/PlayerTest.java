@@ -1,9 +1,12 @@
 package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +14,14 @@ import java.util.List;
 class PlayerTest {
     List<District> hand = new ArrayList<>();
     Player player;
+    IView view;
 
     @BeforeEach
     void setup() {
+        view = mock(Cli.class);
         hand.add(new District(3));
         hand.add(new District(5));
-        player = new Player(10);
+        player = new Player(10, view);
         player.addDistrictToHand(new District(3));
         player.addDistrictToHand(new District(5));
     }
@@ -37,7 +42,7 @@ class PlayerTest {
     @Test
     void testUpdateGold() {
         // Arrange
-        Player player = new Player(10);
+        Player player = new Player(10,view);
 
         // Act
         player.decreaseGold(3);
@@ -54,7 +59,7 @@ class PlayerTest {
         List<District> citadel = new ArrayList<>();
 
         // Act
-        Player player = new Player(10);
+        Player player = new Player(10,view);
         player.addDistrictToHand(new District(3));
 
         // Assert
@@ -67,7 +72,7 @@ class PlayerTest {
     void testResetIdCounter() {
         // Test resetting the ID counter for player
         Player.resetIdCounter();
-        Player newPlayer = new Player(10);
+        Player newPlayer = new Player(10,view);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
     }
 }
