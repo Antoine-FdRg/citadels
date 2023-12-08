@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.District;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -14,11 +15,13 @@ class PlayerTest {
 
     @BeforeEach
     void setup() {
-        hand.add(new District(3));
-        hand.add(new District(5));
+        District districtCostThree = District.PORT;
+        District districtCostFive = District.FORTRESS;
+        hand.add(districtCostThree);
+        hand.add(districtCostFive);
         player = new Player(10);
-        player.addDistrictToHand(new District(3));
-        player.addDistrictToHand(new District(5));
+        player.addDistrictToHand(districtCostThree);
+        player.addDistrictToHand(districtCostFive);
     }
 
     @Test
@@ -50,12 +53,12 @@ class PlayerTest {
     void testPlayerInitialization() {
         // Arrange
         List<District> hand = new ArrayList<>();
-        hand.add(new District(3));
+        hand.add(District.PORT); //district with a cost of 3
         List<District> citadel = new ArrayList<>();
 
         // Act
         Player player = new Player(10);
-        player.addDistrictToHand(new District(3));
+        player.addDistrictToHand(District.PORT); //District with a cost of three
 
         // Assert
         assertEquals(10, player.getNbGold());

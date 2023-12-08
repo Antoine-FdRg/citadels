@@ -32,7 +32,7 @@ class DeckTest {
     void getDistrictCostWIthDeckTest() {
         for (int i = 0; i < 65; i++) {
             assertTrue(districtList.getDeck().get(i).getCost() >= 1);
-            assertTrue(districtList.getDeck().get(i).getCost() <= 5);
+            assertTrue(districtList.getDeck().get(i).getCost() <= 6);
         }
     }
 
