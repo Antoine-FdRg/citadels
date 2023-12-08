@@ -43,10 +43,17 @@ public enum District implements Comparable<District> {
         this.numberOfAppearance = numberOfAppearance;
     }
 
+    /**
+     * @return the name of the district
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     * @return the district which corresponds to the string given in parameters
+     */
     public static District getDistrictWithName(String name) {
         for (District district : District.values()) {
             if (name.contains(district.getName())) {
@@ -56,23 +63,43 @@ public enum District implements Comparable<District> {
         return null;
     }
 
-    public static District getDistrictByOrdinal(int ordinal){
+    /**
+     * getter
+     * @param ordinal of the enum
+     * @return the district which corresponds to the ordinal given in parameters
+     */
+    public static District getDistrictByOrdinal(int ordinal) {
         for (District district : District.values()) {
-            if (district.ordinal()==ordinal) {
+            if (district.ordinal() == ordinal) {
                 return district;
             }
         }
         return null;
     }
 
+    /**
+     * getter
+     *
+     * @return the district Type
+     */
     public DistrictType getDistrictType() {
         return districtType;
     }
 
+    /**
+     * getter
+     *
+     * @return the cost of construction of one district
+     */
     public int getCost() {
         return cost;
     }
 
+    /**
+     * getter
+     *
+     * @return the number of appearances of one district card
+     */
     public int getNumberOfAppearance() {
         return numberOfAppearance;
     }
