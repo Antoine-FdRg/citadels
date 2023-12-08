@@ -29,7 +29,7 @@ public class Player {
         return this.hand.get(random.nextInt(hand.size()));
     }
 
-    public void play() {
+    public District play() {
         int cnt = 0;
         District district = this.chooseDistrict();
         while (district.getCost() > this.nbGold && cnt < 5) {
@@ -39,6 +39,7 @@ public class Player {
         this.hand.remove(district);
         this.citadel.add(district);
         this.decreaseGold(district.getCost());
+        return district;
     }
 
     void decreaseGold(int gold) {
