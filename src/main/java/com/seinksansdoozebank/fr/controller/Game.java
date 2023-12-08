@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.Cli;
 
@@ -31,7 +32,8 @@ public class Game {
         int round = 0;
         while (!isGameFinished && round < NB_ROUND) {
             for (Player player : players) {
-                player.play();
+                District district = player.play();
+                this.view.displayDistrict(player, district);
             }
             isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
             round++;

@@ -78,4 +78,9 @@ public class Player {
         //calcule de la somme du cout des quartiers de la citadelle
         return citadel.stream().mapToInt(District::getCost).sum();
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.id);
+    }
 }

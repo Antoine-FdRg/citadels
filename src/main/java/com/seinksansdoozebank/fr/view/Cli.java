@@ -10,6 +10,6 @@ public class Cli implements IView {
     }
 
     public void displayWinner(String winnerName, int score) {
-        System.out.println("Le gagnant est " + winnerName + " avec un score de " + score);
+        System.out.println("Le joueur " + winnerName + " gagne avec un score de " + score);
     }
 }
