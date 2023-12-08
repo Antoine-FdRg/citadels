@@ -23,10 +23,10 @@ public class Game {
         for (int i = 0; i < nbPlayers; i++) {
             players.add(new Player(NB_GOLD_INIT));
         }
-        this.init();
     }
 
     public void run() {
+        this.init();
         boolean isGameFinished = false;
         int round = 0;
         while (!isGameFinished && round < NB_ROUND) {
@@ -36,7 +36,7 @@ public class Game {
             isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
             round++;
         }
-        view.displayWinner(getWinner().toString());
+        view.displayWinner(getWinner().toString(), getWinner().getScore());
     }
 
 
