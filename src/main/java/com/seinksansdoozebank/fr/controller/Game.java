@@ -31,6 +31,7 @@ public class Game {
         boolean isGameFinished = false;
         int round = 0;
         while (!isGameFinished && round < NB_ROUND) {
+            view.displayRound(round + 1);
             for (Player player : players) {
                 District district = player.play();
                 this.view.displayDistrict(player, district);
