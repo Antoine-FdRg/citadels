@@ -1,24 +1,58 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.Cli;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+    private static final int NB_GOLD_INIT = 30;
+    private static final int NB_CARD_BY_PLAYER = 4;
+    private static final int NB_ROUND = 4;
     Deck deck;
     List<Player> players;
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    Cli view;
+
+    public Game(int nbPlayers) {
+        this.view = new Cli();
+        this.deck = new Deck();
+        this.players = new ArrayList<>();
+        for (int i = 0; i < nbPlayers; i++) {
+            players.add(new Player(NB_GOLD_INIT));
+        }
     }
 
     public void run() {
-        //TODO issue #5
+        this.init();
+        boolean isGameFinished = false;
+        int round = 0;
+        while (!isGameFinished && round < NB_ROUND) {
+            view.displayRound(round + 1);
+            for (Player player : players) {
+                District district = player.play();
+                this.view.displayDistrict(player, district);
+            }
+            isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
+            round++;
+        }
+        view.displayWinner(getWinner().toString(), getWinner().getScore());
     }
 
+
     private void init() {
-        //TODO issue #3
+        dealCards();
+    }
+
+    private void dealCards() {
+        for (int i = 0; i < NB_CARD_BY_PLAYER; i++) {
+            for (Player player : players) {
+                player.getHand().add(deck.pick());
+            }
+        }
     }
 
     protected Player getWinner() {
@@ -29,5 +63,10 @@ public class Game {
             }
         }
         return bestPlayer;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+
     }
 }
