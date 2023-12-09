@@ -35,7 +35,7 @@ public class Game {
                 District district = player.play();
                 this.view.displayDistrict(player, district);
             }
-            isGameFinished = players.stream().allMatch(player -> player.getCitadel().size() > 7);
+            isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
         view.displayWinner(getWinner().toString(), getWinner().getScore());
