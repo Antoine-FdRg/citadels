@@ -16,7 +16,7 @@ If this is something you think you can fix, then fork ProjetS5 and create a bran
 A good branch name would be (where issue (feature) is the feature you're working on):
 
 ```bash
-git checkout -b feature/(feature)
+git switch -c feature/(feature)
 ```
 
 ## Get the code
