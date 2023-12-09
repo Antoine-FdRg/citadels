@@ -20,12 +20,12 @@ public class Deck {
      * We created the deck of 65 cards and then we shuffle it
      */
     private void fillDeck() {
-        for (int i = 0; i < 27; i++) {
+        for (District district: District.values()) {
             //We take the ordinal which corresponds to a district and take the number of appearances
-            int numberOfAppearance = District.getDistrictByOrdinal(i).getNumberOfAppearance();
+            int numberOfAppearance = District.getDistrictByOrdinal(district.ordinal()).getNumberOfAppearance();
             for (int j = 0; j < numberOfAppearance; j++) {
                 //We add to the list the right number of the district called
-                this.districtList.add(District.getDistrictByOrdinal(i));
+                this.districtList.add(district);
             }
         }
         shuffle();

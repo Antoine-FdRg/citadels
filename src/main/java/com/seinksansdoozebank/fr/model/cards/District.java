@@ -56,7 +56,7 @@ public enum District implements Comparable<District> {
      */
     public static District getDistrictWithName(String name) {
         for (District district : District.values()) {
-            if (name.contains(district.getName())) {
+            if (name.equals(district.getName())) {
                 return district;
             }
         }
@@ -109,7 +109,7 @@ public enum District implements Comparable<District> {
      */
     @Override
     public String toString(){
-        return "Le quartier choisi est : "+ this.name + ". Il est de type" + this.districtType+ " et il coûte "+this.cost+" pièces d'or pour être construit.";
+        return "Le/la : "+ this.name + ", son type : " + this.districtType+ ", son coût :  "+this.cost+" pièces d'or";
     }
 
 

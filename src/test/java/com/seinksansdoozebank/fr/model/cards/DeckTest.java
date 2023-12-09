@@ -18,12 +18,26 @@ class DeckTest {
     }
 
     /**
-     * We verify that when the deck is created it has got 65 districts cards
+     * We verify that when the deck is created it has got 65 districts cards and the right number of each district
      */
+
     @Test
     void fillDeckTest() {
+
         assertEquals(65, districtList.getDeck().size());
+
+        for (District district : District.values()) {
+            int numberOfAppearance = district.getNumberOfAppearance();
+            int numberOfsameDistrict = 0;
+            for (int i = 0; i < 65; i++) {
+                if (districtList.getDeck().get(i).equals(district)) {
+                    numberOfsameDistrict++;
+                }
+            }
+            assertEquals(numberOfAppearance, numberOfsameDistrict);
+        }
     }
+
 
     /**
      * We verify that the cost attributed to each district is between 1 and 5
