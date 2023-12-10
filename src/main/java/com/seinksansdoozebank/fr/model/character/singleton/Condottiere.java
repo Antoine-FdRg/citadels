@@ -8,14 +8,14 @@ import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
 
-public class King extends CommonCharacter {
+public class Condottiere extends CommonCharacter {
 
     private final Player player;
     private final List<District> citadel;
     private static final Role role = Role.CONDOTTIERE;
     private static final DistrictType target = DistrictType.SOLDIERLY;
 
-    public King(List<District> citadel, Player player) {
+    public Condottiere(List<District> citadel, Player player) {
         super(role);
         this.citadel = citadel;
         this.player = player;
