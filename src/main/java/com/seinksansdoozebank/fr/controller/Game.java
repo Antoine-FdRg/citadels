@@ -36,8 +36,7 @@ public class Game {
             for (Player player : players) {
                 District district = player.play();
                 view.displayPlayerPlaysDistrict(player, district);
-                view.displayPlayerHand(player, player.getHand());
-                view.displayPlayerCitadel(player, player.getCitadel());
+                view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
             round++;

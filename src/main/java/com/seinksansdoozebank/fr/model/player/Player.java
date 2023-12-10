@@ -16,7 +16,7 @@ public class Player {
     private final List<District> citadel;
     private final Random random = new Random();
     private boolean isStuck = false;
-    private IView view;
+    private final IView view;
 
     public Player(int nbGold, IView view) {
         this.id = counter++;
@@ -27,14 +27,13 @@ public class Player {
     }
 
     District chooseDistrict() {
-        view.displayPlayerHand(this, hand);
         return this.hand.get(random.nextInt(hand.size()));
     }
 
     public District play() {
         int cnt = 0;
         view.displayPlayerStartPlaying(this);
-        view.displayPlayerCitadel(this, citadel);
+        view.displayPlayerInfo(this);
         District district = this.chooseDistrict();
         while (district.getCost() > this.nbGold && cnt < 5) {
             district = this.chooseDistrict();
