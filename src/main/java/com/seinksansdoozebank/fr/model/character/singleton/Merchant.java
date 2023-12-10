@@ -34,14 +34,14 @@ public class Merchant extends CommonCharacter {
      * For each district in the citadel of the target type, the player will collect one gold
      */
     @Override
-    public int goldCollectedFromDisctrictType() {
+    public void goldCollectedFromDisctrictType() {
         int nbGold = 0;
         for (District district : this.citadel) {
             if (district.getDistrictType() == target) {
                 nbGold++;
             }
         }
-        return nbGold;
+        this.player.increaseGold(nbGold);
     }
 
     /**
@@ -52,6 +52,6 @@ public class Merchant extends CommonCharacter {
     @Override
     public void performAction() {
         this.useEffect();
-        this.player.increaseGold(this.goldCollectedFromDisctrictType());
+        this.goldCollectedFromDisctrictType();
     }
 }

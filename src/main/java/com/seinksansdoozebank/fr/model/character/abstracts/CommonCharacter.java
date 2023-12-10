@@ -13,5 +13,5 @@ public abstract class CommonCharacter implements Character {
 
         public abstract void useEffect();
 
-        public abstract void goldCollectedFromDisctrictType(DistrictType target);
+        public abstract void goldCollectedFromDisctrictType();
 }

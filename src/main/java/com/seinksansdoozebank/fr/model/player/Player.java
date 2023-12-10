@@ -42,8 +42,11 @@ public class Player {
         return district;
     }
 
-    void decreaseGold(int gold) {
+    public void decreaseGold(int gold) {
         this.nbGold -= gold;
+    }
+    public void increaseGold(int gold) {
+        this.nbGold += gold;
     }
 
     public void addDistrictToHand(District district) {
