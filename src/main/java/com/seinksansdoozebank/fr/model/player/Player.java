@@ -3,26 +3,27 @@ import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
 
-import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Player {
     private static int counter = 1;
-    private int id;
+    private final int id;
     private int nbGold;
     private final List<District> hand;
     private final List<District> citadel;
     private final Random random = new Random();
     private boolean isStuck = false;
+    private final IView view;
 
-    public Player(int nbGold) {
+    public Player(int nbGold, IView view) {
         this.id = counter++;
         this.nbGold = nbGold;
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
+        this.view = view;
     }
 
     District chooseDistrict() {
@@ -31,11 +32,14 @@ public class Player {
 
     public District play() {
         int cnt = 0;
+        view.displayPlayerStartPlaying(this);
+        view.displayPlayerInfo(this);
         District district = this.chooseDistrict();
         while (district.getCost() > this.nbGold && cnt < 5) {
             district = this.chooseDistrict();
             cnt++;
         }
+
         this.hand.remove(district);
         this.citadel.add(district);
         this.decreaseGold(district.getCost());
@@ -81,6 +85,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return String.valueOf(this.id);
+        return "Le joueur "+this.id;
     }
 }

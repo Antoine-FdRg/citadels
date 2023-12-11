@@ -69,4 +69,8 @@ public class District implements Comparable<District> {
         return this.cost * this.name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return this.name + ", cout : " + this.cost;
+    }
 }
