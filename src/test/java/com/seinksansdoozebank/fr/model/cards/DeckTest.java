@@ -3,6 +3,8 @@ package com.seinksansdoozebank.fr.model.cards;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,15 +29,9 @@ class DeckTest {
         assertEquals(65, districtList.getDeck().size());
 
         for (District district : District.values()) {
-            int numberOfAppearance = district.getNumberOfAppearance();
-            int numberOfsameDistrict = 0;
-            for (int i = 0; i < 65; i++) {
-                if (districtList.getDeck().get(i).equals(district)) {
-                    numberOfsameDistrict++;
-                }
-            }
-            assertEquals(numberOfAppearance, numberOfsameDistrict);
+            assertEquals(district.getNumberOfAppearance(), Collections.frequency(districtList.getDeck(), district));
         }
+
     }
 
 
