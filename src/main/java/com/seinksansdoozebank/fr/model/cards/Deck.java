@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
-    private List<District> districtList;
+    private final List<District> districtList;
     private static final int NUMBER_OF_CARDS = 65;
 
+    Random random;
 
     /**
      * Constructor which implements a new deck of 65 districts
      */
     public Deck() {
         this.districtList = new ArrayList<>();
+        random = new Random();
         fillDeck();
     }
 
@@ -22,7 +24,6 @@ public class Deck {
      * We created the deck of 65 cards and then we shuffle it
      */
     private void fillDeck() {
-        Random random = new Random();
         for (int i = 0; i < NUMBER_OF_CARDS; i++) {
             this.districtList.add(new District(random.nextInt(1, 5)));
         }
@@ -48,7 +49,6 @@ public class Deck {
      * The method shuffle takes the list of districts and shuffles it
      */
     protected void shuffle() {
-        Random random = new Random();
         //On commence par la dernière carte du paquet
         for (int i = districtList.size() - 1; i >= 1; i--) {
             //on choisit un index au hasard parmi les autres éléments, cet index pourra prendre sa valeur entre 0 et i

@@ -15,7 +15,7 @@ public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
     private static final int NB_ROUND = 4;
-    private Deck deck;
+    private final Deck deck;
     private List<Player> players;
 
     IView view;

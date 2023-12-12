@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ class PlayerTest {
     }
 
     @Test
-    @Disabled
+    @Disabled("This test is not deterministic and will be fiexd in next commit")
     void testPlay() {
         int gold = player.getNbGold();
         Optional<District> playedDistrict = player.play();

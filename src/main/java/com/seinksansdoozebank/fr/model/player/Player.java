@@ -19,7 +19,7 @@ public abstract class Player {
     private final List<District> citadel;
     protected final IView view;
     protected final Random random = new Random();
-    public Player(int nbGold, Deck deck, IView view) {
+    protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
         this.nbGold = nbGold;
         this.deck = deck;
