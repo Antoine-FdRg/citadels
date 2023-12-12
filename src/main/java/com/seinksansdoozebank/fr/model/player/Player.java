@@ -1,4 +1,5 @@
 package com.seinksansdoozebank.fr.model.player;
+import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
@@ -6,44 +7,65 @@ import java.util.List;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 
-public class Player {
+public abstract class Player {
     private static int counter = 1;
-    private final int id;
+    protected final int id;
     private int nbGold;
-    private final List<District> hand;
+    protected Deck deck;
+    protected final List<District> hand;
     private final List<District> citadel;
-    private final Random random = new Random();
-    private boolean isStuck = false;
-    private final IView view;
-
-    public Player(int nbGold, IView view) {
+    protected final IView view;
+    protected final Random random = new Random();
+    public Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
         this.nbGold = nbGold;
+        this.deck = deck;
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
+        this.deck = new Deck();
         this.view = view;
     }
 
-    District chooseDistrict() {
-        return this.hand.get(random.nextInt(hand.size()));
+    /**
+     * Represents the player's turn
+     * @return the district built by the player
+     */
+    public abstract Optional<District> play();
+
+    /**
+     * Represents the player's choice between drawing 2 gold coins or a district
+     */
+    protected abstract void pickSomething();
+
+    /**
+     * Represents the player's choice to draw 2 gold coins
+     */
+    protected void pickGold() {
+        view.displayPlayerPicksGold(this);
+        this.nbGold+=2;
     }
 
-    public District play() {
-        int cnt = 0;
-        view.displayPlayerStartPlaying(this);
-        view.displayPlayerInfo(this);
-        District district = this.chooseDistrict();
-        while (district.getCost() > this.nbGold && cnt < 5) {
-            district = this.chooseDistrict();
-            cnt++;
-        }
+    /**
+     * Represents the player's choice to draw 2 districts and keep one
+     */
+    protected abstract void pickADistrict();
 
-        this.hand.remove(district);
-        this.citadel.add(district);
-        this.decreaseGold(district.getCost());
-        return district;
+    protected District buildADistrict() {
+        District districtToBuild = chooseDistrict();
+        this.hand.remove(districtToBuild);
+        this.citadel.add(districtToBuild);
+        this.decreaseGold(districtToBuild.getCost());
+        return districtToBuild;
+    }
+
+    protected abstract District chooseDistrict();
+
+    protected boolean canBuildDistrict(District district) {
+        //TODO verifier que le contains fait ce que je veux
+        return district.getCost() <= this.nbGold && !this.citadel.contains(district);
     }
 
     void decreaseGold(int gold) {
@@ -72,10 +94,6 @@ public class Player {
 
     public static void resetIdCounter() {
         counter = 1;
-    }
-
-    public boolean isStuck() {
-        return isStuck;
     }
 
     public int getScore() {

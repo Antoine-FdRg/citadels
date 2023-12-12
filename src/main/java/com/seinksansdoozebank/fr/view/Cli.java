@@ -3,21 +3,37 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
+import java.util.Optional;
+
 import java.util.List;
 
 public class Cli implements IView {
 
-    public void displayPlayerPlaysDistrict(Player player, District district) {
-        System.out.println(player + " pose un/e " + district.getName() + " qui lui coute " + district.getCost() + " pièces d'or.");
+    public void displayPlayerPlaysDistrict(Player player, Optional<District> optionalDistrict) {
+        if (optionalDistrict.isEmpty()) {
+            System.out.println(player + " ne pose pas de quartier, il lui reste " + player.getNbGold() + " pièces d'or\"");
+        } else {
+            System.out.println(player + " pose un " + optionalDistrict.get().getName() + " qui lui coute " + optionalDistrict.get().getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
+        }
     }
 
-    public void displayWinner(String winnerName, int score) {
-        System.out.println("Le joueur " + winnerName + " gagne avec un score de " + score);
+    public void displayWinner(Player winner) {
+        System.out.println(winner + " gagne avec un score de " + winner.getScore());
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
         System.out.println(player + " commence à jouer.");
+    }
+
+    @Override
+    public void displayPlayerPickDistrict(Player player) {
+        System.out.println(player + " pioche un quartier.");
+    }
+
+    @Override
+    public void displayPlayerPicksGold(Player player) {
+        System.out.println(player + " pioche 2 pièces d'or.");
     }
 
     private void displayPlayerHand(Player player) {

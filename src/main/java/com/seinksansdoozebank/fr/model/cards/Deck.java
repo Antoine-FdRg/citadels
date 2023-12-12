@@ -38,6 +38,7 @@ public class Deck {
             //TODO milestone 2 remettre la fausse dans la liste de District
             //On recrée le deck
             fillDeck();
+            //TODO ne pas ajouter les quartiers déjà construits dans le deck
         }
         //On renvoie la dernière carte district du paquet et on l'enlève du paquet.
         return districtList.remove(districtList.size() - 1);
@@ -46,7 +47,7 @@ public class Deck {
     /**
      * The method shuffle takes the list of districts and shuffles it
      */
-    public void shuffle() {
+    protected void shuffle() {
         Random random = new Random();
         //On commence par la dernière carte du paquet
         for (int i = districtList.size() - 1; i >= 1; i--) {
@@ -62,7 +63,7 @@ public class Deck {
      *
      * @return the deck of 65 districts
      */
-    public List<District> getDeck() {
+    protected List<District> getDeck() {
         return districtList;
     }
 

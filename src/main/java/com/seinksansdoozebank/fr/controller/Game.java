@@ -3,18 +3,20 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
     private static final int NB_ROUND = 4;
-    Deck deck;
-    List<Player> players;
+    private Deck deck;
+    private List<Player> players;
 
     IView view;
 
@@ -23,7 +25,7 @@ public class Game {
         this.deck = new Deck();
         this.players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
-            players.add(new Player(NB_GOLD_INIT, view));
+            players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
     }
 
@@ -34,14 +36,14 @@ public class Game {
         while (!isGameFinished && round < NB_ROUND) {
             view.displayRound(round + 1);
             for (Player player : players) {
-                District district = player.play();
+                Optional<District> district = player.play();
                 view.displayPlayerPlaysDistrict(player, district);
                 view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
             round++;
         }
-        view.displayWinner(getWinner().toString(), getWinner().getScore());
+        view.displayWinner(getWinner());
     }
 
 
