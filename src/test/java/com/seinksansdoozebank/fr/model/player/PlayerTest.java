@@ -19,11 +19,13 @@ class PlayerTest {
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
-        hand.add(new District(3));
-        hand.add(new District(5));
-        player = new Player(10, view);
-        player.addDistrictToHand(new District(3));
-        player.addDistrictToHand(new District(5));
+        District districtCostThree = District.PORT;
+        District districtCostFive = District.FORTRESS;
+        hand.add(districtCostThree);
+        hand.add(districtCostFive);
+        player = new Player(10,view);
+        player.addDistrictToHand(districtCostThree);
+        player.addDistrictToHand(districtCostFive);
     }
 
     @Test
@@ -55,12 +57,12 @@ class PlayerTest {
     void testPlayerInitialization() {
         // Arrange
         List<District> hand = new ArrayList<>();
-        hand.add(new District(3));
+        hand.add(District.PORT); //district with a cost of 3
         List<District> citadel = new ArrayList<>();
 
         // Act
         Player player = new Player(10,view);
-        player.addDistrictToHand(new District(3));
+        player.addDistrictToHand(District.PORT);
 
         // Assert
         assertEquals(10, player.getNbGold());

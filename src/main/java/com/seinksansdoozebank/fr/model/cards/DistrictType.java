@@ -9,8 +9,9 @@ public enum DistrictType {
 
         private final String name;
 
-        DistrictType(String name){
-                this.name=name;
+       private  DistrictType(String name){
+
+               this.name=name;
         }
 
         /**
@@ -26,7 +27,7 @@ public enum DistrictType {
          */
         public static DistrictType getDistrictTypeByString(String name){
                 for(DistrictType districtType : DistrictType.values()){
-                        if(name.contains(districtType.getName())){
+                        if(name.equals(districtType.getName())){
                                 return districtType;
                         }
                 }
@@ -35,6 +36,7 @@ public enum DistrictType {
 
         @Override
         public String toString() {
+
                 return this.name;
         }
 }
