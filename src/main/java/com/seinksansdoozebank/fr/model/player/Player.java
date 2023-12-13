@@ -17,6 +17,7 @@ public class Player {
     private final Random random = new Random();
     private boolean isStuck = false;
     private final IView view;
+    private Character character;
 
     public Player(int nbGold, IView view) {
         this.id = counter++;
@@ -44,6 +45,13 @@ public class Player {
         this.citadel.add(district);
         this.decreaseGold(district.getCost());
         return district;
+    }
+
+    public Character chooseCharacter(List<Character> characters) {
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        this.character.setCitadel(this.citadel);
+        return this.character;
     }
 
     void decreaseGold(int gold) {

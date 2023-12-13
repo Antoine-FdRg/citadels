@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.player.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -14,7 +15,7 @@ public class Game {
     private static final int NB_CARD_BY_PLAYER = 4;
     Deck deck;
     List<Player> players;
-
+    List<Character> characters;
     IView view;
 
     public Game(int nbPlayers) {
@@ -32,7 +33,12 @@ public class Game {
         int round = 0;
         while (!isGameFinished) {
             view.displayRound(round + 1);
+            // Intialize characters
+            createCharacters();
             for (Player player : players) {
+                view.displayPlayerStartPlaying(player);
+                // Choose character and remove it from the list
+                this.removeCharacter(player.chooseCharacter(characters));
                 District district = player.play();
                 view.displayPlayerPlaysDistrict(player, district);
                 view.displayPlayerInfo(player);
@@ -46,6 +52,18 @@ public class Game {
 
     private void init() {
         dealCards();
+    }
+
+    private void createCharacters() {
+        characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+    }
+
+    private void removeCharacter(Character character) {
+        characters.remove(character);
     }
 
     private void dealCards() {
