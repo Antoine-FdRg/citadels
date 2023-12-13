@@ -73,6 +73,6 @@ public class Merchant extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "Merchant gets 1 gold for each " + target + " district in his citadel\nMerchant gets " + this.goldCollected + " gold(s)";
+        return "The character Merchant";
     }
 }

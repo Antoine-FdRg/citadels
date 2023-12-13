@@ -75,6 +75,6 @@ public class Condottiere extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "Condottiere gets 1 gold for each " + target + " district in his citadel\nCondottiere gets " + this.goldCollected + " gold(s)";
+        return "The character Condottiere";
     }
 }

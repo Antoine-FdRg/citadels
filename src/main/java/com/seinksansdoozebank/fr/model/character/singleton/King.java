@@ -69,6 +69,6 @@ public class King extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "King gets 1 gold for each " + target + " district in his citadel\nKing gets " + this.goldCollected + " gold(s)";
+        return "The character King";
     }
 }

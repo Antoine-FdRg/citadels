@@ -44,13 +44,4 @@ class BishopTest {
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
     }
-
-    @Test
-    void testToString() {
-        // Perform the action
-        bishop.performAction();
-
-        // Check if the player's gold has been increased correctly
-        assertEquals("Bishop gets 1 gold for each " + DistrictType.RELIGION + " district in his citadel\nBishop gets 4 gold(s)", bishop.toString());
-    }
 }

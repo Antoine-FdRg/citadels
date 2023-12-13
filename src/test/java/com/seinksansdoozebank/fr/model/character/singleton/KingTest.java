@@ -43,13 +43,4 @@ class KingTest {
         // Check if the player's gold has been increased correctly
         assertEquals(5, player.getNbGold());
     }
-
-    @Test
-    void testToString() {
-        // Perform the action
-        king.performAction();
-
-        // Check if the player's gold has been increased correctly
-        assertEquals("King gets 1 gold for each " + DistrictType.NOBILITY + " district in his citadel\nKing gets 3 gold(s)", king.toString());
-    }
 }

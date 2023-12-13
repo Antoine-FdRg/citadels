@@ -44,13 +44,4 @@ class CondottiereTest {
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
     }
-
-    @Test
-    void testToString() {
-        // Perform the action
-        condottiere.performAction();
-
-        // Check if the player's gold has been increased correctly
-        assertEquals("Condottiere gets 1 gold for each " + DistrictType.SOLDIERLY + " district in his citadel\nCondottiere gets 4 gold(s)", condottiere.toString());
-    }
 }

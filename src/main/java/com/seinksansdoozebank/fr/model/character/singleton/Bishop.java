@@ -67,6 +67,6 @@ public class Bishop extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "Bishop gets 1 gold for each " + target + " district in his citadel\nBishop gets " + this.goldCollected + " gold(s)";
+        return "The character Bishop";
     }
 }
