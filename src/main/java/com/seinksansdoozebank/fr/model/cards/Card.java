@@ -22,14 +22,6 @@ public class Card {
     }
 
     /**
-     * Getter
-     * @return the cost of the card
-     */
-    public int getCostOfTheCard(){
-        return district.getCost();
-    }
-
-    /**
      * @param obj
      * @return a boolean true if it is the same object, false in the other case
      */

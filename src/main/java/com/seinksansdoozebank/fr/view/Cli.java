@@ -9,7 +9,7 @@ import java.util.List;
 public class Cli implements IView {
 
     public void displayPlayerPlaysCard(Player player, Card card) {
-        System.out.println(player + " pose un/e " + card.getDistrict().getName() + " qui lui coute " + card.getCostOfTheCard() + " pièces d'or.");
+        System.out.println(player + " pose un/e " + card.getDistrict().getName() + " qui lui coute " + card.getDistrict().getCost() + " pièces d'or.");
     }
 
     public void displayWinner(String winnerName, int score) {

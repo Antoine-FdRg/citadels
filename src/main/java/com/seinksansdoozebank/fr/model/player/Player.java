@@ -82,7 +82,7 @@ public class Player {
 
     public int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(Card::getCostOfTheCard).sum();
+        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
     @Override

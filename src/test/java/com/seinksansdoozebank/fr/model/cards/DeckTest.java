@@ -42,8 +42,8 @@ class DeckTest {
     @Test
     void getDistrictCostWIthDeckTest() {
         for (int i = 0; i < 65; i++) {
-            assertTrue(districtList.getDeck().get(i).getCostOfTheCard() >= 1);
-            assertTrue(districtList.getDeck().get(i).getCostOfTheCard() <= 6);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() >= 1);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() <= 6);
         }
     }
 
