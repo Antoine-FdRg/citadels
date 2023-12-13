@@ -12,7 +12,6 @@ import java.util.List;
 public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private static final int NB_ROUND = 4;
     Deck deck;
     List<Player> players;
 
@@ -31,14 +30,14 @@ public class Game {
         this.init();
         boolean isGameFinished = false;
         int round = 0;
-        while (!isGameFinished && round < NB_ROUND) {
+        while (!isGameFinished) {
             view.displayRound(round + 1);
             for (Player player : players) {
                 District district = player.play();
                 view.displayPlayerPlaysDistrict(player, district);
                 view.displayPlayerInfo(player);
             }
-            isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
+            isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
         view.displayWinner(getWinner().toString(), getWinner().getScore());
