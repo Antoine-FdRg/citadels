@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Game {
-    private static final int NB_GOLD_INIT = 30;
+    private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
     private final Deck deck;
     private List<Player> players;
@@ -23,7 +24,8 @@ public class Game {
         this.view = new Cli();
         this.deck = new Deck();
         this.players = new ArrayList<>();
-        for (int i = 0; i < nbPlayers; i++) {
+        players.add(new SmartBot(NB_GOLD_INIT, this.deck, this.view));
+        for (int i = 0; i < nbPlayers-1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
     }

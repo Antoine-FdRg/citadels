@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Optional;
 
-public class RandomBot extends Player{
+public class RandomBot extends Player {
 
     public RandomBot(int nbGold, Deck deck, IView view) {
         super(nbGold, deck, view);
@@ -22,8 +22,7 @@ public class RandomBot extends Player{
 
     @Override
     protected void pickSomething() {
-        int randomChoice = random.nextInt(2);
-        if (randomChoice == 0) {
+        if (random.nextInt(2) == 0) {
             pickGold();
         } else {
             pickADistrict();
@@ -47,14 +46,16 @@ public class RandomBot extends Player{
 
     @Override
     protected Optional<District> chooseDistrict() {
-        District chosenDistrict;
-        int cnt = 0;
-        do{
-            chosenDistrict = this.hand.get(random.nextInt(hand.size()));
-            cnt++;
-        }while (this.canBuildDistrict(chosenDistrict) && cnt < 5);
-        if(this.canBuildDistrict(chosenDistrict)){
-            return Optional.of(chosenDistrict);
+        if (!this.hand.isEmpty()) {
+            District chosenDistrict;
+            int cnt = 0;
+            do {
+                chosenDistrict = this.hand.get(random.nextInt(hand.size()));
+                cnt++;
+            } while (this.canBuildDistrict(chosenDistrict) && cnt < 5);
+            if (this.canBuildDistrict(chosenDistrict)) {
+                return Optional.of(chosenDistrict);
+            }
         }
         return Optional.empty();
     }

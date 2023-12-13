@@ -34,7 +34,6 @@ public class SmartBot extends Player {
             this.pickADistrict(); //
             optChosenDistrict = this.chooseDistrict();
             if (optChosenDistrict.isPresent()) {
-                District cheaperDistrict = optChosenDistrict.get();
                 return this.buildADistrict();
             }
             return Optional.empty();
