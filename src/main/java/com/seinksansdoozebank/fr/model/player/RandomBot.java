@@ -17,7 +17,7 @@ public class RandomBot extends Player{
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
         pickSomething();
-        return Optional.of(buildADistrict());
+        return buildADistrict();
     }
 
     @Override
@@ -38,20 +38,24 @@ public class RandomBot extends Player{
         int randomChoice = random.nextInt(2);
         if (randomChoice == 0) {
             this.hand.add(district1);
+            this.deck.discard(district2);
         } else {
             this.hand.add(district2);
+            this.deck.discard(district1);
         }
     }
 
     @Override
-    protected District chooseDistrict() {
-        //TODO return empty if no district can be built
+    protected Optional<District> chooseDistrict() {
         District chosenDistrict;
         int cnt = 0;
         do{
             chosenDistrict = this.hand.get(random.nextInt(hand.size()));
             cnt++;
         }while (this.canBuildDistrict(chosenDistrict) && cnt < 5);
-        return chosenDistrict;
+        if(this.canBuildDistrict(chosenDistrict)){
+            return Optional.of(chosenDistrict);
+        }
+        return Optional.empty();
     }
 }

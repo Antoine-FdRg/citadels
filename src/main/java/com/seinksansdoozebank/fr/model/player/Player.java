@@ -33,7 +33,7 @@ public abstract class Player {
      * Represents the player's turn
      * @return the district built by the player
      */
-    public abstract Optional<District> play();
+    public abstract Optional<District> play(); //TODO make it return void
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district
@@ -43,32 +43,47 @@ public abstract class Player {
     /**
      * Represents the player's choice to draw 2 gold coins
      */
-    protected void pickGold() {
+    protected final void pickGold() {
         view.displayPlayerPicksGold(this);
         this.nbGold+=2;
     }
 
     /**
-     * Represents the player's choice to draw 2 districts and keep one
+     * Represents the player's choice to draw 2 districts keep one and discard the other one
+     * MUST USE this.hand.add() AND this.deck.discard AT EACH CALL
      */
     protected abstract void pickADistrict();
 
-    protected District buildADistrict() {
-        District districtToBuild = chooseDistrict();
+    protected final Optional<District> buildADistrict() {
+        Optional<District> optionalDistrictToBuild = chooseDistrict();
+        if (optionalDistrictToBuild.isEmpty()|| !canBuildDistrict(optionalDistrictToBuild.get())) {
+            return Optional.empty();
+        }
+        District districtToBuild = optionalDistrictToBuild.get();
         this.hand.remove(districtToBuild);
         this.citadel.add(districtToBuild);
         this.decreaseGold(districtToBuild.getCost());
-        return districtToBuild;
+        return optionalDistrictToBuild;
     }
 
-    protected abstract District chooseDistrict();
+    /**
+     * Choose a district to build from the hand
+     * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
+     * @return the district to build
+     */
+    protected abstract Optional<District> chooseDistrict();
 
-    protected boolean canBuildDistrict(District district) {
+    /**
+     * Verify if the player can build the district passed in parameter (he can build it if he has enough gold and if he doesn't already have it in his citadel)
+     * @param district the district to build
+     * @return true if the player can build the district passed in parameter, false otherwise
+     */
+    protected final boolean canBuildDistrict(District district) {
         //TODO verifier que le contains fait ce que je veux
         return district.getCost() <= this.nbGold && !this.citadel.contains(district);
     }
 
-    void decreaseGold(int gold) {
+    protected final void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
 

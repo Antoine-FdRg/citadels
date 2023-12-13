@@ -43,8 +43,9 @@ class PlayerTest {
 
     @Test
     void testChooseDistrict() {
-        District chosenDistrict = player.chooseDistrict();
-        assertTrue(hand.contains(chosenDistrict));
+        //TODO must be changed to test the new chooseDistrict method
+        Optional<District> optionalChosenDistrict = player.chooseDistrict();
+        optionalChosenDistrict.ifPresent(district -> assertTrue(hand.contains(district)));
     }
 
     @Test
