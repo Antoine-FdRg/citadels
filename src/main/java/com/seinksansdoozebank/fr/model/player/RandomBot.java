@@ -18,6 +18,7 @@ public class RandomBot extends Player {
         view.displayPlayerInfo(this);
         pickSomething();
         view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+        view.displayPlayerInfo(this);
     }
 
     @Override

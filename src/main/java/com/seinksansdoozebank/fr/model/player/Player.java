@@ -33,7 +33,7 @@ public abstract class Player {
      * Represents the player's turn
      * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
      */
-    public abstract void play(); //TODO make it return void
+    public abstract void play();
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district
@@ -52,18 +52,18 @@ public abstract class Player {
      * Represents the player's choice to draw 2 districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
+    //TODO Rename to pickADistrictAndDiscardTheOtherOne or something like that beacause some character make pick just on a district
     protected abstract void pickADistrict();
-
     protected final Optional<District> buildADistrict() {
-        Optional<District> optionalDistrictToBuild = chooseDistrict();
-        if (optionalDistrictToBuild.isEmpty()|| !canBuildDistrict(optionalDistrictToBuild.get())) {
+        Optional<District> optChosenDistrict = chooseDistrict();
+        if (optChosenDistrict.isEmpty()|| !canBuildDistrict(optChosenDistrict.get())) {
             return Optional.empty();
         }
-        District districtToBuild = optionalDistrictToBuild.get();
-        this.hand.remove(districtToBuild);
-        this.citadel.add(districtToBuild);
-        this.decreaseGold(districtToBuild.getCost());
-        return optionalDistrictToBuild;
+        District chosenDistrict = optChosenDistrict.get();
+        this.hand.remove(chosenDistrict);
+        this.citadel.add(chosenDistrict);
+        this.decreaseGold(chosenDistrict.getCost());
+        return optChosenDistrict;
     }
 
     /**
@@ -86,10 +86,6 @@ public abstract class Player {
         this.nbGold -= gold;
     }
 
-    public void addDistrictToHand(District district) {
-        this.hand.add(district);
-    }
-
     public List<District> getHand() {
         return this.hand;
     }
@@ -110,7 +106,7 @@ public abstract class Player {
         counter = 1;
     }
 
-    public int getScore() {
+    public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
         return citadel.stream().mapToInt(District::getCost).sum();
     }

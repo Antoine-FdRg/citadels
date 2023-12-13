@@ -36,7 +36,6 @@ public class Game {
             view.displayRound(round + 1);
             for (Player player : players) {
                 player.play();
-                view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;

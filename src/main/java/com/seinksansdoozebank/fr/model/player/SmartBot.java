@@ -36,6 +36,7 @@ public class SmartBot extends Player {
             this.pickADistrict(); //
             view.displayPlayerPlaysDistrict(this, this.buildADistrict());
         }
+        view.displayPlayerInfo(this);
     }
 
     @Override
