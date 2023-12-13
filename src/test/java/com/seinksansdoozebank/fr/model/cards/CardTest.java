@@ -27,6 +27,13 @@ class CardTest {
         assertEquals(District.MONASTERY, monasteryCard.getDistrict());
     }
 
+    /**
+     * We test if its gives us the right cost of the card
+     */
+    @Test
+    void getCostOfTheCardTest(){
+        assertEquals(3,monasteryCard.getCostOfTheCard());
+    }
     @Test
     void equalsTest() {
         assertFalse(monasteryCard.equals(stationCard));

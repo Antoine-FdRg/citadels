@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -33,8 +34,8 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             for (Player player : players) {
-                District district = player.play();
-                view.displayPlayerPlaysDistrict(player, district);
+                Card card = player.play();
+                view.displayPlayerPlaysCard(player, card);
                 view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
