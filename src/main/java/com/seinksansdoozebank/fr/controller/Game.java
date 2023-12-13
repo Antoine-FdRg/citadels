@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,14 @@ public class Game {
     Deck deck;
     List<Player> players;
 
-    Cli view;
+    IView view;
 
     public Game(int nbPlayers) {
         this.view = new Cli();
         this.deck = new Deck();
         this.players = new ArrayList<>();
         for (int i = 0; i < nbPlayers; i++) {
-            players.add(new Player(NB_GOLD_INIT));
+            players.add(new Player(NB_GOLD_INIT, view));
         }
     }
 
@@ -34,7 +35,8 @@ public class Game {
             view.displayRound(round + 1);
             for (Player player : players) {
                 District district = player.play();
-                this.view.displayDistrict(player, district);
+                view.displayPlayerPlaysDistrict(player, district);
+                view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().allMatch(player -> player.getHand().isEmpty());
             round++;

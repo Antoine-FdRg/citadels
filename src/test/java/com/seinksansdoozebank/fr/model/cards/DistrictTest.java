@@ -4,23 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 class DistrictTest {
 
-    private District districtOne;
-    private District districtTwo;
-    private District districtOneBis;
-    private District districtTwoBis;
-
     @BeforeEach
     void setup() {
-        this.districtOne = new District(1);
-        this.districtTwo = new District(2);
-        this.districtOneBis = new District(1);
-        this.districtTwoBis = new District(2, "QuartierBis");
     }
 
     /**
@@ -28,7 +18,7 @@ class DistrictTest {
      */
     @Test
     void getNameTest() {
-        assertEquals("Quartier", districtOne.getName());
+        assertEquals("Palais", District.PALACE.getName());
     }
 
     /**
@@ -36,37 +26,52 @@ class DistrictTest {
      */
     @Test
     void getCostTest() {
-        assertEquals(2, districtTwo.getCost());
+        assertEquals(4, District.PORT.getCost());
     }
 
     /**
-     * We test the method compareTo with different districts
+     * We test the method getDistrictType
      */
     @Test
-    void testCompareToCostWithTwoDifferentCosts() {
-        assertEquals(-1, districtOne.compareTo(districtTwo));
-        assertNotEquals(0, districtOneBis.compareTo(districtTwo));
+    void getDistrictTypeTest() {
+        assertEquals(DistrictType.TRADE_AND_CRAFTS, District.PORT.getDistrictType());
     }
 
     /**
-     * We test the method compareTo with same districts
+     * We test the method getNumberOfAppearance
      */
     @Test
-    void testCompareToCostWithTheSameDistrict() {
-        assertEquals(0, districtOne.compareTo(districtOneBis));
+    void getNumberOfAppearanceTest() {
+        assertEquals(2, District.TOWN_HALL.getNumberOfAppearance());
     }
 
     /**
-     * We test our method equal
+     * We test our method getDistrictWithName
      */
     @Test
-    void testEqualMethod() {
-        //With same default name but different cost
-        assertFalse(districtOne.equals(districtTwo));
-        //With same default name and same cost
-        assertTrue(districtOne.equals(districtOneBis));
-        //With different name but same name
-        assertFalse(districtTwo.equals(districtTwoBis));
+    void getDistrictWithNameTest() {
+
+        String nameValid = "Port";
+        String nameInvalid = "NeCorrespondARien";
+
+        assertEquals(District.PORT, District.getDistrictWithName(nameValid));
+        assertNull(District.getDistrictWithName(nameInvalid));
     }
 
+    /**
+     * We test our method getDistrictWithOrdinal
+     */
+    @Test
+    void getDistrictWithOrdinalTest() {
+        assertEquals(District.LIBRARY, District.getDistrictByOrdinal(23));
+        assertNull(District.getDistrictByOrdinal(27));
+    }
+
+    /**
+     * We test our method toString
+     */
+    @Test
+    void toStringTest() {
+        assertEquals("Le/la : Port, son type : Commerce et artisanat, son coût :  4 pièces d'or", District.PORT.toString());
+    }
 }

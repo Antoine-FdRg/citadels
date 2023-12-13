@@ -7,8 +7,6 @@ import java.util.Random;
 
 public class Deck {
     private List<District> districtList;
-    private static final int NUMBER_OF_CARDS = 65;
-
 
     /**
      * Constructor which implements a new deck of 65 districts
@@ -22,9 +20,13 @@ public class Deck {
      * We created the deck of 65 cards and then we shuffle it
      */
     private void fillDeck() {
-        Random random = new Random();
-        for (int i = 0; i < NUMBER_OF_CARDS; i++) {
-            this.districtList.add(new District(random.nextInt(1, 5)));
+        for (District district : District.values()) {
+            //We take the ordinal which corresponds to a district and take the number of appearances
+            int numberOfAppearance = district.getNumberOfAppearance();
+            for (int j = 0; j < numberOfAppearance; j++) {
+                //We add to the list the right number of the district called
+                this.districtList.add(district);
+            }
         }
         shuffle();
     }

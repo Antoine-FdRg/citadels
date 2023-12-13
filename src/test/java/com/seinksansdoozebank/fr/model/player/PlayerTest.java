@@ -1,9 +1,12 @@
 package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +14,18 @@ import java.util.List;
 class PlayerTest {
     List<District> hand = new ArrayList<>();
     Player player;
+    IView view;
 
     @BeforeEach
     void setup() {
-        hand.add(new District(3));
-        hand.add(new District(5));
-        player = new Player(10);
-        player.addDistrictToHand(new District(3));
-        player.addDistrictToHand(new District(5));
+        view = mock(Cli.class);
+        District districtCostThree = District.PORT;
+        District districtCostFive = District.FORTRESS;
+        hand.add(districtCostThree);
+        hand.add(districtCostFive);
+        player = new Player(10,view);
+        player.addDistrictToHand(districtCostThree);
+        player.addDistrictToHand(districtCostFive);
     }
 
     @Test
@@ -37,7 +44,7 @@ class PlayerTest {
     @Test
     void testUpdateGold() {
         // Arrange
-        Player player = new Player(10);
+        Player player = new Player(10,view);
 
         // Act
         player.decreaseGold(3);
@@ -50,12 +57,12 @@ class PlayerTest {
     void testPlayerInitialization() {
         // Arrange
         List<District> hand = new ArrayList<>();
-        hand.add(new District(3));
+        hand.add(District.PORT); //district with a cost of 3
         List<District> citadel = new ArrayList<>();
 
         // Act
-        Player player = new Player(10);
-        player.addDistrictToHand(new District(3));
+        Player player = new Player(10,view);
+        player.addDistrictToHand(District.PORT);
 
         // Assert
         assertEquals(10, player.getNbGold());
@@ -67,7 +74,7 @@ class PlayerTest {
     void testResetIdCounter() {
         // Test resetting the ID counter for player
         Player.resetIdCounter();
-        Player newPlayer = new Player(10);
+        Player newPlayer = new Player(10,view);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
     }
 }
