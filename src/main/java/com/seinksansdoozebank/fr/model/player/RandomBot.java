@@ -16,14 +16,19 @@ public class RandomBot extends Player {
     public void play() {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
-        pickSomething();
-        view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+        if(random.nextBoolean()){
+            pickSomething();
+            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+        }else{
+            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+            pickSomething();
+        }
         view.displayPlayerInfo(this);
     }
 
     @Override
     protected void pickSomething() {
-        if (random.nextInt(2) == 0) {
+        if (random.nextBoolean()) {
             pickGold();
         } else {
             pickADistrict();
@@ -35,8 +40,7 @@ public class RandomBot extends Player {
         this.view.displayPlayerPickDistrict(this);
         District district1 = deck.pick();
         District district2 = deck.pick();
-        int randomChoice = random.nextInt(2);
-        if (randomChoice == 0) {
+        if (random.nextBoolean()) {
             this.hand.add(district1);
             this.deck.discard(district2);
         } else {
