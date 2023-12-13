@@ -36,14 +36,21 @@ public class Deck {
     public District pick() {
         //On vérifie que la liste n'est pas vide
         if (districtList.isEmpty()) {
-            //TODO milestone 2 remettre la fausse dans la liste de District
             //On recrée le deck
             fillDeck();
-            //TODO ne pas ajouter les quartiers déjà construits dans le deck
         }
         //On renvoie la dernière carte district du paquet et on l'enlève du paquet.
         return districtList.remove(districtList.size() - 1);
     }
+
+    /**
+     * Allows to discard a district
+     * @param districtToDiscard the district to discard
+     */
+    public void discard(District districtToDiscard){
+        this.districtList.add(0,districtToDiscard);
+    }
+
 
     /**
      * The method shuffle takes the list of districts and shuffles it
