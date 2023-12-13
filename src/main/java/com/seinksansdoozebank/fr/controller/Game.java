@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -10,7 +9,6 @@ import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
@@ -37,8 +35,7 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             for (Player player : players) {
-                Optional<District> district = player.play();
-                view.displayPlayerPlaysDistrict(player, district);
+                player.play();
                 view.displayPlayerInfo(player);
             }
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);

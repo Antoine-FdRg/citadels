@@ -31,9 +31,9 @@ public abstract class Player {
 
     /**
      * Represents the player's turn
-     * @return the district built by the player
+     * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
      */
-    public abstract Optional<District> play(); //TODO make it return void
+    public abstract void play(); //TODO make it return void
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district
@@ -50,7 +50,7 @@ public abstract class Player {
 
     /**
      * Represents the player's choice to draw 2 districts keep one and discard the other one
-     * MUST USE this.hand.add() AND this.deck.discard AT EACH CALL
+     * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
     protected abstract void pickADistrict();
 
@@ -79,7 +79,6 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canBuildDistrict(District district) {
-        //TODO verifier que le contains fait ce que je veux
         return district.getCost() <= this.nbGold && !this.citadel.contains(district);
     }
 

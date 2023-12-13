@@ -8,6 +8,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents a smart bot which will try to build the cheaper district
+ * in its hand in order to finish its citadel as fast as possible
+ */
 public class SmartBot extends Player {
 
     public SmartBot(int nbGold, Deck deck, IView view) {
@@ -15,28 +19,27 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public Optional<District> play() {
+    public void play() {
         Optional<District> optChosenDistrict = this.chooseDistrict();
         if (optChosenDistrict.isPresent()) {
             District choosenDistrict = optChosenDistrict.get();
             if (this.canBuildDistrict(choosenDistrict)) {
-                Optional<District> districtToBuild = this.buildADistrict();//build the district given by chooseDistrict
+                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
                 this.pickSomething(); //the version where we already choose the district
-                return districtToBuild;
             } else {
                 this.pickGold(); //
                 if (this.canBuildDistrict(choosenDistrict)) {
-                    return this.buildADistrict();
+                    view.displayPlayerPlaysDistrict(this, this.buildADistrict());
                 }
-                return Optional.empty();
+                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
             }
         } else {//la main est vide
             this.pickADistrict(); //
             optChosenDistrict = this.chooseDistrict();
             if (optChosenDistrict.isPresent()) {
-                return this.buildADistrict();
+                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
             }
-            return Optional.empty();
+            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
         }
     }
 
@@ -86,4 +89,10 @@ public class SmartBot extends Player {
     private Optional<District> getCheaperDistrict(List<District> notBuiltDistrictList) {
         return notBuiltDistrictList.stream().min(Comparator.comparing(District::getCost));
     }
+
+    @Override
+    public String toString() {
+        return "Le bot malin " + this.id;
+    }
+
 }

@@ -13,11 +13,11 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public Optional<District> play() {
+    public void play() {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
         pickSomething();
-        return buildADistrict();
+        view.displayPlayerPlaysDistrict(this, this.buildADistrict());
     }
 
     @Override
@@ -58,5 +58,10 @@ public class RandomBot extends Player {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String toString() {
+        return "Le bot aléatoire "+this.id;
     }
 }
