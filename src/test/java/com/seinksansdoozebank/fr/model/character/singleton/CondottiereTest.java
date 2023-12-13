@@ -30,7 +30,10 @@ class CondottiereTest {
         citadel.add(District.JAIL);
         citadel.add(District.WATCH_TOWER);
         // Create a Bishop character
-        condottiere = new Condottiere(citadel, player);
+        condottiere = new Condottiere();
+        // Set the player and the citadel to the character
+        condottiere.setPlayer(player);
+        condottiere.setCitadel(citadel);
     }
 
     @Test

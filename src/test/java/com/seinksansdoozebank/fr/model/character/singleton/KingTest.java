@@ -29,7 +29,10 @@ class KingTest {
         citadel.add(District.MANOR);
         citadel.add(District.BARRACK);
         // Create a Bishop character
-        king = new King(citadel, player);
+        king = new King();
+        // Set the player and the citadel to the character
+        king.setPlayer(player);
+        king.setCitadel(citadel);
     }
 
     @Test

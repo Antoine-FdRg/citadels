@@ -10,16 +10,30 @@ import java.util.List;
 
 public class Merchant extends CommonCharacter {
 
-    private final Player player;
-    private final List<District> citadel;
+    private Player player;
+    private List<District> citadel;
     private static final Role role = Role.MERCHANT;
     private static final DistrictType target = DistrictType.TRADE_AND_CRAFTS;
     private int goldCollected = 0;
 
-    public Merchant(List<District> citadel, Player player) {
+    public Merchant() {
         super(role);
-        this.citadel = citadel;
+    }
+
+    /**
+     * Set the player of the character
+     * @param player the player to set
+     */
+    public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    /**
+     * Set the citadel of the character
+     * @param citadel the citadel to set
+     */
+    public void setCitadel(List<District> citadel) {
+        this.citadel = citadel;
     }
 
     /**

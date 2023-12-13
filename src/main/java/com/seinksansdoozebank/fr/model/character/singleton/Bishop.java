@@ -9,17 +9,29 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import java.util.List;
 
 public class Bishop extends CommonCharacter {
-    private final Player player;
-    private final List<District> citadel;
+    private Player player;
+    private List<District> citadel;
     private static final Role role = Role.BISHOP;
     private static final DistrictType target = DistrictType.RELIGION;
     private int goldCollected = 0;
-
-
-    public Bishop(List<District> citadel, Player player) {
+    public Bishop() {
         super(role);
-        this.citadel = citadel;
+    }
+
+    /**
+     * Set the player of the character
+     * @param player the player to set
+     */
+    public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    /**
+     * Set the citadel of the character
+     * @param citadel the citadel to set
+     */
+    public void setCitadel(List<District> citadel) {
+        this.citadel = citadel;
     }
 
     @Override
