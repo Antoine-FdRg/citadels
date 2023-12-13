@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DistrictTypeTest {
 
@@ -20,6 +19,14 @@ class DistrictTypeTest {
 
         assertEquals(DistrictType.RELIGION,DistrictType.getDistrictTypeByString(nameValid));
         assertNull(DistrictType.getDistrictTypeByString(nameInvalid));
+    }
+
+    /**
+     * We test our method toString
+     */
+    @Test
+    void toStringTest(){
+        assertEquals("Religion",DistrictType.RELIGION.toString());
     }
 
 

@@ -25,11 +25,13 @@ class PlayerTest {
     void setup() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        hand.add(new District(3));
-        hand.add(new District(5));
+        District districtCostThree = District.PORT;
+        District districtCostFive = District.FORTRESS;
+        hand.add(districtCostThree);
+        hand.add(districtCostFive);
         player = new RandomBot(10, deck, view);
-        player.addDistrictToHand(new District(3));
-        player.addDistrictToHand(new District(5));
+        player.addDistrictToHand(districtCostThree);
+        player.addDistrictToHand(districtCostFive);
     }
 
     @Test
@@ -64,12 +66,12 @@ class PlayerTest {
     void testPlayerInitialization() {
         // Arrange
         List<District> hand = new ArrayList<>();
-        hand.add(new District(3));
+        hand.add(District.PORT); //district with a cost of 3
         List<District> citadel = new ArrayList<>();
 
         // Act
         Player player = new RandomBot(10, deck, view);
-        player.addDistrictToHand(new District(3));
+        player.addDistrictToHand(District.PORT);
 
         // Assert
         assertEquals(10, player.getNbGold());
