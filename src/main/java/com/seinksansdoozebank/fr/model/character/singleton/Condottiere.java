@@ -14,6 +14,7 @@ public class Condottiere extends CommonCharacter {
     private final List<District> citadel;
     private static final Role role = Role.CONDOTTIERE;
     private static final DistrictType target = DistrictType.SOLDIERLY;
+    private int goldCollected = 0;
 
     public Condottiere(List<District> citadel, Player player) {
         super(role);
@@ -41,6 +42,7 @@ public class Condottiere extends CommonCharacter {
                 nbGold++;
             }
         }
+        this.goldCollected = nbGold;
         this.player.increaseGold(nbGold);
     }
 
@@ -52,7 +54,13 @@ public class Condottiere extends CommonCharacter {
     @Override
     public void performAction() {
         // TODO: need to add a condition if the player wants to destroy a district
+        this.goldCollected = 0;
         this.useEffect();
         this.goldCollectedFromDisctrictType();
+    }
+
+    @Override
+    public String toString() {
+        return "Condottiere gets 1 gold for each " + target + " district in his citadel\nCondottiere gets " + this.goldCollected + " gold(s)";
     }
 }

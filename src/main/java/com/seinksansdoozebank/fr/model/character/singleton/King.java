@@ -14,6 +14,7 @@ public class King extends CommonCharacter {
     private final List<District> citadel;
     private static final Role role = Role.KING;
     private static final DistrictType target = DistrictType.NOBILITY;
+    private int goldCollected = 0;
 
     public King(List<District> citadel, Player player) {
         super(role);
@@ -37,6 +38,7 @@ public class King extends CommonCharacter {
                 nbGold++;
             }
         }
+        this.goldCollected = nbGold;
         this.player.increaseGold(nbGold);
     }
 
@@ -47,6 +49,12 @@ public class King extends CommonCharacter {
      */
     @Override
     public void performAction() {
+        this.goldCollected = 0;
         this.goldCollectedFromDisctrictType();
+    }
+
+    @Override
+    public String toString() {
+        return "King gets 1 gold for each " + target + " district in his citadel\nKing gets " + this.goldCollected + " gold(s)";
     }
 }

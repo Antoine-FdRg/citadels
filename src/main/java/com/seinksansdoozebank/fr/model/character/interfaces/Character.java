@@ -11,4 +11,7 @@ public interface Character {
      * The action will be performed by the character
      */
     void performAction();
+
+    @Override
+    String toString();
 }

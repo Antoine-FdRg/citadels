@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.character.singleton;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,14 @@ class CondottiereTest {
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
+    }
+
+    @Test
+    void testToString() {
+        // Perform the action
+        condottiere.performAction();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals("Condottiere gets 1 gold for each " + DistrictType.SOLDIERLY + " district in his citadel\nCondottiere gets 4 gold(s)", condottiere.toString());
     }
 }

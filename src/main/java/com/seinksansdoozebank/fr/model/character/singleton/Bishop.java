@@ -13,6 +13,7 @@ public class Bishop extends CommonCharacter {
     private final List<District> citadel;
     private static final Role role = Role.BISHOP;
     private static final DistrictType target = DistrictType.RELIGION;
+    private int goldCollected = 0;
 
 
     public Bishop(List<District> citadel, Player player) {
@@ -37,6 +38,7 @@ public class Bishop extends CommonCharacter {
                 nbGold++;
             }
         }
+        this.goldCollected = nbGold;
         this.player.increaseGold(nbGold);
     }
 
@@ -47,6 +49,12 @@ public class Bishop extends CommonCharacter {
      */
     @Override
     public void performAction() {
+        this.goldCollected = 0;
         this.goldCollectedFromDisctrictType();
+    }
+
+    @Override
+    public String toString() {
+        return "Bishop gets 1 gold for each " + target + " district in his citadel\nBishop gets " + this.goldCollected + " gold(s)";
     }
 }
