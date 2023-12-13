@@ -20,25 +20,20 @@ public class SmartBot extends Player {
 
     @Override
     public void play() {
+        view.displayPlayerStartPlaying(this);
+        view.displayPlayerInfo(this);
         Optional<District> optChosenDistrict = this.chooseDistrict();
         if (optChosenDistrict.isPresent()) {
             District choosenDistrict = optChosenDistrict.get();
             if (this.canBuildDistrict(choosenDistrict)) {
                 view.displayPlayerPlaysDistrict(this, this.buildADistrict());
-                this.pickSomething(); //the version where we already choose the district
+                this.pickSomething();
             } else {
-                this.pickGold(); //
-                if (this.canBuildDistrict(choosenDistrict)) {
-                    view.displayPlayerPlaysDistrict(this, this.buildADistrict());
-                }
+                this.pickGold();
                 view.displayPlayerPlaysDistrict(this, this.buildADistrict());
             }
         } else {//la main est vide
             this.pickADistrict(); //
-            optChosenDistrict = this.chooseDistrict();
-            if (optChosenDistrict.isPresent()) {
-                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
-            }
             view.displayPlayerPlaysDistrict(this, this.buildADistrict());
         }
     }
@@ -60,6 +55,7 @@ public class SmartBot extends Player {
 
     @Override
     protected void pickADistrict() {
+        this.view.displayPlayerPickDistrict(this);
         //Pick two district
         District district1 = this.deck.pick();
         District district2 = this.deck.pick();

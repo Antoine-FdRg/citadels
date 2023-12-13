@@ -11,9 +11,9 @@ public class Cli implements IView {
 
     public void displayPlayerPlaysDistrict(Player player, Optional<District> optionalDistrict) {
         if (optionalDistrict.isEmpty()) {
-            System.out.println(player + " ne pose pas de quartier, il lui reste " + player.getNbGold() + " pièces d'or\"");
+            System.out.println(player + " ne pose pas de quartier.");
         } else {
-            System.out.println(player + " pose un " + optionalDistrict.get().getName() + " qui lui coute " + optionalDistrict.get().getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
+            System.out.println(player + " pose un/e " + optionalDistrict.get().getName() + " qui lui coute " + optionalDistrict.get().getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
         }
     }
 

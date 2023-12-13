@@ -72,6 +72,6 @@ class DistrictTest {
      */
     @Test
     void toStringTest() {
-        assertEquals("Le/la : Port, son type : Commerce et artisanat, son coût :  4 pièces d'or", District.PORT.toString());
+        assertEquals("Le/a : Port, son type : Commerce et artisanat, son coût :  4 pièces d'or", District.PORT.toString());
     }
 }
