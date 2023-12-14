@@ -10,11 +10,10 @@ import java.util.List;
 
 public class Bishop extends CommonCharacter {
     private Player player;
-    private static final Role role = Role.BISHOP;
     private static final DistrictType target = DistrictType.RELIGION;
     private int goldCollected = 0;
     public Bishop() {
-        super(role);
+        super(Role.BISHOP);
     }
 
     /**

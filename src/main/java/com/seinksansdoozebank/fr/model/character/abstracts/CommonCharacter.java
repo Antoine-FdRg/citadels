@@ -8,7 +8,7 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import java.util.List;
 
 public abstract class CommonCharacter implements Character {
-        private Role role;
+        private final Role role;
 
         /**
          * Set the player of the character

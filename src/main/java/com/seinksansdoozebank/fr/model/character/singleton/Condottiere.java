@@ -11,12 +11,11 @@ import java.util.List;
 public class Condottiere extends CommonCharacter {
 
     private Player player;
-    private static final Role role = Role.CONDOTTIERE;
     private static final DistrictType target = DistrictType.SOLDIERLY;
     private int goldCollected = 0;
 
     public Condottiere() {
-        super(role);
+        super(Role.CONDOTTIERE);
     }
 
     /**

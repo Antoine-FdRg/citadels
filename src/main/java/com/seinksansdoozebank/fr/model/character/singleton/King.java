@@ -11,12 +11,11 @@ import java.util.List;
 public class King extends CommonCharacter {
 
     private Player player;
-    private static final Role role = Role.KING;
     private static final DistrictType target = DistrictType.NOBILITY;
     private int goldCollected = 0;
 
     public King() {
-        super(role);
+        super(Role.KING);
     }
 
     /**

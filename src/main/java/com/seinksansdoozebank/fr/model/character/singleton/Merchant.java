@@ -11,12 +11,11 @@ import java.util.List;
 public class Merchant extends CommonCharacter {
 
     private Player player;
-    private static final Role role = Role.MERCHANT;
     private static final DistrictType target = DistrictType.TRADE_AND_CRAFTS;
     private int goldCollected = 0;
 
     public Merchant() {
-        super(role);
+        super(Role.MERCHANT);
     }
 
     /**
