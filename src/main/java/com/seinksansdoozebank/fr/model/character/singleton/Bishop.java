@@ -67,6 +67,6 @@ public class Bishop extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "The character Bishop";
+        return "L'Evêque";
     }
 }

@@ -75,6 +75,6 @@ public class Condottiere extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "The character Condottiere";
+        return "La Condottiere";
     }
 }

@@ -69,6 +69,6 @@ public class King extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "The character King";
+        return "Le Roi";
     }
 }
