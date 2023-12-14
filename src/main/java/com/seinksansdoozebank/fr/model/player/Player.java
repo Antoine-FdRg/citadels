@@ -53,6 +53,11 @@ public abstract class Player {
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
     protected abstract void pickTwoDistrictKeepOneDiscardOne();
+
+    /**
+     * Represents the phase where the player build a district chosen by chooseDistrict()
+     * @return the district built by the player
+     */
     protected final Optional<District> buildADistrict() {
         Optional<District> optChosenDistrict = chooseDistrict();
         if (optChosenDistrict.isEmpty()|| !canBuildDistrict(optChosenDistrict.get())) {

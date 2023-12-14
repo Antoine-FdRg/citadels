@@ -18,9 +18,9 @@ public class RandomBot extends Player {
         view.displayPlayerInfo(this);
         if(random.nextBoolean()){
             pickSomething();
-            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+            view.displayPlayerBuildDistrict(this, this.buildADistrict());
         }else{
-            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+            view.displayPlayerBuildDistrict(this, this.buildADistrict());
             pickSomething();
         }
         view.displayPlayerInfo(this);

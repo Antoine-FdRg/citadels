@@ -26,15 +26,15 @@ public class SmartBot extends Player {
         if (optChosenDistrict.isPresent()) {
             District choosenDistrict = optChosenDistrict.get();
             if (this.canBuildDistrict(choosenDistrict)) {
-                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+                view.displayPlayerBuildDistrict(this, this.buildADistrict());
                 this.pickSomething();
             } else {
                 this.pickGold();
-                view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+                view.displayPlayerBuildDistrict(this, this.buildADistrict());
             }
         } else {//la main est vide
             this.pickTwoDistrictKeepOneDiscardOne(); //
-            view.displayPlayerPlaysDistrict(this, this.buildADistrict());
+            view.displayPlayerBuildDistrict(this, this.buildADistrict());
         }
         view.displayPlayerInfo(this);
     }

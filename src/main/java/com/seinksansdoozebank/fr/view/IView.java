@@ -10,7 +10,7 @@ public interface IView {
 
     void displayRound(int roundNumber);
 
-    void displayPlayerPlaysDistrict(Player player, Optional<District> district);
+    void displayPlayerBuildDistrict(Player player, Optional<District> district);
 
     void displayWinner(Player winner);
 

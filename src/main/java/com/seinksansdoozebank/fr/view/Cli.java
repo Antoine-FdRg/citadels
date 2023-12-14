@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Cli implements IView {
 
-    public void displayPlayerPlaysDistrict(Player player, Optional<District> optionalDistrict) {
+    public void displayPlayerBuildDistrict(Player player, Optional<District> optionalDistrict) {
         if (optionalDistrict.isEmpty()) {
             System.out.println(player + " ne pose pas de quartier.");
         } else {
