@@ -73,6 +73,6 @@ public class Merchant extends CommonCharacter {
 
     @Override
     public String toString() {
-        return "Le Marchant";
+        return "Le Marchand";
     }
 }

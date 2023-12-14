@@ -22,7 +22,7 @@ public abstract class CommonCharacter implements Character {
          */
         public abstract void setCitadel(List<District> citadel);
 
-        public CommonCharacter(Role role) {
+        protected CommonCharacter(Role role) {
             this.role = role;
         }
 
