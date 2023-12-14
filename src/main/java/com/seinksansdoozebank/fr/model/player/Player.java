@@ -52,8 +52,7 @@ public abstract class Player {
      * Represents the player's choice to draw 2 districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    //TODO Rename to pickADistrictAndDiscardTheOtherOne or something like that beacause some character make pick just on a district
-    protected abstract void pickADistrict();
+    protected abstract void pickTwoDistrictKeepOneDiscardOne();
     protected final Optional<District> buildADistrict() {
         Optional<District> optChosenDistrict = chooseDistrict();
         if (optChosenDistrict.isEmpty()|| !canBuildDistrict(optChosenDistrict.get())) {

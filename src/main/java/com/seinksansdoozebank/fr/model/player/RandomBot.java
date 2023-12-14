@@ -31,12 +31,12 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickGold();
         } else {
-            pickADistrict();
+            pickTwoDistrictKeepOneDiscardOne();
         }
     }
 
     @Override
-    protected void pickADistrict() {
+    protected void pickTwoDistrictKeepOneDiscardOne() {
         this.view.displayPlayerPickDistrict(this);
         District district1 = deck.pick();
         District district2 = deck.pick();

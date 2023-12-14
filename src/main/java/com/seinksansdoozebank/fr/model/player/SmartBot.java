@@ -33,7 +33,7 @@ public class SmartBot extends Player {
                 view.displayPlayerPlaysDistrict(this, this.buildADistrict());
             }
         } else {//la main est vide
-            this.pickADistrict(); //
+            this.pickTwoDistrictKeepOneDiscardOne(); //
             view.displayPlayerPlaysDistrict(this, this.buildADistrict());
         }
         view.displayPlayerInfo(this);
@@ -43,19 +43,19 @@ public class SmartBot extends Player {
     protected void pickSomething() {
         Optional<District> optCheaperBuildableDistrict = this.chooseDistrict();
         if (optCheaperBuildableDistrict.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.pickADistrict(); // => il faut piocher
+            this.pickTwoDistrictKeepOneDiscardOne(); // => il faut piocher
         } else { //s'il y a un district le moins cher
             District cheaperDistrict = optCheaperBuildableDistrict.get();
             if (this.getNbGold() < cheaperDistrict.getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.pickADistrict(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.pickTwoDistrictKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
 
     @Override
-    protected void pickADistrict() {
+    protected void pickTwoDistrictKeepOneDiscardOne() {
         this.view.displayPlayerPickDistrict(this);
         //Pick two district
         District district1 = this.deck.pick();
