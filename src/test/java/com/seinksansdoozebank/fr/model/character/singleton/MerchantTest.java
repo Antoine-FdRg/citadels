@@ -42,10 +42,20 @@ class MerchantTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        merchant.performAction();
+        merchant.goldCollectedFromDisctrictType();
+
+        // Check if the player's gold has been increased correctly
+        // 2 gold for the start + 6 for the 6 districts
+        assertEquals(8, player.getNbGold());
+    }
+
+    @Test
+    void testUseEffect() {
+        // Perform the action
+        merchant.useEffect();
 
         // Check if the player's gold has been increased correctly
         // 2 gold for the start + 1 for the new turn + 6 for the 6 districts
-        assertEquals(9, player.getNbGold());
+        assertEquals(3, player.getNbGold());
     }
 }

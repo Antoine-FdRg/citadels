@@ -40,7 +40,7 @@ class BishopTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        bishop.performAction();
+        bishop.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());

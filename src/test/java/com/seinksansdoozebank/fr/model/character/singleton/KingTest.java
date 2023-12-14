@@ -39,7 +39,7 @@ class KingTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        king.performAction();
+        king.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(5, player.getNbGold());

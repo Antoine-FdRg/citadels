@@ -40,7 +40,7 @@ class CondottiereTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        condottiere.performAction();
+        condottiere.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
