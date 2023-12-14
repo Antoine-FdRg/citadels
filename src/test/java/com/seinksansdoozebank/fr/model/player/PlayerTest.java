@@ -5,79 +5,100 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 class PlayerTest {
-    List<District> hand = new ArrayList<>();
     Player player;
+    Player spyPlayer;
     IView view;
     Deck deck;
+    District districtCostThree;
+    District districtCostFive;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        District districtCostThree = District.PORT;
-        District districtCostFive = District.FORTRESS;
-        hand.add(districtCostThree);
-        hand.add(districtCostFive);
+        districtCostThree = District.FACTORY;
+        districtCostFive = District.FORTRESS;
         player = new RandomBot(10, deck, view);
-        player.addDistrictToHand(districtCostThree);
-        player.addDistrictToHand(districtCostFive);
+        spyPlayer = spy(new RandomBot(10, deck, view));
     }
 
     @Test
-    @Disabled("This test is not deterministic and will be fiexd in next commit")
-    void testPlay() {
-        int gold = player.getNbGold(); //TODO fix this test
-//        Optional<District> playedDistrict = player.play();
-//        assertTrue(playedDistrict.isPresent());
-//        assertTrue(gold - playedDistrict.get().getCost() + 2 == player.getNbGold() || gold - playedDistrict.get().getCost() - 2 == player.getNbGold());
-        assertTrue(true);
+    void testPickGold(){
+        Player player = new RandomBot(10, deck, view);
+        player.pickGold();
+        assertEquals(12, player.getNbGold());
     }
 
     @Test
-    void testChooseDistrict() {
-        //TODO must be changed to test the new chooseDistrict method
-        Optional<District> optionalChosenDistrict = player.chooseDistrict();
-        optionalChosenDistrict.ifPresent(district -> assertTrue(hand.contains(district)));
+    void testBuildADistrictWithEmptyOptChosenDistrictShouldReturnEmpty() {
+        when(spyPlayer.chooseDistrict()).thenReturn(Optional.empty());
+        assertTrue(spyPlayer.buildADistrict().isEmpty());
     }
 
     @Test
-    void testUpdateGold() {
-        // Arrange
+    void testBuildADistrictWithUnbuildableChosenDistrictShouldReturnEmpty() {
+        doReturn(false).when(spyPlayer).canBuildDistrict(any(District.class));
+        assertTrue(spyPlayer.buildADistrict().isEmpty());
+    }
+
+    @Test
+    void testBuildADistrictWithBuildableChosenDistrictShouldReturnDistrict() {
+        spyPlayer.getHand().add(districtCostThree);
+        doReturn(Optional.of(districtCostThree)).when(spyPlayer).chooseDistrict();
+        doReturn(true).when(spyPlayer).canBuildDistrict(any(District.class));
+
+        Optional<District> optBuiltDistrict = spyPlayer.buildADistrict();
+        assertTrue(optBuiltDistrict.isPresent());
+        District builtDistrict = optBuiltDistrict.get();
+
+        assertFalse(spyPlayer.getHand().contains(districtCostThree));
+        assertTrue(spyPlayer.getCitadel().contains(districtCostThree));
+        verify(spyPlayer, times(1)).canBuildDistrict(districtCostThree);
+        assertEquals(districtCostThree, builtDistrict);
+    }
+
+    @Test
+    void testCanBuildDistrictWithTooExpensiveDistrictShouldReturnFalse() {
+        spyPlayer.decreaseGold(10);
+        District tooExpensiveDistrict = districtCostFive;
+        assertFalse(spyPlayer.getCitadel().contains(tooExpensiveDistrict));
+        assertFalse(spyPlayer.canBuildDistrict(tooExpensiveDistrict));
+    }
+    @Test
+    void testCanBuildDistrictWithAlreadyBuiltDistrictShouldReturnFalse() {
+        spyPlayer.getCitadel().add(districtCostThree);
+        assertTrue(spyPlayer.getCitadel().contains(districtCostThree));
+        assertTrue(districtCostThree.getCost() <= spyPlayer.getNbGold());
+    }
+
+    @Test
+    void testCanBuildDistrictWithBuildableDistrictShouldReturnTrue() {
+        assertFalse(spyPlayer.getCitadel().contains(districtCostThree));
+        assertTrue(districtCostThree.getCost() <= spyPlayer.getNbGold());
+        assertTrue(spyPlayer.canBuildDistrict(districtCostThree));
+    }
+
+    @Test
+    void testDecreaseGold() {
         Player player = new RandomBot(10, deck, view);
 
-        // Act
         player.decreaseGold(3);
 
-        // Assert
         assertEquals(7, player.getNbGold());
-    }
-
-    @Test
-    void testPlayerInitialization() {
-        // Arrange
-        List<District> hand = new ArrayList<>();
-        hand.add(District.PORT); //district with a cost of 3
-        List<District> citadel = new ArrayList<>();
-
-        // Act
-        Player player = new RandomBot(10, deck, view);
-        player.addDistrictToHand(District.PORT);
-
-        // Assert
-        assertEquals(10, player.getNbGold());
-        assertEquals(hand, player.getHand());
-        assertEquals(citadel, player.getCitadel());
     }
 
     @Test
@@ -86,5 +107,19 @@ class PlayerTest {
         Player.resetIdCounter();
         Player newPlayer = new RandomBot(10, deck, view);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
+    }
+
+    @Test
+    void testGetScoreWithEmptyCitadel() {
+        assertTrue(player.getCitadel().isEmpty());
+        assertEquals(0, player.getScore());
+    }
+
+    @Test
+    void testGetScoreWithSomeDistrictInCitadel() {
+        player.getCitadel().add(districtCostThree);
+        player.getCitadel().add(districtCostFive);
+        int sum = districtCostThree.getCost() + districtCostFive.getCost();
+        assertEquals(sum, player.getScore());
     }
 }

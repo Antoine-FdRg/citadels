@@ -73,4 +73,11 @@ class DeckTest {
         districtList.pick();
         assertEquals(64, districtList.getDeck().size());
     }
+
+    @Test
+    void discard(){
+        District districtToDiscard = District.MANOR;
+        districtList.discard(districtToDiscard);
+        assertEquals(districtToDiscard, districtList.getDeck().get(0));
+    }
 }
