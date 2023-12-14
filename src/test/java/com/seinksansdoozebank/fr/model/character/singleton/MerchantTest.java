@@ -32,7 +32,7 @@ class MerchantTest {
         citadel.add(District.BARRACK);
         citadel.add(District.BARRACK);
         // Set the citadel to the player
-        player.setCitadel(citadel);
+        player.getCitadel().addAll(citadel);
         // Create a Bishop character
         merchant = new Merchant();
         // Set the player and the citadel to the character
