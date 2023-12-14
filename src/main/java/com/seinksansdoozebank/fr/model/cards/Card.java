@@ -25,7 +25,6 @@ public class Card {
      * @param obj
      * @return a boolean true if it is the same object, false in the other case
      */
-    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Card card) {
             return district.equals(card.district);
@@ -33,7 +32,6 @@ public class Card {
         return false;
     }
 
-    @Override
     public int hashCode() {
         return district.hashCode();
     }
@@ -43,6 +41,6 @@ public class Card {
      */
     @Override
     public String toString() {
-        return "la carte est : " + district.toString();
+        return "la carte " + district.toString();
     }
 }

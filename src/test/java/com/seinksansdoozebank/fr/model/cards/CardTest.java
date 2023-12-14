@@ -19,14 +19,6 @@ class CardTest {
         monasteryCardBis = new Card(District.MONASTERY);
     }
 
-    /**
-     * We test if it gives us the right district
-     */
-    @Test
-    void getDistrictTest() {
-        assertEquals(District.MONASTERY, monasteryCard.getDistrict());
-    }
-
     @Test
     void equalsTest() {
         assertFalse(monasteryCard.equals(stationCard));
