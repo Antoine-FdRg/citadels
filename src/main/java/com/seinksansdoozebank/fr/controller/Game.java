@@ -2,7 +2,11 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.player.Character;
+import com.seinksansdoozebank.fr.model.character.interfaces.Character;
+import com.seinksansdoozebank.fr.model.character.singleton.Bishop;
+import com.seinksansdoozebank.fr.model.character.singleton.Condottiere;
+import com.seinksansdoozebank.fr.model.character.singleton.King;
+import com.seinksansdoozebank.fr.model.character.singleton.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -13,10 +17,10 @@ import java.util.List;
 public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
-    Deck deck;
-    List<Player> players;
-    List<Character> characters;
-    IView view;
+    private final Deck deck;
+    private List<Player> players;
+    private List<Character> characters;
+    private final IView view;
 
     public Game(int nbPlayers) {
         this.view = new Cli();
@@ -54,7 +58,7 @@ public class Game {
         dealCards();
     }
 
-    private void createCharacters() {
+    void createCharacters() {
         characters = new ArrayList<>();
         characters.add(new Bishop());
         characters.add(new King());
@@ -86,6 +90,9 @@ public class Game {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
 
+    public List<Character> getCharacters() {
+        return characters;
     }
 }

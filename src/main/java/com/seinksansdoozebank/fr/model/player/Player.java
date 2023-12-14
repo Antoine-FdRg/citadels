@@ -3,6 +3,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
 
+import com.seinksansdoozebank.fr.model.character.interfaces.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -50,12 +51,14 @@ public class Player {
     public Character chooseCharacter(List<Character> characters) {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
-        this.character.setCitadel(this.citadel);
         return this.character;
     }
 
-    void decreaseGold(int gold) {
+    public void decreaseGold(int gold) {
         this.nbGold -= gold;
+    }
+    public void increaseGold(int gold) {
+        this.nbGold += gold;
     }
 
     public void addDistrictToHand(District district) {
