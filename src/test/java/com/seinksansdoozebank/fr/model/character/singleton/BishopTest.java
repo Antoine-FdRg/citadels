@@ -33,7 +33,6 @@ class BishopTest {
         bishop = new Bishop();
         // Set the player and the citadel to the character
         bishop.setPlayer(player);
-        bishop.setCitadel(citadel);
     }
 
     @Test

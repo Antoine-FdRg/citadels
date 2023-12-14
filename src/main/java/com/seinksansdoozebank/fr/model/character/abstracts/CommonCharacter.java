@@ -16,12 +16,6 @@ public abstract class CommonCharacter implements Character {
          */
         public abstract void setPlayer(Player player);
 
-        /**
-         * Set the citadel of the character
-         * @param citadel the citadel to set
-         */
-        public abstract void setCitadel(List<District> citadel);
-
         protected CommonCharacter(Role role) {
             this.role = role;
         }

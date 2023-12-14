@@ -33,7 +33,6 @@ class CondottiereTest {
         condottiere = new Condottiere();
         // Set the player and the citadel to the character
         condottiere.setPlayer(player);
-        condottiere.setCitadel(citadel);
     }
 
     @Test

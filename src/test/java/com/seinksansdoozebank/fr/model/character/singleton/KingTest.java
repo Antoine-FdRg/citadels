@@ -32,7 +32,6 @@ class KingTest {
         king = new King();
         // Set the player and the citadel to the character
         king.setPlayer(player);
-        king.setCitadel(citadel);
     }
 
     @Test

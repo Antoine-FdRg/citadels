@@ -11,7 +11,6 @@ import java.util.List;
 public class Condottiere extends CommonCharacter {
 
     private Player player;
-    private List<District> citadel;
     private static final Role role = Role.CONDOTTIERE;
     private static final DistrictType target = DistrictType.SOLDIERLY;
     private int goldCollected = 0;
@@ -24,16 +23,9 @@ public class Condottiere extends CommonCharacter {
      * Set the player of the character
      * @param player the player to set
      */
+    @Override
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    /**
-     * Set the citadel of the character
-     * @param citadel the citadel to set
-     */
-    public void setCitadel(List<District> citadel) {
-        this.citadel = citadel;
     }
 
     /**
@@ -51,7 +43,7 @@ public class Condottiere extends CommonCharacter {
     @Override
     public void goldCollectedFromDisctrictType() {
         int nbGold = 0;
-        for (District district : this.citadel) {
+        for (District district : this.player.getCitadel()) {
             if (district.getDistrictType() == target) {
                 nbGold++;
             }

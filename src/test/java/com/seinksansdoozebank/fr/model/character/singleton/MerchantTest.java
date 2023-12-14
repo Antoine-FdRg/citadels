@@ -35,7 +35,6 @@ class MerchantTest {
         merchant = new Merchant();
         // Set the player and the citadel to the character
         merchant.setPlayer(player);
-        merchant.setCitadel(citadel);
     }
 
     @Test
