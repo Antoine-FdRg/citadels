@@ -29,6 +29,8 @@ class BishopTest {
         citadel.add(District.MARKET_PLACE);
         citadel.add(District.MONASTERY);
         citadel.add(District.CATHEDRAL);
+        // Set the citadel to the player
+        player.setCitadel(citadel);
         // Create a Bishop character
         bishop = new Bishop();
         // Set the player and the citadel to the character

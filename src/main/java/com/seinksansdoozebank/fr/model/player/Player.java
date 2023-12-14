@@ -13,7 +13,7 @@ public class Player {
     private final int id;
     private int nbGold;
     private final List<District> hand;
-    private final List<District> citadel;
+    private List<District> citadel;
     private final Random random = new Random();
     private boolean isStuck = false;
     private final IView view;
@@ -63,6 +63,14 @@ public class Player {
 
     public List<District> getCitadel() {
         return this.citadel;
+    }
+
+    /**
+     * this function should be used only for test
+     * @param citadel
+     */
+    public void setCitadel(List<District> citadel) {
+        this.citadel = citadel;
     }
 
     public int getNbGold() {
