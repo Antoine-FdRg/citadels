@@ -17,7 +17,7 @@ public enum District implements Comparable<District> {
     TOWN_HALL("Hôtel de ville", DistrictType.TRADE_AND_CRAFTS, 5, 2),
     WATCH8TOWER("Tour de guet", DistrictType.SOLDIERLY, 1, 3),
     JAIL("Prison", DistrictType.SOLDIERLY, 2, 3),
-    STATION("Caserne", DistrictType.SOLDIERLY, 3, 3),
+    BARRACK("Caserne", DistrictType.SOLDIERLY, 3, 3),
     FORTRESS("Forteresse", DistrictType.SOLDIERLY, 5, 2),
     COURTYARD_OF_MIRACLE("Cour des miracles", DistrictType.PRESTIGE, 2, 1),
     DONJON("Donjon", DistrictType.PRESTIGE, 3, 2),

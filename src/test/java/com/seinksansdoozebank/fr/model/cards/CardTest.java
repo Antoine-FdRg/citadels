@@ -10,18 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CardTest {
     private Card monasteryCard;
     private Card monasteryCardBis;
-    private Card stationCard;
+    private Card barrackCard;
 
     @BeforeEach
     void setUp() {
         monasteryCard = new Card(District.MONASTERY);
-        stationCard = new Card(District.STATION);
+        barrackCard = new Card(District.BARRACK);
         monasteryCardBis = new Card(District.MONASTERY);
     }
 
     @Test
     void equalsTest() {
-        assertFalse(monasteryCard.equals(stationCard));
+        assertFalse(monasteryCard.equals(barrackCard));
         assertTrue(monasteryCard.equals(monasteryCardBis));
     }
 }
