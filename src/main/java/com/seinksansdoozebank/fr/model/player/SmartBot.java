@@ -47,7 +47,7 @@ public class SmartBot extends Player {
         } else { //s'il y a un district le moins cher
             District cheaperDistrict = optCheaperBuildableDistrict.get();
             if (this.getNbGold() < cheaperDistrict.getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
-                pickGold(); // => il faut piocher de l'or
+                this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
                 this.pickTwoDistrictKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
@@ -83,7 +83,7 @@ public class SmartBot extends Player {
      *
      * @return the cheaper district in the hand if there is one or an empty optional
      */
-    private Optional<District> getCheaperDistrict(List<District> notBuiltDistrictList) {
+    protected Optional<District> getCheaperDistrict(List<District> notBuiltDistrictList) {
         return notBuiltDistrictList.stream().min(Comparator.comparing(District::getCost));
     }
 

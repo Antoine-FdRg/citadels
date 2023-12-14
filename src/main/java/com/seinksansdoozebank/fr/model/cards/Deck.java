@@ -71,9 +71,9 @@ public class Deck {
     /**
      * getter
      *
-     * @return the deck of 65 districts
+     * @return the list of districts
      */
-    protected List<District> getDeck() {
+    public List<District> getDeck() {
         return districtList;
     }
 
