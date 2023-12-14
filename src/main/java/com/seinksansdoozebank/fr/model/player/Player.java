@@ -25,7 +25,6 @@ public abstract class Player {
         this.deck = deck;
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
-        this.deck = new Deck();
         this.view = view;
     }
 
