@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.interfaces.Character;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class PlayerTest {
-    List<District> hand = new ArrayList<>();
+    List<Card> hand = new ArrayList<>();
     Player player;
     IView view;
 
@@ -26,24 +27,26 @@ class PlayerTest {
         view = mock(Cli.class);
         District districtCostThree = District.PORT;
         District districtCostFive = District.FORTRESS;
-        hand.add(districtCostThree);
-        hand.add(districtCostFive);
+        Card cardCostThree= new Card(districtCostThree);
+        Card cardCostFive= new Card(districtCostFive);
+        hand.add(cardCostThree);
+        hand.add(cardCostFive);
         player = new Player(10,view);
-        player.addDistrictToHand(districtCostThree);
-        player.addDistrictToHand(districtCostFive);
+        player.addCardToHand(cardCostThree);
+        player.addCardToHand(cardCostFive);
     }
 
     @Test
     void testPlay() {
-        District playedDistrict = player.play();
+        Card playedDistrict = player.play();
         assertFalse(player.getHand().contains(playedDistrict));
-        assertEquals(10 - playedDistrict.getCost(), player.getNbGold());
+        assertEquals(10 - playedDistrict.getDistrict().getCost(), player.getNbGold());
     }
 
     @Test
-    void testChooseDistrict() {
-        District chosenDistrict = player.chooseDistrict();
-        assertTrue(hand.contains(chosenDistrict));
+    void testChooseCard() {
+        Card chosenCard = player.chooseCard();
+        assertTrue(hand.contains(chosenCard));
     }
 
     @Test
@@ -61,13 +64,13 @@ class PlayerTest {
     @Test
     void testPlayerInitialization() {
         // Arrange
-        List<District> hand = new ArrayList<>();
-        hand.add(District.PORT); //district with a cost of 3
-        List<District> citadel = new ArrayList<>();
+        List<Card> hand = new ArrayList<>();
+        hand.add(new Card(District.PORT)); //district with a cost of 3
+        List<Card> citadel = new ArrayList<>();
 
         // Act
         Player player = new Player(10,view);
-        player.addDistrictToHand(District.PORT);
+        player.addCardToHand(new Card(District.PORT));
 
         // Assert
         assertEquals(10, player.getNbGold());

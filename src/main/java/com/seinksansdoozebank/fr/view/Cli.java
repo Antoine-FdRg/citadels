@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
@@ -7,8 +8,8 @@ import java.util.List;
 
 public class Cli implements IView {
 
-    public void displayPlayerPlaysDistrict(Player player, District district) {
-        System.out.println(player + " pose un/e " + district.getName() + " qui lui coute " + district.getCost() + " pièces d'or.");
+    public void displayPlayerPlaysCard(Player player, Card card) {
+        System.out.println(player + " pose un/e " + card.getDistrict().getName() + " qui lui coute " + card.getDistrict().getCost() + " pièces d'or.");
     }
 
     public void displayWinner(String winnerName, int score) {
@@ -21,7 +22,7 @@ public class Cli implements IView {
     }
 
     private void displayPlayerHand(Player player) {
-        List<District> hand = player.getHand();
+        List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
         if(!hand.isEmpty()){
             if(player.getHand().size() == 1){
@@ -43,7 +44,7 @@ public class Cli implements IView {
     }
 
     private void displayPlayerCitadel(Player player) {
-        List<District> citadel = player.getCitadel();
+        List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
         if(!citadel.isEmpty()){
             if(player.getCitadel().size() == 1){

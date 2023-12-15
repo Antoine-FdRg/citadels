@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commonCharacters;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CondottiereTest {
-    List<District> citadel;
+    List<Card> citadel;
     Player player;
     Condottiere condottiere;
 
@@ -22,12 +23,12 @@ class CondottiereTest {
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
-        citadel.add(District.TEMPLE);
-        citadel.add(District.BARRACK);
-        citadel.add(District.MARKET_PLACE);
-        citadel.add(District.FORTRESS);
-        citadel.add(District.JAIL);
-        citadel.add(District.WATCH_TOWER);
+        citadel.add(new Card(District.TEMPLE));
+        citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.MARKET_PLACE));
+        citadel.add(new Card(District.FORTRESS));
+        citadel.add(new Card(District.JAIL));
+        citadel.add(new Card(District.WATCH_TOWER));
         // Set the citadel to the player
         player.getCitadel().addAll(citadel);
         // Create a Bishop character
