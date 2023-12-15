@@ -1,9 +1,7 @@
-package com.seinksansdoozebank.fr.model.character.singleton;
+package com.seinksansdoozebank.fr.model.character.commonCharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.player.Player;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,10 +10,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BishopTest {
+class KingTest {
     List<District> citadel;
     Player player;
-    Bishop bishop;
+    King king;
 
     @BeforeEach
     void setUp() {
@@ -24,25 +22,25 @@ class BishopTest {
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
-        citadel.add(District.TEMPLE);
-        citadel.add(District.CHURCH);
+        citadel.add(District.PALACE);
+        citadel.add(District.CASTLE);
         citadel.add(District.MARKET_PLACE);
-        citadel.add(District.MONASTERY);
-        citadel.add(District.CATHEDRAL);
+        citadel.add(District.MANOR);
+        citadel.add(District.BARRACK);
         // Set the citadel to the player
         player.getCitadel().addAll(citadel);
         // Create a Bishop character
-        bishop = new Bishop();
+        king = new King();
         // Set the player and the citadel to the character
-        bishop.setPlayer(player);
+        king.setPlayer(player);
     }
 
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        bishop.goldCollectedFromDisctrictType();
+        king.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
-        assertEquals(6, player.getNbGold());
+        assertEquals(5, player.getNbGold());
     }
 }

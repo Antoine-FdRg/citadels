@@ -36,6 +36,6 @@ class GameTest {
     @Test
     void testCharactersChoice() {
         game.createCharacters();
-        assertEquals(4, game.getCharacters().size());
+        assertEquals(4, game.getAvailableCharacters().size());
     }
 }

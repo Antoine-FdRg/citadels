@@ -2,10 +2,10 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.interfaces.Character;
-import com.seinksansdoozebank.fr.model.character.singleton.Bishop;
-import com.seinksansdoozebank.fr.model.character.singleton.Condottiere;
-import com.seinksansdoozebank.fr.model.character.singleton.King;
-import com.seinksansdoozebank.fr.model.character.singleton.Merchant;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
