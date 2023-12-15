@@ -3,15 +3,23 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atMostOnce;
@@ -99,5 +107,37 @@ class RandomBotTest {
         assertFalse(spyRandomBot.getHand().isEmpty());
         assertTrue(chosenDistrict.isPresent());
         assertTrue(spyRandomBot.getHand().contains(chosenDistrict.get()));
+    }
+
+
+    @Test
+    void chooseCharacterSetPointersBetweenCharacterAndPlayer() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+
+        spyRandomBot.chooseCharacter(characters);
+
+        Character character = spyRandomBot.getCharacter();
+        assertEquals(character.getPlayer().getId(), spyRandomBot.getId());
+        verify(view, times(1)).displayPlayerChooseCharacter(spyRandomBot);
+
+    }
+
+    @Test
+    void chooseCharacter() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+        Player player = new RandomBot(10, deck, view);
+
+        spyRandomBot.chooseCharacter(characters);
+        player.chooseCharacter(characters);
+
+        assertNotEquals(spyRandomBot.getCharacter(), player.getCharacter());
     }
 }
