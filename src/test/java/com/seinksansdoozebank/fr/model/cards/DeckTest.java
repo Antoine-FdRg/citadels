@@ -29,7 +29,8 @@ class DeckTest {
         assertEquals(65, districtList.getDeck().size());
 
         for (District district : District.values()) {
-            assertEquals(district.getNumberOfAppearance(), Collections.frequency(districtList.getDeck(), district));
+            Card card=new Card(district);
+            assertEquals(district.getNumberOfAppearance(), Collections.frequency(districtList.getDeck(),card ));
         }
 
     }
@@ -41,8 +42,8 @@ class DeckTest {
     @Test
     void getDistrictCostWIthDeckTest() {
         for (int i = 0; i < 65; i++) {
-            assertTrue(districtList.getDeck().get(i).getCost() >= 1);
-            assertTrue(districtList.getDeck().get(i).getCost() <= 6);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() >= 1);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() <= 6);
         }
     }
 
@@ -54,7 +55,7 @@ class DeckTest {
         districtListTest.shuffle();
         int differencesCount = 0;
         for (int i = 0; i < 65; i++) {
-            if (districtListTest.getDeck().get(i).compareTo(districtList.getDeck().get(i)) != 0) {
+            if (districtListTest.getDeck().get(i).getDistrict().compareTo(districtList.getDeck().get(i).getDistrict()) != 0) {
                 differencesCount++;
             }
         }
@@ -76,8 +77,8 @@ class DeckTest {
 
     @Test
     void discard(){
-        District districtToDiscard = District.MANOR;
-        districtList.discard(districtToDiscard);
-        assertEquals(districtToDiscard, districtList.getDeck().get(0));
+        Card cardToDiscard = new Card(District.MANOR);
+        districtList.discard(cardToDiscard);
+        assertEquals(cardToDiscard, districtList.getDeck().get(0));
     }
 }

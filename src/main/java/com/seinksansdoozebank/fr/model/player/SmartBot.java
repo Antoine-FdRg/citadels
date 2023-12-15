@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.IView;
@@ -22,60 +23,60 @@ public class SmartBot extends Player {
     public void play() {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
-        Optional<District> optChosenDistrict = this.chooseDistrict();
-        if (optChosenDistrict.isPresent()) {
-            District choosenDistrict = optChosenDistrict.get();
-            if (this.canBuildDistrict(choosenDistrict)) {
-                view.displayPlayerBuildDistrict(this, this.buildADistrict());
+        Optional<Card> optChosenCard = this.chooseCard();
+        if (optChosenCard.isPresent()) {
+            Card choosenCard = optChosenCard.get();
+            if (this.canPlayCard(choosenCard)) {
+                view.displayPlayerPlaysCard(this, this.playACard());
                 this.pickSomething();
             } else {
                 this.pickGold();
-                view.displayPlayerBuildDistrict(this, this.buildADistrict());
+                view.displayPlayerPlaysCard(this, this.playACard());
             }
         } else {//la main est vide
-            this.pickTwoDistrictKeepOneDiscardOne(); //
-            view.displayPlayerBuildDistrict(this, this.buildADistrict());
+            this.pickTwoCardKeepOneDiscardOne(); //
+            view.displayPlayerPlaysCard(this, this.playACard());
         }
         view.displayPlayerInfo(this);
     }
 
     @Override
     protected void pickSomething() {
-        Optional<District> optCheaperBuildableDistrict = this.chooseDistrict();
-        if (optCheaperBuildableDistrict.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.pickTwoDistrictKeepOneDiscardOne(); // => il faut piocher
+        Optional<Card> optCheaperPlayableCard = this.chooseCard();
+        if (optCheaperPlayableCard.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
+            this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher
         } else { //s'il y a un district le moins cher
-            District cheaperDistrict = optCheaperBuildableDistrict.get();
-            if (this.getNbGold() < cheaperDistrict.getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
+            Card cheaperCard = optCheaperPlayableCard.get();
+            if (this.getNbGold() < cheaperCard.getDistrict().getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.pickTwoDistrictKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
 
     @Override
-    protected void pickTwoDistrictKeepOneDiscardOne() {
-        this.view.displayPlayerPickDistrict(this);
+    protected void pickTwoCardKeepOneDiscardOne() {
+        this.view.displayPlayerPickCard(this);
         //Pick two district
-        District district1 = this.deck.pick();
-        District district2 = this.deck.pick();
+        Card card1 = this.deck.pick();
+        Card card2 = this.deck.pick();
         //Keep the cheaper one and discard the other one
-        if (district1.getCost() < district2.getCost()) {
-            this.hand.add(district1);
-            this.deck.discard(district2);
+        if (card1.getDistrict().getCost() < card2.getDistrict().getCost()) {
+            this.hand.add(card1);
+            this.deck.discard(card2);
         } else {
-            this.hand.add(district2);
-            this.deck.discard(district1);
+            this.hand.add(card2);
+            this.deck.discard(card1);
         }
     }
 
     @Override
-    protected Optional<District> chooseDistrict() {
+    protected Optional<Card> chooseCard() {
         //Gathering districts wich are not already built in player's citadel
-        List<District> notBuiltDistrictList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
+        List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
         //Choosing the cheaper one
-        return this.getCheaperDistrict(notBuiltDistrictList);
+        return this.getCheaperCard(notAlreadyPlayedCardList);
     }
 
     /**
@@ -83,8 +84,8 @@ public class SmartBot extends Player {
      *
      * @return the cheaper district in the hand if there is one or an empty optional
      */
-    protected Optional<District> getCheaperDistrict(List<District> notBuiltDistrictList) {
-        return notBuiltDistrictList.stream().min(Comparator.comparing(District::getCost));
+    protected Optional<Card> getCheaperCard(List<Card> notAlreadyPlayedCardList) {
+        return notAlreadyPlayedCardList.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
     }
 
     @Override

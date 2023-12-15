@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
@@ -9,11 +10,12 @@ import java.util.List;
 
 public class Cli implements IView {
 
-    public void displayPlayerBuildDistrict(Player player, Optional<District> optionalDistrict) {
-        if (optionalDistrict.isEmpty()) {
+    public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
+        if (optionalCard.isEmpty()) {
             System.out.println(player + " ne pose pas de quartier.");
         } else {
-            System.out.println(player + " pose un/e " + optionalDistrict.get().getName() + " qui lui coute " + optionalDistrict.get().getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
+            District builtDistrict = optionalCard.get().getDistrict();
+            System.out.println(player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
         }
     }
 
@@ -27,7 +29,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPickDistrict(Player player) {
+    public void displayPlayerPickCard(Player player) {
         System.out.println(player + " pioche un quartier.");
     }
 
@@ -37,10 +39,10 @@ public class Cli implements IView {
     }
 
     private void displayPlayerHand(Player player) {
-        List<District> hand = player.getHand();
+        List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
         if(!hand.isEmpty()){
-            if(player.getHand().size() == 1){
+            if(hand.size() == 1){
                 sb.append("\t- la carte suivante dans sa main : \n");
             }
             else{
@@ -59,10 +61,10 @@ public class Cli implements IView {
     }
 
     private void displayPlayerCitadel(Player player) {
-        List<District> citadel = player.getCitadel();
+        List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
         if(!citadel.isEmpty()){
-            if(player.getCitadel().size() == 1){
+            if(citadel.size() == 1){
                 sb.append("\t- le quartier suivant dans sa citadelle : \n");
             }
             else{

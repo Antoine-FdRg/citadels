@@ -1,9 +1,10 @@
 package com.seinksansdoozebank.fr.model.player;
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
 
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ public abstract class Player {
     protected final int id;
     private int nbGold;
     protected Deck deck;
-    protected final List<District> hand;
-    private final List<District> citadel;
+    protected final List<Card> hand;
+    private final List<Card> citadel;
     protected final IView view;
     protected final Random random = new Random();
+    protected Character character;
+
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
         this.nbGold = nbGold;
@@ -51,22 +54,22 @@ public abstract class Player {
      * Represents the player's choice to draw 2 districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    protected abstract void pickTwoDistrictKeepOneDiscardOne();
+    protected abstract void pickTwoCardKeepOneDiscardOne();
 
     /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
      * @return the district built by the player
      */
-    protected final Optional<District> buildADistrict() {
-        Optional<District> optChosenDistrict = chooseDistrict();
-        if (optChosenDistrict.isEmpty()|| !canBuildDistrict(optChosenDistrict.get())) {
+    protected final Optional<Card> playACard() {
+        Optional<Card> optChosenCard = chooseCard();
+        if (optChosenCard.isEmpty()|| !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
-        District chosenDistrict = optChosenDistrict.get();
-        this.hand.remove(chosenDistrict);
-        this.citadel.add(chosenDistrict);
-        this.decreaseGold(chosenDistrict.getCost());
-        return optChosenDistrict;
+        Card chosenCard = optChosenCard.get();
+        this.hand.remove(chosenCard);
+        this.citadel.add(chosenCard);
+        this.decreaseGold(chosenCard.getDistrict().getCost());
+        return optChosenCard;
     }
 
     /**
@@ -74,26 +77,29 @@ public abstract class Player {
      * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
      * @return the district to build
      */
-    protected abstract Optional<District> chooseDistrict();
+    protected abstract Optional<Card> chooseCard();
 
     /**
      * Verify if the player can build the district passed in parameter (he can build it if he has enough gold and if he doesn't already have it in his citadel)
-     * @param district the district to build
+     * @param card the district to build
      * @return true if the player can build the district passed in parameter, false otherwise
      */
-    protected final boolean canBuildDistrict(District district) {
-        return district.getCost() <= this.nbGold && !this.citadel.contains(district);
+    protected final boolean canPlayCard(Card card) {
+        return card.getDistrict().getCost() <= this.nbGold && !this.citadel.contains(card);
     }
 
     protected final void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
+    public void increaseGold(int gold) {
+        this.nbGold += gold;
+    }
 
-    public List<District> getHand() {
+    public List<Card> getHand() {
         return this.hand;
     }
 
-    public List<District> getCitadel() {
+    public List<Card> getCitadel() {
         return this.citadel;
     }
 
@@ -111,7 +117,13 @@ public abstract class Player {
 
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(District::getCost).sum();
+        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
+    }
+
+    public Character chooseCharacter(List<Character> characters) {
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        return this.character;
     }
 
     @Override

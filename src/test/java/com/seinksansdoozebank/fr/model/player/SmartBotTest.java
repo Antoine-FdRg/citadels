@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -23,136 +24,136 @@ class SmartBotTest {
     SmartBot spySmartBot;
     IView view;
     Deck deck;
-    District districtCostThree;
-    District districtCostFive;
+    Card cardCostThree;
+    Card cardCostFive;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
         deck = spy(new Deck());
-        districtCostThree = District.FACTORY;
-        districtCostFive = District.FORTRESS;
+        cardCostThree = new Card(District.DONJON);
+        cardCostFive = new Card(District.FORTRESS);
         spySmartBot = spy(new SmartBot(10, deck, view));
     }
 
     @Test
     void playWithEmptyChosenDistrictShouldPickDistrictAndBuild() {
-        Optional<District> optDistrict = Optional.empty();
-        doReturn(optDistrict).when(spySmartBot).chooseDistrict();
+        Optional<Card> optDistrict = Optional.empty();
+        doReturn(optDistrict).when(spySmartBot).chooseCard();
 
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
-        verify(spySmartBot, times(1)).pickTwoDistrictKeepOneDiscardOne();
-        verify(spySmartBot, times(1)).buildADistrict();
-        verify(view, times(1)).displayPlayerBuildDistrict(spySmartBot, optDistrict);
+        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).playACard();
+        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, optDistrict);
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
 
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
-        Optional<District> optDistrict = Optional.of(districtCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseDistrict();
-        doReturn(false).when(spySmartBot).canBuildDistrict(any(District.class));
-        doReturn(Optional.of(districtCostThree)).when(spySmartBot).buildADistrict();
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spySmartBot).chooseCard();
+        doReturn(false).when(spySmartBot).canPlayCard(any(Card.class));
+        doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
 
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(1)).buildADistrict();
-        verify(view, times(1)).displayPlayerBuildDistrict(spySmartBot,Optional.of(districtCostThree));
+        verify(spySmartBot, times(1)).playACard();
+        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot,Optional.of(cardCostThree));
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
 
     @Test
     void playWithUBuildableDistrictShouldBuildAndPickSomething() {
-        Optional<District> optDistrict = Optional.of(districtCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseDistrict();
-        doReturn(true).when(spySmartBot).canBuildDistrict(any(District.class));
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spySmartBot).chooseCard();
+        doReturn(true).when(spySmartBot).canPlayCard(any(Card.class));
 
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
-        verify(spySmartBot, times(1)).buildADistrict();
-        verify(view, times(1)).displayPlayerBuildDistrict(spySmartBot, optDistrict);
+        verify(spySmartBot, times(1)).playACard();
+        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, optDistrict);
         verify(spySmartBot, times(1)).pickSomething();
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
 
     @Test
     void pickSomethingWithEmptyChoosenDistrict() {
-        Optional<District> optDistrict = Optional.empty();
-        doReturn(optDistrict).when(spySmartBot).buildADistrict();
+        Optional<Card> optDistrict = Optional.empty();
+        doReturn(optDistrict).when(spySmartBot).playACard();
         spySmartBot.pickSomething();
 
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoDistrictKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
     }
 
     @Test
     void pickSomethingWithChoosenDistrictAndNotEnoughGold() {
         spySmartBot.decreaseGold(spySmartBot.getNbGold());
-        Optional<District> optDistrict = Optional.of(districtCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseDistrict();
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spySmartBot).chooseCard();
         spySmartBot.pickSomething();
-        assertTrue(spySmartBot.getNbGold() < districtCostThree.getCost());
+        assertTrue(spySmartBot.getNbGold() < cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(0)).pickTwoDistrictKeepOneDiscardOne();
+        verify(spySmartBot, times(0)).pickTwoCardKeepOneDiscardOne();
     }
 
     @Test
     void pickSomethingWithChoosenDistrictAndEnoughGold() {
-        Optional<District> optDistrict = Optional.of(districtCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseDistrict();
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spySmartBot).chooseCard();
         spySmartBot.pickSomething();
-        assertTrue(spySmartBot.getNbGold() >= districtCostThree.getCost());
+        assertTrue(spySmartBot.getNbGold() >= cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoDistrictKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOneShouldkeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        spySmartBot.pickTwoDistrictKeepOneDiscardOne();
+        spySmartBot.pickTwoCardKeepOneDiscardOne();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
-        verify(view, times(1)).displayPlayerPickDistrict(spySmartBot);
+        verify(view, times(1)).displayPlayerPickCard(spySmartBot);
         verify(deck, times(2)).pick();
-        verify(deck, times(1)).discard(any(District.class));
-        assertTrue(spySmartBot.getHand().get(0).getCost()<= deck.getDeck().get(0).getCost());
+        verify(deck, times(1)).discard(any(Card.class));
+        assertTrue(spySmartBot.getHand().get(0).getDistrict().getCost()<= deck.getDeck().get(0).getDistrict().getCost());
     }
 
     @Test
     void chooseDistrictWithEmptyHand() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        Optional<District> chosenDistrict = spySmartBot.chooseDistrict();
+        Optional<Card> chosenDistrict = spySmartBot.chooseCard();
         assertTrue(chosenDistrict.isEmpty());
         assertTrue(handIsEmpty);
     }
 
     @Test
     void chooseDistrictShouldReturnANotAlreadyBuiltDistrict() {
-        spySmartBot.getHand().add(districtCostThree);
-        spySmartBot.getHand().add(districtCostFive);
-        spySmartBot.getCitadel().add(districtCostThree);
-        Optional<District> chosenDistrict = spySmartBot.chooseDistrict();
+        spySmartBot.getHand().add(cardCostThree);
+        spySmartBot.getHand().add(cardCostFive);
+        spySmartBot.getCitadel().add(cardCostThree);
+        Optional<Card> chosenDistrict = spySmartBot.chooseCard();
         assertTrue(chosenDistrict.isPresent());
-        assertEquals(districtCostFive, chosenDistrict.get());
+        assertEquals(cardCostFive, chosenDistrict.get());
     }
 
     @Test
     void getCheaperDistricWithEmptyListtShouldReturnEmptyOptional() {
-        Optional<District> cheaperDistrict = spySmartBot.getCheaperDistrict(List.of());
-        assertTrue(cheaperDistrict.isEmpty());
+        Optional<Card> cheaperCard = spySmartBot.getCheaperCard(List.of());
+        assertTrue(cheaperCard.isEmpty());
     }
 
     @Test
     void getCheaperDistrictShouldReturnTheCheaperDistrict() {
-        List<District> districtList = List.of(districtCostFive, districtCostThree, districtCostFive);
-        Optional<District> cheaperDistrict = spySmartBot.getCheaperDistrict(districtList);
-        assertTrue(cheaperDistrict.isPresent());
-        assertEquals(districtCostThree, cheaperDistrict.get());
+        List<Card> districtList = List.of(cardCostFive, cardCostThree, cardCostFive);
+        Optional<Card> cheaperCard = spySmartBot.getCheaperCard(districtList);
+        assertTrue(cheaperCard.isPresent());
+        assertEquals(cardCostThree, cheaperCard.get());
     }
 }

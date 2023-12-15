@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
-    private final List<District> districtList;
-    private Random random;
+    private final List<Card> cardsList;
+    private final Random random;
 
     /**
-     * Constructor which implements a new deck of 65 districts
+     * Constructor which implements a new deck of 65 cards of district
      */
     public Deck() {
-        this.districtList = new ArrayList<>();
+        this.cardsList = new ArrayList<>();
         random = new Random();
         fillDeck();
     }
@@ -27,54 +27,56 @@ public class Deck {
             int numberOfAppearance = district.getNumberOfAppearance();
             for (int j = 0; j < numberOfAppearance; j++) {
                 //We add to the list the right number of the district called
-                this.districtList.add(district);
+                this.cardsList.add(new Card(district));
             }
         }
         shuffle();
     }
 
     /**
-     * @return the last element of districtList and we remove it
+     * @return the last element of cardsList and we remove it
      */
-    public District pick() {
+    public Card pick() {
         //On vérifie que la liste n'est pas vide
-        if (districtList.isEmpty()) {
+        if (cardsList.isEmpty()) {
             //On recrée le deck
             fillDeck();
         }
         //On renvoie la dernière carte district du paquet et on l'enlève du paquet.
-        return districtList.remove(districtList.size() - 1);
+        return cardsList.remove(cardsList.size() - 1);
     }
 
     /**
      * Allows to discard a district
-     * @param districtToDiscard the district to discard
+     *
+     * @param cardToDiscard the card to discard
      */
-    public void discard(District districtToDiscard){
-        this.districtList.add(0,districtToDiscard);
+    public void discard(Card cardToDiscard) {
+        this.cardsList.add(0, cardToDiscard);
     }
 
 
     /**
-     * The method shuffle takes the list of districts and shuffles it
+     * The method shuffle takes the list of cards and shuffles it
      */
     protected void shuffle() {
         //On commence par la dernière carte du paquet
-        for (int i = districtList.size() - 1; i >= 1; i--) {
+        for (int i = cardsList.size() - 1; i >= 1; i--) {
             //on choisit un index au hasard parmi les autres éléments, cet index pourra prendre sa valeur entre 0 et i
             int j = random.nextInt(i + 1);
             //On échange l'élément à la i-ème place avec celui à la j-ème place
-            Collections.swap(districtList, i, j);
+            Collections.swap(cardsList, i, j);
         }
     }
 
     /**
      * getter
      *
-     * @return the list of districts
+     * @return the list of cards
      */
-    public List<District> getDeck() {
-        return districtList;
+    public List<Card> getDeck() {
+
+        return cardsList;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.IView;
@@ -18,9 +19,9 @@ public class RandomBot extends Player {
         view.displayPlayerInfo(this);
         if(random.nextBoolean()){
             pickSomething();
-            view.displayPlayerBuildDistrict(this, this.buildADistrict());
+            view.displayPlayerPlaysCard(this, this.playACard());
         }else{
-            view.displayPlayerBuildDistrict(this, this.buildADistrict());
+            view.displayPlayerPlaysCard(this, this.playACard());
             pickSomething();
         }
         view.displayPlayerInfo(this);
@@ -31,35 +32,35 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickGold();
         } else {
-            pickTwoDistrictKeepOneDiscardOne();
+            pickTwoCardKeepOneDiscardOne();
         }
     }
 
     @Override
-    protected void pickTwoDistrictKeepOneDiscardOne() {
-        this.view.displayPlayerPickDistrict(this);
-        District district1 = deck.pick();
-        District district2 = deck.pick();
+    protected void pickTwoCardKeepOneDiscardOne() {
+        this.view.displayPlayerPickCard(this);
+        Card card1 = this.deck.pick();
+        Card card2 = this.deck.pick();
         if (random.nextBoolean()) {
-            this.hand.add(district1);
-            this.deck.discard(district2);
+            this.hand.add(card1);
+            this.deck.discard(card2);
         } else {
-            this.hand.add(district2);
-            this.deck.discard(district1);
+            this.hand.add(card2);
+            this.deck.discard(card1);
         }
     }
 
     @Override
-    protected Optional<District> chooseDistrict() {
+    protected Optional<Card> chooseCard() {
         if (!this.hand.isEmpty()) {
-            District chosenDistrict;
+            Card chosenCard;
             int cnt = 0;
             do {
-                chosenDistrict = this.hand.get(random.nextInt(hand.size()));
+                chosenCard = this.hand.get(random.nextInt(hand.size()));
                 cnt++;
-            } while (this.canBuildDistrict(chosenDistrict) && cnt < 5);
-            if (this.canBuildDistrict(chosenDistrict)) {
-                return Optional.of(chosenDistrict);
+            } while (this.canPlayCard(chosenCard) && cnt < 5);
+            if (this.canPlayCard(chosenCard)) {
+                return Optional.of(chosenCard);
             }
         }
         return Optional.empty();

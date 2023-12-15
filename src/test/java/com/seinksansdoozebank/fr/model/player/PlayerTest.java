@@ -1,7 +1,13 @@
 package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +22,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 class PlayerTest {
@@ -23,15 +31,15 @@ class PlayerTest {
     Player spyPlayer;
     IView view;
     Deck deck;
-    District districtCostThree;
-    District districtCostFive;
+    Card cardCostThree;
+    Card cardCostFive;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        districtCostThree = District.FACTORY;
-        districtCostFive = District.FORTRESS;
+        cardCostThree= new Card(District.BARRACK);
+        cardCostFive= new Card(District.FORTRESS);
         player = new RandomBot(10, deck, view);
         spyPlayer = spy(new RandomBot(10, deck, view));
     }
@@ -44,52 +52,52 @@ class PlayerTest {
     }
 
     @Test
-    void testBuildADistrictWithEmptyOptChosenDistrictShouldReturnEmpty() {
-        when(spyPlayer.chooseDistrict()).thenReturn(Optional.empty());
-        assertTrue(spyPlayer.buildADistrict().isEmpty());
+    void testBuildADistrictWithEmptyOptChosenCardShouldReturnEmpty() {
+        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
+        assertTrue(spyPlayer.playACard().isEmpty());
     }
 
     @Test
-    void testBuildADistrictWithUnbuildableChosenDistrictShouldReturnEmpty() {
-        doReturn(false).when(spyPlayer).canBuildDistrict(any(District.class));
-        assertTrue(spyPlayer.buildADistrict().isEmpty());
+    void testPlayACardWithUnplayableChosenCardShouldReturnEmpty() {
+        doReturn(false).when(spyPlayer).canPlayCard(any(Card.class));
+        assertTrue(spyPlayer.playACard().isEmpty());
     }
 
     @Test
-    void testBuildADistrictWithBuildableChosenDistrictShouldReturnDistrict() {
-        spyPlayer.getHand().add(districtCostThree);
-        doReturn(Optional.of(districtCostThree)).when(spyPlayer).chooseDistrict();
-        doReturn(true).when(spyPlayer).canBuildDistrict(any(District.class));
+    void testPlayACardWithPlayableChosenCardShouldReturnCard() {
+        spyPlayer.getHand().add(cardCostThree);
+        doReturn(Optional.of(cardCostThree)).when(spyPlayer).chooseCard();
+        doReturn(true).when(spyPlayer).canPlayCard(any(Card.class));
 
-        Optional<District> optBuiltDistrict = spyPlayer.buildADistrict();
-        assertTrue(optBuiltDistrict.isPresent());
-        District builtDistrict = optBuiltDistrict.get();
+        Optional<Card> optPlayedCard = spyPlayer.playACard();
+        assertTrue(optPlayedCard.isPresent());
+        Card playedCard = optPlayedCard.get();
 
-        assertFalse(spyPlayer.getHand().contains(districtCostThree));
-        assertTrue(spyPlayer.getCitadel().contains(districtCostThree));
-        verify(spyPlayer, times(1)).canBuildDistrict(districtCostThree);
-        assertEquals(districtCostThree, builtDistrict);
+        assertFalse(spyPlayer.getHand().contains(cardCostThree));
+        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
+        verify(spyPlayer, times(1)).canPlayCard(cardCostThree);
+        assertEquals(cardCostThree, playedCard);
     }
 
     @Test
-    void testCanBuildDistrictWithTooExpensiveDistrictShouldReturnFalse() {
+    void testCanPlayCardWithTooExpensiveCardShouldReturnFalse() {
         spyPlayer.decreaseGold(10);
-        District tooExpensiveDistrict = districtCostFive;
-        assertFalse(spyPlayer.getCitadel().contains(tooExpensiveDistrict));
-        assertFalse(spyPlayer.canBuildDistrict(tooExpensiveDistrict));
+        Card tooExpensiveCard = cardCostFive;
+        assertFalse(spyPlayer.getCitadel().contains(tooExpensiveCard));
+        assertFalse(spyPlayer.canPlayCard(tooExpensiveCard));
     }
     @Test
-    void testCanBuildDistrictWithAlreadyBuiltDistrictShouldReturnFalse() {
-        spyPlayer.getCitadel().add(districtCostThree);
-        assertTrue(spyPlayer.getCitadel().contains(districtCostThree));
-        assertTrue(districtCostThree.getCost() <= spyPlayer.getNbGold());
+    void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
+        spyPlayer.getCitadel().add(cardCostThree);
+        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
+        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
     }
 
     @Test
-    void testCanBuildDistrictWithBuildableDistrictShouldReturnTrue() {
-        assertFalse(spyPlayer.getCitadel().contains(districtCostThree));
-        assertTrue(districtCostThree.getCost() <= spyPlayer.getNbGold());
-        assertTrue(spyPlayer.canBuildDistrict(districtCostThree));
+    void testCanPlayCardWithPlayableCardShouldReturnTrue() {
+        assertFalse(spyPlayer.getCitadel().contains(cardCostThree));
+        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
+        assertTrue(spyPlayer.canPlayCard(cardCostThree));
     }
 
     @Test
@@ -117,9 +125,25 @@ class PlayerTest {
 
     @Test
     void testGetScoreWithSomeDistrictInCitadel() {
-        player.getCitadel().add(districtCostThree);
-        player.getCitadel().add(districtCostFive);
-        int sum = districtCostThree.getCost() + districtCostFive.getCost();
+        player.getCitadel().add(cardCostThree);
+        player.getCitadel().add(cardCostFive);
+        int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, player.getScore());
+    }
+
+    @Test
+    void testChooseCharacter() {
+        // Arrange
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+
+        // Act
+        Character character = player.chooseCharacter(characters);
+
+        // Assert
+        assertTrue(characters.contains(character));
     }
 }

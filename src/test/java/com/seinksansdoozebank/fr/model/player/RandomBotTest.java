@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -24,76 +25,76 @@ class RandomBotTest {
     RandomBot spyRandomBot;
     IView view;
     Deck deck;
-    District districtCostThree;
-    District districtCostFive;
+    Card cardCostThree;
+    Card cardCostFive;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
         deck = spy(new Deck());
-        districtCostThree = District.FACTORY;
-        districtCostFive = District.FORTRESS;
+        cardCostThree = new Card(District.DONJON);
+        cardCostFive = new Card(District.FORTRESS);
         spyRandomBot = spy(new RandomBot(10, deck, view));
     }
 
     @Test
     void play() {
-        Optional<District> optDistrict = Optional.of(districtCostThree);
-        doReturn(optDistrict).when(spyRandomBot).buildADistrict();
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spyRandomBot).playACard();
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
-        verify(spyRandomBot, atMostOnce()).buildADistrict();
+        verify(spyRandomBot, atMostOnce()).playACard();
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, times(1)).displayPlayerBuildDistrict(spyRandomBot, optDistrict);
+        verify(view, times(1)).displayPlayerPlaysCard(spyRandomBot, optDistrict);
     }
 
     @Test
     void pickSomething() {
         spyRandomBot.pickSomething();
         verify(spyRandomBot, atMostOnce()).pickGold();
-        verify(spyRandomBot, atMostOnce()).pickTwoDistrictKeepOneDiscardOne();
+        verify(spyRandomBot, atMostOnce()).pickTwoCardKeepOneDiscardOne();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOne() {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
-        spyRandomBot.pickTwoDistrictKeepOneDiscardOne();
+        spyRandomBot.pickTwoCardKeepOneDiscardOne();
 
-        verify(view, times(1)).displayPlayerPickDistrict(spyRandomBot);
+        verify(view, times(1)).displayPlayerPickCard(spyRandomBot);
 
         verify(deck, times(2)).pick();
         assertEquals(handSizeBeforePicking + 1, spyRandomBot.getHand().size());
-        verify(deck, times(1)).discard(any(District.class));
+        verify(deck, times(1)).discard(any(Card.class));
     }
 
     @Test
     void chooseDistrictWithEmptyHand() {
         boolean handIsEmpty = spyRandomBot.getHand().isEmpty();
-        Optional<District> chosenDistrict = spyRandomBot.chooseDistrict();
+        Optional<Card> chosenDistrict = spyRandomBot.chooseCard();
         assertTrue(chosenDistrict.isEmpty());
         assertTrue(handIsEmpty);
     }
 
     @Test
     void chooseDistrictWithNonEmptyHandButNoDistrictToBuildShouldReturnEmptyOptional() {
-        spyRandomBot.getHand().add(districtCostThree);
-        spyRandomBot.getHand().add(districtCostFive);
-        doReturn(false).when(spyRandomBot).canBuildDistrict(any(District.class));
+        spyRandomBot.getHand().add(cardCostThree);
+        spyRandomBot.getHand().add(cardCostFive);
+        doReturn(false).when(spyRandomBot).canPlayCard(any(Card.class));
 
-        Optional<District> chosenDistrict = spyRandomBot.chooseDistrict();
+        Optional<Card> chosenDistrict = spyRandomBot.chooseCard();
 
         assertTrue(chosenDistrict.isEmpty());
     }
 
     @Test
     void chooseDistrictWithNonEmptyHandAndCanBuildDistrictTrueShouldReturnADistrictOfFromTheHand() {
-        spyRandomBot.getHand().add(districtCostThree);
-        spyRandomBot.getHand().add(districtCostFive);
-        doReturn(true).when(spyRandomBot).canBuildDistrict(any(District.class));
+        spyRandomBot.getHand().add(cardCostThree);
+        spyRandomBot.getHand().add(cardCostFive);
+        doReturn(true).when(spyRandomBot).canPlayCard(any(Card.class));
 
-        Optional<District> chosenDistrict = spyRandomBot.chooseDistrict();
+        Optional<Card> chosenDistrict = spyRandomBot.chooseCard();
 
         assertFalse(spyRandomBot.getHand().isEmpty());
         assertTrue(chosenDistrict.isPresent());
