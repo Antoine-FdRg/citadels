@@ -32,4 +32,10 @@ class GameTest {
         game.setPlayers(List.of(p1, p2, p3, p4));
         assertEquals(p3, game.getWinner());
     }
+
+    @Test
+    void testCharactersChoice() {
+        game.createCharacters();
+        assertEquals(4, game.getAvailableCharacters().size());
+    }
 }

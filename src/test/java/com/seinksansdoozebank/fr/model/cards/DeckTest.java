@@ -3,6 +3,8 @@ package com.seinksansdoozebank.fr.model.cards;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,12 +20,21 @@ class DeckTest {
     }
 
     /**
-     * We verify that when the deck is created it has got 65 districts cards
+     * We verify that when the deck is created it has got 65 districts cards and the right number of each district
      */
+
     @Test
     void fillDeckTest() {
+
         assertEquals(65, districtList.getDeck().size());
+
+        for (District district : District.values()) {
+            Card card=new Card(district);
+            assertEquals(district.getNumberOfAppearance(), Collections.frequency(districtList.getDeck(),card ));
+        }
+
     }
+
 
     /**
      * We verify that the cost attributed to each district is between 1 and 5
@@ -31,8 +42,8 @@ class DeckTest {
     @Test
     void getDistrictCostWIthDeckTest() {
         for (int i = 0; i < 65; i++) {
-            assertTrue(districtList.getDeck().get(i).getCost() >= 1);
-            assertTrue(districtList.getDeck().get(i).getCost() <= 5);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() >= 1);
+            assertTrue(districtList.getDeck().get(i).getDistrict().getCost() <= 6);
         }
     }
 
@@ -44,7 +55,7 @@ class DeckTest {
         districtListTest.shuffle();
         int differencesCount = 0;
         for (int i = 0; i < 65; i++) {
-            if (districtListTest.getDeck().get(i).compareTo(districtList.getDeck().get(i)) != 0) {
+            if (districtListTest.getDeck().get(i).getDistrict().compareTo(districtList.getDeck().get(i).getDistrict()) != 0) {
                 differencesCount++;
             }
         }
@@ -62,5 +73,12 @@ class DeckTest {
         }
         districtList.pick();
         assertEquals(64, districtList.getDeck().size());
+    }
+
+    @Test
+    void discard(){
+        Card cardToDiscard = new Card(District.MANOR);
+        districtList.discard(cardToDiscard);
+        assertEquals(cardToDiscard, districtList.getDeck().get(0));
     }
 }
