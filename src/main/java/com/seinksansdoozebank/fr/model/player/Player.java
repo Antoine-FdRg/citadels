@@ -47,8 +47,11 @@ public class Player {
         return card;
     }
 
-    void decreaseGold(int gold) {
+    public void decreaseGold(int gold) {
         this.nbGold -= gold;
+    }
+    public void increaseGold(int gold) {
+        this.nbGold += gold;
     }
 
     public void addCardToHand(Card card) {
