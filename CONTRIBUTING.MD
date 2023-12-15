@@ -30,14 +30,14 @@ Then, there's a specific branching model for development:
 2. `dev`: This is where development happens. Pull requests should go here.
 3. `feature/(feature)`: This is where you develop new features. When you're done, you should make a pull request
    to `dev`.
+4. `fix/(feature)`: This is where you fix a feature. When you're done, you should make a pull request
+   to `dev`.
 
 ## Code Guidelines
 
 - Ensure any install or build dependencies are removed before the end of the layer when doing a build.
 - Update the README.md with details of changes to the interface, this includes new environment variables, exposed ports,
   useful file locations and container parameters.
-- Increase the version numbers in any examples files and the README.md to the new version that this Pull Request would
-  represent. The versioning scheme we use is [SemVer](http://semver.org/).
 - You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission
   to do that, you may request the second reviewer to merge it for you.
 
