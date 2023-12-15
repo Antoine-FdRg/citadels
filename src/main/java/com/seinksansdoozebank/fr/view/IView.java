@@ -19,4 +19,6 @@ public interface IView {
     void displayPlayerPickCard(Player player);
 
     void displayPlayerPicksGold(Player player);
+
+    void displayPlayerChooseCharacter(Player player);
 }

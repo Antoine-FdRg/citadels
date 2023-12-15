@@ -20,6 +20,11 @@ public abstract class Player {
     private final List<Card> citadel;
     protected final IView view;
     protected final Random random = new Random();
+
+    public Character getCharacter() {
+        return character;
+    }
+
     protected Character character;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -120,10 +125,11 @@ public abstract class Player {
         return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
-    public Character chooseCharacter(List<Character> characters) {
+    public void chooseCharacter(List<Character> characters)  {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
-        return this.character;
+        characters.remove(this.character);
+        this.view.displayPlayerChooseCharacter(this);
     }
 
     @Override

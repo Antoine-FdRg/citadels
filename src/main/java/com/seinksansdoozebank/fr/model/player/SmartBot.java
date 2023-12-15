@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;

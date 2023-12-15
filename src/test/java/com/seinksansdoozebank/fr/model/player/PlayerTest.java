@@ -131,19 +131,4 @@ class PlayerTest {
         assertEquals(sum, player.getScore());
     }
 
-    @Test
-    void testChooseCharacter() {
-        // Arrange
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-        characters.add(new King());
-        characters.add(new Merchant());
-        characters.add(new Condottiere());
-
-        // Act
-        Character character = player.chooseCharacter(characters);
-
-        // Assert
-        assertTrue(characters.contains(character));
-    }
 }

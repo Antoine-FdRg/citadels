@@ -36,14 +36,15 @@ public class Game {
     public void run() {
         this.init();
         boolean isGameFinished = false;
-        int round = 0;
+        int round = 1;
         while (!isGameFinished) {
-            view.displayRound(round + 1);
-            // Intialize characters
+            view.displayRound(round);
             createCharacters();
             for (Player player : players) {
+                player.chooseCharacter(availableCharacters);
+            }
+            for (Player player : players) {
                 player.play();
-                this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
@@ -62,10 +63,6 @@ public class Game {
         availableCharacters.add(new King());
         availableCharacters.add(new Merchant());
         availableCharacters.add(new Condottiere());
-    }
-
-    private void removeCharacter(Character character) {
-        availableCharacters.remove(character);
     }
 
     private void dealCards() {

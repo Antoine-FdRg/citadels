@@ -38,6 +38,11 @@ public class Cli implements IView {
         System.out.println(player + " pioche 2 pièces d'or.");
     }
 
+    @Override
+    public void displayPlayerChooseCharacter(Player player) {
+        System.out.println( player + " choisit un personnage.");
+    }
+
     private void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
