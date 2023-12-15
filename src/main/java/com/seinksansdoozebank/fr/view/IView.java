@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
@@ -8,7 +9,7 @@ public interface IView {
 
     void displayRound(int roundNumber);
 
-    void displayPlayerPlaysDistrict(Player player, District district);
+    void displayPlayerPlaysCard(Player player, Card card);
 
     void displayWinner(String toString, int score);
 

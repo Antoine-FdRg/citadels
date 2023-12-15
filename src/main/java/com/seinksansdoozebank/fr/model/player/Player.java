@@ -1,4 +1,5 @@
 package com.seinksansdoozebank.fr.model.player;
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public class Player {
     private static int counter = 1;
     private final int id;
     private int nbGold;
-    private final List<District> hand;
-    private final List<District> citadel;
+    private final List<Card> hand;
+    private final List<Card> citadel;
     private final Random random = new Random();
     private boolean isStuck = false;
     private final IView view;
@@ -26,24 +27,24 @@ public class Player {
         this.view = view;
     }
 
-    District chooseDistrict() {
+    Card chooseCard() {
         return this.hand.get(random.nextInt(hand.size()));
     }
 
-    public District play() {
+    public Card play() {
         int cnt = 0;
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
-        District district = this.chooseDistrict();
-        while (district.getCost() > this.nbGold && cnt < 5) {
-            district = this.chooseDistrict();
+        Card card = this.chooseCard();
+        while (card.getDistrict().getCost() > this.nbGold && cnt < 5) {
+            card = this.chooseCard();
             cnt++;
         }
 
-        this.hand.remove(district);
-        this.citadel.add(district);
-        this.decreaseGold(district.getCost());
-        return district;
+        this.hand.remove(card);
+        this.citadel.add(card);
+        this.decreaseGold(card.getDistrict().getCost());
+        return card;
     }
 
     public void decreaseGold(int gold) {
@@ -53,17 +54,18 @@ public class Player {
         this.nbGold += gold;
     }
 
-    public void addDistrictToHand(District district) {
-        this.hand.add(district);
+    public void addCardToHand(Card card) {
+        this.hand.add(card);
     }
 
-    public List<District> getHand() {
+    public List<Card> getHand() {
         return this.hand;
     }
 
-    public List<District> getCitadel() {
+    public List<Card> getCitadel() {
         return this.citadel;
     }
+
 
     public int getNbGold() {
         return this.nbGold;
@@ -83,7 +85,7 @@ public class Player {
 
     public int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(District::getCost).sum();
+        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
     @Override
