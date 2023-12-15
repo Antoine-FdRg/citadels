@@ -1,8 +1,9 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.character.interfaces.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
@@ -11,79 +12,123 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class PlayerTest {
-    List<Card> hand = new ArrayList<>();
     Player player;
+    Player spyPlayer;
     IView view;
+    Deck deck;
+    Card cardCostThree;
+    Card cardCostFive;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
-        District districtCostThree = District.PORT;
-        District districtCostFive = District.FORTRESS;
-        Card cardCostThree= new Card(districtCostThree);
-        Card cardCostFive= new Card(districtCostFive);
-        hand.add(cardCostThree);
-        hand.add(cardCostFive);
-        player = new Player(10,view);
-        player.addCardToHand(cardCostThree);
-        player.addCardToHand(cardCostFive);
+        deck = mock(Deck.class);
+        cardCostThree= new Card(District.BARRACK);
+        cardCostFive= new Card(District.FORTRESS);
+        player = new RandomBot(10, deck, view);
+        spyPlayer = spy(new RandomBot(10, deck, view));
     }
 
     @Test
-    void testPlay() {
-        Card playedDistrict = player.play();
-        assertFalse(player.getHand().contains(playedDistrict));
-        assertEquals(10 - playedDistrict.getDistrict().getCost(), player.getNbGold());
+    void testPickGold(){
+        Player player = new RandomBot(10, deck, view);
+        player.pickGold();
+        assertEquals(12, player.getNbGold());
     }
 
     @Test
-    void testChooseCard() {
-        Card chosenCard = player.chooseCard();
-        assertTrue(hand.contains(chosenCard));
+    void testBuildADistrictWithEmptyOptChosenCardShouldReturnEmpty() {
+        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
+        assertTrue(spyPlayer.playACard().isEmpty());
     }
 
     @Test
-    void testUpdateGold() {
-        // Arrange
-        Player player = new Player(10,view);
+    void testPlayACardWithUnplayableChosenCardShouldReturnEmpty() {
+        doReturn(false).when(spyPlayer).canPlayCard(any(Card.class));
+        assertTrue(spyPlayer.playACard().isEmpty());
+    }
 
-        // Act
+    @Test
+    void testPlayACardWithPlayableChosenCardShouldReturnCard() {
+        spyPlayer.getHand().add(cardCostThree);
+        doReturn(Optional.of(cardCostThree)).when(spyPlayer).chooseCard();
+        doReturn(true).when(spyPlayer).canPlayCard(any(Card.class));
+
+        Optional<Card> optPlayedCard = spyPlayer.playACard();
+        assertTrue(optPlayedCard.isPresent());
+        Card playedCard = optPlayedCard.get();
+
+        assertFalse(spyPlayer.getHand().contains(cardCostThree));
+        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
+        verify(spyPlayer, times(1)).canPlayCard(cardCostThree);
+        assertEquals(cardCostThree, playedCard);
+    }
+
+    @Test
+    void testCanPlayCardWithTooExpensiveCardShouldReturnFalse() {
+        spyPlayer.decreaseGold(10);
+        Card tooExpensiveCard = cardCostFive;
+        assertFalse(spyPlayer.getCitadel().contains(tooExpensiveCard));
+        assertFalse(spyPlayer.canPlayCard(tooExpensiveCard));
+    }
+    @Test
+    void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
+        spyPlayer.getCitadel().add(cardCostThree);
+        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
+        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
+    }
+
+    @Test
+    void testCanPlayCardWithPlayableCardShouldReturnTrue() {
+        assertFalse(spyPlayer.getCitadel().contains(cardCostThree));
+        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
+        assertTrue(spyPlayer.canPlayCard(cardCostThree));
+    }
+
+    @Test
+    void testDecreaseGold() {
+        Player player = new RandomBot(10, deck, view);
+
         player.decreaseGold(3);
 
-        // Assert
         assertEquals(7, player.getNbGold());
-    }
-
-    @Test
-    void testPlayerInitialization() {
-        // Arrange
-        List<Card> hand = new ArrayList<>();
-        hand.add(new Card(District.PORT)); //district with a cost of 3
-        List<Card> citadel = new ArrayList<>();
-
-        // Act
-        Player player = new Player(10,view);
-        player.addCardToHand(new Card(District.PORT));
-
-        // Assert
-        assertEquals(10, player.getNbGold());
-        assertEquals(hand, player.getHand());
-        assertEquals(citadel, player.getCitadel());
     }
 
     @Test
     void testResetIdCounter() {
         // Test resetting the ID counter for player
         Player.resetIdCounter();
-        Player newPlayer = new Player(10,view);
+        Player newPlayer = new RandomBot(10, deck, view);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
+    }
+
+    @Test
+    void testGetScoreWithEmptyCitadel() {
+        assertTrue(player.getCitadel().isEmpty());
+        assertEquals(0, player.getScore());
+    }
+
+    @Test
+    void testGetScoreWithSomeDistrictInCitadel() {
+        player.getCitadel().add(cardCostThree);
+        player.getCitadel().add(cardCostFive);
+        int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
+        assertEquals(sum, player.getScore());
     }
 
     @Test

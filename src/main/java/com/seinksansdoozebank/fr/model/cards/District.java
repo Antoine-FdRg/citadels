@@ -51,7 +51,7 @@ public enum District implements Comparable<District> {
     }
 
     /**
-     * @param name
+     * @param name of the district
      * @return the district which corresponds to the string given in parameters
      */
     public static District getDistrictWithName(String name) {
@@ -111,6 +111,4 @@ public enum District implements Comparable<District> {
     public String toString(){
         return "Le/la : "+ this.name + ", son type : " + this.districtType+ ", son coût :  "+this.cost+" pièces d'or";
     }
-
-
 }

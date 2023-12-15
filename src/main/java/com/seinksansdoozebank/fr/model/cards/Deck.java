@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
-    private List<Card> cardsList;
+    private final List<Card> cardsList;
+    private final Random random;
 
     /**
      * Constructor which implements a new deck of 65 cards of district
      */
     public Deck() {
         this.cardsList = new ArrayList<>();
+        random = new Random();
         fillDeck();
     }
 
@@ -37,7 +39,6 @@ public class Deck {
     public Card pick() {
         //On vérifie que la liste n'est pas vide
         if (cardsList.isEmpty()) {
-            //TODO milestone 3 remettre la fausse dans la liste de District
             //On recrée le deck
             fillDeck();
         }
@@ -46,10 +47,19 @@ public class Deck {
     }
 
     /**
+     * Allows to discard a district
+     *
+     * @param cardToDiscard the card to discard
+     */
+    public void discard(Card cardToDiscard) {
+        this.cardsList.add(0, cardToDiscard);
+    }
+
+
+    /**
      * The method shuffle takes the list of cards and shuffles it
      */
-    public void shuffle() {
-        Random random = new Random();
+    protected void shuffle() {
         //On commence par la dernière carte du paquet
         for (int i = cardsList.size() - 1; i >= 1; i--) {
             //on choisit un index au hasard parmi les autres éléments, cet index pourra prendre sa valeur entre 0 et i
@@ -62,7 +72,7 @@ public class Deck {
     /**
      * getter
      *
-     * @return the deck of 65 cards
+     * @return the list of cards
      */
     public List<Card> getDeck() {
 

@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.interfaces;
+package com.seinksansdoozebank.fr.model.character.abstracts;
 
 import com.seinksansdoozebank.fr.model.player.Player;
 

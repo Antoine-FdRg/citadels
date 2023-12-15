@@ -1,8 +1,12 @@
 package com.seinksansdoozebank.fr.model.character.commonCharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,16 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 class MerchantTest {
     List<Card> citadel;
     Player player;
     Merchant merchant;
+    IView view;
+    Deck deck;
 
     @BeforeEach
     void setUp() {
         // Create a player
-        player = new Player(2, null);
+        view = mock(Cli.class);
+        deck = mock(Deck.class);
+        player = new RandomBot(2, deck, view);
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
