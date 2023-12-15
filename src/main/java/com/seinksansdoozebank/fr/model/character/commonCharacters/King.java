@@ -1,13 +1,10 @@
-package com.seinksansdoozebank.fr.model.character.singleton;
+package com.seinksansdoozebank.fr.model.character.commonCharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.interfaces.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.player.Player;
-
-import java.util.List;
 
 public class King extends CommonCharacter {
 

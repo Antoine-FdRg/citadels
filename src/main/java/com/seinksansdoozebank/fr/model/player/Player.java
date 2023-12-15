@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 
 import java.util.List;
 
+import com.seinksansdoozebank.fr.model.character.interfaces.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Player {
     private final Random random = new Random();
     private boolean isStuck = false;
     private final IView view;
+    private Character character;
 
     public Player(int nbGold, IView view) {
         this.id = counter++;
@@ -45,6 +47,12 @@ public class Player {
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
         return card;
+    }
+
+    public Character chooseCharacter(List<Character> characters) {
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        return this.character;
     }
 
     public void decreaseGold(int gold) {

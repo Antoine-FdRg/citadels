@@ -3,6 +3,11 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.interfaces.Character;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -13,10 +18,10 @@ import java.util.List;
 public class Game {
     private static final int NB_GOLD_INIT = 30;
     private static final int NB_CARD_BY_PLAYER = 4;
-    Deck deck;
-    List<Player> players;
-
-    IView view;
+    private final Deck deck;
+    private List<Player> players;
+    private List<Character> availableCharacters;
+    private final IView view;
 
     public Game(int nbPlayers) {
         this.view = new Cli();
@@ -33,7 +38,12 @@ public class Game {
         int round = 0;
         while (!isGameFinished) {
             view.displayRound(round + 1);
+            // Intialize characters
+            createCharacters();
             for (Player player : players) {
+                view.displayPlayerStartPlaying(player);
+                // Choose character and remove it from the list
+                this.removeCharacter(player.chooseCharacter(availableCharacters));
                 Card card = player.play();
                 view.displayPlayerPlaysCard(player, card);
                 view.displayPlayerInfo(player);
@@ -47,6 +57,18 @@ public class Game {
 
     private void init() {
         dealCards();
+    }
+
+    void createCharacters() {
+        availableCharacters = new ArrayList<>();
+        availableCharacters.add(new Bishop());
+        availableCharacters.add(new King());
+        availableCharacters.add(new Merchant());
+        availableCharacters.add(new Condottiere());
+    }
+
+    private void removeCharacter(Character character) {
+        availableCharacters.remove(character);
     }
 
     private void dealCards() {
@@ -69,6 +91,9 @@ public class Game {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
 
+    public List<Character> getAvailableCharacters() {
+        return availableCharacters;
     }
 }

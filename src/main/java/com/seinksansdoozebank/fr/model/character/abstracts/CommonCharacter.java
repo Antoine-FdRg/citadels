@@ -12,16 +12,6 @@ import java.util.List;
 public abstract class CommonCharacter extends Character {
     private final Role role;
     private final DistrictType target;
-    private Player player;
-
-    /**
-     * Set the player of the character
-     *
-     * @param player the player to set
-     */
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     protected CommonCharacter(Role role, DistrictType target) {
         this.role = role;
@@ -37,16 +27,12 @@ public abstract class CommonCharacter extends Character {
      */
     public void goldCollectedFromDisctrictType() {
         int nbGold = 0;
-        for (Card card : this.player.getCitadel()) {
+        for (Card card : this.getPlayer().getCitadel()) {
             if (card.getDistrict().getDistrictType() == target) {
                 nbGold++;
             }
         }
-        this.player.increaseGold(nbGold);
-    }
-
-    public Player getPlayer() {
-        return this.player;
+        this.getPlayer().increaseGold(nbGold);
     }
 
     @Override

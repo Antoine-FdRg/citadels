@@ -1,8 +1,7 @@
-package com.seinksansdoozebank.fr.model.character.singleton;
+package com.seinksansdoozebank.fr.model.character.commonCharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

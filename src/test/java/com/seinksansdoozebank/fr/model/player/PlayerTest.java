@@ -2,6 +2,11 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.interfaces.Character;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,5 +84,21 @@ class PlayerTest {
         Player.resetIdCounter();
         Player newPlayer = new Player(10,view);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
+    }
+
+    @Test
+    void testChooseCharacter() {
+        // Arrange
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+
+        // Act
+        Character character = player.chooseCharacter(characters);
+
+        // Assert
+        assertTrue(characters.contains(character));
     }
 }
