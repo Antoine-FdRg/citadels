@@ -41,14 +41,22 @@ public class Game {
             view.displayRound(round + 1);
             // Intialize characters
             createCharacters();
+            playersChooseCharacters();
+            sortPlayersByCharacter();
             for (Player player : players) {
                 player.play();
-                this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
         view.displayWinner(getWinner());
+    }
+
+
+    private void playersChooseCharacters() {
+        for (Player player : players) {
+            this.removeCharacter(player.chooseCharacter(availableCharacters));
+        }
     }
 
 
@@ -58,10 +66,27 @@ public class Game {
 
     void createCharacters() {
         availableCharacters = new ArrayList<>();
-        availableCharacters.add(new Bishop());
+        // availableCharacters.add(new Assassin());
+        // availableCharacters.add(new Thief());
+        // availableCharacters.add(new Magician());
         availableCharacters.add(new King());
+        availableCharacters.add(new Bishop());
         availableCharacters.add(new Merchant());
+        // availableCharacters.add(new Architect());
         availableCharacters.add(new Condottiere());
+    }
+
+    private void sortPlayersByCharacter() {
+        this.createCharacters();
+        List<Player> sortedPlayers = new ArrayList<>();
+        for (Character character : availableCharacters) {
+            for (Player player : players) {
+                if (player.getCharacter().equals(character)) {
+                    sortedPlayers.add(player);
+                }
+            }
+        }
+        players = sortedPlayers;
     }
 
     private void removeCharacter(Character character) {

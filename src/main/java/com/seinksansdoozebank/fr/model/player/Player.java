@@ -126,6 +126,10 @@ public abstract class Player {
         return this.character;
     }
 
+    public Character getCharacter() {
+        return this.character;
+    }
+
     @Override
     public String toString() {
         return "Le joueur "+this.id;
