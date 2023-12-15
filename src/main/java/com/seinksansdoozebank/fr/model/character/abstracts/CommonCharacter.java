@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.interfaces.Character;
@@ -36,8 +37,8 @@ public abstract class CommonCharacter extends Character {
      */
     public void goldCollectedFromDisctrictType() {
         int nbGold = 0;
-        for (District district : this.player.getCitadel()) {
-            if (district.getDistrictType() == target) {
+        for (Card card : this.player.getCitadel()) {
+            if (card.getDistrict().getDistrictType() == target) {
                 nbGold++;
             }
         }
