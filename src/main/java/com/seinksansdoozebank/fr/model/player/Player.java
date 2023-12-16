@@ -47,7 +47,7 @@ public abstract class Player {
      */
     protected final void pickGold() {
         view.displayPlayerPicksGold(this);
-        this.nbGold+=2;
+        this.nbGold += 2;
     }
 
     /**
@@ -58,11 +58,12 @@ public abstract class Player {
 
     /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
+     *
      * @return the district built by the player
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty()|| !canPlayCard(optChosenCard.get())) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -72,15 +73,27 @@ public abstract class Player {
         return optChosenCard;
     }
 
+    public Optional<List<Card>> playCards(int numberOfCards) {
+        Optional<List<Card>> cards = Optional.of(new ArrayList<>());
+        for (int i = 0; i < numberOfCards; i++) {
+            if (playACard().isPresent()) {
+                cards.get().add(playACard().get());
+            }
+        }
+        return cards;
+    }
+
     /**
      * Choose a district to build from the hand
      * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
+     *
      * @return the district to build
      */
     protected abstract Optional<Card> chooseCard();
 
     /**
      * Verify if the player can build the district passed in parameter (he can build it if he has enough gold and if he doesn't already have it in his citadel)
+     *
      * @param card the district to build
      * @return true if the player can build the district passed in parameter, false otherwise
      */
@@ -91,6 +104,7 @@ public abstract class Player {
     protected final void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
+
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
@@ -126,8 +140,12 @@ public abstract class Player {
         return this.character;
     }
 
+    public int getNbDistrictsCanBeBuild() {
+        return this.character.getRole().getNbDistrictsCanBeBuild();
+    }
+
     @Override
     public String toString() {
-        return "Le joueur "+this.id;
+        return "Le joueur " + this.id;
     }
 }

@@ -16,10 +16,10 @@ public class RandomBot extends Player {
     public void play() {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
-        if(random.nextBoolean()){
+        if (random.nextBoolean()) {
             pickSomething();
             view.displayPlayerPlaysCard(this, this.playACard());
-        }else{
+        } else {
             view.displayPlayerPlaysCard(this, this.playACard());
             pickSomething();
         }
@@ -67,6 +67,6 @@ public class RandomBot extends Player {
 
     @Override
     public String toString() {
-        return "Le bot aléatoire "+this.id;
+        return "Le bot aléatoire " + this.id;
     }
 }
