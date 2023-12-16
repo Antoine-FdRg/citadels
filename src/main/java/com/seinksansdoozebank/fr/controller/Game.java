@@ -20,7 +20,7 @@ public class Game {
     private static final int NB_CARD_BY_PLAYER = 4;
     private final Deck deck;
     private List<Player> players;
-    private List<Character> availableCharacters;
+    private final List<Character> availableCharacters;
     private final IView view;
 
     public Game(int nbPlayers) {
@@ -31,6 +31,7 @@ public class Game {
         for (int i = 0; i < nbPlayers-1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        availableCharacters  = new ArrayList<>();
     }
 
     public void run() {
@@ -39,25 +40,34 @@ public class Game {
         int round = 0;
         while (!isGameFinished) {
             view.displayRound(round + 1);
-            // Intialize characters
             createCharacters();
             for (Player player : players) {
                 player.play();
                 this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
+            retrieveCharacters();
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
         view.displayWinner(getWinner());
     }
 
+    /**
+     * Retrieve the characters from the players
+     */
+    private void retrieveCharacters() {
+        for (Player player : players) {
+            availableCharacters.add(player.retrieveCharacter());
+        }
+    }
+
 
     private void init() {
         dealCards();
+        createCharacters();
     }
 
-    void createCharacters() {
-        availableCharacters = new ArrayList<>();
+    protected void createCharacters() {
         availableCharacters.add(new Bishop());
         availableCharacters.add(new King());
         availableCharacters.add(new Merchant());

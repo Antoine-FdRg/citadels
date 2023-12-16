@@ -130,4 +130,11 @@ public abstract class Player {
     public String toString() {
         return "Le joueur "+this.id;
     }
+
+    public Character retrieveCharacter() {
+        Character characterToRetrieve = this.character;
+        this.character = null;
+        characterToRetrieve.setPlayer(null);
+        return characterToRetrieve;
+    }
 }
