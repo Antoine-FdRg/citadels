@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -129,5 +130,13 @@ public abstract class Player {
     @Override
     public String toString() {
         return "Le joueur "+this.id;
+    }
+
+    public boolean isTheKing() {
+        //TODO remove this if when player are able to choose a character
+        if(this.character == null) {
+            return false;
+        }
+        return Role.KING.equals(this.character.getRole());
     }
 }

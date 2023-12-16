@@ -14,12 +14,14 @@ import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
     private final Deck deck;
     private List<Player> players;
+    Optional<Player> kingPlayer;
     private List<Character> availableCharacters;
     private final IView view;
 
@@ -31,6 +33,7 @@ public class Game {
         for (int i = 0; i < nbPlayers-1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        kingPlayer = Optional.empty();
     }
 
     public void run() {
@@ -39,9 +42,10 @@ public class Game {
         int round = 0;
         while (!isGameFinished) {
             view.displayRound(round + 1);
-            // Intialize characters
+            orderPlayerBeforeChoosingCharacter();
             createCharacters();
             for (Player player : players) {
+                kingPlayer = player.isTheKing()? Optional.of(player) : Optional.empty();
                 player.play();
                 this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
@@ -49,6 +53,23 @@ public class Game {
             round++;
         }
         view.displayWinner(getWinner());
+    }
+
+    /**
+     * Order the players before choosing a character if a
+     * player revealed himself being the king during the last round
+     */
+    private void orderPlayerBeforeChoosingCharacter() {
+        if(kingPlayer.isPresent()) {
+            List<Player> orderedPlayers = new ArrayList<>();
+            //récupération de l'index du roi dans la liste des joueurs
+            int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());
+            for (int i = indexOfTheKingPlayer; i < players.size(); i++) {
+                //ajout des joueurs dans l'ordre à partir du roi en les décalant de l'index du roi
+                orderedPlayers.add((i - indexOfTheKingPlayer) % players.size(), players.get(i));
+            }
+            players = orderedPlayers;
+        }
     }
 
 
