@@ -59,7 +59,7 @@ public class RandomBot extends Player {
             do {
                 chosenCard = this.hand.get(random.nextInt(hand.size()));
                 cnt++;
-            } while (this.canPlayCard(chosenCard) && cnt < 5);
+            } while (!this.canPlayCard(chosenCard) && cnt < 5);
             if (this.canPlayCard(chosenCard)) {
                 return Optional.of(chosenCard);
             }
