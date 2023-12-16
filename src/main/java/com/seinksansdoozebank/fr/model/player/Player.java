@@ -132,6 +132,9 @@ public abstract class Player {
     }
 
     public Character retrieveCharacter() {
+        if(this.character == null) {
+            throw new IllegalStateException("No character to retrieve");
+        }
         Character characterToRetrieve = this.character;
         this.character = null;
         characterToRetrieve.setPlayer(null);

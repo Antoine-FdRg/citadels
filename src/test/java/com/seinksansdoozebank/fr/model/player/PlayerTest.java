@@ -146,4 +146,17 @@ class PlayerTest {
         // Assert
         assertTrue(characters.contains(character));
     }
+
+    @Test
+    void retrieveCharacter() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Condottiere());
+        Character character = player.chooseCharacter(characters);
+
+        Character retrievedCharacter = player.retrieveCharacter();
+
+        assertEquals(character, retrievedCharacter);
+        assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
+        assertNull(character.getPlayer());
+    }
 }
