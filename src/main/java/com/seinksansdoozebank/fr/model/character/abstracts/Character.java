@@ -1,9 +1,15 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public abstract class Character {
+    private final Role role;
     private Player player;
+
+    protected Character(Role role) {
+        this.role = role;
+    }
 
     @Override
     public abstract String toString();
@@ -19,5 +25,9 @@ public abstract class Character {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }
