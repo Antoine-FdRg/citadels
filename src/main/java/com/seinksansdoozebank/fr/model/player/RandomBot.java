@@ -15,6 +15,7 @@ public class RandomBot extends Player {
     @Override
     public void play() {
         view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
         if(random.nextBoolean()){
             pickSomething();
