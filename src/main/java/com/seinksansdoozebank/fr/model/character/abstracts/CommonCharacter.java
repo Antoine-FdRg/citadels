@@ -29,9 +29,4 @@ public abstract class CommonCharacter extends Character {
         }
         this.getPlayer().increaseGold(nbGold);
     }
-
-    @Override
-    public String toString() {
-        return super.getRole().getName();
-    }
 }

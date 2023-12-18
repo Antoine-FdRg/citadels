@@ -65,8 +65,10 @@ public class Game {
             //récupération de l'index du roi dans la liste des joueurs
             int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());
             for (int i = indexOfTheKingPlayer; i < players.size(); i++) {
-                //ajout des joueurs dans l'ordre à partir du roi en les décalant de l'index du roi
                 orderedPlayers.add((i - indexOfTheKingPlayer) % players.size(), players.get(i));
+            }
+            for (int i = 0; i < indexOfTheKingPlayer; i++) {
+                orderedPlayers.add((i + players.size() - indexOfTheKingPlayer) % players.size(), players.get(i));
             }
             players = orderedPlayers;
         }
@@ -113,5 +115,9 @@ public class Game {
 
     public List<Character> getAvailableCharacters() {
         return availableCharacters;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 }

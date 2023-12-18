@@ -46,6 +46,7 @@ class RandomBotTest {
         verify(spyRandomBot, times(1)).pickSomething();
         verify(spyRandomBot, atMostOnce()).playACard();
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
+        verify(view,times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
         verify(view, times(1)).displayPlayerPlaysCard(spyRandomBot, optDistrict);
     }
