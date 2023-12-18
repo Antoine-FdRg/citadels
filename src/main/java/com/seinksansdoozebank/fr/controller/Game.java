@@ -40,7 +40,6 @@ public class Game {
         int round = 0;
         while (!isGameFinished) {
             view.displayRound(round + 1);
-            createCharacters();
             for (Player player : players) {
                 player.play();
                 this.removeCharacter(player.chooseCharacter(availableCharacters));
