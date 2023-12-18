@@ -3,6 +3,10 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +20,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 class PlayerTest {
@@ -122,5 +129,40 @@ class PlayerTest {
         int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, player.getScore());
     }
+    @Test
+    void isTheKingWithAPlayerBeingTheKing() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new King());
 
+        player.chooseCharacter(characters);
+
+        assertTrue(player.isTheKing());
+    }
+    @Test
+    void isTheKingWithAPlayerNotBeingTheKing() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+
+        player.chooseCharacter(characters);
+
+        assertFalse(player.isTheKing());
+    }
+    @Test
+    void isTheKingWithAPlayerWithNoCharacter() {
+        assertFalse(player.isTheKing());
+    }
+
+    @Test
+    void retrieveCharacter() {
+        List<Character> characters = new ArrayList<>();
+        Character condottiere = new Condottiere();
+        characters.add(condottiere);
+        player.chooseCharacter(characters);
+
+        Character retrievedCharacter = player.retrieveCharacter();
+
+        assertEquals(condottiere, retrievedCharacter);
+        assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
+        assertNull(condottiere.getPlayer());
+    }
 }

@@ -21,4 +21,6 @@ public interface IView {
     void displayPlayerPicksGold(Player player);
 
     void displayPlayerChooseCharacter(Player player);
+
+    void displayPlayerRevealCharacter(Player player);
 }

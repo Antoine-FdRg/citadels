@@ -21,6 +21,7 @@ public class SmartBot extends Player {
     @Override
     public void play() {
         view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
         Optional<Card> optChosenCard = this.chooseCard();
         if (optChosenCard.isPresent()) {

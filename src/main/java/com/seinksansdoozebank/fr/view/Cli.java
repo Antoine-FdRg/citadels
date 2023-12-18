@@ -15,12 +15,12 @@ public class Cli implements IView {
             System.out.println(player + " ne pose pas de quartier.");
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
-            System.out.println(player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or");
+            System.out.println(player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or.");
         }
     }
 
     public void displayWinner(Player winner) {
-        System.out.println(winner + " gagne avec un score de " + winner.getScore());
+        System.out.println(winner + " gagne avec un score de " + winner.getScore()+".");
     }
 
     @Override
@@ -41,6 +41,11 @@ public class Cli implements IView {
     @Override
     public void displayPlayerChooseCharacter(Player player) {
         System.out.println( player + " choisit un personnage.");
+    }
+
+    @Override
+    public void displayPlayerRevealCharacter(Player player) {
+        System.out.println(player + " se révèle être "+player.getCharacter()+".");
     }
 
     private void displayPlayerHand(Player player) {
@@ -89,7 +94,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerInfo(Player player) {
-        System.out.println(player + " possède : \n\t- " + player.getNbGold() + " pièces d'or");
+        System.out.println(player + " possède : \n\t- " + player.getNbGold() + " pièces d'or.");
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
