@@ -40,14 +40,16 @@ public class Game {
     public void run() {
         this.init();
         boolean isGameFinished = false;
-        int round = 0;
+        int round = 1;
         while (!isGameFinished) {
             view.displayRound(round + 1);
             orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
+                player.chooseCharacter(availableCharacters);
+            }
+            for (Player player : players) {
                 kingPlayer = player.isTheKing()? Optional.of(player) : Optional.empty();
                 player.play();
-                this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
             retrieveCharacters();
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
@@ -97,10 +99,6 @@ public class Game {
         availableCharacters.add(new Condottiere());
     }
 
-    private void removeCharacter(Character character) {
-        availableCharacters.remove(character);
-    }
-
     private void dealCards() {
         for (int i = 0; i < NB_CARD_BY_PLAYER; i++) {
             for (Player player : players) {
@@ -125,9 +123,5 @@ public class Game {
 
     public List<Character> getAvailableCharacters() {
         return availableCharacters;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
     }
 }

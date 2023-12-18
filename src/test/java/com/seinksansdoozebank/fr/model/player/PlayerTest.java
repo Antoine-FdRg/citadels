@@ -7,7 +7,6 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -130,23 +129,6 @@ class PlayerTest {
         int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, player.getScore());
     }
-
-    @Test
-    void testChooseCharacter() {
-        // Arrange
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-        characters.add(new King());
-        characters.add(new Merchant());
-        characters.add(new Condottiere());
-
-        // Act
-        Character character = player.chooseCharacter(characters);
-
-        // Assert
-        assertTrue(characters.contains(character));
-    }
-
     @Test
     void isTheKingWithAPlayerBeingTheKing() {
         List<Character> characters = new ArrayList<>();
@@ -173,13 +155,14 @@ class PlayerTest {
     @Test
     void retrieveCharacter() {
         List<Character> characters = new ArrayList<>();
-        characters.add(new Condottiere());
-        Character character = player.chooseCharacter(characters);
+        Character condottiere = new Condottiere();
+        characters.add(condottiere);
+        player.chooseCharacter(characters);
 
         Character retrievedCharacter = player.retrieveCharacter();
 
-        assertEquals(character, retrievedCharacter);
+        assertEquals(condottiere, retrievedCharacter);
         assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
-        assertNull(character.getPlayer());
+        assertNull(condottiere.getPlayer());
     }
 }

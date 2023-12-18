@@ -39,6 +39,11 @@ public class Cli implements IView {
     }
 
     @Override
+    public void displayPlayerChooseCharacter(Player player) {
+        System.out.println( player + " choisit un personnage.");
+    }
+
+    @Override
     public void displayPlayerRevealCharacter(Player player) {
         System.out.println(player + " se révèle être "+player.getCharacter()+".");
     }

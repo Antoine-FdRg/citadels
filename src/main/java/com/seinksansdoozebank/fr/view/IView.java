@@ -10,7 +10,7 @@ public interface IView {
 
     void displayRound(int roundNumber);
 
-    void displayPlayerPlaysCard(Player player, Optional<Card> optinalCard);
+    void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard);
 
     void displayWinner(Player winner);
 
@@ -19,6 +19,8 @@ public interface IView {
     void displayPlayerPickCard(Player player);
 
     void displayPlayerPicksGold(Player player);
+
+    void displayPlayerChooseCharacter(Player player);
 
     void displayPlayerRevealCharacter(Player player);
 }
