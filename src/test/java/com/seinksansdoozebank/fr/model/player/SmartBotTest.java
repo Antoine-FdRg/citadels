@@ -3,11 +3,20 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,5 +167,26 @@ class SmartBotTest {
         Optional<Card> cheaperCard = spySmartBot.getCheaperCard(districtList);
         assertTrue(cheaperCard.isPresent());
         assertEquals(cardCostThree, cheaperCard.get());
+    }
+
+    @Test
+    void getDistrictTypeFrequencyList() {
+        List<Card> districtList = List.of(cardCostFive, cardCostThree, cardCostFive);
+        List<DistrictType> districtTypeFrequencyList = spySmartBot.getDistrictTypeFrequencyList(districtList);
+        assertEquals(2, districtTypeFrequencyList.size());
+        assertEquals(DistrictType.SOLDIERLY, districtTypeFrequencyList.get(0));
+        assertEquals(DistrictType.PRESTIGE, districtTypeFrequencyList.get(1));
+    }
+
+
+    @Test
+    void chooseCharacter() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new Bishop());
+        characters.add(new King());
+        characters.add(new Merchant());
+        characters.add(new Condottiere());
+        spySmartBot.getCitadel().add(cardCostFive);
+
     }
 }
