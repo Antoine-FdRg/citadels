@@ -1,14 +1,14 @@
 package com.seinksansdoozebank.fr.model.character.roles;
 
 public enum Role {
-    MERCHANT("Marchand"),
+    //ASSASSIN("Assassin")
+    //THIEF("Voleur"),
+    //MAGICIAN("Magicien"),
     KING("Roi"),
     BISHOP("Evêque"),
-    CONDOTTIERE("Condottiere"),
-    ARCHITECT("Architecte");
-    //MAGICIAN("Magicien"),
-    //THIEF("Voleur"),
-    //ASSASSIN("Assassin");
+    MERCHANT("Marchand"),
+    ARCHITECT("Architecte"),
+    CONDOTTIERE("Condottiere");
 
     private String name;
 
