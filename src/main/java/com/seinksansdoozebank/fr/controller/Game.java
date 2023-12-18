@@ -21,7 +21,7 @@ public class Game {
     private static final int NB_CARD_BY_PLAYER = 4;
     private final Deck deck;
     private List<Player> players;
-    Optional<Player> kingPlayer;
+    private Optional<Player> kingPlayer;
     private List<Character> availableCharacters;
     private final IView view;
 
