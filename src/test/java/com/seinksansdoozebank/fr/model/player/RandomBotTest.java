@@ -111,7 +111,7 @@ class RandomBotTest {
 
 
     @Test
-    void chooseCharacterSetPointersBetweenCharacterAndPlayer() {
+    void chooseCharacterSetLinkBetweenCharacterAndPlayer() {
         List<Character> characters = new ArrayList<>();
         characters.add(new Bishop());
         characters.add(new King());
