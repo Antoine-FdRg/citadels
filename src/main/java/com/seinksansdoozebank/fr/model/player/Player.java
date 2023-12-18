@@ -131,9 +131,14 @@ public abstract class Player {
         return this.character;
     }
 
-    @Override
-    public String toString() {
-        return "Le joueur "+this.id;
+    public Character retrieveCharacter() {
+        if(this.character == null) {
+            throw new IllegalStateException("No character to retrieve");
+        }
+        Character characterToRetrieve = this.character;
+        this.character = null;
+        characterToRetrieve.setPlayer(null);
+        return characterToRetrieve;
     }
 
     public boolean isTheKing() {
@@ -142,5 +147,10 @@ public abstract class Player {
             return false;
         }
         return Role.KING.equals(this.character.getRole());
+    }
+
+    @Override
+    public String toString() {
+        return "Le joueur "+this.id;
     }
 }

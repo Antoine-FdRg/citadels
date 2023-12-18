@@ -22,7 +22,7 @@ public class Game {
     private final Deck deck;
     private List<Player> players;
     private Optional<Player> kingPlayer;
-    private List<Character> availableCharacters;
+    private final List<Character> availableCharacters;
     private final IView view;
 
     public Game(int nbPlayers) {
@@ -33,6 +33,7 @@ public class Game {
         for (int i = 0; i < nbPlayers-1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        availableCharacters  = new ArrayList<>();
         kingPlayer = Optional.empty();
     }
 
@@ -43,16 +44,25 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             orderPlayerBeforeChoosingCharacter();
-            createCharacters();
             for (Player player : players) {
                 kingPlayer = player.isTheKing()? Optional.of(player) : Optional.empty();
                 player.play();
                 this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
+            retrieveCharacters();
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
         view.displayWinner(getWinner());
+    }
+
+    /**
+     * Retrieve the characters from the players
+     */
+    private void retrieveCharacters() {
+        for (Player player : players) {
+            availableCharacters.add(player.retrieveCharacter());
+        }
     }
 
     /**
@@ -77,10 +87,10 @@ public class Game {
 
     private void init() {
         dealCards();
+        createCharacters();
     }
 
-    void createCharacters() {
-        availableCharacters = new ArrayList<>();
+    protected void createCharacters() {
         availableCharacters.add(new Bishop());
         availableCharacters.add(new King());
         availableCharacters.add(new Merchant());
