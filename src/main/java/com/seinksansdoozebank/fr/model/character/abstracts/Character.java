@@ -11,13 +11,6 @@ public abstract class Character {
         this.role = role;
     }
 
-
-
-    @Override
-    public String toString() {
-        return this.role.getName();
-    }
-
     /**
      * Set the player of the character
      *
@@ -29,5 +22,14 @@ public abstract class Character {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return this.role.getName();
     }
 }
