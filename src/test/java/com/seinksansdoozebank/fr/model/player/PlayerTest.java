@@ -7,7 +7,6 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -130,20 +129,36 @@ class PlayerTest {
         int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, player.getScore());
     }
-
     @Test
-    void testChooseCharacter() {
-        // Arrange
+    void isTheKingWithAPlayerBeingTheKing() {
+        List<Character> characters = new ArrayList<>();
+        characters.add(new King());
+
+        player.chooseCharacter(characters);
+
+        assertTrue(player.isTheKing());
+    }
+    @Test
+    void isTheKingWithAPlayerNotBeingTheKing() {
         List<Character> characters = new ArrayList<>();
         characters.add(new Bishop());
-        characters.add(new King());
-        characters.add(new Merchant());
-        characters.add(new Condottiere());
 
-        // Act
-        Character character = player.chooseCharacter(characters);
+        player.chooseCharacter(characters);
 
-        // Assert
-        assertTrue(characters.contains(character));
+        assertFalse(player.isTheKing());
+    }
+
+    @Test
+    void retrieveCharacter() {
+        List<Character> characters = new ArrayList<>();
+        Character condottiere = new Condottiere();
+        characters.add(condottiere);
+        player.chooseCharacter(characters);
+
+        Character retrievedCharacter = player.retrieveCharacter();
+
+        assertEquals(condottiere, retrievedCharacter);
+        assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
+        assertNull(condottiere.getPlayer());
     }
 }

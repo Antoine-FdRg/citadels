@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -91,6 +92,7 @@ public abstract class Player {
     protected final void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
+
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
@@ -120,14 +122,30 @@ public abstract class Player {
         return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
-    public Character chooseCharacter(List<Character> characters) {
+    public Character chooseCharacter(List<Character> characters)  {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
+        characters.remove(this.character);
+        this.view.displayPlayerChooseCharacter(this);
         return this.character;
     }
 
-    public Character getCharacter() {
+    public Character getCharacter(){
         return this.character;
+    }
+
+    public Character retrieveCharacter() {
+        if(this.character == null) {
+            throw new IllegalStateException("No character to retrieve");
+        }
+        Character characterToRetrieve = this.character;
+        this.character = null;
+        characterToRetrieve.setPlayer(null);
+        return characterToRetrieve;
+    }
+
+    public boolean isTheKing() {
+        return Role.KING.equals(this.character.getRole());
     }
 
     @Override

@@ -1,12 +1,15 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public abstract class Character {
+    private final Role role;
     private Player player;
 
-    @Override
-    public abstract String toString();
+    protected Character(Role role) {
+        this.role = role;
+    }
 
     /**
      * Set the player of the character
@@ -37,6 +40,15 @@ public abstract class Character {
 
     @Override
     public int hashCode() {
-    	return this.toString().hashCode();
+        return this.toString().hashCode();
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return this.role.getName();
     }
 }
