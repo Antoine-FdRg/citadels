@@ -1,4 +1,5 @@
 package com.seinksansdoozebank.fr.model.player;
+
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 
@@ -15,6 +16,8 @@ public abstract class Player {
     private static int counter = 1;
     protected final int id;
     private int nbGold;
+    private int bonus;
+    private boolean isFirstToHaveEightDistricts;
     protected Deck deck;
     protected final List<Card> hand;
     private final List<Card> citadel;
@@ -29,6 +32,8 @@ public abstract class Player {
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
         this.view = view;
+        this.bonus = 0;
+        this.isFirstToHaveEightDistricts = false;
     }
 
     /**
@@ -47,7 +52,7 @@ public abstract class Player {
      */
     protected final void pickGold() {
         view.displayPlayerPicksGold(this);
-        this.nbGold+=2;
+        this.nbGold += 2;
     }
 
     /**
@@ -58,11 +63,12 @@ public abstract class Player {
 
     /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
+     *
      * @return the district built by the player
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty()|| !canPlayCard(optChosenCard.get())) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -75,12 +81,14 @@ public abstract class Player {
     /**
      * Choose a district to build from the hand
      * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
+     *
      * @return the district to build
      */
     protected abstract Optional<Card> chooseCard();
 
     /**
      * Verify if the player can build the district passed in parameter (he can build it if he has enough gold and if he doesn't already have it in his citadel)
+     *
      * @param card the district to build
      * @return true if the player can build the district passed in parameter, false otherwise
      */
@@ -91,6 +99,7 @@ public abstract class Player {
     protected final void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
+
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
@@ -115,9 +124,42 @@ public abstract class Player {
         counter = 1;
     }
 
+    /**
+     * We add bonus with the final state of the game to a specific player
+     *
+     * @param bonus
+     */
+    public void addBonus(int bonus) {
+        this.bonus += bonus;
+    }
+
+    /**
+     * getter
+     *
+     * @return bonus point of a player
+     */
+    public int getBonus() {
+        return this.bonus;
+    }
+
+    /**
+     * getter
+     * @return a boolean which specify if the player is the first to have 8Districts in his citadel
+     */
+    public boolean getIsFirstToHaveEightDistricts() {
+        return this.isFirstToHaveEightDistricts;
+    }
+
+    /**
+     * setter, this method set the isFirstToHaveEightDistricts attribute to true
+     */
+    public void setIsFirstToHaveEightDistricts() {
+        this.isFirstToHaveEightDistricts = true;
+    }
+
     public final int getScore() {
-        //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
+        //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
+        return (citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
     }
 
     public Character chooseCharacter(List<Character> characters) {
@@ -128,6 +170,6 @@ public abstract class Player {
 
     @Override
     public String toString() {
-        return "Le joueur "+this.id;
+        return "Le joueur " + this.id;
     }
 }
