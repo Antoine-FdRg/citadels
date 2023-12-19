@@ -119,7 +119,7 @@ public abstract class Player {
 
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
+        return getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
     public abstract void chooseCharacter(List<Character> characters);
