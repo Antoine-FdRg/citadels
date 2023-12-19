@@ -146,4 +146,13 @@ class PlayerTest {
         // Assert
         assertTrue(characters.contains(character));
     }
+
+    @Test
+    void getScoreWithBonusTest(){
+        player.getCitadel().add(cardCostThree);
+        player.getCitadel().add(cardCostFive);
+        player.addBonus(4);
+        int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost()+ player.getBonus();
+        assertEquals(sum, player.getScore());
+    }
 }
