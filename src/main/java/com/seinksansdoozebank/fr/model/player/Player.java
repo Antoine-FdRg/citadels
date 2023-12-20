@@ -86,7 +86,7 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.citadel.contains(card);
+        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card);
     }
 
     protected final void decreaseGold(int gold) {

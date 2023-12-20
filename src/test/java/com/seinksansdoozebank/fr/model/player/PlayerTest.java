@@ -87,9 +87,8 @@ class PlayerTest {
     }
     @Test
     void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
-        spyPlayer.getCitadel().add(cardCostThree);
-        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
-        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
+        doReturn(List.of(cardCostThree)).when(spyPlayer).getCitadel();
+        assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
 
     @Test
