@@ -55,7 +55,7 @@ public class Game {
             round++;
         }
         //we add bonus to player who has specific citadel
-        findBonusOfPlayer();
+        updatePlayersBonus();
         view.displayWinner(getWinner());
     }
 
@@ -118,7 +118,7 @@ public class Game {
     /**
      * This method adds bonus to the attribute bonus of each player of the game if they have got one
      */
-    public void findBonusOfPlayer() {
+    public void updatePlayersBonus() {
         for (Player player : players) {
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);

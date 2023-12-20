@@ -36,17 +36,42 @@ class GameTest {
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
-        List<Card> citadelWithEightDistrictsAndFiveDistrictTypes = new ArrayList<>(List.of(new Card(District.PORT), new Card(District.PALACE), new Card(District.TEMPLE), new Card(District.FORTRESS), new Card(District.MARKET_PLACE), new Card(District.CEMETERY), new Card(District.MANUFACTURE), new Card(District.CASTLE)));
-        when(playerWIthEightDistrictsAndFiveDistrictTypes.getCitadel()).thenReturn(citadelWithEightDistrictsAndFiveDistrictTypes);
+
+        List<Card> citadelWithEightDistrictsAndFiveDistrictTypes = new ArrayList<>(List.
+                of(new Card(District.PORT),
+                        new Card(District.PALACE),
+                        new Card(District.TEMPLE),
+                        new Card(District.FORTRESS),
+                        new Card(District.MARKET_PLACE),
+                        new Card(District.CEMETERY),
+                        new Card(District.MANUFACTURE),
+                        new Card(District.CASTLE)));
+
+        when(playerWIthEightDistrictsAndFiveDistrictTypes.getCitadel()).
+                thenReturn(citadelWithEightDistrictsAndFiveDistrictTypes);
 
         //Set player 2 with only two districts in its citadel
         playerWithNoBonus = spy(new RandomBot(5, new Deck(), view));
-        List<Card> citadelWithNoBonusAssociated = new ArrayList<>(List.of(new Card(District.PORT), new Card(District.PALACE)));
+
+        List<Card> citadelWithNoBonusAssociated = new ArrayList<>(List.
+                of(new Card(District.PORT),
+                        new Card(District.PALACE)));
+
         when(playerWithNoBonus.getCitadel()).thenReturn(citadelWithNoBonusAssociated);
 
         //Set player 3 with eight district in its citadel and with less than 5 different districtTypes
         playerWithEightDistricts = spy(new RandomBot(5, new Deck(), view));
-        List<Card> citadelWithEightDistricts = new ArrayList<>(List.of(new Card(District.TEMPLE), new Card(District.CHURCH), new Card(District.MONASTERY), new Card(District.CATHEDRAL), new Card(District.MANOR), new Card(District.CASTLE), new Card(District.PALACE), new Card(District.TAVERN)));
+
+        List<Card> citadelWithEightDistricts = new ArrayList<>(List.
+                of(new Card(District.TEMPLE),
+                        new Card(District.CHURCH),
+                        new Card(District.MONASTERY),
+                        new Card(District.CATHEDRAL),
+                        new Card(District.MANOR),
+                        new Card(District.CASTLE),
+                        new Card(District.PALACE),
+                        new Card(District.TAVERN)));
+
         when(playerWithEightDistricts.getCitadel()).thenReturn(citadelWithEightDistricts);
 
         gameWithThreePlayer.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
@@ -83,7 +108,7 @@ class GameTest {
         gameWithThreePlayer.isTheFirstOneToHaveEightDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
         //playerWithEightDistricts is not the first who has eight districts +2 in bonus
         gameWithThreePlayer.isTheFirstOneToHaveEightDistricts(playerWithEightDistricts);
-        gameWithThreePlayer.findBonusOfPlayer();
+        gameWithThreePlayer.updatePlayersBonus();
 
         assertEquals(7, playerWIthEightDistrictsAndFiveDistrictTypes.getBonus());
         assertEquals(2, playerWithEightDistricts.getBonus());
@@ -93,9 +118,9 @@ class GameTest {
      * This test verifies the method hasFiveDifferentDistrictTypes on a player who has got five different types of district
      */
     @Test
-    void hasDifferentDistrictTypeTest() {
+    void hasDifferentDistrictTypeTestWithPlayerHavingFiveTypesShouldReturnTrue() {
         //botWithFiveDifferentDistrictType
-        gameWithThreePlayer.findBonusOfPlayer();
+        gameWithThreePlayer.updatePlayersBonus();
         assertTrue(gameWithThreePlayer.hasFiveDifferentDistrictTypes(playerWIthEightDistrictsAndFiveDistrictTypes));
     }
 
@@ -103,9 +128,9 @@ class GameTest {
      * This test verifies the method hasFiveDifferentDistrictTypes on a player who has got five different types of district
      */
     @Test
-    void hasDifferentDistrictTypeTestBis() {
+    void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
         //botWithLessThanFiveDifferentDistrictType
-        gameWithThreePlayer.findBonusOfPlayer();
+        gameWithThreePlayer.updatePlayersBonus();
         assertFalse(gameWithThreePlayer.hasFiveDifferentDistrictTypes(playerWithNoBonus));
     }
 
@@ -115,7 +140,7 @@ class GameTest {
     @Test
     void botWithEightDistrictInItCitadelTest() {
 
-        gameWithThreePlayer.findBonusOfPlayer();
+        gameWithThreePlayer.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
     }
 }
