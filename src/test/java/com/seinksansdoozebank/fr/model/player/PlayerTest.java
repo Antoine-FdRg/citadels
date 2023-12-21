@@ -38,14 +38,14 @@ class PlayerTest {
     void setup() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        cardCostThree= new Card(District.BARRACK);
-        cardCostFive= new Card(District.FORTRESS);
+        cardCostThree = new Card(District.BARRACK);
+        cardCostFive = new Card(District.FORTRESS);
         player = new RandomBot(10, deck, view);
         spyPlayer = spy(new RandomBot(10, deck, view));
     }
 
     @Test
-    void testPickGold(){
+    void testPickGold() {
         Player player = new RandomBot(10, deck, view);
         player.pickGold();
         assertEquals(12, player.getNbGold());
@@ -141,6 +141,7 @@ class PlayerTest {
 
         assertTrue(player.isTheKing());
     }
+
     @Test
     void isTheKingWithAPlayerNotBeingTheKing() {
         List<Character> characters = new ArrayList<>();
@@ -168,5 +169,18 @@ class PlayerTest {
         assertEquals(condottiere, retrievedCharacter);
         assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
         assertNull(condottiere.getPlayer());
+    }
+
+    @Test
+    void getScoreWithBonusTest() {
+        List<Card> spyPlayerCitadel = new ArrayList<>(List.
+                of(new Card(District.PORT),
+                        new Card(District.PALACE)));
+        when(spyPlayer.getCitadel()).
+                thenReturn(spyPlayerCitadel);
+
+        spyPlayer.addBonus(4);
+        int sum = (new Card(District.PORT)).getDistrict().getCost() + (new Card(District.PALACE)).getDistrict().getCost() + spyPlayer.getBonus();
+        assertEquals(sum, spyPlayer.getScore());
     }
 }

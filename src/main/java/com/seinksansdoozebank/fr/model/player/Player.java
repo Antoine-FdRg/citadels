@@ -1,4 +1,5 @@
 package com.seinksansdoozebank.fr.model.player;
+
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 
@@ -17,6 +18,8 @@ public abstract class Player {
     private static int counter = 1;
     protected final int id;
     private int nbGold;
+    private int bonus;
+    private boolean isFirstToHaveEightDistricts;
     protected Deck deck;
     protected final List<Card> hand;
     private final List<Card> citadel;
@@ -31,6 +34,8 @@ public abstract class Player {
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
         this.view = view;
+        this.bonus = 0;
+        this.isFirstToHaveEightDistricts = false;
     }
 
     /**
@@ -131,9 +136,42 @@ public abstract class Player {
         counter = 1;
     }
 
+    /**
+     * We add bonus with the final state of the game to a specific player
+     *
+     * @param bonus
+     */
+    public void addBonus(int bonus) {
+        this.bonus += bonus;
+    }
+
+    /**
+     * getter
+     *
+     * @return bonus point of a player
+     */
+    public int getBonus() {
+        return this.bonus;
+    }
+
+    /**
+     * getter
+     * @return a boolean which specify if the player is the first to have 8Districts in his citadel
+     */
+    public boolean getIsFirstToHaveEightDistricts() {
+        return this.isFirstToHaveEightDistricts;
+    }
+
+    /**
+     * setter, this method set the isFirstToHaveEightDistricts attribute to true
+     */
+    public void setIsFirstToHaveEightDistricts() {
+        this.isFirstToHaveEightDistricts = true;
+    }
+
     public final int getScore() {
-        //calcule de la somme du cout des quartiers de la citadelle
-        return getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum();
+        //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
+        return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
     }
 
     public abstract void chooseCharacter(List<Character> characters);
