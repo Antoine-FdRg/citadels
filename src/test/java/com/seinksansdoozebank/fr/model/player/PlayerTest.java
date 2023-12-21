@@ -129,6 +129,7 @@ class PlayerTest {
         int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, player.getScore());
     }
+
     @Test
     void isTheKingWithAPlayerBeingTheKing() {
         List<Character> characters = new ArrayList<>();
@@ -147,6 +148,7 @@ class PlayerTest {
 
         assertFalse(player.isTheKing());
     }
+
     @Test
     void isTheKingWithAPlayerWithNoCharacter() {
         assertFalse(player.isTheKing());

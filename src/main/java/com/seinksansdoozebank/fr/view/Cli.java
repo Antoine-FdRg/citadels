@@ -20,7 +20,7 @@ public class Cli implements IView {
     }
 
     public void displayWinner(Player winner) {
-        System.out.println(winner + " gagne avec un score de " + winner.getScore()+".");
+        System.out.println(winner + " gagne avec un score de " + winner.getScore() + ".");
     }
 
     @Override
@@ -40,12 +40,12 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        System.out.println( player + " choisit un personnage.");
+        System.out.println(player + " choisit un personnage.");
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        System.out.println(player + " se révèle être "+player.getCharacter()+".");
+        System.out.println(player + " se révèle être " + player.getCharacter() + ".");
     }
 
     private void displayPlayerHand(Player player) {

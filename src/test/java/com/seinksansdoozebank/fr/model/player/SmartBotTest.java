@@ -44,7 +44,7 @@ class SmartBotTest {
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
-        verify(view,times(1)).displayPlayerRevealCharacter(spySmartBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
         verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, optDistrict);
@@ -61,7 +61,7 @@ class SmartBotTest {
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
-        verify(view,times(1)).displayPlayerRevealCharacter(spySmartBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
         verify(spySmartBot, times(1)).pickGold();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot,Optional.of(cardCostThree));
@@ -77,7 +77,7 @@ class SmartBotTest {
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
-        verify(view,times(1)).displayPlayerRevealCharacter(spySmartBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, optDistrict);
         verify(spySmartBot, times(1)).pickSomething();
