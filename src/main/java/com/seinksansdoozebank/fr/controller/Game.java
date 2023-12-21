@@ -33,7 +33,7 @@ public class Game {
         for (int i = 0; i < nbPlayers-1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
-        availableCharacters  = new ArrayList<>();
+        availableCharacters = new ArrayList<>();
         kingPlayer = Optional.empty();
     }
 
@@ -48,7 +48,7 @@ public class Game {
                 player.chooseCharacter(availableCharacters);
             }
             for (Player player : players) {
-                kingPlayer = player.isTheKing()? Optional.of(player) : Optional.empty();
+                kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 player.play();
             }
             retrieveCharacters();
@@ -72,7 +72,7 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     private void orderPlayerBeforeChoosingCharacter() {
-        if(kingPlayer.isPresent()) {
+        if (kingPlayer.isPresent()) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
             int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());

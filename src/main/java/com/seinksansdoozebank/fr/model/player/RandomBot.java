@@ -19,10 +19,10 @@ public class RandomBot extends Player {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
-        if(random.nextBoolean()){
+        if (random.nextBoolean()) {
             pickSomething();
             view.displayPlayerPlaysCard(this, this.playACard());
-        }else{
+        } else {
             view.displayPlayerPlaysCard(this, this.playACard());
             pickSomething();
         }
@@ -69,7 +69,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void chooseCharacter(List<Character> characters)  {
+    public void chooseCharacter(List<Character> characters) {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
         characters.remove(this.character);
@@ -78,6 +78,6 @@ public class RandomBot extends Player {
 
     @Override
     public String toString() {
-        return "Le bot aléatoire "+this.id;
+        return "Le bot aléatoire " + this.id;
     }
 }
