@@ -22,7 +22,7 @@ public class Game {
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
 
-    boolean findFirstPlayerWithEightDistricts = false;
+    private boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
     private List<Player> players;
     private Optional<Player> kingPlayer;
