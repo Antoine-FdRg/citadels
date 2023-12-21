@@ -2,9 +2,10 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RandomBot extends Player {
@@ -16,11 +17,12 @@ public class RandomBot extends Player {
     @Override
     public void play() {
         view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
-        if(random.nextBoolean()){
+        if (random.nextBoolean()) {
             pickSomething();
             view.displayPlayerPlaysCard(this, this.playACard());
-        }else{
+        } else {
             view.displayPlayerPlaysCard(this, this.playACard());
             pickSomething();
         }
@@ -58,7 +60,7 @@ public class RandomBot extends Player {
             do {
                 chosenCard = this.hand.get(random.nextInt(hand.size()));
                 cnt++;
-            } while (this.canPlayCard(chosenCard) && cnt < 5);
+            } while (!this.canPlayCard(chosenCard) && cnt < 5);
             if (this.canPlayCard(chosenCard)) {
                 return Optional.of(chosenCard);
             }
@@ -67,7 +69,15 @@ public class RandomBot extends Player {
     }
 
     @Override
+    public void chooseCharacter(List<Character> characters) {
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        characters.remove(this.character);
+        this.view.displayPlayerChooseCharacter(this);
+    }
+
+    @Override
     public String toString() {
-        return "Le bot aléatoire "+this.id;
+        return "Le bot aléatoire " + this.id;
     }
 }

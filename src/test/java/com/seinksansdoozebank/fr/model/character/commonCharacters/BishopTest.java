@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 class BishopTest {
     List<Card> citadel;
@@ -29,7 +28,7 @@ class BishopTest {
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        player = new RandomBot(2, deck, view);
+        player = spy(new RandomBot(2, deck, view));
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
@@ -39,7 +38,7 @@ class BishopTest {
         citadel.add(new Card(District.MONASTERY));
         citadel.add(new Card(District.CATHEDRAL));
         // Set the citadel to the player
-        player.getCitadel().addAll(citadel);
+        when(player.getCitadel()).thenReturn(citadel);
         // Create a Bishop character
         bishop = new Bishop();
         // Set the player and the citadel to the character

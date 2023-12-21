@@ -3,9 +3,11 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -78,6 +80,16 @@ public abstract class Player {
         return optChosenCard;
     }
 
+    public Optional<List<Card>> playCards(int numberOfCards) {
+        Optional<List<Card>> cards = Optional.of(new ArrayList<>());
+        for (int i = 0; i < numberOfCards; i++) {
+            if (playACard().isPresent()) {
+                cards.get().add(playACard().get());
+            }
+        }
+        return cards;
+    }
+
     /**
      * Choose a district to build from the hand
      * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
@@ -109,7 +121,7 @@ public abstract class Player {
     }
 
     public List<Card> getCitadel() {
-        return this.citadel;
+        return Collections.unmodifiableList(this.citadel);
     }
 
     public int getNbGold() {
@@ -159,13 +171,35 @@ public abstract class Player {
 
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
-        return (citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
+        return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
     }
 
-    public Character chooseCharacter(List<Character> characters) {
-        this.character = characters.get(random.nextInt(characters.size()));
-        this.character.setPlayer(this);
+    public abstract void chooseCharacter(List<Character> characters);
+
+    public Character getCharacter() {
         return this.character;
+    }
+
+    public int getNbDistrictsCanBeBuild() {
+        return this.character.getRole().getNbDistrictsCanBeBuild();
+    }
+
+    public Character retrieveCharacter() {
+        if (this.character == null) {
+            throw new IllegalStateException("No character to retrieve");
+        }
+        Character characterToRetrieve = this.character;
+        this.character = null;
+        characterToRetrieve.setPlayer(null);
+        return characterToRetrieve;
+    }
+
+    public boolean isTheKing() {
+        //TODO remove this if when player are able to choose a character
+        if (this.character == null) {
+            return false;
+        }
+        return Role.KING.equals(this.character.getRole());
     }
 
     @Override

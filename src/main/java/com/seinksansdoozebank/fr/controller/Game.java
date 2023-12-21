@@ -16,6 +16,7 @@ import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
@@ -24,7 +25,8 @@ public class Game {
     boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
     private List<Player> players;
-    private List<Character> availableCharacters;
+    private Optional<Player> kingPlayer;
+    private final List<Character> availableCharacters;
     private final IView view;
 
     public Game(int nbPlayers) {
@@ -35,22 +37,27 @@ public class Game {
         for (int i = 0; i < nbPlayers - 1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        availableCharacters = new ArrayList<>();
+        kingPlayer = Optional.empty();
     }
 
     public void run() {
         this.init();
         boolean isGameFinished = false;
-        int round = 0;
+        int round = 1;
         while (!isGameFinished) {
             view.displayRound(round + 1);
-            // Intialize characters
-            createCharacters();
+            orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
+                player.chooseCharacter(availableCharacters);
+            }
+            for (Player player : players) {
+                kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
                 isTheFirstOneToHaveEightDistricts(player);
-                this.removeCharacter(player.chooseCharacter(availableCharacters));
             }
+            retrieveCharacters();
             isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
             round++;
         }
@@ -59,21 +66,45 @@ public class Game {
         view.displayWinner(getWinner());
     }
 
+    /**
+     * Retrieve the characters from the players
+     */
+    private void retrieveCharacters() {
+        for (Player player : players) {
+            availableCharacters.add(player.retrieveCharacter());
+        }
+    }
+
+    /**
+     * Order the players before choosing a character if a
+     * player revealed himself being the king during the last round
+     */
+    private void orderPlayerBeforeChoosingCharacter() {
+        if (kingPlayer.isPresent()) {
+            List<Player> orderedPlayers = new ArrayList<>();
+            //récupération de l'index du roi dans la liste des joueurs
+            int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());
+            for (int i = indexOfTheKingPlayer; i < players.size(); i++) {
+                orderedPlayers.add((i - indexOfTheKingPlayer) % players.size(), players.get(i));
+            }
+            for (int i = 0; i < indexOfTheKingPlayer; i++) {
+                orderedPlayers.add((i + players.size() - indexOfTheKingPlayer) % players.size(), players.get(i));
+            }
+            players = orderedPlayers;
+        }
+    }
+
 
     private void init() {
         dealCards();
+        createCharacters();
     }
 
-    void createCharacters() {
-        availableCharacters = new ArrayList<>();
+    protected void createCharacters() {
         availableCharacters.add(new Bishop());
         availableCharacters.add(new King());
         availableCharacters.add(new Merchant());
         availableCharacters.add(new Condottiere());
-    }
-
-    private void removeCharacter(Character character) {
-        availableCharacters.remove(character);
     }
 
     private void dealCards() {

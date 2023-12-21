@@ -6,11 +6,10 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
 public abstract class CommonCharacter extends Character {
-    private final Role role;
     private final DistrictType target;
 
     protected CommonCharacter(Role role, DistrictType target) {
-        this.role = role;
+        super(role);
         this.target = target;
     }
 
@@ -31,8 +30,12 @@ public abstract class CommonCharacter extends Character {
         this.getPlayer().increaseGold(nbGold);
     }
 
-    @Override
-    public String toString() {
-        return this.role.getName();
+    /**
+     * Get the target type of the character
+     *
+     * @return the target type of the character
+     */
+    public DistrictType getTarget() {
+        return target;
     }
 }

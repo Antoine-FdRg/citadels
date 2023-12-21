@@ -34,7 +34,7 @@ To run the project, follow these steps:
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for more details.
 
 ## Contact
 
