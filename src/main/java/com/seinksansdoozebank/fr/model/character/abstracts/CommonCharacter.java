@@ -29,4 +29,13 @@ public abstract class CommonCharacter extends Character {
         }
         this.getPlayer().increaseGold(nbGold);
     }
+
+    /**
+     * Get the target type of the character
+     *
+     * @return the target type of the character
+     */
+    public DistrictType getTarget() {
+        return target;
+    }
 }

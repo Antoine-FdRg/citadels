@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
@@ -115,7 +116,7 @@ public abstract class Player {
     }
 
     public List<Card> getCitadel() {
-        return this.citadel;
+        return Collections.unmodifiableList(this.citadel);
     }
 
     public int getNbGold() {
@@ -132,15 +133,10 @@ public abstract class Player {
 
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle
-        return citadel.stream().mapToInt(card -> card.getDistrict().getCost()).sum();
+        return getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
-    public void chooseCharacter(List<Character> characters) {
-        this.character = characters.get(random.nextInt(characters.size()));
-        this.character.setPlayer(this);
-        characters.remove(this.character);
-        this.view.displayPlayerChooseCharacter(this);
-    }
+    public abstract void chooseCharacter(List<Character> characters);
 
     public Character getCharacter() {
         return this.character;

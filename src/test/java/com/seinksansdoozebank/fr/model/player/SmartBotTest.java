@@ -3,22 +3,27 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class SmartBotTest {
     SmartBot spySmartBot;
@@ -64,7 +69,7 @@ class SmartBotTest {
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
         verify(spySmartBot, times(1)).pickGold();
         verify(spySmartBot, times(1)).playACard();
-        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot,Optional.of(cardCostThree));
+        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, Optional.of(cardCostThree));
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
 
@@ -125,7 +130,7 @@ class SmartBotTest {
         verify(view, times(1)).displayPlayerPickCard(spySmartBot);
         verify(deck, times(2)).pick();
         verify(deck, times(1)).discard(any(Card.class));
-        assertTrue(spySmartBot.getHand().get(0).getDistrict().getCost()<= deck.getDeck().get(0).getDistrict().getCost());
+        assertTrue(spySmartBot.getHand().get(0).getDistrict().getCost() <= deck.getDeck().get(0).getDistrict().getCost());
     }
 
     @Test
@@ -140,7 +145,7 @@ class SmartBotTest {
     void chooseDistrictShouldReturnANotAlreadyBuiltDistrict() {
         spySmartBot.getHand().add(cardCostThree);
         spySmartBot.getHand().add(cardCostFive);
-        spySmartBot.getCitadel().add(cardCostThree);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(cardCostThree));
         Optional<Card> chosenDistrict = spySmartBot.chooseCard();
         assertTrue(chosenDistrict.isPresent());
         assertEquals(cardCostFive, chosenDistrict.get());
@@ -158,5 +163,92 @@ class SmartBotTest {
         Optional<Card> cheaperCard = spySmartBot.getCheaperCard(districtList);
         assertTrue(cheaperCard.isPresent());
         assertEquals(cardCostThree, cheaperCard.get());
+    }
+
+    @Test
+    void getDistrictTypeFrequencyList() {
+        List<Card> districtList = List.of(cardCostFive, cardCostThree, cardCostFive);
+        List<DistrictType> districtTypeFrequencyList = spySmartBot.getDistrictTypeFrequencyList(districtList);
+        assertEquals(2, districtTypeFrequencyList.size());
+        assertEquals(DistrictType.SOLDIERLY, districtTypeFrequencyList.get(0));
+        assertEquals(DistrictType.PRESTIGE, districtTypeFrequencyList.get(1));
+    }
+
+    List<Character> createCharactersList() {
+        Bishop bishop = new Bishop();
+        King king = new King();
+        Merchant merchant = new Merchant();
+        Condottiere condottiere = new Condottiere();
+
+        List<Character> characters = new ArrayList<>();
+        characters.add(bishop);
+        characters.add(king);
+        characters.add(merchant);
+        characters.add(condottiere);
+        return characters;
+    }
+
+    @Test
+    void chooseCharacterWhenMostOwnedDistrictTypeCharacterIsAvailable() {
+        List<Character> characters = createCharactersList();
+        Card manorCard = new Card(District.MANOR);
+        Card castleCard = new Card(District.CASTLE);
+        Card palaceCard = new Card(District.PALACE);
+        Card laboratoryCard = new Card(District.LABORATORY);
+
+        ArrayList<Card> citadel = new ArrayList<>();
+        citadel.add(manorCard);
+        citadel.add(castleCard);
+        citadel.add(palaceCard);
+        citadel.add(laboratoryCard);
+
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseCharacter(characters);
+        assertEquals(characters.get(1), spySmartBot.getCharacter());
+    }
+
+    @Test
+    void chooseCharacterWhenMostOwnedDistrictTypeCharacterIsNotAvailable() {
+        List<Character> characters = createCharactersList();
+        characters.remove(1); // Remove the king
+        Card manorCard = new Card(District.MANOR);
+        Card castleCard = new Card(District.CASTLE);
+        Card palaceCard = new Card(District.PALACE);
+        Card laboratoryCard = new Card(District.FORTRESS);
+
+        ArrayList<Card> citadel = new ArrayList<>();
+        citadel.add(manorCard);
+        citadel.add(castleCard);
+        citadel.add(palaceCard);
+        citadel.add(laboratoryCard);
+
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseCharacter(characters);
+        assertEquals(characters.get(2), spySmartBot.getCharacter());
+    }
+
+    @Test
+    void chooseCharacterWhenMostOwnedDistrictTypeCharacterIsNotAvailableAndSecondNeither() {
+        List<Character> characters = createCharactersList();
+        characters.remove(1); // Remove the king
+        characters.remove(2); // Remove the condottiere
+        Card manorCard = new Card(District.MANOR);
+        Card castleCard = new Card(District.CASTLE);
+        Card palaceCard = new Card(District.PALACE);
+        Card laboratoryCard = new Card(District.FORTRESS);
+        Card barrackCard = new Card(District.BARRACK);
+        Card cornerShopCard = new Card(District.CORNER_SHOP);
+
+        ArrayList<Card> citadel = new ArrayList<>();
+        citadel.add(manorCard);
+        citadel.add(castleCard);
+        citadel.add(palaceCard);
+        citadel.add(laboratoryCard);
+        citadel.add(barrackCard);
+        citadel.add(cornerShopCard);
+
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseCharacter(characters);
+        assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
 }
