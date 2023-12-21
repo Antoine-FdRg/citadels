@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character;
 
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 
@@ -10,4 +11,18 @@ public class Architect extends Character {
     }
 
 
+    @Override
+    public void useEffect() {
+        // No action
+    }
+
+    @Override
+    public void useEffect(Character character) {
+        // No action
+    }
+
+    @Override
+    public void useEffect(Character character, District district) {
+        // No action
+    }
 }
