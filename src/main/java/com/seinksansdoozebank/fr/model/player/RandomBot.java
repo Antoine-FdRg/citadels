@@ -2,8 +2,10 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RandomBot extends Player {
@@ -15,6 +17,7 @@ public class RandomBot extends Player {
     @Override
     public void play() {
         view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
         if (random.nextBoolean()) {
             pickSomething();
@@ -63,6 +66,14 @@ public class RandomBot extends Player {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void chooseCharacter(List<Character> characters) {
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        characters.remove(this.character);
+        this.view.displayPlayerChooseCharacter(this);
     }
 
     @Override
