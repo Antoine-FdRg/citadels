@@ -34,10 +34,16 @@ public class SmartBot extends Player {
             Card choosenCard = optChosenCard.get();
             if (this.canPlayCard(choosenCard)) {
                 view.displayPlayerPlaysCard(this, this.playACard());
+                this.character.useEffect();
                 this.pickSomething();
             } else {
-                this.pickGold();
-                view.displayPlayerPlaysCard(this, this.playACard());
+                this.character.useEffect();
+                if (this.canPlayCard(choosenCard)) {
+                    view.displayPlayerPlaysCard(this, this.playACard());
+                } else {
+                    this.pickGold();
+                    view.displayPlayerPlaysCard(this, this.playACard());
+                }
             }
         } else {//la main est vide
             this.pickTwoCardKeepOneDiscardOne(); //
@@ -79,6 +85,16 @@ public class SmartBot extends Player {
 
     @Override
     protected Optional<Card> chooseCard() {
+        // search for a card in the hand that is the same as the character's target
+        if (this.character instanceof CommonCharacter commonCharacter) {
+            DistrictType target = commonCharacter.getTarget();
+            Optional<Card> optCard = this.hand.stream()
+                    .filter(card -> card.getDistrict().getDistrictType() == target)
+                    .min(Comparator.comparing(card -> card.getDistrict().getCost()));
+            if (optCard.isPresent()) {
+                return optCard;
+            }
+        }
         //Gathering districts wich are not already built in player's citadel
         List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
         //Choosing the cheaper one

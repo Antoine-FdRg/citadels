@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
@@ -27,6 +28,12 @@ public abstract class Character {
     public Role getRole() {
         return this.role;
     }
+
+    public abstract void useEffect();
+
+    public abstract void useEffect(Character character);
+
+    public abstract void useEffect(Character character, District district);
 
     @Override
     public String toString() {

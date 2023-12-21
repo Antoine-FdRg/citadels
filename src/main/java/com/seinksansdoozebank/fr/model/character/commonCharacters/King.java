@@ -14,7 +14,7 @@ public class King extends CommonCharacter {
 
     @Override
     public void useEffect() {
-        // No action
+        this.getPlayer().increaseGold(1);
     }
 
     @Override
