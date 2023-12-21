@@ -5,7 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
-import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.CliLogger;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class MerchantTest {
     @BeforeEach
     void setUp() {
         // Create a player
-        view = mock(Cli.class);
+        view = mock(CliLogger.class);
         deck = mock(Deck.class);
         player = new RandomBot(2, deck, view);
         // Create a list of districts for the citadel
