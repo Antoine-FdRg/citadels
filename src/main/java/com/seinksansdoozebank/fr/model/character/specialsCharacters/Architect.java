@@ -1,0 +1,13 @@
+package com.seinksansdoozebank.fr.model.character.specialsCharacters;
+
+import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+
+public class Architect extends Character {
+
+    public Architect() {
+        super(Role.ARCHITECT);
+    }
+
+
+}

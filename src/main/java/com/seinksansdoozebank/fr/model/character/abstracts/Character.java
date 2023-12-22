@@ -4,8 +4,8 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public abstract class Character {
-    private final Role role;
     private Player player;
+    private final Role role;
 
     protected Character(Role role) {
         this.role = role;
@@ -44,7 +44,7 @@ public abstract class Character {
     }
 
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     @Override

@@ -2,11 +2,17 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Represents a smart bot which will try to build the cheaper district
@@ -86,6 +92,46 @@ public class SmartBot extends Player {
      */
     protected Optional<Card> getCheaperCard(List<Card> notAlreadyPlayedCardList) {
         return notAlreadyPlayedCardList.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+    }
+
+    @Override
+    public Character chooseCharacter(List<Character> characters) {
+        // Choose the character by getting the frequency of each districtType in the citadel
+        // and choosing the districtType with the highest frequency for the character
+
+        List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());
+        if (!districtTypeFrequencyList.isEmpty()) {
+            // Choose the character with the mostOwnedDistrictType
+            for (DistrictType districtType : districtTypeFrequencyList) {
+                for (Character character : characters) {
+                    if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
+                            this.character = commonCharacter;
+                            this.character.setPlayer(this);
+                            return this.character;
+                    }
+                }
+            }
+        }
+        // If no character has the mostOwnedDistrictType, choose a random character
+        this.character = characters.get(random.nextInt(characters.size()));
+        this.character.setPlayer(this);
+        return this.character;
+    }
+
+    /**
+     * Returns a list of districtType sorted by frequency in the citadel
+     *
+     * @param citadel the citadel of the player
+     * @return a list of districtType sorted by frequency in the citadel
+     */
+    protected List<DistrictType> getDistrictTypeFrequencyList(List<Card> citadel) {
+        return citadel.stream()
+                .map(card -> card.getDistrict().getDistrictType())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .map(Map.Entry::getKey)
+                .toList();
     }
 
     @Override
