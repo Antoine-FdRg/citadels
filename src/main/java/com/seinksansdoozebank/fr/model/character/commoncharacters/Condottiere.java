@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
@@ -6,11 +6,16 @@ import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
-public class Bishop extends CommonCharacter {
-    public Bishop() {
-        super(Role.BISHOP, DistrictType.RELIGION);
+public class Condottiere extends CommonCharacter {
+
+    public Condottiere() {
+        super(Role.CONDOTTIERE, DistrictType.SOLDIERLY);
     }
 
+    /**
+     * The condottiere can choose to destroy a district of another player
+     * Paying the cost of the district to the bank -1
+     */
     @Override
     public void useEffect() {
         // No action
@@ -23,6 +28,6 @@ public class Bishop extends CommonCharacter {
 
     @Override
     public void useEffect(Character character, District district) {
-        // No action
+        // TODO: need to implement the strategy to destroy a district
     }
 }
