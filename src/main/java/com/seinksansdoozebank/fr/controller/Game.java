@@ -25,6 +25,10 @@ public class Game {
     private final List<Character> availableCharacters;
     private final IView view;
 
+    /**
+     * Constructor of the Game class
+     * @param nbPlayers the number of players playing
+     */
     public Game(int nbPlayers) {
         this.view = new Cli();
         this.deck = new Deck();
@@ -37,6 +41,9 @@ public class Game {
         kingPlayer = Optional.empty();
     }
 
+    /**
+     *
+     */
     public void run() {
         this.init();
         boolean isGameFinished = false;
@@ -86,19 +93,26 @@ public class Game {
         }
     }
 
-
+    /**
+     * Ask the player to choose their characters
+     */
     protected void playersChooseCharacters() {
         for (Player player : players) {
-            this.removeCharacter(player.chooseCharacter(availableCharacters));
+            availableCharacters.remove(player.chooseCharacter(availableCharacters));
         }
     }
 
-
+    /**
+     * Initialize the game
+     */
     private void init() {
         dealCards();
         createCharacters();
     }
 
+    /**
+     * Create the list of characters ordered
+     */
     protected void createCharacters() {
         availableCharacters.add(new King());
         availableCharacters.add(new Bishop());
@@ -107,10 +121,9 @@ public class Game {
         availableCharacters.add(new Condottiere());
     }
 
-    void removeCharacter(Character character) {
-        availableCharacters.remove(character);
-    }
-
+    /**
+     * Deal the cards to the players
+     */
     private void dealCards() {
         for (int i = 0; i < NB_CARD_BY_PLAYER; i++) {
             for (Player player : players) {
@@ -119,6 +132,10 @@ public class Game {
         }
     }
 
+    /**
+     * Get the winner of the game
+     * @return The player who win the game
+     */
     protected Player getWinner() {
         Player bestPlayer = players.get(0);
         for (Player currentPlayer : players) {
@@ -129,10 +146,18 @@ public class Game {
         return bestPlayer;
     }
 
+    /**
+     * Set the list of players (For Test ONLY)
+     * @param players the list of players
+     */
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
+    /**
+     * Get the characters that are still available.
+     * @return the list of characters available
+     */
     public List<Character> getAvailableCharacters() {
         return availableCharacters;
     }
