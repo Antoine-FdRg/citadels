@@ -8,6 +8,8 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -52,6 +54,9 @@ public class Game {
                 player.chooseCharacter(availableCharacters);
             }
             for (Player player : players) {
+                if (player.getCharacter().isDead()) {
+                    continue;
+                }
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
@@ -101,9 +106,11 @@ public class Game {
     }
 
     protected void createCharacters() {
+        // availableCharacters.add(new Assassin());
         availableCharacters.add(new Bishop());
         availableCharacters.add(new King());
         availableCharacters.add(new Merchant());
+        // availableCharacters.add(new Architect());
         availableCharacters.add(new Condottiere());
     }
 

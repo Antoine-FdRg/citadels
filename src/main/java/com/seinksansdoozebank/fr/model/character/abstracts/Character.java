@@ -1,15 +1,21 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public abstract class Character {
     private Player player;
     private final Role role;
+    private boolean isDead = false;
 
     protected Character(Role role) {
         this.role = role;
     }
+
+    public abstract void useEffect();
+    public abstract void useEffect(Character character);
+    public abstract void useEffect(Character character, District district);
 
     /**
      * Set the player of the character
@@ -31,5 +37,16 @@ public abstract class Character {
     @Override
     public String toString() {
         return this.role.getName();
+    }
+
+    /**
+     * Kill the character
+     */
+    public void kill() {
+        this.isDead = true;
+    }
+
+    public boolean isDead() {
+        return this.isDead;
     }
 }
