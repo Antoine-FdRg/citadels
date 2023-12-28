@@ -5,6 +5,8 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
@@ -34,10 +36,14 @@ public class SmartBot extends Player {
             Card choosenCard = optChosenCard.get();
             if (this.canPlayCard(choosenCard)) {
                 view.displayPlayerPlaysCard(this, this.playACard());
-                this.character.useEffect();
+                if (character instanceof CommonCharacter commonCharacter) {
+                    commonCharacter.goldCollectedFromDisctrictType();
+                }
                 this.pickSomething();
             } else {
-                this.character.useEffect();
+                if (character instanceof CommonCharacter commonCharacter) {
+                    commonCharacter.goldCollectedFromDisctrictType();
+                }
                 if (this.canPlayCard(choosenCard)) {
                     view.displayPlayerPlaysCard(this, this.playACard());
                 } else {
@@ -49,6 +55,7 @@ public class SmartBot extends Player {
             this.pickTwoCardKeepOneDiscardOne(); //
             view.displayPlayerPlaysCard(this, this.playACard());
         }
+        this.useEffect();
         view.displayPlayerInfo(this);
     }
 
@@ -149,6 +156,29 @@ public class SmartBot extends Player {
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey)
                 .toList();
+    }
+
+    protected void useEffect() {
+        // The strategy of the smart bot for condottiere will be to destroy a district of the player which owns the highest number of districts
+        if (this.character instanceof Condottiere condottiere) {
+            // Get the player with the most districts
+            Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
+                    .max(Comparator.comparing(player -> player.getCitadel().size()));
+            if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().character instanceof Bishop) {
+                return;
+            }
+            // Sort the districts of the player by cost
+            List<Card> cardOfPlayerSortedByCost = playerWithMostDistricts.get().getCitadel().stream()
+                    .sorted(Comparator.comparing(card -> card.getDistrict().getCost()))
+                    .toList();
+            // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
+            for (Card card : cardOfPlayerSortedByCost) {
+                if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
+                    condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
+                    return;
+                }
+            }
+        }
     }
 
     @Override

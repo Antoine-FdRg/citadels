@@ -18,16 +18,21 @@ public class Condottiere extends CommonCharacter {
      */
     @Override
     public void useEffect() {
-        this.getPlayer().increaseGold(1);
-    }
-
-    @Override
-    public void useEffect(Character character) {
         // No action
     }
 
-    @Override
     public void useEffect(Character character, District district) {
-        // TODO: need to implement the strategy to destroy a district
+        if (character.getPlayer().getNbGold() < district.getCost() + 1) {
+            throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
+        }
+        if (character.getPlayer().equals(this.getPlayer())) {
+            throw new IllegalArgumentException("The player can't destroy his own district");
+        }
+        if (character instanceof Bishop) {
+            throw new IllegalArgumentException("The player can't destroy the district of the bishop");
+        }
+        if (character.getPlayer().destroyDistrict(district)) {
+            this.getPlayer().decreaseGold(district.getCost() + 1);
+        }
     }
 }

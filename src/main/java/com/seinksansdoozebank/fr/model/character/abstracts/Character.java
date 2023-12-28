@@ -31,10 +31,6 @@ public abstract class Character {
 
     public abstract void useEffect();
 
-    public abstract void useEffect(Character character);
-
-    public abstract void useEffect(Character character, District district);
-
     @Override
     public String toString() {
         return this.role.getName();

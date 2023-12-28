@@ -48,6 +48,11 @@ public class Cli implements IView {
         System.out.println(player + " se révèle être " + player.getCharacter() + ".");
     }
 
+    @Override
+    public void displayPlayerDestroyDistrict(Player player, District district) {
+        System.out.println(player + " détruit le quartier " + district.getName() + " de " + district.getCost() + " pièces d'or.");
+    }
+
     private void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
