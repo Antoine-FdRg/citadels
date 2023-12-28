@@ -7,6 +7,7 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
@@ -32,6 +33,7 @@ public class SmartBot extends Player {
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
         Optional<Card> optChosenCard = this.chooseCard();
+        this.useEffect();
         if (optChosenCard.isPresent()) {
             Card choosenCard = optChosenCard.get();
             if (this.canPlayCard(choosenCard)) {
@@ -55,7 +57,6 @@ public class SmartBot extends Player {
             this.pickTwoCardKeepOneDiscardOne(); //
             view.displayPlayerPlaysCard(this, this.playACard());
         }
-        this.useEffect();
         view.displayPlayerInfo(this);
     }
 
@@ -159,8 +160,11 @@ public class SmartBot extends Player {
     }
 
     protected void useEffect() {
+        if (this.character instanceof Merchant merchant) {
+            merchant.useEffect();
+        }
         // The strategy of the smart bot for condottiere will be to destroy a district of the player which owns the highest number of districts
-        if (this.character instanceof Condottiere condottiere) {
+        else if (this.character instanceof Condottiere condottiere) {
             // Get the player with the most districts
             Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
                     .max(Comparator.comparing(player -> player.getCitadel().size()));
