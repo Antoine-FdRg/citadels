@@ -87,7 +87,7 @@ class PlayerTest {
     }
     @Test
     void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
-        doReturn(List.of(cardCostThree)).when(spyPlayer).getCitadel();
+        when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
         assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
 
