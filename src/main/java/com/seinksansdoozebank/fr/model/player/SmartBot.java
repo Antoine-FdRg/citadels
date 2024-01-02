@@ -93,12 +93,11 @@ public class SmartBot extends Player {
 
     @Override
     protected Optional<Card> chooseCard() {
-        // search for a card in the hand that is the same as the character's target
         if (this.character instanceof CommonCharacter commonCharacter) {
             DistrictType target = commonCharacter.getTarget();
             Optional<Card> optCard = this.hand.stream()
-                    .filter(card -> card.getDistrict().getDistrictType() == target)
-                    .min(Comparator.comparing(card -> card.getDistrict().getCost()));
+                    .filter(card -> card.getDistrict().getDistrictType() == target) // filter the cards that are the same as the character's target
+                    .min(Comparator.comparing(card -> card.getDistrict().getCost())); // choose the cheaper one
             if (optCard.isPresent()) {
                 return optCard;
             }
@@ -163,7 +162,7 @@ public class SmartBot extends Player {
         if (this.character instanceof Merchant merchant) {
             merchant.useEffect();
         }
-        // The strategy of the smart bot for condottiere will be to destroy a district of the player which owns the highest number of districts
+        // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
             // Get the player with the most districts
             Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
