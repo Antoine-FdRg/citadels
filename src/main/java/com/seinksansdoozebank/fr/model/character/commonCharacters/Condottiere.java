@@ -31,7 +31,7 @@ public class Condottiere extends CommonCharacter {
         if (character instanceof Bishop) {
             throw new IllegalArgumentException("The player can't destroy the district of the bishop");
         }
-        if (character.getPlayer().destroyDistrict(district)) {
+        if (character.getPlayer().destroyDistrict(this.getPlayer(), district)) {
             this.getPlayer().decreaseGold(district.getCost() + 1);
         }
     }

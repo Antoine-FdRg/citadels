@@ -210,9 +210,9 @@ public abstract class Player {
         return "Le joueur " + this.id;
     }
 
-    public boolean destroyDistrict(District district) {
+    public boolean destroyDistrict(Player attacker, District district) {
         if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
-            this.view.displayPlayerDestroyDistrict(this, district);
+            this.view.displayPlayerDestroyDistrict(attacker, this, district);
             return true;
         } else {
             throw new IllegalStateException("The player doesn't have the district to destroy");
