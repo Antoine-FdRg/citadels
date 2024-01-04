@@ -60,7 +60,6 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             // Intialize characters
-            createCharacters();
             playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
