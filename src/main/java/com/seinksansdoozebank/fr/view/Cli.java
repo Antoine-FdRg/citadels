@@ -23,48 +23,40 @@ public class Cli implements IView {
 
     public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            String res = player + " ne pose pas de quartier.";
-            logger.info(res);
+            logger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
-            String res = player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or";
-            logger.info(res);
+            logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d'or.",new Object[]{ player, builtDistrict.getName(),builtDistrict.getCost(),player.getNbGold()});
         }
     }
 
     public void displayWinner(Player winner) {
-        String res = winner + " gagne avec un score de " + winner.getScore() +".";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} gagne avec un score de {1} .",new Object[]{ winner, winner.getScore()});
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        String res = player + " commence à jouer.";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} commence à jouer.",player);
     }
 
     @Override
     public void displayPlayerPickCard(Player player) {
-        String res = player + " pioche un quartier.";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} pioche un quartier.",player);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player) {
-        String res = player + " pioche 2 pièces d'or.";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} pioche 2 pièces d''or.",player);
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-       String res=player + " choisit un personnage.";
-       logger.info(res);
+        logger.log(Level.INFO, "{0} choisit un personnage.",player);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        String res=player + " se révèle être " + player.getCharacter() + ".";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} se révèle être {1} .",new Object[]{ player, player.getCharacter()});
     }
 
     private void displayPlayerHand(Player player) {
@@ -85,8 +77,7 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de carte dans sa main.");
         }
-        String res = String.valueOf(sb);
-        logger.info(res);
+         logger.log(Level.INFO , sb.toString());
     }
 
     private void displayPlayerCitadel(Player player) {
@@ -107,20 +98,17 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
-        String res = String.valueOf(sb);
-        logger.info(res);
+        logger.log(Level.INFO , sb.toString());
     }
 
     @Override
     public void displayPlayerInfo(Player player) {
-        String res = player + " possède : \n\t- " + player.getNbGold() + " pièces d'or";
-        logger.info(res);
+        logger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.",new Object[]{ player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
 
     public void displayRound(int roundNumber) {
-        String res = "########## Début du round " + roundNumber + " ##########";
-        logger.info(res);
+        logger.log(Level.INFO, "########## Début du round {0} ##########",roundNumber);
     }
 }
