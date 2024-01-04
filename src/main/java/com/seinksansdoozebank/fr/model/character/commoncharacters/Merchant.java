@@ -20,14 +20,4 @@ public class Merchant extends CommonCharacter {
         this.getPlayer().increaseGold(1);
     }
 
-    @Override
-    public void useEffect(Character character) {
-
-    }
-
-    @Override
-    public void useEffect(Character character, District district) {
-
-    }
-
 }

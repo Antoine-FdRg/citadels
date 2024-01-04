@@ -19,18 +19,12 @@ public class Assassin extends Character {
      * Kill the character
      * @param character the character to kill
      */
-    @Override
     public void useEffect(Character character) {
         // Kill the specific character
         if (character.isDead()) {
             throw new IllegalStateException("The character is already dead");
         }
         character.kill();
-    }
-
-    @Override
-    public void useEffect(Character character, District district) {
-        // No action
     }
 
 }

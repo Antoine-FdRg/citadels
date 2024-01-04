@@ -17,14 +17,4 @@ public class King extends CommonCharacter {
         // No action
     }
 
-    @Override
-    public void useEffect(Character character) {
-
-    }
-
-    @Override
-    public void useEffect(Character character, District district) {
-
-    }
-
 }

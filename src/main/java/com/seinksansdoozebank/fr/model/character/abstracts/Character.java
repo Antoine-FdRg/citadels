@@ -13,10 +13,6 @@ public abstract class Character {
         this.role = role;
     }
 
-    public abstract void useEffect();
-    public abstract void useEffect(Character character);
-    public abstract void useEffect(Character character, District district);
-
     /**
      * Set the player of the character
      *
@@ -33,6 +29,8 @@ public abstract class Character {
     public Role getRole() {
         return this.role;
     }
+
+    public abstract void useEffect();
 
     @Override
     public String toString() {

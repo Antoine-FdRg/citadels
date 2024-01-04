@@ -15,14 +15,4 @@ public class Architect extends Character {
     public void useEffect() {
 
     }
-
-    @Override
-    public void useEffect(Character character) {
-
-    }
-
-    @Override
-    public void useEffect(Character character, District district) {
-
-    }
 }
