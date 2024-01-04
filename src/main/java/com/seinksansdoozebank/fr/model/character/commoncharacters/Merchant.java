@@ -22,11 +22,12 @@ public class Merchant extends CommonCharacter {
 
     @Override
     public void useEffect(Character character) {
-        // No action
+
     }
 
     @Override
     public void useEffect(Character character, District district) {
-        // No action
+
     }
+
 }

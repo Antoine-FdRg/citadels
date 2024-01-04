@@ -39,6 +39,11 @@ public class Game {
         for (int i = 0; i < nbPlayers - 1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        for (Player player : players) {
+            List<Player> opponents = new ArrayList<>(players);
+            opponents.remove(player);
+            player.setOpponents(opponents);
+        }
         availableCharacters = new ArrayList<>();
         kingPlayer = Optional.empty();
     }
