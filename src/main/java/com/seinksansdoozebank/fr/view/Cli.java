@@ -8,44 +8,55 @@ import java.util.Optional;
 
 import java.util.List;
 
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 public class Cli implements IView {
+
+    private static final Logger logger = Logger.getLogger(Cli.class.getName());
+
+    public Cli() {
+        logger.setLevel(Level.ALL);
+    }
 
     public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            System.out.println(player + " ne pose pas de quartier.");
+            logger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
-            System.out.println(player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or.");
+            logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d'or.",new Object[]{ player, builtDistrict.getName(),builtDistrict.getCost(),player.getNbGold()});
         }
     }
 
     public void displayWinner(Player winner) {
-        System.out.println(winner + " gagne avec un score de " + winner.getScore() + ".");
+        logger.log(Level.INFO, "{0} gagne avec un score de {1} .",new Object[]{ winner, winner.getScore()});
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        System.out.println(player + " commence à jouer.");
+        logger.log(Level.INFO, "{0} commence à jouer.",player);
     }
 
     @Override
     public void displayPlayerPickCard(Player player) {
-        System.out.println(player + " pioche un quartier.");
+        logger.log(Level.INFO, "{0} pioche un quartier.",player);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player) {
-        System.out.println(player + " pioche 2 pièces d'or.");
+        logger.log(Level.INFO, "{0} pioche 2 pièces d''or.",player);
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        System.out.println(player + " choisit un personnage.");
+        logger.log(Level.INFO, "{0} choisit un personnage.",player);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        System.out.println(player + " se révèle être " + player.getCharacter() + ".");
+        logger.log(Level.INFO, "{0} se révèle être {1} .",new Object[]{ player, player.getCharacter()});
     }
 
     @Override
@@ -71,7 +82,7 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de carte dans sa main.");
         }
-        System.out.println(sb);
+         logger.log(Level.INFO , sb.toString());
     }
 
     private void displayPlayerCitadel(Player player) {
@@ -92,17 +103,17 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
-        System.out.println(sb);
+        logger.log(Level.INFO , sb.toString());
     }
 
     @Override
     public void displayPlayerInfo(Player player) {
-        System.out.println(player + " possède : \n\t- " + player.getNbGold() + " pièces d'or.");
+        logger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.",new Object[]{ player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
 
     public void displayRound(int roundNumber) {
-        System.out.println("########## Début du round " + roundNumber + " ##########");
+        logger.log(Level.INFO, "########## Début du round {0} ##########",roundNumber);
     }
 }
