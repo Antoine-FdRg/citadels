@@ -8,7 +8,9 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AssassinTest {
@@ -16,9 +18,11 @@ class AssassinTest {
     private Assassin assassin;
     private Bishop bishop;
 
+    @Mock
+    private IView view;
+
     @BeforeEach
     void setUp() {
-        IView view = new Cli();
         Deck deckAssassin = new Deck();
         assassin = new Assassin();
         Player playerAssassin = new RandomBot(2, deckAssassin, view);
@@ -30,7 +34,7 @@ class AssassinTest {
     }
 
     /**
-     * Check if the bishop is dead after the assassin's effect.g
+     * Check if the bishop is dead after the assassin's effect.
      */
     @Test
     void testUseEffect() {
@@ -38,5 +42,14 @@ class AssassinTest {
         assassin.useEffect(bishop);
         // Check if the bishop is dead.
         assertTrue(bishop.isDead());
+    }
+
+    @Test
+    void testUseEffectWhenCharacterIsAlreadyDead() {
+        // Kill the bishop.
+        bishop.kill();
+        // Test the effect of the assassin.
+        // Check that the useEffect throw an IllegalStateException.
+        assertThrows(IllegalStateException.class, () -> assassin.useEffect(bishop));
     }
 }
