@@ -177,7 +177,7 @@ public abstract class Player {
         return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
     }
 
-    public abstract void chooseCharacter(List<Character> characters);
+    public abstract Character chooseCharacter(List<Character> characters);
 
     public Character getCharacter() {
         return this.character;

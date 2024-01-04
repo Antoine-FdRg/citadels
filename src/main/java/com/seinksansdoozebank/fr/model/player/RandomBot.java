@@ -69,11 +69,12 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void chooseCharacter(List<Character> characters) {
+    public Character chooseCharacter(List<Character> characters) {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
         characters.remove(this.character);
         this.view.displayPlayerChooseCharacter(this);
+        return this.character;
     }
 
     @Override

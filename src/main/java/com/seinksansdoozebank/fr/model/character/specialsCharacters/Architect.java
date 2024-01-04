@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character;
+package com.seinksansdoozebank.fr.model.character.specialsCharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
