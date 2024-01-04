@@ -5,9 +5,9 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;

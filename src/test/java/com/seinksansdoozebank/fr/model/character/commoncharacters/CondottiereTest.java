@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class KingTest {
+class CondottiereTest {
     List<Card> citadel;
     Player player;
-    King king;
+    Condottiere condottiere;
     IView view;
     Deck deck;
 
@@ -32,25 +32,26 @@ class KingTest {
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
-        citadel.add(new Card(District.PALACE));
-        citadel.add(new Card(District.CASTLE));
-        citadel.add(new Card(District.MARKET_PLACE));
-        citadel.add(new Card(District.MANOR));
+        citadel.add(new Card(District.TEMPLE));
         citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.MARKET_PLACE));
+        citadel.add(new Card(District.FORTRESS));
+        citadel.add(new Card(District.JAIL));
+        citadel.add(new Card(District.WATCH_TOWER));
         // Set the citadel to the player
         when(player.getCitadel()).thenReturn(citadel);
         // Create a Bishop character
-        king = new King();
+        condottiere = new Condottiere();
         // Set the player and the citadel to the character
-        king.setPlayer(player);
+        condottiere.setPlayer(player);
     }
 
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        king.goldCollectedFromDisctrictType();
+        condottiere.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
-        assertEquals(5, player.getNbGold());
+        assertEquals(6, player.getNbGold());
     }
 }
