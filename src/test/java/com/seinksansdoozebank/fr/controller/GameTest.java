@@ -3,6 +3,11 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -12,12 +17,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class GameTest {
 
@@ -96,6 +97,52 @@ class GameTest {
     @Test
     void testCharactersChoice() {
         game.createCharacters();
+        assertEquals(4, game.getAvailableCharacters().size());
+    }
+
+    @Test
+    void testCreateCharacters() {
+        // Test the createCharacters method
+        game.createCharacters();
+
+        List<Character> availableCharacters = game.getAvailableCharacters();
+
+        // Check if the correct number of characters is created
+        assertEquals(4, availableCharacters.size()); // Adjust the expected size based on your implementation
+    }
+
+    @Test
+    void testPlayersChooseCharacters() {
+        // Test the playersChooseCharacters method
+        List<Player> players = game.players;
+
+        // Test that createCharacters create a list of characters
+        game.createCharacters();
+        List<Character> charactersList = List.of(
+                new King(),
+                new Bishop(),
+                new Merchant(),
+                new Condottiere()
+        );
+
+        // Test that the game available characters list is equal to charactersList
+        assertEquals(charactersList, game.getAvailableCharacters());
+
+        // Test that all players have chosen a character
+        game.playersChooseCharacters();
+
+        // Check if all players have a character
+        for (Player player : players) {
+            assertNotNull(player.getCharacter());
+        }
+
+        // Check if all characters were removed from the available characters list
+        assertEquals(0, game.getAvailableCharacters().size());
+
+        // Reset the available characters list
+        game.retrieveCharacters();
+
+        // Check if the available characters list is equal to charactersList
         assertEquals(4, game.getAvailableCharacters().size());
     }
 

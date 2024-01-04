@@ -26,6 +26,25 @@ public abstract class Character {
         return this.player;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj == null) {
+    		return false;
+    	}
+    	if (obj == this) {
+    		return true;
+    	}
+    	if (!(obj instanceof Character character)) {
+    		return false;
+    	}
+        return this.toString().equals(character.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
     public Role getRole() {
         return this.role;
     }

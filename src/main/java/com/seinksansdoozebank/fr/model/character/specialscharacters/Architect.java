@@ -13,6 +13,6 @@ public class Architect extends Character {
 
     @Override
     public void useEffect() {
-
+        // No action
     }
 }
