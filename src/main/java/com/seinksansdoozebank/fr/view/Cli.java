@@ -59,6 +59,11 @@ public class Cli implements IView {
         logger.log(Level.INFO, "{0} se révèle être {1} .",new Object[]{ player, player.getCharacter()});
     }
 
+    @Override
+    public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
+        System.out.println(attacker + " détruit le quartier " + district.getName() + " de " + defender + " en payant " + district.getCost() + 1 + " pièces d'or.");
+    }
+
     private void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();

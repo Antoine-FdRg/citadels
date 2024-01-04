@@ -4,10 +4,10 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -24,11 +24,15 @@ public class Game {
 
     private boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
-    private List<Player> players;
+    protected List<Player> players;
     private Optional<Player> kingPlayer;
     private final List<Character> availableCharacters;
     private final IView view;
 
+    /**
+     * Constructor of the Game class
+     * @param nbPlayers the number of players playing
+     */
     public Game(int nbPlayers) {
         this.view = new Cli();
         this.deck = new Deck();
@@ -37,20 +41,28 @@ public class Game {
         for (int i = 0; i < nbPlayers - 1; i++) {
             players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
         }
+        for (Player player : players) {
+            List<Player> opponents = new ArrayList<>(players);
+            opponents.remove(player);
+            player.setOpponents(opponents);
+        }
         availableCharacters = new ArrayList<>();
         kingPlayer = Optional.empty();
     }
 
+    /**
+     * Run the game
+     */
     public void run() {
         this.init();
         boolean isGameFinished = false;
         int round = 1;
         while (!isGameFinished) {
             view.displayRound(round + 1);
+            // Intialize characters
+            createCharacters();
+            playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
-            for (Player player : players) {
-                player.chooseCharacter(availableCharacters);
-            }
             for (Player player : players) {
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 player.play();
@@ -69,7 +81,7 @@ public class Game {
     /**
      * Retrieve the characters from the players
      */
-    private void retrieveCharacters() {
+    void retrieveCharacters() {
         for (Player player : players) {
             availableCharacters.add(player.retrieveCharacter());
         }
@@ -79,7 +91,7 @@ public class Game {
      * Order the players before choosing a character if a
      * player revealed himself being the king during the last round
      */
-    private void orderPlayerBeforeChoosingCharacter() {
+    void orderPlayerBeforeChoosingCharacter() {
         if (kingPlayer.isPresent()) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
@@ -94,19 +106,37 @@ public class Game {
         }
     }
 
+    /**
+     * Ask the player to choose their characters
+     */
+    protected void playersChooseCharacters() {
+        for (Player player : players) {
+            availableCharacters.remove(player.chooseCharacter(availableCharacters));
+        }
+    }
 
+    /**
+     * Initialize the game
+     */
     private void init() {
         dealCards();
         createCharacters();
     }
 
+    /**
+     * Create the list of characters ordered
+     */
     protected void createCharacters() {
-        availableCharacters.add(new Bishop());
         availableCharacters.add(new King());
+        availableCharacters.add(new Bishop());
         availableCharacters.add(new Merchant());
+        // availableCharacters.add(new Architect());
         availableCharacters.add(new Condottiere());
     }
 
+    /**
+     * Deal the cards to the players
+     */
     private void dealCards() {
         for (int i = 0; i < NB_CARD_BY_PLAYER; i++) {
             for (Player player : players) {
@@ -115,6 +145,10 @@ public class Game {
         }
     }
 
+    /**
+     * Get the winner of the game
+     * @return The player who win the game
+     */
     protected Player getWinner() {
         Player bestPlayer = players.get(0);
         for (Player currentPlayer : players) {
@@ -125,10 +159,18 @@ public class Game {
         return bestPlayer;
     }
 
+    /**
+     * Set the list of players (For Test ONLY)
+     * @param players the list of players
+     */
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
+    /**
+     * Get the characters that are still available.
+     * @return the list of characters available
+     */
     public List<Character> getAvailableCharacters() {
         return availableCharacters;
     }

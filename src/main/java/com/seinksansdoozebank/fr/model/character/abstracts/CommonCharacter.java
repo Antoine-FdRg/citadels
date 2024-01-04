@@ -13,10 +13,6 @@ public abstract class CommonCharacter extends Character {
         this.target = target;
     }
 
-    public abstract void useEffect();
-    public abstract void useEffect(Character character);
-    public abstract void useEffect(Character character, District district);
-
     /**
      * For each district in the citadel of the target type, the player will collect one gold
      */

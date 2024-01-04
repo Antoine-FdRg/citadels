@@ -5,12 +5,10 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
-import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +60,7 @@ class SmartBotTest {
         doReturn(optDistrict).when(spySmartBot).chooseCard();
         doReturn(false).when(spySmartBot).canPlayCard(any(Card.class));
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
-
+        spySmartBot.chooseCharacter(List.of(new Bishop(), new King(), new Merchant(), new Condottiere()));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
@@ -78,7 +76,7 @@ class SmartBotTest {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spySmartBot).chooseCard();
         doReturn(true).when(spySmartBot).canPlayCard(any(Card.class));
-
+        spySmartBot.chooseCharacter(List.of(new Bishop(), new King(), new Merchant(), new Condottiere()));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);

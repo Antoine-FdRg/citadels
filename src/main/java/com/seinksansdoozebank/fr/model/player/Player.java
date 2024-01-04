@@ -6,6 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import java.util.Collections;
 import java.util.List;
 
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -26,6 +27,7 @@ public abstract class Player {
     protected final IView view;
     protected final Random random = new Random();
     protected Character character;
+    private final List<Player> opponents = new ArrayList<>();
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -108,7 +110,7 @@ public abstract class Player {
         return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card);
     }
 
-    protected final void decreaseGold(int gold) {
+    public void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
 
@@ -156,6 +158,7 @@ public abstract class Player {
 
     /**
      * getter
+     *
      * @return a boolean which specify if the player is the first to have 8Districts in his citadel
      */
     public boolean getIsFirstToHaveEightDistricts() {
@@ -174,7 +177,7 @@ public abstract class Player {
         return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
     }
 
-    public abstract void chooseCharacter(List<Character> characters);
+    public abstract Character chooseCharacter(List<Character> characters);
 
     public Character getCharacter() {
         return this.character;
@@ -205,5 +208,22 @@ public abstract class Player {
     @Override
     public String toString() {
         return "Le joueur " + this.id;
+    }
+
+    public boolean destroyDistrict(Player attacker, District district) {
+        if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
+            this.view.displayPlayerDestroyDistrict(attacker, this, district);
+            return true;
+        } else {
+            throw new IllegalStateException("The player doesn't have the district to destroy");
+        }
+    }
+
+    public List<Player> getOpponents() {
+        return Collections.unmodifiableList(this.opponents);
+    }
+
+    public void setOpponents(List<Player> opponents) {
+        this.opponents.addAll(opponents);
     }
 }
