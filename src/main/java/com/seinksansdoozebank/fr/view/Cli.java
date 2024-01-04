@@ -4,9 +4,10 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
+import java.util.Optional;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ public class Cli implements IView {
     }
 
     public void displayWinner(Player winner) {
-        String res = winner + " gagne avec un score de " + winner.getScore();
+        String res = winner + " gagne avec un score de " + winner.getScore() +".";
         logInfo(res);
     }
 
@@ -60,14 +61,12 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        String res = "Le joueur a choisi d'être " + player.getCharacter();
-        logInfo(res);
+        System.out.println(player + " choisit un personnage.");
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        String res = "Le joueur révèle être " + player.getCharacter();
-        logInfo(res);
+        System.out.println(player + " se révèle être " + player.getCharacter() + ".");
     }
 
     private void displayPlayerHand(Player player) {
