@@ -7,7 +7,7 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
-import com.seinksansdoozebank.fr.view.CliLogger;
+import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class PlayerTest {
 
     @BeforeEach
     void setup() {
-        view = mock(CliLogger.class);
+        view = mock(Cli.class);
         deck = mock(Deck.class);
         cardCostThree= new Card(District.BARRACK);
         cardCostFive= new Card(District.FORTRESS);

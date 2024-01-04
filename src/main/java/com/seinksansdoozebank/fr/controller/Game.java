@@ -9,7 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
-import com.seinksansdoozebank.fr.view.CliLogger;
+import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class Game {
     private final IView view;
 
     public Game(int nbPlayers) {
-        this.view = new CliLogger();
+        this.view = new Cli();
         this.deck = new Deck();
         this.players = new ArrayList<>();
         players.add(new SmartBot(NB_GOLD_INIT, this.deck, this.view));

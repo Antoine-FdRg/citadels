@@ -12,11 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class CliLogger implements IView {
+public class Cli implements IView {
 
-    private static final Logger logger = Logger.getLogger(CliLogger.class.getName());
+    private static final Logger logger = Logger.getLogger(Cli.class.getName());
 
-    public CliLogger() {
+    public Cli() {
         logger.setLevel(Level.ALL);
     }
 

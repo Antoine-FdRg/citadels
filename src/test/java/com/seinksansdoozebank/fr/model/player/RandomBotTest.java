@@ -8,7 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commonCharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.King;
 import com.seinksansdoozebank.fr.model.character.commonCharacters.Merchant;
-import com.seinksansdoozebank.fr.view.CliLogger;
+import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class RandomBotTest {
 
     @BeforeEach
     void setup() {
-        view = mock(CliLogger.class);
+        view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
