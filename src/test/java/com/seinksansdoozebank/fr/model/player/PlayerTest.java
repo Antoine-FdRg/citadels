@@ -90,9 +90,8 @@ class PlayerTest {
     @Disabled("This test is not working because we are adding some cards to the citadel with add method, by the way, we don't see the goal of this test")
     @Test
     void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
-        spyPlayer.getCitadel().add(cardCostThree);
-        assertTrue(spyPlayer.getCitadel().contains(cardCostThree));
-        assertTrue(cardCostThree.getDistrict().getCost() <= spyPlayer.getNbGold());
+        when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
+        assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
 
     @Test

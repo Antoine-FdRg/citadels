@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.Optional;
@@ -23,4 +24,6 @@ public interface IView {
     void displayPlayerChooseCharacter(Player player);
 
     void displayPlayerRevealCharacter(Player player);
+
+    void displayPlayerDestroyDistrict(Player attacker, Player defender, District district);
 }

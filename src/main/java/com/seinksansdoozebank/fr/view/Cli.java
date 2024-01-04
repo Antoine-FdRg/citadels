@@ -48,23 +48,27 @@ public class Cli implements IView {
         System.out.println(player + " se révèle être " + player.getCharacter() + ".");
     }
 
+    @Override
+    public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
+        System.out.println(attacker + " détruit le quartier " + district.getName() + " de " + defender + " en payant " + district.getCost() + 1 + " pièces d'or.");
+    }
+
     private void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
-        if(!hand.isEmpty()){
-            if(hand.size() == 1){
+        if (!hand.isEmpty()) {
+            if (hand.size() == 1) {
                 sb.append("\t- la carte suivante dans sa main : \n");
-            }
-            else{
+            } else {
                 sb.append("\t- les cartes suivantes dans sa main : \n");
             }
-            for(int i = 0;i< hand.size();i++){
+            for (int i = 0; i < hand.size(); i++) {
                 sb.append("\t\t- ").append(hand.get(i));
-                if(i!= hand.size()-1){
+                if (i != hand.size() - 1) {
                     sb.append("\n");
                 }
             }
-        }else{
+        } else {
             sb.append("\t- pas de carte dans sa main.");
         }
         System.out.println(sb);
@@ -73,20 +77,19 @@ public class Cli implements IView {
     private void displayPlayerCitadel(Player player) {
         List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
-        if(!citadel.isEmpty()){
-            if(citadel.size() == 1){
+        if (!citadel.isEmpty()) {
+            if (citadel.size() == 1) {
                 sb.append("\t- le quartier suivant dans sa citadelle : \n");
-            }
-            else{
+            } else {
                 sb.append("\t- les quartiers suivants dans sa citadelle : \n");
             }
-            for(int i = 0;i< citadel.size();i++){
+            for (int i = 0; i < citadel.size(); i++) {
                 sb.append("\t\t- ").append(citadel.get(i));
-                if(i!= citadel.size()-1){
+                if (i != citadel.size() - 1) {
                     sb.append("\n");
                 }
             }
-        }else{
+        } else {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
         System.out.println(sb);
@@ -100,6 +103,6 @@ public class Cli implements IView {
     }
 
     public void displayRound(int roundNumber) {
-        System.out.println("########## Début du round " + roundNumber +" ##########");
+        System.out.println("########## Début du round " + roundNumber + " ##########");
     }
 }
