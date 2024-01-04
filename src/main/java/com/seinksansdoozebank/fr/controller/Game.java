@@ -64,9 +64,6 @@ public class Game {
             playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
-                player.chooseCharacter(availableCharacters);
-            }
-            for (Player player : players) {
                 if (player.getCharacter().isDead()) {
                     continue;
                 }
