@@ -21,52 +21,50 @@ public class Cli implements IView {
         logger.setLevel(Level.ALL);
     }
 
-    private void logInfo(String message) {
-        logger.info(message);
-    }
-
     public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
             String res = player + " ne pose pas de quartier.";
-            logInfo(res);
+            logger.info(res);
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
             String res = player + " pose un/e " + builtDistrict.getName() + " qui lui coute " + builtDistrict.getCost() + ", il lui reste " + player.getNbGold() + " pièces d'or";
-            logInfo(res);
+            logger.info(res);
         }
     }
 
     public void displayWinner(Player winner) {
         String res = winner + " gagne avec un score de " + winner.getScore() +".";
-        logInfo(res);
+        logger.info(res);
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
         String res = player + " commence à jouer.";
-        logInfo(res);
+        logger.info(res);
     }
 
     @Override
     public void displayPlayerPickCard(Player player) {
         String res = player + " pioche un quartier.";
-        logInfo(res);
+        logger.info(res);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player) {
         String res = player + " pioche 2 pièces d'or.";
-        logInfo(res);
+        logger.info(res);
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        System.out.println(player + " choisit un personnage.");
+       String res=player + " choisit un personnage.";
+       logger.info(res);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        System.out.println(player + " se révèle être " + player.getCharacter() + ".");
+        String res=player + " se révèle être " + player.getCharacter() + ".";
+        logger.info(res);
     }
 
     private void displayPlayerHand(Player player) {
@@ -88,7 +86,7 @@ public class Cli implements IView {
             sb.append("\t- pas de carte dans sa main.");
         }
         String res = String.valueOf(sb);
-        logInfo(res);
+        logger.info(res);
     }
 
     private void displayPlayerCitadel(Player player) {
@@ -110,19 +108,19 @@ public class Cli implements IView {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
         String res = String.valueOf(sb);
-        logInfo(res);
+        logger.info(res);
     }
 
     @Override
     public void displayPlayerInfo(Player player) {
         String res = player + " possède : \n\t- " + player.getNbGold() + " pièces d'or";
-        logInfo(res);
+        logger.info(res);
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
 
     public void displayRound(int roundNumber) {
         String res = "########## Début du round " + roundNumber + " ##########";
-        logInfo(res);
+        logger.info(res);
     }
 }
