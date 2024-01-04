@@ -60,12 +60,14 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-
+        String res = "Le joueur a choisi d'être " + player.getCharacter();
+        logInfo(res);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-
+        String res = "Le joueur révèle être " + player.getCharacter();
+        logInfo(res);
     }
 
     private void displayPlayerHand(Player player) {
