@@ -128,7 +128,7 @@ class GameTest {
         // Test that the game available characters list is equal to charactersList
         assertEquals(charactersList, game.getAvailableCharacters());
 
-        // Test that all players have choose a character
+        // Test that all players have chosen a character
         game.playersChooseCharacters();
 
         // Check if all players have a character

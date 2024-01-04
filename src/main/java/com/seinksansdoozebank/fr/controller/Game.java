@@ -46,7 +46,7 @@ public class Game {
     }
 
     /**
-     *
+     * Run the game
      */
     public void run() {
         this.init();
