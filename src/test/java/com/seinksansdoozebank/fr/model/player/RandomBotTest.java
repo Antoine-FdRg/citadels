@@ -141,4 +141,11 @@ class RandomBotTest {
 
         assertNotEquals(spyRandomBot.getCharacter(), player.getCharacter());
     }
+
+    @Test
+    void testRandomBotUseEffect() {
+        spyRandomBot.useEffect();
+        verify(spyRandomBot, atMostOnce()).pickSomething();
+        verify(spyRandomBot, atMostOnce()).useEffect();
+    }
 }
