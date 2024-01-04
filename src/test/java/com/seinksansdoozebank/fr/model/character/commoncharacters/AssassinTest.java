@@ -52,4 +52,11 @@ class AssassinTest {
         // Check that the useEffect throw an IllegalStateException.
         assertThrows(IllegalStateException.class, () -> assassin.useEffect(bishop));
     }
+
+    @Test
+    void testUseEffectWhenCharacterIsItself() {
+        // Test the effect of the assassin.
+        // Check that the useEffect throw an IllegalArgumentException.
+        assertThrows(IllegalArgumentException.class, () -> assassin.useEffect(assassin));
+    }
 }
