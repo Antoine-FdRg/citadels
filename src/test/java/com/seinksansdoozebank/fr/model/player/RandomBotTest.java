@@ -16,18 +16,14 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class RandomBotTest {
     RandomBot spyRandomBot;
@@ -140,5 +136,20 @@ class RandomBotTest {
         player.chooseCharacter(characters);
 
         assertNotEquals(spyRandomBot.getCharacter(), player.getCharacter());
+    }
+
+    @Test
+    void testRandomBotUseEffect() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+
+        // Test the useEffect method
+        spyRandomBot.useEffect();
+        verify(spyRandomBot, times(1)).useEffect();
+        verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 }

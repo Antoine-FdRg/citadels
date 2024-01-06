@@ -25,7 +25,7 @@ public abstract class Player {
     protected final List<Card> hand;
     private final List<Card> citadel;
     protected final IView view;
-    protected final Random random = new Random();
+    protected Random random = new Random();
     protected Character character;
     private final List<Player> opponents = new ArrayList<>();
 
