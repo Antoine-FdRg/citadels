@@ -67,6 +67,11 @@ public class Game {
                     continue;
                 }
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
+                //We check if the player has been stolen
+                if(player.getCharacter().getGoldWillBeStolen()){
+                    player.getCharacter().isStolen();
+                    view.displayStolenCharacter(player.getCharacter());
+                }
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
                 isTheFirstOneToHaveEightDistricts(player);
