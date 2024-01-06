@@ -8,6 +8,7 @@ public abstract class Character {
     private Player player;
     private final Role role;
     private boolean isDead = false;
+    private boolean goldWillBeStolen = false;
 
     protected Character(Role role) {
         this.role = role;
@@ -28,15 +29,15 @@ public abstract class Character {
 
     @Override
     public boolean equals(Object obj) {
-    	if (obj == null) {
-    		return false;
-    	}
-    	if (obj == this) {
-    		return true;
-    	}
-    	if (!(obj instanceof Character character)) {
-    		return false;
-    	}
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Character character)) {
+            return false;
+        }
         return this.toString().equals(character.toString());
     }
 
@@ -65,5 +66,31 @@ public abstract class Character {
 
     public boolean isDead() {
         return this.isDead;
+    }
+
+
+    /**
+     * setter
+     * @param goldWillBeStolen
+     */
+    public void setGoldWillBeStolen(boolean goldWillBeStolen) {
+        this.goldWillBeStolen = goldWillBeStolen;
+    }
+
+    /**
+     * getter
+     * @return a boolean
+     */
+    public boolean getGoldWillBeStolen() {
+        return goldWillBeStolen;
+    }
+
+    /**
+     * this method decrease the number of gold of the character which is stolen and
+     * refreshes the attribute goldWillBeStolen
+     */
+    public void isStolen() {
+        this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
+        this.setGoldWillBeStolen(false);
     }
 }
