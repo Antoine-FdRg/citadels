@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.Optional;
@@ -115,5 +116,9 @@ public class Cli implements IView {
 
     public void displayRound(int roundNumber) {
         logger.log(Level.INFO, "########## Début du round {0} ##########",roundNumber);
+    }
+
+    public void displayStolenCharacter(Character character){
+        logger.log(Level.INFO,"Le {0} a été volé et perd {1} pièces d''or ", new Object[]{ character, character.getPlayer().getNbGold() });
     }
 }
