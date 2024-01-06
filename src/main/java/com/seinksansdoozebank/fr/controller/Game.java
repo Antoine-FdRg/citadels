@@ -60,10 +60,12 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             // Intialize characters
-            createCharacters();
             playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
+                if (player.getCharacter().isDead()) {
+                    continue;
+                }
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
@@ -127,6 +129,7 @@ public class Game {
      * Create the list of characters ordered
      */
     protected void createCharacters() {
+        // availableCharacters.add(new Assassin());
         availableCharacters.add(new King());
         availableCharacters.add(new Bishop());
         availableCharacters.add(new Merchant());

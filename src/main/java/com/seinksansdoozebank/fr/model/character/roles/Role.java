@@ -1,7 +1,7 @@
 package com.seinksansdoozebank.fr.model.character.roles;
 
 public enum Role {
-    //ASSASSIN("Assassin")
+    ASSASSIN("Assassin"),
     //THIEF("Voleur"),
     //MAGICIAN("Magicien"),
     KING("Roi"),
