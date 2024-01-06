@@ -22,7 +22,7 @@ public class Condottiere extends CommonCharacter {
     }
 
     public void useEffect(Character character, District district) {
-        if (character.getPlayer().getNbGold() < district.getCost() + 1) {
+        if (this.getPlayer().getNbGold() < district.getCost() + 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
         if (character.getPlayer().equals(this.getPlayer())) {
