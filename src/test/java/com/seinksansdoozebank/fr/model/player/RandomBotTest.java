@@ -147,5 +147,6 @@ class RandomBotTest {
         spyRandomBot.useEffect();
         verify(spyRandomBot, atMostOnce()).pickSomething();
         verify(spyRandomBot, atMostOnce()).useEffect();
+        verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 }

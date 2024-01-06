@@ -89,24 +89,30 @@ public class RandomBot extends Player {
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
-            // get a value 0 or 1
-            boolean randomValue = random.nextBoolean();
-            // if the value is 0, the bot is not using the condottiere effect, else it is using it
-            if (randomValue) {
-                // get a random player, and destroy a district of this player randomly
-                Player playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
-                // if the player has no district, the bot will not use the condottiere effect
-                // Or check if the player choose is not the bishop
-                if (playerToDestroyDistrict.getCitadel().isEmpty() || playerToDestroyDistrict.getCharacter() instanceof Bishop) {
-                    return;
-                }
-                // get the district to destroy
-                District districtToDestroy = playerToDestroyDistrict.getCitadel().get(random.nextInt(playerToDestroyDistrict.getCitadel().size())).getDistrict();
-                // Check if the number of golds of the player is enough to destroy the district
-                if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
-                    // destroy the district
-                    condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
-                }
+            this.useEffectCondottiere(condottiere);
+        }
+    }
+
+    void useEffectCondottiere(Condottiere condottiere) {
+        // get a value 0 or 1
+        boolean randomValue = random.nextBoolean();
+        // if the value is 0, the bot is not using the condottiere effect, else it is using it
+        if (randomValue) {
+            // get a random player, and destroy a district of this player randomly
+            Player playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            // if the player has no district, the bot will not use the condottiere effect
+            // Or check if the player choose is not the bishop
+            if (playerToDestroyDistrict.getCitadel().isEmpty() || playerToDestroyDistrict.getCharacter() instanceof Bishop) {
+                return;
+            }
+            // get the random district
+            int index = random.nextInt(playerToDestroyDistrict.getCitadel().size());
+            // get the district to destroy
+            District districtToDestroy = playerToDestroyDistrict.getCitadel().get(index).getDistrict();
+            // Check if the number of golds of the player is enough to destroy the district
+            if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
+                // destroy the district
+                condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
             }
         }
     }
