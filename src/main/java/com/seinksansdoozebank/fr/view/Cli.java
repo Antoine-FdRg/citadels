@@ -26,7 +26,7 @@ public class Cli implements IView {
             logger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
-            logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d'or.",new Object[]{ player, builtDistrict.getName(),builtDistrict.getCost(),player.getNbGold()});
+            logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
         }
     }
 
@@ -61,7 +61,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        System.out.println(attacker + " détruit le quartier " + district.getName() + " de " + defender + " en payant " + district.getCost() + 1 + " pièces d'or.");
+        logger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
     }
 
     private void displayPlayerHand(Player player) {
@@ -82,7 +82,7 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de carte dans sa main.");
         }
-         logger.log(Level.INFO , sb.toString());
+        logger.log(Level.INFO, sb::toString);
     }
 
     private void displayPlayerCitadel(Player player) {
@@ -103,7 +103,7 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
-        logger.log(Level.INFO , sb.toString());
+        logger.log(Level.INFO, sb::toString);
     }
 
     @Override
