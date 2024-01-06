@@ -12,6 +12,7 @@ import com.seinksansdoozebank.fr.view.IView;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class RandomBot extends Player {
 
@@ -120,5 +121,9 @@ public class RandomBot extends Player {
     @Override
     public String toString() {
         return "Le bot aléatoire " + this.id;
+    }
+
+    public void setRandom(Random mockRandom) {
+        this.random = mockRandom;
     }
 }
