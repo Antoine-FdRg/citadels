@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
@@ -13,16 +13,6 @@ public class Bishop extends CommonCharacter {
 
     @Override
     public void useEffect() {
-        // No action
-    }
-
-    @Override
-    public void useEffect(Character character) {
-        // No action
-    }
-
-    @Override
-    public void useEffect(Character character, District district) {
         // No action
     }
 }

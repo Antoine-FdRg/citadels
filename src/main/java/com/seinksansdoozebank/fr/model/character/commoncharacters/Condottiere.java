@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
@@ -21,13 +21,18 @@ public class Condottiere extends CommonCharacter {
         // No action
     }
 
-    @Override
-    public void useEffect(Character character) {
-        // No action
-    }
-
-    @Override
     public void useEffect(Character character, District district) {
-        // TODO: need to implement the strategy to destroy a district
+        if (this.getPlayer().getNbGold() < district.getCost() + 1) {
+            throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
+        }
+        if (character.getPlayer().equals(this.getPlayer())) {
+            throw new IllegalArgumentException("The player can't destroy his own district");
+        }
+        if (character instanceof Bishop) {
+            throw new IllegalArgumentException("The player can't destroy the district of the bishop");
+        }
+        if (character.getPlayer().destroyDistrict(this.getPlayer(), district)) {
+            this.getPlayer().decreaseGold(district.getCost() + 1);
+        }
     }
 }

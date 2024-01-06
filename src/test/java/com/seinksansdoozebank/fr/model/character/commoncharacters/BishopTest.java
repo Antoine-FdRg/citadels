@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
-class CondottiereTest {
+class BishopTest {
     List<Card> citadel;
     Player player;
-    Condottiere condottiere;
+    Bishop bishop;
     IView view;
     Deck deck;
 
@@ -28,28 +28,27 @@ class CondottiereTest {
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        player = new RandomBot(2, deck, view);
+        player = spy(new RandomBot(2, deck, view));
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
         citadel.add(new Card(District.TEMPLE));
-        citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.CHURCH));
         citadel.add(new Card(District.MARKET_PLACE));
-        citadel.add(new Card(District.FORTRESS));
-        citadel.add(new Card(District.JAIL));
-        citadel.add(new Card(District.WATCH_TOWER));
+        citadel.add(new Card(District.MONASTERY));
+        citadel.add(new Card(District.CATHEDRAL));
         // Set the citadel to the player
-        player.getCitadel().addAll(citadel);
+        when(player.getCitadel()).thenReturn(citadel);
         // Create a Bishop character
-        condottiere = new Condottiere();
+        bishop = new Bishop();
         // Set the player and the citadel to the character
-        condottiere.setPlayer(player);
+        bishop.setPlayer(player);
     }
 
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        condottiere.goldCollectedFromDisctrictType();
+        bishop.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());

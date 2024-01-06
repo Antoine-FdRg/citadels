@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.character.commonCharacters;
+package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
-class MerchantTest {
+class CondottiereTest {
     List<Card> citadel;
     Player player;
-    Merchant merchant;
+    Condottiere condottiere;
     IView view;
     Deck deck;
 
@@ -28,43 +28,30 @@ class MerchantTest {
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        player = new RandomBot(2, deck, view);
+        player = spy(new RandomBot(2, deck, view));
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
-        citadel.add(new Card(District.TAVERN));
-        citadel.add(new Card(District.CORNER_SHOP));
+        citadel.add(new Card(District.TEMPLE));
+        citadel.add(new Card(District.BARRACK));
         citadel.add(new Card(District.MARKET_PLACE));
-        citadel.add(new Card(District.TRADING_POST));
-        citadel.add(new Card(District.PORT));
-        citadel.add(new Card(District.TOWN_HALL));
-        citadel.add(new Card(District.BARRACK));
-        citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.FORTRESS));
+        citadel.add(new Card(District.JAIL));
+        citadel.add(new Card(District.WATCH_TOWER));
         // Set the citadel to the player
-        player.getCitadel().addAll(citadel);
+        when(player.getCitadel()).thenReturn(citadel);
         // Create a Bishop character
-        merchant = new Merchant();
+        condottiere = new Condottiere();
         // Set the player and the citadel to the character
-        merchant.setPlayer(player);
+        condottiere.setPlayer(player);
     }
 
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        merchant.goldCollectedFromDisctrictType();
+        condottiere.goldCollectedFromDisctrictType();
 
         // Check if the player's gold has been increased correctly
-        // 2 gold for the start + 6 for the 6 districts
-        assertEquals(8, player.getNbGold());
-    }
-
-    @Test
-    void testUseEffect() {
-        // Perform the action
-        merchant.useEffect();
-
-        // Check if the player's gold has been increased correctly
-        // 2 gold for the start + 1 for the new turn + 6 for the 6 districts
-        assertEquals(3, player.getNbGold());
+        assertEquals(6, player.getNbGold());
     }
 }
