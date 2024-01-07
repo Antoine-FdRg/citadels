@@ -29,4 +29,6 @@ public interface IView {
     void displayPlayerDestroyDistrict(Player attacker, Player defender, District district);
 
     void displayStolenCharacter(Character character);
+
+    void displayActualNumberOfGold(Player player);
 }

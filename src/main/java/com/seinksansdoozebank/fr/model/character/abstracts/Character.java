@@ -1,8 +1,9 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
-import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
+
+import java.util.List;
 
 public abstract class Character {
     private Player player;
@@ -89,7 +90,14 @@ public abstract class Character {
      * this method decrease the number of gold of the character which is stolen and
      * refreshes the attribute goldWillBeStolen
      */
-    public void isStolen() {
+    public void isStolen(List<Player> players) {
+        for(Player searchedPlayer : players){
+            if(searchedPlayer.getCharacter().role==Role.THIEF){
+                //We add the number of gold stolen to the number of gold of the thief
+                searchedPlayer.increaseGold(this.getPlayer().getNbGold());
+                break;
+            }
+        }
         this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
         this.setGoldWillBeStolen(false);
     }

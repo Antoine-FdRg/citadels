@@ -32,8 +32,6 @@ public class Thief extends Character {
         if (character.isDead()) {
             throw new IllegalStateException("This character is already dead");
         }
-        //We add the number of gold stolen to the number of gold of the thief
-        this.getPlayer().increaseGold(character.getPlayer().getNbGold());
         //We set the attribute goldWillBeStolen to true.
         character.setGoldWillBeStolen(true);
     }

@@ -121,4 +121,7 @@ public class Cli implements IView {
     public void displayStolenCharacter(Character character){
         logger.log(Level.INFO,"Le {0} a été volé et perd {1} pièces d''or ", new Object[]{ character, character.getPlayer().getNbGold() });
     }
+    public void displayActualNumberOfGold(Player player){
+        logger.log(Level.INFO,"Le {0} a maintenant {1} pièces d''or.", new Object[]{ player.getCharacter(), player.getNbGold() });
+    }
 }

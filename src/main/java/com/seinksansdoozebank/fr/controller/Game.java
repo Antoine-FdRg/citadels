@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -17,6 +18,8 @@ import com.seinksansdoozebank.fr.view.IView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.seinksansdoozebank.fr.model.character.roles.Role.THIEF;
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
@@ -69,8 +72,9 @@ public class Game {
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 //We check if the player has been stolen
                 if(player.getCharacter().getGoldWillBeStolen()){
-                    player.getCharacter().isStolen();
+                    player.getCharacter().isStolen(players);
                     view.displayStolenCharacter(player.getCharacter());
+                    view.displayActualNumberOfGold(getPlayerWithRole(THIEF).get());
                 }
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
@@ -175,6 +179,10 @@ public class Game {
         this.players = players;
     }
 
+    public List<Player> getListPlayers(){
+        return players;
+    }
+
     /**
      * Get the characters that are still available.
      * @return the list of characters available
@@ -227,5 +235,14 @@ public class Game {
             }
         }
         return (listDifferentDistrictType.size() == 5);
+    }
+
+    public Optional<Player> getPlayerWithRole(Role role){
+        for(Player player : players){
+            if(player.getCharacter().getRole()==role){
+                return Optional.of(player);
+            }
+        }
+        return Optional.empty();
     }
 }
