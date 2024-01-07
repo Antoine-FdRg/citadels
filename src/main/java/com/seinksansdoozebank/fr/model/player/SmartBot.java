@@ -79,8 +79,8 @@ public class SmartBot extends Player {
     protected void pickTwoCardKeepOneDiscardOne() {
         this.view.displayPlayerPickCard(this);
         //Pick two district
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
+        Card card1 = this.pickACard();
+        Card card2 = this.pickACard();
         //Keep the cheaper one and discard the other one
         if (card1.getDistrict().getCost() < card2.getDistrict().getCost()) {
             this.hand.add(card1);

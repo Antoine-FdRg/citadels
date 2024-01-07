@@ -48,8 +48,8 @@ public class RandomBot extends Player {
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
         this.view.displayPlayerPickCard(this);
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
+        Card card1 = this.pickACard();
+        Card card2 = this.pickACard();
         if (random.nextBoolean()) {
             this.hand.add(card1);
             this.deck.discard(card2);

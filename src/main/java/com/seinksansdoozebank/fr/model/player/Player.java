@@ -65,6 +65,10 @@ public abstract class Player {
      */
     protected abstract void pickTwoCardKeepOneDiscardOne();
 
+    public Card pickACard() {
+        return this.deck.pick();
+    }
+
     /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
      *
@@ -225,5 +229,13 @@ public abstract class Player {
 
     public void setOpponents(List<Player> opponents) {
         this.opponents.addAll(opponents);
+    }
+
+    public void switchHandWith(Player player) {
+        List<Card> handToSwitch = new ArrayList<>(this.hand);
+        this.hand.clear();
+        this.hand.addAll(player.hand);
+        player.hand.clear();
+        player.hand.addAll(handToSwitch);
     }
 }
