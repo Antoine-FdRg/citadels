@@ -64,7 +64,7 @@ public abstract class Player {
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
     protected abstract void pickTwoCardKeepOneDiscardOne();
-
+    
     public Card pickACard() {
         return this.deck.pick();
     }
