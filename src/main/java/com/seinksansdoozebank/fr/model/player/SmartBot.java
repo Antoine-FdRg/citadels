@@ -130,6 +130,7 @@ public class SmartBot extends Player {
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
                             this.character = commonCharacter;
                             this.character.setPlayer(this);
+                            this.view.displayPlayerChooseCharacter(this);
                             return this.character;
                     }
                 }
@@ -138,6 +139,7 @@ public class SmartBot extends Player {
         // If no character has the mostOwnedDistrictType, choose a random character
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
+        this.view.displayPlayerChooseCharacter(this);
         return this.character;
     }
 
