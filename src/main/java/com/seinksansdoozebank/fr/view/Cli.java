@@ -2,7 +2,9 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.SmartBot;
 
 import java.util.Optional;
 
@@ -62,6 +64,11 @@ public class Cli implements IView {
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
         logger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+    }
+
+    @Override
+    public void displayPlayerUseAssasinEffect(SmartBot smartBot, Character target) {
+        logger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ smartBot, target});
     }
 
     private void displayPlayerHand(Player player) {
