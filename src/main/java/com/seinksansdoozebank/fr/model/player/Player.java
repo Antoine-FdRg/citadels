@@ -82,12 +82,11 @@ public abstract class Player {
         return optChosenCard;
     }
 
-    public Optional<List<Card>> playCards(int numberOfCards) {
-        Optional<List<Card>> cards = Optional.of(new ArrayList<>());
+    public List<Card> playCards(int numberOfCards) {
+        List<Card> cards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
-            if (playACard().isPresent()) {
-                cards.get().add(playACard().get());
-            }
+            Optional<Card> card = playACard();
+            card.ifPresent(cards::add);
         }
         return cards;
     }
