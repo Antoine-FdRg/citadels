@@ -8,8 +8,12 @@ import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -128,9 +132,9 @@ public class SmartBot extends Player {
             for (DistrictType districtType : districtTypeFrequencyList) {
                 for (Character character : characters) {
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
-                            this.character = commonCharacter;
-                            this.character.setPlayer(this);
-                            return this.character;
+                        this.character = commonCharacter;
+                        this.character.setPlayer(this);
+                        return this.character;
                     }
                 }
             }
@@ -160,6 +164,8 @@ public class SmartBot extends Player {
     protected void useEffect() {
         if (this.character instanceof Merchant merchant) {
             merchant.useEffect();
+        } else if (this.character instanceof Assassin assassin) {
+            assassin.useEffect(this.choseAssassinTarget());
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
@@ -181,6 +187,29 @@ public class SmartBot extends Player {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
+     * @return the target of the assassin
+     */
+    private Character choseAssassinTarget() {
+        List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
+        Collections.shuffle(roleInterestingToKill);
+        Character target = null;
+        List<Character> charactersList = this.getOpponents().stream().map(Player::getCharacter).toList();
+        for (Role role : roleInterestingToKill) {
+            for (Character character : charactersList) {
+                if (character.getRole() == role) {
+                    target = character;
+                    break;
+                }
+            }
+        }
+        if(target == null) {
+            target = charactersList.get(random.nextInt(charactersList.size()));
+        }
+        return target;
     }
 
     @Override
