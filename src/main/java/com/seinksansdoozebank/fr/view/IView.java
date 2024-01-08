@@ -26,4 +26,8 @@ public interface IView {
     void displayPlayerRevealCharacter(Player player);
 
     void displayPlayerDestroyDistrict(Player attacker, Player defender, District district);
+
+    void displayPlayerError(Player player, String message);
+
+    void displayPlayerStrategy(Player player, String strategy);
 }

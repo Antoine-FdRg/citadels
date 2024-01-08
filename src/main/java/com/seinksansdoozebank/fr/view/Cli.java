@@ -23,7 +23,7 @@ public class Cli implements IView {
 
     public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            logger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
+            logger.log(Level.INFO, "{0} ne pose pas de quartier. ", player);
         } else {
             District builtDistrict = optionalCard.get().getDistrict();
             logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
@@ -31,32 +31,32 @@ public class Cli implements IView {
     }
 
     public void displayWinner(Player winner) {
-        logger.log(Level.INFO, "{0} gagne avec un score de {1} .",new Object[]{ winner, winner.getScore()});
+        logger.log(Level.INFO, "{0} gagne avec un score de {1} .", new Object[]{winner, winner.getScore()});
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        logger.log(Level.INFO, "{0} commence à jouer.",player);
+        logger.log(Level.INFO, "{0} commence à jouer.", player);
     }
 
     @Override
     public void displayPlayerPickCard(Player player) {
-        logger.log(Level.INFO, "{0} pioche un quartier.",player);
+        logger.log(Level.INFO, "{0} pioche un quartier.", player);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player) {
-        logger.log(Level.INFO, "{0} pioche 2 pièces d''or.",player);
+        logger.log(Level.INFO, "{0} pioche 2 pièces d''or.", player);
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        logger.log(Level.INFO, "{0} choisit un personnage.",player);
+        logger.log(Level.INFO, "{0} choisit un personnage.", player);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        logger.log(Level.INFO, "{0} se révèle être {1} .",new Object[]{ player, player.getCharacter()});
+        logger.log(Level.INFO, "{0} se révèle être {1} .", new Object[]{player, player.getCharacter()});
     }
 
     @Override
@@ -108,12 +108,30 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerInfo(Player player) {
-        logger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.",new Object[]{ player, player.getNbGold()});
+        logger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
 
+    @Override
     public void displayRound(int roundNumber) {
-        logger.log(Level.INFO, "########## Début du round {0} ##########",roundNumber);
+        logger.log(Level.INFO, "########## Début du round {0} ##########", roundNumber);
+    }
+
+    @Override
+    public void displayPlayerError(Player player, String message) {
+        logger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
+    }
+
+    /**
+     * Display the strategy of the player
+     * Here we use a function which take a message because the log level is fine and this will be the only function which log the strategy
+     *
+     * @param player  the player
+     * @param message the message to display
+     */
+    @Override
+    public void displayPlayerStrategy(Player player, String message) {
+        logger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
     }
 }
