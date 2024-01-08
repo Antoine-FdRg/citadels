@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -31,6 +32,7 @@ public class Game {
 
     /**
      * Constructor of the Game class
+     *
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers) {
@@ -129,7 +131,7 @@ public class Game {
      * Create the list of characters ordered
      */
     protected void createCharacters() {
-        // availableCharacters.add(new Assassin());
+        availableCharacters.add(new Assassin());
         availableCharacters.add(new King());
         availableCharacters.add(new Bishop());
         availableCharacters.add(new Merchant());
@@ -150,6 +152,7 @@ public class Game {
 
     /**
      * Get the winner of the game
+     *
      * @return The player who win the game
      */
     protected Player getWinner() {
@@ -164,6 +167,7 @@ public class Game {
 
     /**
      * Set the list of players (For Test ONLY)
+     *
      * @param players the list of players
      */
     public void setPlayers(List<Player> players) {
@@ -172,6 +176,7 @@ public class Game {
 
     /**
      * Get the characters that are still available.
+     *
      * @return the list of characters available
      */
     public List<Character> getAvailableCharacters() {
