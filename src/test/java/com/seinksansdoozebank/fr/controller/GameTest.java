@@ -33,8 +33,6 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = new Game(4);
-        gameWithThreePlayer = new Game(3);
         game = spy(new Game(4,view));
         gameWithThreePlayer = new Game(3,view);
 
@@ -189,8 +187,29 @@ class GameTest {
      */
     @Test
     void botWithEightDistrictInItCitadelTest() {
-
         gameWithThreePlayer.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
+    }
+
+    @Test
+    void run() {
+        game.run();
+        verify(game,times(1)).init();
+        int nbRoundPlayed = game.getNbCurrentRound()-1;
+        verify(game, times(nbRoundPlayed)).playARound();
+        verify(game, times(1)).updatePlayersBonus();
+        verify(view, times(1)).displayWinner(any(Player.class));
+    }
+
+    @Test
+    void playARound() {
+        game.createCharacters();
+        game.playARound();
+        verify(view, times(1)).displayRound(anyInt());
+        verify(game, times(1)).orderPlayerBeforeChoosingCharacter();
+        verify(game, times(1)).playersChooseCharacters();
+        verify(game, times(1)).orderPlayerBeforePlaying();
+        verify(game, times(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(game, times(1)).retrieveCharacters();
     }
 }
