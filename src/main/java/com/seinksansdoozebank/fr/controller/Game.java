@@ -71,10 +71,12 @@ public class Game {
                 }
                 kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
                 //We check if the player has been stolen
-                if(player.getCharacter().getGoldWillBeStolen()){
+                if (player.getCharacter().getGoldWillBeStolen()) {
                     player.getCharacter().isStolen(players);
                     view.displayStolenCharacter(player.getCharacter());
-                    view.displayActualNumberOfGold(getPlayerWithRole(THIEF).get());
+                    if (getPlayerWithRole(THIEF).isPresent()) {
+                        view.displayActualNumberOfGold(getPlayerWithRole(THIEF).get());
+                    }
                 }
                 player.play();
                 //We set the attribute to true if player is the first who has eight districts
@@ -179,7 +181,10 @@ public class Game {
         this.players = players;
     }
 
-    public List<Player> getListPlayers(){
+    /**
+     * @return the list of players
+     */
+    public List<Player> getListPlayers() {
         return players;
     }
 
@@ -237,9 +242,13 @@ public class Game {
         return (listDifferentDistrictType.size() == 5);
     }
 
-    public Optional<Player> getPlayerWithRole(Role role){
-        for(Player player : players){
-            if(player.getCharacter().getRole()==role){
+    /**
+     * @param role
+     * @return an optional of Player with the given role
+     */
+    public Optional<Player> getPlayerWithRole(Role role) {
+        for (Player player : players) {
+            if (player.getCharacter().getRole() == role) {
                 return Optional.of(player);
             }
         }
