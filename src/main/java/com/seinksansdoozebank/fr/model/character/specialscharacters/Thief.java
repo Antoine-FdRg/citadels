@@ -5,13 +5,13 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 
 public class Thief extends Character {
 
-    protected Thief(Role role) {
+    public Thief() {
         super(Role.THIEF);
     }
 
     @Override
     public void useEffect() {
-
+        //No effect
     }
 
 
