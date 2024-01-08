@@ -86,9 +86,11 @@ public abstract class Character {
         return goldWillBeStolen;
     }
 
+
     /**
      * this method decrease the number of gold of the character which is stolen and
      * refreshes the attribute goldWillBeStolen
+     * @param players , the list of players of the game
      */
     public void isStolen(List<Player> players) {
         for(Player searchedPlayer : players){

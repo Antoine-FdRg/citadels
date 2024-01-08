@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.seinksansdoozebank.fr.model.character.roles.Role.THIEF;
-
 public class Game {
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
@@ -74,8 +72,8 @@ public class Game {
                 if (player.getCharacter().getGoldWillBeStolen()) {
                     player.getCharacter().isStolen(players);
                     view.displayStolenCharacter(player.getCharacter());
-                    if (getPlayerWithRole(THIEF).isPresent()) {
-                        view.displayActualNumberOfGold(getPlayerWithRole(THIEF).get());
+                    if (getPlayerWithRole(Role.THIEF).isPresent()) {
+                        view.displayActualNumberOfGold(getPlayerWithRole(Role.THIEF).get());
                     }
                 }
                 player.play();

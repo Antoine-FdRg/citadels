@@ -22,11 +22,11 @@ public class Thief extends Character {
     public void useEffect(Character character) {
         //We verify if the character is not the thief
         if (character == this) {
-            throw new IllegalArgumentException("The thief cannot still from itself ");
+            throw new IllegalArgumentException("The thief cannot steal from himself ");
         }
         //We verify if the character is not the assassin
         if (character.getRole() == Role.ASSASSIN) {
-            throw new IllegalArgumentException("The thief cannot still from the assassin ");
+            throw new IllegalArgumentException("The thief cannot steal from the assassin ");
         }
         //We verify if the character is not dead
         if (character.isDead()) {

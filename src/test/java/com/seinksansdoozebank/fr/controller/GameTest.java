@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.seinksansdoozebank.fr.model.character.roles.Role.ARCHITECT;
-import static com.seinksansdoozebank.fr.model.character.roles.Role.MERCHANT;
-import static com.seinksansdoozebank.fr.model.character.roles.Role.THIEF;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
 
 class GameTest {
 
@@ -216,8 +219,8 @@ class GameTest {
 
         game.setPlayers(List.of(playerThief, playerArchitect));
         //The player architect is present in the game
-        assertEquals(Optional.of(playerArchitect), game.getPlayerWithRole(ARCHITECT));
+        assertEquals(Optional.of(playerArchitect), game.getPlayerWithRole(Role.ARCHITECT));
         //The player merchant is not present in the game
-        assertEquals(Optional.empty(), game.getPlayerWithRole(MERCHANT));
+        assertEquals(Optional.empty(), game.getPlayerWithRole(Role.MERCHANT));
     }
 }
