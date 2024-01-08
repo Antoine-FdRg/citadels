@@ -180,7 +180,7 @@ public class SmartBot extends Player {
                         condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
                         return;
                     } catch (IllegalArgumentException e) {
-                        view.displayPlayerStrategy(this, "Le bot malin " + this.id + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get().id + ", il passe donc à la carte suivante");
+                        view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get().id + ", il passe donc à la carte suivante");
                     }
                 }
             }
