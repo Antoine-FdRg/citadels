@@ -71,6 +71,7 @@ public class CustomLogger {
         for (Object param : params) {
             if (param instanceof Player player) {
                 message = applyColor(player, message);
+                break;
             }
         }
         logger.log(level, message, params);
