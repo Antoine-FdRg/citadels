@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -115,6 +116,14 @@ public class RandomBot extends Player {
                 condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
             }
         }
+    }
+
+    public void chooseColorCourtyardOfMiracle() {
+        // Set a random DistricType to the Courtyard of Miracle
+        this.getCitadel().stream()
+                .filter(card -> card.getDistrict().getName().equals("Cour des miracles"))
+                .findFirst()
+                .ifPresent(card -> card.getDistrict().setDistrictType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
     }
 
     @Override

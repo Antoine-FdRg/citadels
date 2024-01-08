@@ -183,6 +183,22 @@ public class SmartBot extends Player {
         }
     }
 
+    public void chooseColorCourtyardOfMiracle() {
+        // if the player has all different district types except one DistrictType, the bot will choose the missing one
+        List<DistrictType> listDifferentDistrictType = getDistrictTypeFrequencyList(this.getCitadel());
+        if (listDifferentDistrictType.size() == 4) {
+            for (DistrictType districtType : DistrictType.values()) {
+                if (!listDifferentDistrictType.contains(districtType)) {
+                    this.getCitadel().stream()
+                            .filter(card -> card.getDistrict().getName().equals("Cour des miracles"))
+                            .forEach(card -> card.getDistrict().setDistrictType(districtType));
+                    return;
+                }
+            }
+        }
+        // Do nothing otherwise
+    }
+
     @Override
     public String toString() {
         return "Le bot malin " + this.id;

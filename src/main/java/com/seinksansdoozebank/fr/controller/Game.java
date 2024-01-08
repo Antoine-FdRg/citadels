@@ -76,7 +76,7 @@ public class Game {
         }
         //we add bonus to player who has specific citadel
         updatePlayersBonus();
-        view.displayWinner(getWinner());
+        view.displayWinner(this.getWinner());
     }
 
     /**
@@ -195,6 +195,10 @@ public class Game {
      */
     public void updatePlayersBonus() {
         for (Player player : players) {
+            // Check if the player contain the district COURTYARD_OF_MIRACLE
+            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles"))) {
+                player.chooseColorCourtyardOfMiracle();
+            }
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);
             }
