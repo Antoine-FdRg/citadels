@@ -8,6 +8,9 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -16,7 +19,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static com.seinksansdoozebank.fr.model.character.roles.Role.ARCHITECT;
+import static com.seinksansdoozebank.fr.model.character.roles.Role.MERCHANT;
+import static com.seinksansdoozebank.fr.model.character.roles.Role.THIEF;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -189,5 +196,28 @@ class GameTest {
 
         gameWithThreePlayer.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
+    }
+
+    /**
+     * we verify that the method getPlayerWithRoleTest return the right Optional
+     */
+    @Test
+    void getPlayerWithRoleTest() {
+        //Création du player de type architecte
+        Player playerArchitect = spy(new RandomBot(5, new Deck(), view));
+        Architect architect = new Architect();
+        architect.setPlayer(playerArchitect);
+        when(playerArchitect.getCharacter()).thenReturn(architect);
+        //Création du player de type voleur
+        Player playerThief = spy(new RandomBot(5, new Deck(), view));
+        Thief thief = new Thief();
+        thief.setPlayer(playerThief);
+        when(playerThief.getCharacter()).thenReturn(thief);
+
+        game.setPlayers(List.of(playerThief, playerArchitect));
+        //The player architect is present in the game
+        assertEquals(Optional.of(playerArchitect), game.getPlayerWithRole(ARCHITECT));
+        //The player merchant is not present in the game
+        assertEquals(Optional.empty(), game.getPlayerWithRole(MERCHANT));
     }
 }
