@@ -68,8 +68,13 @@ public abstract class Player {
     /**
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
-    public void pickACard() {
+    public final void pickACard() {
        this.hand.add(this.deck.pick());
+    }
+
+    public final void discardACard(Card card) {
+        this.hand.remove(card);
+        this.deck.discard(card);
     }
 
     /**

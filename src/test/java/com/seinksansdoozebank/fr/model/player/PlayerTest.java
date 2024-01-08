@@ -220,4 +220,12 @@ class PlayerTest {
         assertTrue(spyPlayer.hand.isEmpty());
         assertTrue(otherPlayer.hand.isEmpty());
     }
+
+    @Test
+    void discardACard(){
+        spyPlayer.hand.add(cardCostFive);
+        spyPlayer.discardACard(cardCostFive);
+        assertTrue(spyPlayer.hand.isEmpty());
+        verify(deck, times(1)).discard(cardCostFive);
+    }
 }

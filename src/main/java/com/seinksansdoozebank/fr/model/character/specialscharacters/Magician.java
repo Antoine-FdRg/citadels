@@ -23,8 +23,8 @@ public class Magician extends Character {
             this.getPlayer().switchHandWith(optTargetPlayer.get());
         }else{ //picking card from deck
             int numberOfCardsToPick = this.getPlayer().getHand().size();
-            this.getPlayer().getHand().clear();
             for (int i = 0; i < numberOfCardsToPick; i++) {
+                this.getPlayer().discardACard(this.getPlayer().getHand().get(i));
                 this.getPlayer().pickACard();
             }
         }
