@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,6 +35,8 @@ class GameTest {
         view = mock(Cli.class);
         game = new Game(4);
         gameWithThreePlayer = new Game(3);
+        game = spy(new Game(4,view));
+        gameWithThreePlayer = new Game(3,view);
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
