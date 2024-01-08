@@ -64,9 +64,12 @@ public abstract class Player {
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
     protected abstract void pickTwoCardKeepOneDiscardOne();
-    
-    public Card pickACard() {
-        return this.deck.pick();
+
+    /**
+     * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
+     */
+    public void pickACard() {
+       this.hand.add(this.deck.pick());
     }
 
     /**
@@ -145,7 +148,7 @@ public abstract class Player {
     /**
      * We add bonus with the final state of the game to a specific player
      *
-     * @param bonus
+     * @param bonus point to add to a player
      */
     public void addBonus(int bonus) {
         this.bonus += bonus;
@@ -232,9 +235,9 @@ public abstract class Player {
     }
 
     public void switchHandWith(Player player) {
-        List<Card> handToSwitch = new ArrayList<>(this.hand);
+        List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.hand.clear();
-        this.hand.addAll(player.hand);
+        this.hand.addAll(player.getHand());
         player.hand.clear();
         player.hand.addAll(handToSwitch);
     }

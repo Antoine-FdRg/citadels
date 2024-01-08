@@ -10,7 +10,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,7 +86,6 @@ class PlayerTest {
         assertFalse(spyPlayer.canPlayCard(tooExpensiveCard));
     }
 
-    @Disabled("This test is not working because we are adding some cards to the citadel with add method, by the way, we don't see the goal of this test")
     @Test
     void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
@@ -181,5 +179,45 @@ class PlayerTest {
         spyPlayer.addBonus(4);
         int sum = (new Card(District.PORT)).getDistrict().getCost() + (new Card(District.PALACE)).getDistrict().getCost() + spyPlayer.getBonus();
         assertEquals(sum, spyPlayer.getScore());
+    }
+
+    @Test
+    void pickACard(){
+        int handSize = spyPlayer.hand.size();
+        this.spyPlayer.pickACard();
+        assertEquals(handSize + 1, spyPlayer.hand.size());
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithTwoFilledHand(){
+        spyPlayer.hand.add(cardCostFive);
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        otherPlayer.hand.add(cardCostThree);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertEquals(cardCostThree, spyPlayer.hand.get(0));
+        assertEquals(cardCostFive, otherPlayer.hand.get(0));
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithOneFilledHand(){
+        spyPlayer.hand.add(cardCostFive);
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertEquals(cardCostFive, otherPlayer.hand.get(0));
+        assertTrue(spyPlayer.hand.isEmpty());
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithTwoEmptyHand(){
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertTrue(spyPlayer.hand.isEmpty());
+        assertTrue(otherPlayer.hand.isEmpty());
     }
 }

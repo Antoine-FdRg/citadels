@@ -1,11 +1,9 @@
 package com.seinksansdoozebank.fr.model.character.specialscharacters;
 
-import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
-import java.util.List;
 import java.util.Optional;
 
 public class Magician extends Character {

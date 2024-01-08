@@ -9,7 +9,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.view.IView;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -48,8 +47,8 @@ public class RandomBot extends Player {
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
         this.view.displayPlayerPickCard(this);
-        Card card1 = this.pickACard();
-        Card card2 = this.pickACard();
+        Card card1 = this.deck.pick();
+        Card card2 = this.deck.pick();
         if (random.nextBoolean()) {
             this.hand.add(card1);
             this.deck.discard(card2);
