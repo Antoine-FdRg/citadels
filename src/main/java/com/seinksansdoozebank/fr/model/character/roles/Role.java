@@ -10,7 +10,7 @@ public enum Role {
     ARCHITECT("Architecte"),
     CONDOTTIERE("Condottiere");
 
-    private String name;
+    private final String name;
 
     Role(String name) {
         this.name = name;
@@ -21,10 +21,6 @@ public enum Role {
     }
 
     public int getNbDistrictsCanBeBuild() {
-        return this == ARCHITECT ? 3 : 1;
-    }
-
-    public int getNbCardToPick() {
         return this == ARCHITECT ? 3 : 1;
     }
 }

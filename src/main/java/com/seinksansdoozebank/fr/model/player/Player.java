@@ -108,6 +108,9 @@ public abstract class Player {
         return cards;
     }
 
+    /**
+     * Effect of architect character (pick 2 cards)
+     */
     protected void useEffectArchitectPickCards() {
         // get the two cards
         Card card1 = this.deck.pick();
