@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -248,5 +250,33 @@ class SmartBotTest {
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Architect());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertInstanceOf(Architect.class, target);
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetNotInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Bishop());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer, merchantPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertTrue(target instanceof Bishop || target instanceof Merchant);
     }
 }

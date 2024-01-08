@@ -193,7 +193,7 @@ public class SmartBot extends Player {
      * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
      * @return the target of the assassin
      */
-    private Character choseAssassinTarget() {
+    protected Character choseAssassinTarget() {
         List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
         Collections.shuffle(roleInterestingToKill);
         Character target = null;

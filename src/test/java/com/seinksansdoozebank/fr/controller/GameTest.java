@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -32,7 +33,7 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = new Game(4);
+        game = new Game(5);
         gameWithThreePlayer = new Game(3);
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
@@ -97,7 +98,7 @@ class GameTest {
     @Test
     void testCharactersChoice() {
         game.createCharacters();
-        assertEquals(4, game.getAvailableCharacters().size());
+        assertEquals(5, game.getAvailableCharacters().size());
     }
 
     @Test
@@ -108,7 +109,7 @@ class GameTest {
         List<Character> availableCharacters = game.getAvailableCharacters();
 
         // Check if the correct number of characters is created
-        assertEquals(4, availableCharacters.size()); // Adjust the expected size based on your implementation
+        assertEquals(5, availableCharacters.size()); // Adjust the expected size based on your implementation
     }
 
     @Test
@@ -118,7 +119,9 @@ class GameTest {
 
         // Test that createCharacters create a list of characters
         game.createCharacters();
+        //PENSER A METTRE LES BOTS DANS L'ORDRE
         List<Character> charactersList = List.of(
+                new Assassin(),
                 new King(),
                 new Bishop(),
                 new Merchant(),
@@ -143,7 +146,7 @@ class GameTest {
         game.retrieveCharacters();
 
         // Check if the available characters list is equal to charactersList
-        assertEquals(4, game.getAvailableCharacters().size());
+        assertEquals(charactersList.size(), game.getAvailableCharacters().size());
     }
 
     /**
