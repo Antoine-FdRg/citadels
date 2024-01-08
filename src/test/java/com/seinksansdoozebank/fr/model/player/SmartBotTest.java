@@ -249,4 +249,21 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(characters);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
+
+    @Test
+    void testChooseColorCourtyardOfMiracleGetTheCorrectColor() {
+        // Set a citadel with 4 district with different colors
+        Card manorCard = new Card(District.TEMPLE);
+        Card castleCard = new Card(District.MANOR);
+        Card palaceCard = new Card(District.TAVERN);
+        Card laboratoryCard = new Card(District.WATCH_TOWER);
+        // Add the Courtyard of miracle
+        Card courtyardOfMiracleCard = new Card(District.COURTYARD_OF_MIRACLE);
+        ArrayList<Card> citadel = new ArrayList<>(
+                List.of(manorCard, castleCard, palaceCard, laboratoryCard, courtyardOfMiracleCard)
+        );
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseColorCourtyardOfMiracle();
+        assertEquals(DistrictType.PRESTIGE, courtyardOfMiracleCard.getDistrict().getDistrictType());
+    }
 }

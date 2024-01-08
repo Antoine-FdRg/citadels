@@ -196,7 +196,12 @@ public class Game {
     public void updatePlayersBonus() {
         for (Player player : players) {
             // Check if the player contain the district COURTYARD_OF_MIRACLE
-            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles"))) {
+            System.out.println(player.getCitadel());
+            System.out.println(player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles")));
+            System.out.println(player.isLastCardPlacedCourtyardOfMiracle());
+            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles"))
+            && !player.isLastCardPlacedCourtyardOfMiracle()) {
+                System.out.println("test");
                 player.chooseColorCourtyardOfMiracle();
             }
             if (hasFiveDifferentDistrictTypes(player)) {

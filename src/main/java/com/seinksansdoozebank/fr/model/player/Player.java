@@ -250,4 +250,12 @@ public abstract class Player {
     }
 
     public abstract void chooseColorCourtyardOfMiracle();
+
+    public boolean isLastCardPlacedCourtyardOfMiracle() {
+        return this.lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public void setLastCardPlacedCourtyardOfMiracle(boolean lastCardPlacedCourtyardOfMiracle) {
+        this.lastCardPlacedCourtyardOfMiracle = lastCardPlacedCourtyardOfMiracle;
+    }
 }
