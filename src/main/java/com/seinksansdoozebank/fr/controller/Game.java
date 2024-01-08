@@ -15,6 +15,7 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +61,9 @@ public class Game {
         while (!isGameFinished) {
             view.displayRound(round + 1);
             // Intialize characters
-            playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
+            playersChooseCharacters();
+            orderPlayerBeforePlaying();
             for (Player player : players) {
                 if (player.getCharacter().isDead()) {
                     continue;
@@ -78,6 +80,10 @@ public class Game {
         //we add bonus to player who has specific citadel
         updatePlayersBonus();
         view.displayWinner(getWinner());
+    }
+
+    void orderPlayerBeforePlaying() {
+        players.sort(Comparator.comparing(player -> player.getCharacter().getRole()));
     }
 
     /**
