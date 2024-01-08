@@ -58,7 +58,7 @@ public class Game {
         boolean isGameFinished = false;
         int round = 1;
         while (!isGameFinished) {
-            view.displayRound(round );
+            view.displayRound(round);
             playersChooseCharacters();
             orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
