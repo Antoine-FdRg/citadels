@@ -59,8 +59,8 @@ public class Game {
         int round = 1;
         while (!isGameFinished) {
             view.displayRound(round );
-            orderPlayerBeforeChoosingCharacter();
             playersChooseCharacters();
+            orderPlayerBeforeChoosingCharacter();
             for (Player player : players) {
                 if (player.getCharacter().isDead()) {
                     continue;
