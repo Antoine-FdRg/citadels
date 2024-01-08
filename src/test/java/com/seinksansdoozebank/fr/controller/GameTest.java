@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -189,5 +190,20 @@ class GameTest {
 
         gameWithThreePlayer.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
+    }
+
+    @Test
+    void orderPlayerBeforePlaying() {
+        game.createCharacters();
+        List<Character> availableCharacters = new ArrayList<>(game.getAvailableCharacters());
+        availableCharacters.sort(Comparator.comparing(Character::getRole));
+        game.playersChooseCharacters();
+        availableCharacters.removeAll(game.getAvailableCharacters());
+        game.orderPlayerBeforePlaying();
+        int size  = availableCharacters.size();
+        assertEquals(size, game.players.size());
+        for (int i = 0; i < size; i++) {
+            assertEquals(game.players.get(i).getCharacter(), availableCharacters.get(i));
+        }
     }
 }
