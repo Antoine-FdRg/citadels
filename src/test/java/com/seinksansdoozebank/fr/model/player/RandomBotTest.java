@@ -45,6 +45,7 @@ class RandomBotTest {
     void play() {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spyRandomBot).playACard();
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
@@ -52,7 +53,7 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, times(1)).displayPlayerPlaysCard(spyRandomBot, optDistrict);
+        verify(view, times(1)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
     }
 
     @Test
@@ -152,4 +153,6 @@ class RandomBotTest {
         verify(spyRandomBot, times(1)).useEffect();
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
+
+
 }
