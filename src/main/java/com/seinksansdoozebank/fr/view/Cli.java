@@ -6,7 +6,6 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 
 
@@ -40,7 +39,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerPicksGold(Player player) {
-        CustomLogger.log(Level.INFO, "{0} pioche 2 pièces d'or.", player);
+        CustomLogger.log(Level.INFO, "{0} pioche 2 pièces d''or.", player);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d'or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or'.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
     }
 
     private void displayPlayerHand(Player player) {
@@ -102,7 +101,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerInfo(Player player) {
-        CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d'or.", new Object[]{player, player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
