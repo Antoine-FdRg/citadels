@@ -5,9 +5,11 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
@@ -25,12 +27,20 @@ public class RandomBot extends Player {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
+        if (character instanceof CommonCharacter commonCharacter) {
+            commonCharacter.goldCollectedFromDisctrictType();
+        }
         this.useEffect();
+        int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
         if (random.nextBoolean()) {
             pickSomething();
-            view.displayPlayerPlaysCard(this, this.playACard());
+            if (nbDistrictsToBuild > 0) {
+                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+            }
         } else {
-            view.displayPlayerPlaysCard(this, this.playACard());
+            if (nbDistrictsToBuild > 0) {
+                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+            }
             pickSomething();
         }
         view.displayPlayerInfo(this);
@@ -91,6 +101,8 @@ public class RandomBot extends Player {
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
             this.useEffectCondottiere(condottiere);
+        } else if (this.character instanceof Architect) {
+            this.useEffectArchitectPickCards();
         }
     }
 

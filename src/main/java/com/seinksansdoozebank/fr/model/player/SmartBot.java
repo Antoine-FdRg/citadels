@@ -37,7 +37,7 @@ public class SmartBot extends Player {
         if (optChosenCard.isPresent()) {
             Card choosenCard = optChosenCard.get();
             if (this.canPlayCard(choosenCard)) {
-                view.displayPlayerPlaysCard(this, this.playACard());
+                view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
                 if (character instanceof CommonCharacter commonCharacter) {
                     commonCharacter.goldCollectedFromDisctrictType();
                 }
@@ -47,15 +47,15 @@ public class SmartBot extends Player {
                     commonCharacter.goldCollectedFromDisctrictType();
                 }
                 if (this.canPlayCard(choosenCard)) {
-                    view.displayPlayerPlaysCard(this, this.playACard());
+                    view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
                 } else {
                     this.pickGold();
-                    view.displayPlayerPlaysCard(this, this.playACard());
+                    view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
                 }
             }
         } else {//la main est vide
             this.pickTwoCardKeepOneDiscardOne(); //
-            view.displayPlayerPlaysCard(this, this.playACard());
+            view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         }
         view.displayPlayerInfo(this);
     }
@@ -102,7 +102,7 @@ public class SmartBot extends Player {
                 return optCard;
             }
         }
-        //Gathering districts wich are not already built in player's citadel
+        //Gathering districts which are not already built in player's citadel
         List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
         //Choosing the cheaper one
         return this.getCheaperCard(notAlreadyPlayedCardList);
@@ -138,6 +138,7 @@ public class SmartBot extends Player {
         // If no character has the mostOwnedDistrictType, choose a random character
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
+        characters.remove(this.character);
         return this.character;
     }
 
