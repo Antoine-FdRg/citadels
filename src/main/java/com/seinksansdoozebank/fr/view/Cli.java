@@ -12,12 +12,15 @@ import java.util.logging.Level;
 
 public class Cli implements IView {
 
-    public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
+    @Override
+    public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            CustomLogger.log(Level.INFO, "{0} ne pose pas de quartier. ", player);
+            CustomLogger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
         } else {
-            District builtDistrict = optionalCard.get().getDistrict();
-            CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d'or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+            for (Card card : optionalCard) {
+                District builtDistrict = card.getDistrict();
+                CustomLogger.log(Level.INFO,"{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+            }
         }
     }
 
