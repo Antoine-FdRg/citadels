@@ -256,7 +256,7 @@ class SmartBotTest {
         Card manorCard = new Card(District.TEMPLE);
         Card castleCard = new Card(District.MANOR);
         Card palaceCard = new Card(District.TAVERN);
-        Card laboratoryCard = new Card(District.WATCH_TOWER);
+        Card laboratoryCard = new Card(District.CEMETERY);
         // Add the Courtyard of miracle
         Card courtyardOfMiracleCard = new Card(District.COURTYARD_OF_MIRACLE);
         ArrayList<Card> citadel = new ArrayList<>(
@@ -264,6 +264,6 @@ class SmartBotTest {
         );
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseColorCourtyardOfMiracle();
-        assertEquals(DistrictType.PRESTIGE, courtyardOfMiracleCard.getDistrict().getDistrictType());
+        assertEquals(DistrictType.SOLDIERLY, spySmartBot.getColorCourtyardOfMiracleType());
     }
 }

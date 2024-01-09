@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -29,6 +30,7 @@ public abstract class Player {
     protected Character character;
     private final List<Player> opponents = new ArrayList<>();
     private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -257,5 +259,13 @@ public abstract class Player {
 
     public void setLastCardPlacedCourtyardOfMiracle(boolean lastCardPlacedCourtyardOfMiracle) {
         this.lastCardPlacedCourtyardOfMiracle = lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public DistrictType getColorCourtyardOfMiracleType() {
+        return this.colorCourtyardOfMiracleType;
+    }
+
+    public void setColorCourtyardOfMiracleType(DistrictType colorCourtyardOfMiracleType) {
+        this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
     }
 }

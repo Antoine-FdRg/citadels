@@ -123,7 +123,7 @@ public class RandomBot extends Player {
         this.getCitadel().stream()
                 .filter(card -> card.getDistrict().getName().equals("Cour des miracles"))
                 .findFirst()
-                .ifPresent(card -> card.getDistrict().setDistrictType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
+                .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
     }
 
     @Override

@@ -31,6 +31,7 @@ public class Game {
 
     /**
      * Constructor of the Game class
+     *
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers) {
@@ -149,6 +150,7 @@ public class Game {
 
     /**
      * Get the winner of the game
+     *
      * @return The player who win the game
      */
     protected Player getWinner() {
@@ -163,6 +165,7 @@ public class Game {
 
     /**
      * Set the list of players (For Test ONLY)
+     *
      * @param players the list of players
      */
     public void setPlayers(List<Player> players) {
@@ -171,6 +174,7 @@ public class Game {
 
     /**
      * Get the characters that are still available.
+     *
      * @return the list of characters available
      */
     public List<Character> getAvailableCharacters() {
@@ -196,12 +200,8 @@ public class Game {
     public void updatePlayersBonus() {
         for (Player player : players) {
             // Check if the player contain the district COURTYARD_OF_MIRACLE
-            System.out.println(player.getCitadel());
-            System.out.println(player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles")));
-            System.out.println(player.isLastCardPlacedCourtyardOfMiracle());
             if (player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles"))
-            && !player.isLastCardPlacedCourtyardOfMiracle()) {
-                System.out.println("test");
+                    && !player.isLastCardPlacedCourtyardOfMiracle()) {
                 player.chooseColorCourtyardOfMiracle();
             }
             if (hasFiveDifferentDistrictTypes(player)) {
@@ -228,6 +228,12 @@ public class Game {
             if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
                 listDifferentDistrictType.add(card.getDistrict().getDistrictType());
             }
+        }
+        // if there is 4 different district types and there is a courtyard of miracle in the citadel, we add the last district type
+        if (listDifferentDistrictType.size() == 4 &&
+                player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles")) &&
+                !player.isLastCardPlacedCourtyardOfMiracle()) {
+            listDifferentDistrictType.add(player.getColorCourtyardOfMiracleType());
         }
         return (listDifferentDistrictType.size() == 5);
     }

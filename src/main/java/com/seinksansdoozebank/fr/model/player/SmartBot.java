@@ -191,7 +191,7 @@ public class SmartBot extends Player {
                 if (!listDifferentDistrictType.contains(districtType)) {
                     this.getCitadel().stream()
                             .filter(card -> card.getDistrict().getName().equals("Cour des miracles"))
-                            .forEach(card -> card.getDistrict().setDistrictType(districtType));
+                            .forEach(card -> this.setColorCourtyardOfMiracleType(districtType));
                     return;
                 }
             }
