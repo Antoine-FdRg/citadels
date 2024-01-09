@@ -222,10 +222,7 @@ public abstract class Player {
     }
 
     public boolean isTheKing() {
-        //TODO remove this if when player are able to choose a character
-        if (this.character == null) {
-            return false;
-        }
+
         return Role.KING.equals(this.character.getRole());
     }
 

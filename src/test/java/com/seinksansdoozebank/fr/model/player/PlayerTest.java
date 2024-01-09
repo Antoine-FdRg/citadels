@@ -131,31 +131,6 @@ class PlayerTest {
     }
 
     @Test
-    void isTheKingWithAPlayerBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new King());
-
-        player.chooseCharacter(characters);
-
-        assertTrue(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerNotBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-
-        player.chooseCharacter(characters);
-
-        assertFalse(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerWithNoCharacter() {
-        assertFalse(player.isTheKing());
-    }
-
-    @Test
     void retrieveCharacter() {
         List<Character> characters = new ArrayList<>();
         Character condottiere = new Condottiere();

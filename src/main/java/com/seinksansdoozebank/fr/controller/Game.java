@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -78,7 +79,7 @@ public class Game {
             if (player.getCharacter().isDead()) {
                 continue;
             }
-            kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
+            kingPlayer = player.getCharacter().getRole().equals(Role.KING)? Optional.of(player) : kingPlayer;
             player.play();
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
@@ -110,6 +111,7 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     void orderPlayerBeforeChoosingCharacter() {
+        players.sort(Comparator.comparing(Player::getId));
         if (kingPlayer.isPresent()) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
