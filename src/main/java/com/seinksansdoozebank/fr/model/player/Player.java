@@ -112,12 +112,8 @@ public abstract class Player {
      * Effect of architect character (pick 2 cards)
      */
     protected void useEffectArchitectPickCards() {
-        // get the two cards
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        // add the two cards to the hand
-        this.hand.add(card1);
-        this.hand.add(card2);
+        this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
     }
 
     /**
