@@ -33,6 +33,6 @@ public class Thief extends Character {
             throw new IllegalStateException("This character is already dead");
         }
         //We set the attribute goldWillBeStolen to true.
-        character.setGoldWillBeStolen(true);
+        character.setSavedThief(this.getPlayer());
     }
 }

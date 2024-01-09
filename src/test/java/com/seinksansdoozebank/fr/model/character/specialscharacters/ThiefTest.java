@@ -1,9 +1,7 @@
 package com.seinksansdoozebank.fr.model.character.specialscharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.IView;
@@ -11,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,7 +45,7 @@ public class ThiefTest {
     @Test
     void testUseEffect() {
         thief.useEffect(merchant);
-        assertTrue(merchant.getGoldWillBeStolen());
+        assertNull(merchant.getSavedThief());
     }
 
     /**

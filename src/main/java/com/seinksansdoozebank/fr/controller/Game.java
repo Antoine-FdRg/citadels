@@ -12,7 +12,6 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
-import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -81,11 +80,11 @@ public class Game {
                 continue;
             }
             kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
-            if (player.getCharacter().getGoldWillBeStolen()) {
+            if (player.getCharacter().getSavedThief()!=null) {
                 player.getCharacter().isStolen(players);
                 view.displayStolenCharacter(player.getCharacter());
-                if (getPlayerWithRole(Role.THIEF).isPresent()) {
-                    view.displayActualNumberOfGold(getPlayerWithRole(Role.THIEF).get());
+                if (getPlayerByRole(Role.THIEF).isPresent()) {
+                    view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
                 }
             }
             player.play();
@@ -198,12 +197,13 @@ public class Game {
     /**
      * @return the list of players
      */
-    public List<Player> getListPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
     /**
      * Get the characters that are still available.
+     *
      * @return the list of characters available
      */
     public List<Character> getAvailableCharacters() {
@@ -260,7 +260,7 @@ public class Game {
      * @param role
      * @return an optional of Player with the given role
      */
-    public Optional<Player> getPlayerWithRole(Role role) {
+    public Optional<Player> getPlayerByRole(Role role) {
         for (Player player : players) {
             if (player.getCharacter().getRole() == role) {
                 return Optional.of(player);

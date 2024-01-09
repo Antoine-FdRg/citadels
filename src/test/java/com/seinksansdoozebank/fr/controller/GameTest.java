@@ -260,8 +260,8 @@ class GameTest {
 
         game.setPlayers(List.of(playerThief, playerArchitect));
         //The player architect is present in the game
-        assertEquals(Optional.of(playerArchitect), game.getPlayerWithRole(Role.ARCHITECT));
+        assertEquals(Optional.of(playerArchitect), game.getPlayerByRole(Role.ARCHITECT));
         //The player merchant is not present in the game
-        assertEquals(Optional.empty(), game.getPlayerWithRole(Role.MERCHANT));
+        assertEquals(Optional.empty(), game.getPlayerByRole(Role.MERCHANT));
     }
 }

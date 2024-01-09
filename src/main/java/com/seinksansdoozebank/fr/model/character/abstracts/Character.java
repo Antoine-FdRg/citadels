@@ -4,12 +4,13 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Character {
     private Player player;
     private final Role role;
     private boolean isDead = false;
-    private boolean goldWillBeStolen = false;
+    private Player savedThief ;
 
     protected Character(Role role) {
         this.role = role;
@@ -71,19 +72,21 @@ public abstract class Character {
 
 
     /**
-     * setter
-     * @param goldWillBeStolen
+     * @param player
      */
-    public void setGoldWillBeStolen(boolean goldWillBeStolen) {
-        this.goldWillBeStolen = goldWillBeStolen;
+    public void setSavedThief(Player player) {
+        if(savedThief==null){
+            savedThief=player;
+        }
+        savedThief = null;
     }
 
     /**
      * getter
-     * @return a boolean
+     * @return a player
      */
-    public boolean getGoldWillBeStolen() {
-        return goldWillBeStolen;
+    public Player getSavedThief() {
+        return savedThief;
     }
 
 
@@ -101,6 +104,6 @@ public abstract class Character {
             }
         }
         this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
-        this.setGoldWillBeStolen(false);
+        this.setSavedThief(null);
     }
 }

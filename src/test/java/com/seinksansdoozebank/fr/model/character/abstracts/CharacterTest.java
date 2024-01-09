@@ -15,6 +15,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -66,7 +68,7 @@ public class CharacterTest {
     void isStolenGetNumberOfGoldOfMerchantTest() {
         merchant.isStolen(listOfPlayer);
         assertEquals(0, merchantPlayer.getNbGold());
-        assertFalse(merchantPlayer.getCharacter().getGoldWillBeStolen());
+        assertNull(merchantPlayer.getCharacter().getSavedThief());
     }
 
     /**
@@ -76,6 +78,6 @@ public class CharacterTest {
     void isStolenGetGoldWillBeStolenOfMerchantTest() {
         merchant.isStolen(listOfPlayer);
         assertEquals(0, merchantPlayer.getNbGold());
-        assertFalse(merchantPlayer.getCharacter().getGoldWillBeStolen());
+        assertNull(merchantPlayer.getCharacter().getSavedThief());
     }
 }
