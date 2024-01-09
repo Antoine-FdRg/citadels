@@ -17,7 +17,8 @@ import com.seinksansdoozebank.fr.view.IView;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+
+
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
@@ -26,7 +27,7 @@ public class Game {
     private boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
     protected List<Player> players;
-    private Optional<Player> kingPlayer;
+    private Player crownedPlayer;
     private final List<Character> availableCharacters;
     private final IView view;
     private int nbCurrentRound;
@@ -50,7 +51,7 @@ public class Game {
             player.setOpponents(opponents);
         }
         availableCharacters = new ArrayList<>();
-        kingPlayer = Optional.empty();
+        crownedPlayer = null;
         this.finished = false;
     }
 
@@ -79,7 +80,7 @@ public class Game {
             if (player.getCharacter().isDead()) {
                 continue;
             }
-            kingPlayer = player.getCharacter().getRole().equals(Role.KING)? Optional.of(player) : kingPlayer;
+            crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
             player.play();
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
@@ -112,10 +113,10 @@ public class Game {
      */
     void orderPlayerBeforeChoosingCharacter() {
         players.sort(Comparator.comparing(Player::getId));
-        if (kingPlayer.isPresent()) {
+        if (crownedPlayer == null) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
-            int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());
+            int indexOfTheKingPlayer = players.indexOf(crownedPlayer);
             for (int i = indexOfTheKingPlayer; i < players.size(); i++) {
                 orderedPlayers.add((i - indexOfTheKingPlayer) % players.size(), players.get(i));
             }
