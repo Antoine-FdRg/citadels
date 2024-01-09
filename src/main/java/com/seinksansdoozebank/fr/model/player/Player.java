@@ -69,7 +69,7 @@ public abstract class Player {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-       this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
     }
 
     public final void discardACard(Card card) {
@@ -95,12 +95,25 @@ public abstract class Player {
     }
 
     public List<Card> playCards(int numberOfCards) {
+        if (numberOfCards <= 0) {
+            throw new IllegalArgumentException("Number of cards to play must be positive");
+        } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
+            throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
+        }
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
             card.ifPresent(cards::add);
         }
         return cards;
+    }
+
+    /**
+     * Effect of architect character (pick 2 cards)
+     */
+    protected void useEffectArchitectPickCards() {
+        this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
     }
 
     /**
