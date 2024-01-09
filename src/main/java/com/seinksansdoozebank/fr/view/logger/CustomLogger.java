@@ -18,16 +18,14 @@ public class CustomLogger {
     private static final Random random = new Random();
 
     private static final List<String> availableColors = new ArrayList<>(List.of(
-            "\u001B[32m", // Green
-            "\u001B[33m", // Yellow
-            "\u001B[34m", // Blue
-            "\u001B[35m", // Purple
-            "\u001B[36m", // Cyan
-            "\u001B[92m", // Light Green
-            "\u001B[93m", // Light Yellow
-            "\u001B[94m", // Light Blue
-            "\u001B[95m", // Light Purple
-            "\u001B[96m" // Light Cyan
+            "\u001B[38;5;21m", // dark blue
+            "\u001B[38;5;32m", // light blue
+            "\u001B[38;5;129m", // purple
+            "\u001B[38;5;199m", // pink
+            "\u001B[38;5;28m", // dark green
+            "\u001B[38;5;40m", // light green
+            "\u001B[38;5;202m", // orange
+            "\u001B[38;5;124m" // red
     ));
 
 

@@ -26,4 +26,10 @@ public interface IView {
     void displayPlayerRevealCharacter(Player player);
 
     void displayPlayerDestroyDistrict(Player attacker, Player defender, District district);
+
+    void displayPlayerScore(Player player);
+
+    void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName);
+
+    void displayGameFinished();
 }

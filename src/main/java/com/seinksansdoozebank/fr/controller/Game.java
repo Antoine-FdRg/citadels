@@ -33,6 +33,7 @@ public class Game {
 
     /**
      * Constructor of the Game class
+     *
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers, IView view) {
@@ -62,6 +63,7 @@ public class Game {
         while (!finished) {
             this.playARound();
         }
+        view.displayGameFinished();
         updatePlayersBonus();
         view.displayWinner(getWinner());
     }
@@ -136,7 +138,7 @@ public class Game {
     /**
      * Initialize the game
      */
-     protected void init() {
+    protected void init() {
         dealCards();
         createCharacters();
     }
@@ -166,6 +168,7 @@ public class Game {
 
     /**
      * Get the winner of the game
+     *
      * @return The player who win the game
      */
     protected Player getWinner() {
@@ -180,6 +183,7 @@ public class Game {
 
     /**
      * Set the list of players (For Test ONLY)
+     *
      * @param players the list of players
      */
     public void setPlayers(List<Player> players) {
@@ -188,6 +192,7 @@ public class Game {
 
     /**
      * Get the characters that are still available.
+     *
      * @return the list of characters available
      */
     public List<Character> getAvailableCharacters() {
@@ -214,13 +219,17 @@ public class Game {
         for (Player player : players) {
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);
+                view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
             if (player.getCitadel().size() == 8) {
                 if (player.getIsFirstToHaveEightDistricts()) {
                     player.addBonus(2);
+                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre 8 quartiers");
                 }
                 player.addBonus(2);
+                view.displayPlayerGetBonus(player, 2, "8 quartiers");
             }
+            view.displayPlayerScore(player);
         }
     }
 
