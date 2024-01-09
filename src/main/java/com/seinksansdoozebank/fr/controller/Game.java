@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-
-
 public class Game {
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
@@ -27,7 +25,7 @@ public class Game {
     private boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
     protected List<Player> players;
-    private Player crownedPlayer;
+    Player crownedPlayer;
     private final List<Character> availableCharacters;
     private final IView view;
     private int nbCurrentRound;
@@ -113,7 +111,7 @@ public class Game {
      */
     void orderPlayerBeforeChoosingCharacter() {
         players.sort(Comparator.comparing(Player::getId));
-        if (crownedPlayer == null) {
+        if (crownedPlayer != null) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
             int indexOfTheKingPlayer = players.indexOf(crownedPlayer);

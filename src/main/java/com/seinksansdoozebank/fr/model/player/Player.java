@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -219,11 +218,6 @@ public abstract class Player {
         this.character = null;
         characterToRetrieve.setPlayer(null);
         return characterToRetrieve;
-    }
-
-    public boolean isTheKing() {
-
-        return Role.KING.equals(this.character.getRole());
     }
 
     @Override
