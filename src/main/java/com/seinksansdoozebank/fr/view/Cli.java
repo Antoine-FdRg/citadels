@@ -11,6 +11,8 @@ import java.util.logging.Level;
 
 public class Cli implements IView {
 
+    String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
+
     @Override
     public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
@@ -120,10 +122,10 @@ public class Cli implements IView {
 
     @Override
     public void displayGameFinished() {
-        CustomLogger.log(Level.INFO, "\u001B[31m\n### La partie est terminée ! ###\u001B[31m");
+        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"### La partie est terminée ! ###\u001B[0m");
     }
 
     public void displayRound(int roundNumber) {
-        CustomLogger.log(Level.INFO, "\u001B[31m\n\n########## Début du round {0} ##########\u001B[0m", roundNumber);
+        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"########## Début du round {0} ##########\u001B[0m", roundNumber);
     }
 }
