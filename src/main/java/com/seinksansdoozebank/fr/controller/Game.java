@@ -62,6 +62,7 @@ public class Game {
         while (!finished) {
             this.playARound();
         }
+        view.displayGameFinished();
         updatePlayersBonus();
         view.displayWinner(getWinner());
     }
@@ -214,13 +215,17 @@ public class Game {
         for (Player player : players) {
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);
+                view.displayPlayerGetBonus(player,3,"5 quartiers de types différents");
             }
             if (player.getCitadel().size() == 8) {
                 if (player.getIsFirstToHaveEightDistricts()) {
                     player.addBonus(2);
+                    view.displayPlayerGetBonus(player,2,"premier joueur a atteindre 8 quartiers");
                 }
                 player.addBonus(2);
+                view.displayPlayerGetBonus(player,2,"8 quartiers");
             }
+            view.displayPlayerScore(player);
         }
     }
 

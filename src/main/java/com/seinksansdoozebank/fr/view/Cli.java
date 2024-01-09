@@ -24,7 +24,7 @@ public class Cli implements IView {
     }
 
     public void displayWinner(Player winner) {
-        CustomLogger.log(Level.INFO, "{0} gagne avec un score de {1} .", new Object[]{winner, winner.getScore()});
+        CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
 
     @Override
@@ -49,12 +49,22 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        CustomLogger.log(Level.INFO, "{0} se révèle être {1} .", new Object[]{player, player.getCharacter()});
+        CustomLogger.log(Level.INFO, "{0} se révèle être {1}.", new Object[]{player, player.getCharacter()});
     }
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
         CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or'.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+    }
+
+    @Override
+    public void displayPlayerScore(Player player) {
+        CustomLogger.log(Level.INFO, "{0} fini la partie avec un score de {1}.", new Object[]{player, player.getScore()});
+    }
+
+    @Override
+    public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
+        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
     }
 
     private void displayPlayerHand(Player player) {
@@ -104,6 +114,13 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
+    }
+
+
+
+    @Override
+    public void displayGameFinished() {
+        CustomLogger.log(Level.INFO, "\u001B[31m\n### La partie est terminée ! ###\u001B[31m");
     }
 
     public void displayRound(int roundNumber) {
