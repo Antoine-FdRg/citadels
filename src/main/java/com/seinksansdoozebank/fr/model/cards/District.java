@@ -31,7 +31,7 @@ public enum District implements Comparable<District> {
     PORT_FOR_DRAGONS("Dracoport", DistrictType.PRESTIGE, 6, 1);
 
     private final String name;
-    private DistrictType districtType;
+    private final DistrictType districtType;
     private final int cost;
     private final int numberOfAppearance;
 
@@ -84,12 +84,6 @@ public enum District implements Comparable<District> {
      */
     public DistrictType getDistrictType() {
         return districtType;
-    }
-
-    public void setDistrictType(DistrictType districtType) {
-        if (this.name.equals("Cour des miracles")) {
-            this.districtType = districtType;
-        }
     }
 
     /**

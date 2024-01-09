@@ -275,4 +275,16 @@ class GameTest {
         verify(game, times(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(game, times(1)).retrieveCharacters();
     }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsNotTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(false);
+        assertTrue(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+    }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        assertFalse(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+    }
 }
