@@ -123,13 +123,6 @@ public class Cli implements IView {
         logger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
     }
 
-    /**
-     * Display the strategy of the player
-     * Here we use a function which take a message because the log level is fine and this will be the only function which log the strategy
-     *
-     * @param player  the player
-     * @param message the message to display
-     */
     @Override
     public void displayPlayerStrategy(Player player, String message) {
         logger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
