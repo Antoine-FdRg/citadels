@@ -23,8 +23,4 @@ public enum Role {
     public int getNbDistrictsCanBeBuild() {
         return this == ARCHITECT ? 3 : 1;
     }
-
-    public int getNbCardToPick() {
-        return this == ARCHITECT ? 3 : 1;
-    }
 }
