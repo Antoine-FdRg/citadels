@@ -16,6 +16,7 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,13 +30,15 @@ public class Game {
     private Optional<Player> kingPlayer;
     private final List<Character> availableCharacters;
     private final IView view;
+    private int nbCurrentRound;
+    private boolean finished;
 
     /**
      * Constructor of the Game class
      * @param nbPlayers the number of players playing
      */
-    public Game(int nbPlayers) {
-        this.view = new Cli();
+    public Game(int nbPlayers, IView view) {
+        this.view = view;
         this.deck = new Deck();
         this.players = new ArrayList<>();
         players.add(new SmartBot(NB_GOLD_INIT, this.deck, this.view));
@@ -49,6 +52,7 @@ public class Game {
         }
         availableCharacters = new ArrayList<>();
         kingPlayer = Optional.empty();
+        this.finished = false;
     }
 
     /**
@@ -56,37 +60,49 @@ public class Game {
      */
     public void run() {
         this.init();
-        boolean isGameFinished = false;
-        int round = 1;
-        while (!isGameFinished) {
-            view.displayRound(round + 1);
-            // Intialize characters
-            playersChooseCharacters();
-            orderPlayerBeforeChoosingCharacter();
-            for (Player player : players) {
-                if (player.getCharacter().isDead()) {
-                    continue;
-                }
-                kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
-                //We check if the player has been stolen
-                if (player.getCharacter().getGoldWillBeStolen()) {
-                    player.getCharacter().isStolen(players);
-                    view.displayStolenCharacter(player.getCharacter());
-                    if (getPlayerWithRole(Role.THIEF).isPresent()) {
-                        view.displayActualNumberOfGold(getPlayerWithRole(Role.THIEF).get());
-                    }
-                }
-                player.play();
-                //We set the attribute to true if player is the first who has eight districts
-                isTheFirstOneToHaveEightDistricts(player);
-            }
-            retrieveCharacters();
-            isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
-            round++;
+        this.nbCurrentRound = 1;
+        while (!finished) {
+            this.playARound();
         }
-        //we add bonus to player who has specific citadel
         updatePlayersBonus();
         view.displayWinner(getWinner());
+    }
+
+    /**
+     * Play a round
+     */
+    protected void playARound() {
+        view.displayRound(nbCurrentRound);
+        orderPlayerBeforeChoosingCharacter();
+        playersChooseCharacters();
+        orderPlayerBeforePlaying();
+        for (Player player : players) {
+            if (player.getCharacter().isDead()) {
+                continue;
+            }
+            kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
+            if (player.getCharacter().getGoldWillBeStolen()) {
+                player.getCharacter().isStolen(players);
+                view.displayStolenCharacter(player.getCharacter());
+                if (getPlayerWithRole(Role.THIEF).isPresent()) {
+                    view.displayActualNumberOfGold(getPlayerWithRole(Role.THIEF).get());
+                }
+            }
+            player.play();
+            //We set the attribute to true if player is the first who has eight districts
+            isTheFirstOneToHaveEightDistricts(player);
+        }
+        retrieveCharacters();
+        finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
+        this.nbCurrentRound++;
+    }
+
+    protected int getNbCurrentRound() {
+        return nbCurrentRound;
+    }
+
+    void orderPlayerBeforePlaying() {
+        players.sort(Comparator.comparing(player -> player.getCharacter().getRole()));
     }
 
     /**
@@ -129,7 +145,7 @@ public class Game {
     /**
      * Initialize the game
      */
-    private void init() {
+     protected void init() {
         dealCards();
         createCharacters();
     }
