@@ -7,6 +7,7 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -182,14 +183,14 @@ class PlayerTest {
     }
 
     @Test
-    void pickACard(){
+    void pickACard() {
         int handSize = spyPlayer.hand.size();
         this.spyPlayer.pickACard();
         assertEquals(handSize + 1, spyPlayer.hand.size());
     }
 
     @Test
-    void switchHandBetweenTwoPlayersWithTwoFilledHand(){
+    void switchHandBetweenTwoPlayersWithTwoFilledHand() {
         spyPlayer.hand.add(cardCostFive);
         RandomBot otherPlayer = new RandomBot(10, deck, view);
         otherPlayer.hand.add(cardCostThree);
@@ -201,7 +202,7 @@ class PlayerTest {
     }
 
     @Test
-    void switchHandBetweenTwoPlayersWithOneFilledHand(){
+    void switchHandBetweenTwoPlayersWithOneFilledHand() {
         spyPlayer.hand.add(cardCostFive);
         RandomBot otherPlayer = new RandomBot(10, deck, view);
 
@@ -212,7 +213,7 @@ class PlayerTest {
     }
 
     @Test
-    void switchHandBetweenTwoPlayersWithTwoEmptyHand(){
+    void switchHandBetweenTwoPlayersWithTwoEmptyHand() {
         RandomBot otherPlayer = new RandomBot(10, deck, view);
 
         spyPlayer.switchHandWith(otherPlayer);
@@ -222,10 +223,30 @@ class PlayerTest {
     }
 
     @Test
-    void discardACard(){
+    void discardACard() {
         spyPlayer.hand.add(cardCostFive);
         spyPlayer.discardACard(cardCostFive);
         assertTrue(spyPlayer.hand.isEmpty());
         verify(deck, times(1)).discard(cardCostFive);
+    }
+
+    @Test
+    void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
+        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
+
+        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyPlayer.play();
+
+        // assert between 2 and 3 districts are gained
+        assertTrue(spyPlayer.getHand().size() >= 2 && spyPlayer.getHand().size() <= 3);
+    }
+
+    @Test
+    void playCardsWithUncorrectBoundaries() {
+        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(-1));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(0));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
     }
 }
