@@ -78,7 +78,7 @@ public abstract class Character {
         if(savedThief==null){
             savedThief=player;
         }
-        savedThief = null;
+        else{savedThief = null;}
     }
 
     /**
@@ -93,16 +93,11 @@ public abstract class Character {
     /**
      * this method decrease the number of gold of the character which is stolen and
      * refreshes the attribute goldWillBeStolen
-     * @param players , the list of players of the game
      */
-    public void isStolen(List<Player> players) {
-        for(Player searchedPlayer : players){
-            if(searchedPlayer.getCharacter().role==Role.THIEF){
-                //We add the number of gold stolen to the number of gold of the thief
-                searchedPlayer.increaseGold(this.getPlayer().getNbGold());
-                break;
-            }
-        }
+    public void isStolen() {
+        //We add the number of gold stolen to the number of gold of the thief
+        getSavedThief().increaseGold(this.getPlayer().getNbGold());
+
         this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
         this.setSavedThief(null);
     }

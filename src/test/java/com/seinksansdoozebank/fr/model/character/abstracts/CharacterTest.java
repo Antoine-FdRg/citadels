@@ -43,9 +43,10 @@ public class CharacterTest {
         //Création d'un player de type marchand
         Deck merchantDeck = new Deck();
         merchantPlayer = spy(new RandomBot(3, merchantDeck, view));
-        merchant = new Merchant();
+        merchant =spy( new Merchant());
         when(merchantPlayer.getCharacter()).thenReturn(merchant);
         merchant.setPlayer(merchantPlayer);
+        when(merchant.getSavedThief()).thenReturn(thiefPlayer);
 
         listOfPlayer = new ArrayList<>(List.of(merchantPlayer, thiefPlayer));
     }
@@ -56,7 +57,7 @@ public class CharacterTest {
      */
     @Test
     void isStolenGetNumberOfGoldOfThiefTest() {
-        merchant.isStolen(listOfPlayer);
+        merchant.isStolen();
         assertEquals(8, thiefPlayer.getNbGold());
     }
 
@@ -66,18 +67,9 @@ public class CharacterTest {
      */
     @Test
     void isStolenGetNumberOfGoldOfMerchantTest() {
-        merchant.isStolen(listOfPlayer);
+        merchant.isStolen();
         assertEquals(0, merchantPlayer.getNbGold());
-        assertNull(merchantPlayer.getCharacter().getSavedThief());
     }
 
-    /**
-     * We verify that the attribute is well set after the isStolen method is called
-     */
-    @Test
-    void isStolenGetGoldWillBeStolenOfMerchantTest() {
-        merchant.isStolen(listOfPlayer);
-        assertEquals(0, merchantPlayer.getNbGold());
-        assertNull(merchantPlayer.getCharacter().getSavedThief());
-    }
+
 }

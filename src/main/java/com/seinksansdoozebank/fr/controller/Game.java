@@ -81,7 +81,7 @@ public class Game {
             }
             kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
             if (player.getCharacter().getSavedThief()!=null) {
-                player.getCharacter().isStolen(players);
+                player.getCharacter().isStolen();
                 view.displayStolenCharacter(player.getCharacter());
                 if (getPlayerByRole(Role.THIEF).isPresent()) {
                     view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
