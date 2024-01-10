@@ -1,13 +1,12 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -151,7 +150,7 @@ public class Game {
         availableCharacters.add(new King());
         availableCharacters.add(new Bishop());
         availableCharacters.add(new Merchant());
-        // availableCharacters.add(new Architect());
+        availableCharacters.add(new Architect());
         availableCharacters.add(new Condottiere());
     }
 
@@ -217,7 +216,7 @@ public class Game {
      */
     public void updatePlayersBonus() {
         for (Player player : players) {
-            if (hasFiveDifferentDistrictTypes(player)) {
+            if (player.hasFiveDifferentDistrictTypes()) {
                 player.addBonus(3);
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
@@ -233,19 +232,5 @@ public class Game {
         }
     }
 
-    /**
-     * if the bot has got in its citadel 5 different types of districts it returns true else return false
-     *
-     * @param player Player
-     * @return a boolean
-     */
-    public boolean hasFiveDifferentDistrictTypes(Player player) {
-        List<DistrictType> listDifferentDistrictType = new ArrayList<>();
-        for (Card card : player.getCitadel()) {
-            if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
-                listDifferentDistrictType.add(card.getDistrict().getDistrictType());
-            }
-        }
-        return (listDifferentDistrictType.size() == 5);
-    }
+
 }
