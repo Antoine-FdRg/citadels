@@ -22,7 +22,7 @@ public class Condottiere extends CommonCharacter {
     }
 
     public void useEffect(Character character, District district) {
-        if (this.getPlayer().getNbGold() < district.getCost() + 1) {
+        if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
         if (character.getPlayer().equals(this.getPlayer())) {
@@ -35,7 +35,7 @@ public class Condottiere extends CommonCharacter {
             throw new IllegalArgumentException("The player can't destroy the donjon");
         }
         if (character.getPlayer().destroyDistrict(this.getPlayer(), district)) {
-            this.getPlayer().decreaseGold(district.getCost() + 1);
+            this.getPlayer().decreaseGold(district.getCost() - 1);
         }
     }
 }
