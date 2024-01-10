@@ -120,13 +120,13 @@ class SmartBotTest {
     }
 
     @Test
-    void pickTwoDistrictKeepOneDiscardOneShouldkeepTheCheaperOne() {
+    void pickTwoDistrictKeepOneDiscardOneShouldKeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
         spySmartBot.pickTwoCardKeepOneDiscardOne();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
-        verify(view, times(1)).displayPlayerPickCard(spySmartBot);
+        verify(view, times(1)).displayPlayerPickCard(spySmartBot,2);
         verify(deck, times(2)).pick();
         verify(deck, times(1)).discard(any(Card.class));
         assertTrue(spySmartBot.getHand().get(0).getDistrict().getCost() <= deck.getDeck().get(0).getDistrict().getCost());

@@ -35,8 +35,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPickCard(Player player) {
-        CustomLogger.log(Level.INFO, "{0} pioche un quartier.", player);
+    public void displayPlayerPickCard(Player player,int numberOfCards) {
+        CustomLogger.log(Level.INFO, "{0} pioche {1} quartier(s).", new Object[]{player, numberOfCards});
     }
 
     @Override
