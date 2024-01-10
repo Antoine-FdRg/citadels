@@ -267,6 +267,7 @@ class GameTest {
         gameWithFourPlayers.createCharacters();
         assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(charactersList.size()-5)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
@@ -274,8 +275,9 @@ class GameTest {
         assertThrows(UnsupportedOperationException.class, () -> gameWithFivePlayers.createCharacters());
 //        TODO UNCOMMENT these lines when a sixth character is added and remove the assertThrows one
 //        gameWithFivePlayers.createCharacters();
-//        assertEquals(5, gameWithFivePlayers.getAvailableCharacters().size());
+//        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
 //        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+//        verify(view, times(charactersList.size()-6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
@@ -284,7 +286,8 @@ class GameTest {
         assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
 //        TODO UNCOMMENT this line when a sixth character is added and remove the assertThrows one
 //        gameWithSixPlayers.createCharacters();
-//        assertEquals(6, gameWithSixPlayers.getAvailableCharacters().size());
+//        assertEquals(7, gameWithSixPlayers.getAvailableCharacters().size());
 //        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+//        verify(view, times(charactersList.size()-7)).displayUnusedCharacterInRound(any(Character.class));
     }
 }

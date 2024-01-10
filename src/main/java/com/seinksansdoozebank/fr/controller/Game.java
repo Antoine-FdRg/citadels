@@ -159,19 +159,26 @@ public class Game {
      */
     protected void createCharacters() {
         int nbPlayers = this.players.size();
-        availableCharacters.add(new King()); // the king is always available
-        List<Character> unnecessaryCharacters = new ArrayList<>(List.of(
+        List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
                 new Bishop(),
                 new Merchant(),
                 new Condottiere()));
-        if(nbPlayers > unnecessaryCharacters.size()) {
+        if(nbPlayers > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
-        Collections.shuffle(unnecessaryCharacters);
-        //adding as much characters as there are players is putting some characters away for this round
+        Collections.shuffle(notMandatoryCharacters);
+        // the king must always be available
+        availableCharacters.add(new King());
+        //adding as much characters as there are players because the king is already added and the rules say that the number of characters must be equal to the number of players +1
         for (int i = 0; i < nbPlayers; i++) {
-            availableCharacters.add(unnecessaryCharacters.get(i));
+            availableCharacters.add(notMandatoryCharacters.get(i));
+        }
+        //remove the characters that are available from the list of not mandatory characters
+        notMandatoryCharacters.removeAll(availableCharacters);
+        //display the characters that are not in availableCharacters
+        for(Character unusedCharacter : notMandatoryCharacters) {
+            view.displayUnusedCharacterInRound(unusedCharacter);
         }
     }
 

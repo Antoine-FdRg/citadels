@@ -35,4 +35,6 @@ public interface IView {
     void displayGameFinished();
 
     void displayPlayerUseAssasinEffect(Player player, Character target);
+
+    void displayUnusedCharacterInRound(Character character);
 }

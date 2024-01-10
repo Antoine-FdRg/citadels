@@ -125,7 +125,10 @@ public class Cli implements IView {
         this.displayPlayerCitadel(player);
     }
 
-
+    @Override
+    public void displayUnusedCharacterInRound(Character character) {
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE+"Le {0} a été écraté pour cette manche.\u001B", character);
+    }
 
     @Override
     public void displayGameFinished() {
