@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -52,6 +53,33 @@ public abstract class Player {
     protected abstract void pickSomething();
 
     /**
+     * if the bot has got in its citadel 5 different types of districts it returns true else return false
+     *
+     * @return a boolean
+     */
+    public boolean hasFiveDifferentDistrictTypes() {
+        List<DistrictType> listDifferentDistrictType = new ArrayList<>();
+        for (Card card : this.getCitadel()) {
+            if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
+                listDifferentDistrictType.add(card.getDistrict().getDistrictType());
+            }
+        }
+        return (listDifferentDistrictType.size() == 5);
+    }
+
+    /**
+     * @return list of districtType missing in the citadel of the player
+     */
+    public List<DistrictType>  findDistrictTypeMissing(){
+        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
+        for(DistrictType districtType : DistrictType.values()){
+            if(this.citadel.stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+                listOfDistrictTypeMissing.add(districtType);
+            }
+        }
+        return listOfDistrictTypeMissing;
+    }
+    /**
      * Represents the player's choice to draw 2 gold coins
      */
     protected final void pickGold() {
@@ -84,7 +112,7 @@ public abstract class Player {
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -109,11 +137,27 @@ public abstract class Player {
     }
 
     /**
+     * Represents the phase where the player build a district chosen by the variable
+     *
+     * @return the district built by the player
+     */
+    public List<Card> playCard(Card card){
+        if(!canPlayCard(card)){
+            return List.of();
+        }
+        this.hand.remove(card);
+        this.citadel.add(card);
+        this.decreaseGold(card.getDistrict().getCost());
+        return List.of(card);
+    }
+
+    /**
      * Effect of architect character (pick 2 cards)
      */
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
+        view.displayPlayerPickCard(this,2);
     }
 
     /**
