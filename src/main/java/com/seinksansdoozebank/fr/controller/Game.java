@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -72,7 +73,7 @@ public class Game {
         }
         view.displayGameFinished();
         updatePlayersBonus();
-        view.displayWinner(getWinner());
+        view.displayWinner(this.getWinner());
     }
 
     /**
@@ -244,6 +245,10 @@ public class Game {
      */
     public void updatePlayersBonus() {
         for (Player player : players) {
+            // Check if the player contain the district COURTYARD_OF_MIRACLE
+            if (this.hasCourtyardOfMiracleAndItsNotTheLastCard(player)) {
+                player.chooseColorCourtyardOfMiracle();
+            }
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
@@ -260,6 +265,11 @@ public class Game {
         }
     }
 
+    protected boolean hasCourtyardOfMiracleAndItsNotTheLastCard(Player player) {
+        return player.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                && !player.isLastCardPlacedCourtyardOfMiracle();
+    }
+
     /**
      * if the bot has got in its citadel 5 different types of districts it returns true else return false
      *
@@ -273,7 +283,10 @@ public class Game {
                 listDifferentDistrictType.add(card.getDistrict().getDistrictType());
             }
         }
+        // if there is 4 different district types and there is a courtyard of miracle in the citadel, we add the last district type
+        if (listDifferentDistrictType.size() == 4 && this.hasCourtyardOfMiracleAndItsNotTheLastCard(player)) {
+            listDifferentDistrictType.add(player.getColorCourtyardOfMiracleType());
+        }
         return (listDifferentDistrictType.size() == 5);
     }
-
 }

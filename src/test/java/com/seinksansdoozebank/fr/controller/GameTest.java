@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,6 +12,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +29,12 @@ class GameTest {
     Game gameWithFivePlayers;
     Game gameWithThreePlayers;
     Game gameWithFourPlayers;
+    Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
+    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracle;
+    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition;
     private Cli view;
     List<Character> charactersList;
 
@@ -39,7 +44,7 @@ class GameTest {
         gameWithFivePlayers = spy(new Game(5, view));
         gameWithThreePlayers = new Game(3, view);
         gameWithFourPlayers = spy(new Game(4, view));
-
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(3, view);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -90,6 +95,27 @@ class GameTest {
                 new Condottiere()
         );
 
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view));
+
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle);
+
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = spy(new SmartBot(5, new Deck(), view));
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition);
     }
 
     @Test
@@ -190,6 +216,25 @@ class GameTest {
     }
 
     @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleGetTheBonus() {
+        gameWithFourPlayers.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
+        // Update the bonus of all players
+        gameWithFourPlayers.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(3, playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getBonus());
+    }
+
+    @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        // Update the bonus of all players
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(0, playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getBonus());
+    }
+
+    @Test
     void orderPlayerBeforePlaying() {
         gameWithFourPlayers.createCharacters();
         List<Character> availableCharacters = new ArrayList<>(gameWithFourPlayers.getAvailableCharacters());
@@ -228,6 +273,18 @@ class GameTest {
         for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
             assertFalse(character.isDead());
         }
+    }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsNotTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(false);
+        assertTrue(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+    }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        assertFalse(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
     }
 
     @Test

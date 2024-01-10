@@ -18,11 +18,11 @@ public class Cli implements IView {
     @Override
     public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            CustomLogger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
+            CustomLogger.log(Level.INFO, "{0} ne pose pas de quartier. ", player);
         } else {
             for (Card card : optionalCard) {
                 District builtDistrict = card.getDistrict();
-                CustomLogger.log(Level.INFO,"{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+                CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
             }
         }
     }
@@ -132,10 +132,21 @@ public class Cli implements IView {
 
     @Override
     public void displayGameFinished() {
-        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"### La partie est terminée ! ###\u001B[0m");
+        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE + "### La partie est terminée ! ###\u001B[0m");
     }
 
+    @Override
     public void displayRound(int roundNumber) {
-        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"########## Début du round {0} ##########\u001B[0m", roundNumber);
+        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE + "########## Début du round {0} ##########\u001B[0m", roundNumber);
+    }
+
+    @Override
+    public void displayPlayerError(Player player, String message) {
+        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
+    }
+
+    @Override
+    public void displayPlayerStrategy(Player player, String message) {
+        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
     }
 }

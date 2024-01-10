@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -149,9 +150,21 @@ public class RandomBot extends Player {
             // Check if the number of golds of the player is enough to destroy the district
             if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
                 // destroy the district
-                condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
+                try {
+                    condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
+                } catch (IllegalArgumentException e) {
+                    view.displayPlayerError(this, e.getMessage());
+                }
             }
         }
+    }
+
+    public void chooseColorCourtyardOfMiracle() {
+        // Set a random DistricType to the Courtyard of Miracle
+        this.getCitadel().stream()
+                .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                .findFirst()
+                .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
     }
 
     @Override
