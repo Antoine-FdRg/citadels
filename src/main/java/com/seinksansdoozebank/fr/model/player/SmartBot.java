@@ -129,9 +129,10 @@ public class SmartBot extends Player {
             for (DistrictType districtType : districtTypeFrequencyList) {
                 for (Character character : characters) {
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
-                            this.character = commonCharacter;
-                            this.character.setPlayer(this);
-                            return this.character;
+                        this.character = commonCharacter;
+                        this.character.setPlayer(this);
+                        this.view.displayPlayerChooseCharacter(this);
+                        return this.character;
                     }
                 }
             }
@@ -140,6 +141,7 @@ public class SmartBot extends Player {
         this.character = characters.get(random.nextInt(characters.size()));
         this.character.setPlayer(this);
         characters.remove(this.character);
+        this.view.displayPlayerChooseCharacter(this);
         return this.character;
     }
 
@@ -178,8 +180,12 @@ public class SmartBot extends Player {
             // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
             for (Card card : cardOfPlayerSortedByCost) {
                 if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
-                    condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
-                    return;
+                    try {
+                        condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
+                        return;
+                    } catch (IllegalArgumentException e) {
+                        view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get().id + ", il passe donc à la carte suivante");
+                    }
                 }
             }
         }

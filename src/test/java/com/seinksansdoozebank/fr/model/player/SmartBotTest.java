@@ -203,6 +203,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
 
@@ -223,6 +225,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(2), spySmartBot.getCharacter());
     }
 
@@ -248,6 +252,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
 

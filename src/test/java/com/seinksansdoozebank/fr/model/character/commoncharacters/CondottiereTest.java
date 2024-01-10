@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class CondottiereTest {
@@ -53,5 +54,16 @@ class CondottiereTest {
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
+    }
+
+    @Test
+    void cantDestroyDonjon() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.DONJON));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(merchant, District.DONJON));
     }
 }

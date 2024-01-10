@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -43,7 +44,6 @@ class GameTest {
         gameWithThreePlayer = new Game(3, view);
         gameWithFourPlayer = new Game(4, view);
         gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(1, view);
-
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -247,7 +247,7 @@ class GameTest {
         game.playersChooseCharacters();
         availableCharacters.removeAll(game.getAvailableCharacters());
         game.orderPlayerBeforePlaying();
-        int size  = availableCharacters.size();
+        int size = availableCharacters.size();
         assertEquals(size, game.players.size());
         for (int i = 0; i < size; i++) {
             assertEquals(game.players.get(i).getCharacter(), availableCharacters.get(i));
@@ -257,8 +257,8 @@ class GameTest {
     @Test
     void run() {
         game.run();
-        verify(game,times(1)).init();
-        int nbRoundPlayed = game.getNbCurrentRound()-1;
+        verify(game, times(1)).init();
+        int nbRoundPlayed = game.getNbCurrentRound() - 1;
         verify(game, times(nbRoundPlayed)).playARound();
         verify(game, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
@@ -286,5 +286,27 @@ class GameTest {
     void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
         assertFalse(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+    }
+
+    @Test
+    void crownedPlayerIsUpdatedWithAKingAlive() {
+        game.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
+
+        game.playARound();
+
+        assertEquals(game.players.get(0), game.crownedPlayer);
+    }
+
+    @Test
+    void kingPlayerIsNotUpdatedWithAKingDead() {
+        King king = new King();
+        Assassin assassin = new Assassin();
+        assassin.useEffect(king);
+        game.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
+
+        game.playARound();
+
+        assertTrue(king.isDead());
+        assertNull(game.crownedPlayer);
     }
 }
