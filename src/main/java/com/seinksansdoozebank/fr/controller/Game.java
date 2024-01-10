@@ -80,7 +80,7 @@ public class Game {
             if (player.getCharacter().isDead()) {
                 continue;
             }
-            crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
+            crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
             player.play();
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);

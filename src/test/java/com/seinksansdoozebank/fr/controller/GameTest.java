@@ -34,8 +34,8 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = spy(new Game(4,view));
-        gameWithThreePlayer = new Game(3,view);
+        game = spy(new Game(4, view));
+        gameWithThreePlayer = new Game(3, view);
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
@@ -200,7 +200,7 @@ class GameTest {
         game.playersChooseCharacters();
         availableCharacters.removeAll(game.getAvailableCharacters());
         game.orderPlayerBeforePlaying();
-        int size  = availableCharacters.size();
+        int size = availableCharacters.size();
         assertEquals(size, game.players.size());
         for (int i = 0; i < size; i++) {
             assertEquals(game.players.get(i).getCharacter(), availableCharacters.get(i));
@@ -210,8 +210,8 @@ class GameTest {
     @Test
     void run() {
         game.run();
-        verify(game,times(1)).init();
-        int nbRoundPlayed = game.getNbCurrentRound()-1;
+        verify(game, times(1)).init();
+        int nbRoundPlayed = game.getNbCurrentRound() - 1;
         verify(game, times(nbRoundPlayed)).playARound();
         verify(game, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
@@ -230,7 +230,7 @@ class GameTest {
     }
 
     @Test
-    void crownedPlayerIsUpdatedWithAKingAlive(){
+    void crownedPlayerIsUpdatedWithAKingAlive() {
         game.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
 
         game.playARound();
@@ -239,7 +239,7 @@ class GameTest {
     }
 
     @Test
-    void kingPlayerIsNotUpdatedWithAKingDead(){
+    void kingPlayerIsNotUpdatedWithAKingDead() {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);

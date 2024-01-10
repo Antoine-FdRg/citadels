@@ -45,8 +45,8 @@ class MagicianTest {
 
     @Test
     void useEffectSwitchHandWithPlayer() {
-        ((Magician)spyPlayer.getCharacter()).useEffect(Optional.of(otherSpyPlayer));
-        verify(spyPlayer,times(1)).switchHandWith(otherSpyPlayer);
+        ((Magician) spyPlayer.getCharacter()).useEffect(Optional.of(otherSpyPlayer));
+        verify(spyPlayer, times(1)).switchHandWith(otherSpyPlayer);
     }
 
     @Test
@@ -54,7 +54,7 @@ class MagicianTest {
         when(deck.pick()).thenReturn(firstPickedCard, secondPickedCard);
         spyPlayer.pickACard();
 
-        ((Magician)spyPlayer.getCharacter()).useEffect(Optional.empty());
+        ((Magician) spyPlayer.getCharacter()).useEffect(Optional.empty());
 
         assertEquals(1, spyPlayer.getHand().size());
         assertEquals(secondPickedCard, spyPlayer.getHand().get(0));
