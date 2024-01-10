@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,7 @@ class GameTest {
 
     Game game;
     Game gameWithThreePlayer;
+    Game gameWithFourPlayer;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
@@ -33,8 +35,9 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = new Game(5);
-        gameWithThreePlayer = new Game(3);
+        game = spy(new Game(5,view));
+        gameWithThreePlayer = new Game(3,view);
+        gameWithFourPlayer = spy(new Game(4,view));
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
@@ -189,8 +192,67 @@ class GameTest {
      */
     @Test
     void botWithEightDistrictInItCitadelTest() {
-
         gameWithThreePlayer.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
+    }
+
+    @Test
+    void orderPlayerBeforePlaying() {
+        game.createCharacters();
+        List<Character> availableCharacters = new ArrayList<>(game.getAvailableCharacters());
+        availableCharacters.sort(Comparator.comparing(Character::getRole));
+        game.playersChooseCharacters();
+        availableCharacters.removeAll(game.getAvailableCharacters());
+        game.orderPlayerBeforePlaying();
+        int size  = availableCharacters.size();
+        assertEquals(size, game.players.size());
+        for (int i = 0; i < size; i++) {
+            assertEquals(game.players.get(i).getCharacter(), availableCharacters.get(i));
+        }
+    }
+
+    @Test
+    void run() {
+        game.run();
+        verify(game,times(1)).init();
+        int nbRoundPlayed = game.getNbCurrentRound()-1;
+        verify(game, times(nbRoundPlayed)).playARound();
+        verify(game, times(1)).updatePlayersBonus();
+        verify(view, times(1)).displayWinner(any(Player.class));
+    }
+
+    @Test
+    void playARound() {
+        game.createCharacters();
+        game.playARound();
+        verify(view, times(1)).displayRound(anyInt());
+        verify(game, times(1)).orderPlayerBeforeChoosingCharacter();
+        verify(game, times(1)).playersChooseCharacters();
+        verify(game, times(1)).orderPlayerBeforePlaying();
+        verify(game, atMost(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(game, atLeast(game.players.size()-1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(game, times(1)).retrieveCharacters();
+    }
+
+    @Test
+    void crownedPlayerIsUpdatedWithAKingAlive(){
+        gameWithFourPlayer.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
+
+        gameWithFourPlayer.playARound();
+
+        assertEquals(gameWithFourPlayer.players.get(0), gameWithFourPlayer.crownedPlayer);
+    }
+
+    @Test
+    void kingPlayerIsNotUpdatedWithAKingDead(){
+        King king = new King();
+        Assassin assassin = new Assassin();
+        assassin.useEffect(king);
+        gameWithFourPlayer.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
+
+        gameWithFourPlayer.playARound();
+
+        verify(gameWithFourPlayer,times(gameWithFourPlayer.players.size()-1)).updateCrownedPlayer(any(Player.class));
+        assertNull(gameWithFourPlayer.crownedPlayer);
     }
 }

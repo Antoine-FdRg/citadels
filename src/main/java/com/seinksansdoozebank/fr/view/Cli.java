@@ -6,69 +6,75 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 
-import java.util.Optional;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 import java.util.List;
-
-
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Cli implements IView {
 
-    private static final Logger logger = Logger.getLogger(Cli.class.getName());
+    String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
 
-    public Cli() {
-        logger.setLevel(Level.ALL);
-    }
-
-    public void displayPlayerPlaysCard(Player player, Optional<Card> optionalCard) {
+    @Override
+    public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
         if (optionalCard.isEmpty()) {
-            logger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
+            CustomLogger.log(Level.INFO,"{0} ne pose pas de quartier. ",player );
         } else {
-            District builtDistrict = optionalCard.get().getDistrict();
-            logger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+            for (Card card : optionalCard) {
+                District builtDistrict = card.getDistrict();
+                CustomLogger.log(Level.INFO,"{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+            }
         }
     }
 
     public void displayWinner(Player winner) {
-        logger.log(Level.INFO, "{0} gagne avec un score de {1} .",new Object[]{ winner, winner.getScore()});
+        CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        logger.log(Level.INFO, "{0} commence à jouer.",player);
+        CustomLogger.log(Level.INFO, "\n{0} commence à jouer.", player);
     }
 
     @Override
     public void displayPlayerPickCard(Player player) {
-        logger.log(Level.INFO, "{0} pioche un quartier.",player);
+        CustomLogger.log(Level.INFO, "{0} pioche un quartier.", player);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player) {
-        logger.log(Level.INFO, "{0} pioche 2 pièces d''or.",player);
+        CustomLogger.log(Level.INFO, "{0} pioche 2 pièces d''or.", player);
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        logger.log(Level.INFO, "{0} choisit un personnage.",player);
+        CustomLogger.log(Level.INFO, "{0} choisit un personnage.", player);
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        logger.log(Level.INFO, "{0} se révèle être {1} .",new Object[]{ player, player.getCharacter()});
+        CustomLogger.log(Level.INFO, "{0} se révèle être {1}.", new Object[]{player, player.getCharacter()});
     }
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        logger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or'.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+    }
+
+    @Override
+    public void displayPlayerScore(Player player) {
+        CustomLogger.log(Level.INFO, "{0} fini la partie avec un score de {1}.", new Object[]{player, player.getScore()});
+    }
+
+    @Override
+    public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
+        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
     }
 
     @Override
     public void displayPlayerUseAssasinEffect(SmartBot smartBot, Character target) {
-        logger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ smartBot, target});
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ smartBot, target});
     }
 
     private void displayPlayerHand(Player player) {
@@ -89,7 +95,7 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de carte dans sa main.");
         }
-        logger.log(Level.INFO, sb::toString);
+        CustomLogger.log(Level.INFO, sb.toString(), player);
     }
 
     private void displayPlayerCitadel(Player player) {
@@ -110,17 +116,24 @@ public class Cli implements IView {
         } else {
             sb.append("\t- pas de quartier dans sa citadelle.");
         }
-        logger.log(Level.INFO, sb::toString);
+        CustomLogger.log(Level.INFO, sb.toString(), player);
     }
 
     @Override
     public void displayPlayerInfo(Player player) {
-        logger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.",new Object[]{ player, player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
 
+
+
+    @Override
+    public void displayGameFinished() {
+        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"### La partie est terminée ! ###\u001B[0m");
+    }
+
     public void displayRound(int roundNumber) {
-        logger.log(Level.INFO, "########## Début du round {0} ##########",roundNumber);
+        CustomLogger.log(Level.INFO, "\n\n"+ANSI_DEFAULT_STYLE+"########## Début du round {0} ##########\u001B[0m", roundNumber);
     }
 }

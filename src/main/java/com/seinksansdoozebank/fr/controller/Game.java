@@ -8,16 +8,16 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
-import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class Game {
     private static final int NB_GOLD_INIT = 2;
@@ -26,17 +26,19 @@ public class Game {
     private boolean findFirstPlayerWithEightDistricts = false;
     private final Deck deck;
     protected List<Player> players;
-    private Optional<Player> kingPlayer;
+    Player crownedPlayer;
     private final List<Character> availableCharacters;
     private final IView view;
+    private int nbCurrentRound;
+    private boolean finished;
 
     /**
      * Constructor of the Game class
      *
      * @param nbPlayers the number of players playing
      */
-    public Game(int nbPlayers) {
-        this.view = new Cli();
+    public Game(int nbPlayers, IView view) {
+        this.view = view;
         this.deck = new Deck();
         this.players = new ArrayList<>();
         players.add(new SmartBot(NB_GOLD_INIT, this.deck, this.view));
@@ -49,7 +51,8 @@ public class Game {
             player.setOpponents(opponents);
         }
         availableCharacters = new ArrayList<>();
-        kingPlayer = Optional.empty();
+        crownedPlayer = null;
+        this.finished = false;
     }
 
     /**
@@ -57,29 +60,46 @@ public class Game {
      */
     public void run() {
         this.init();
-        boolean isGameFinished = false;
-        int round = 1;
-        while (!isGameFinished) {
-            view.displayRound(round + 1);
-            // Intialize characters
-            playersChooseCharacters();
-            orderPlayerBeforeChoosingCharacter();
-            for (Player player : players) {
-                if (player.getCharacter().isDead()) {
-                    continue;
-                }
-                kingPlayer = player.isTheKing() ? Optional.of(player) : Optional.empty();
-                player.play();
-                //We set the attribute to true if player is the first who has eight districts
-                isTheFirstOneToHaveEightDistricts(player);
-            }
-            retrieveCharacters();
-            isGameFinished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
-            round++;
+        this.nbCurrentRound = 1;
+        while (!finished) {
+            this.playARound();
         }
-        //we add bonus to player who has specific citadel
+        view.displayGameFinished();
         updatePlayersBonus();
         view.displayWinner(getWinner());
+    }
+
+    /**
+     * Play a round
+     */
+    protected void playARound() {
+        view.displayRound(nbCurrentRound);
+        orderPlayerBeforeChoosingCharacter();
+        playersChooseCharacters();
+        orderPlayerBeforePlaying();
+        for (Player player : players) {
+            if (!player.getCharacter().isDead()) {
+                this.updateCrownedPlayer(player);
+                player.play();
+            }
+            //We set the attribute to true if player is the first who has eight districts
+            isTheFirstOneToHaveEightDistricts(player);
+        }
+        retrieveCharacters();
+        finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
+        this.nbCurrentRound++;
+    }
+
+    void updateCrownedPlayer(Player player) {
+        crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
+    }
+
+    protected int getNbCurrentRound() {
+        return nbCurrentRound;
+    }
+
+    void orderPlayerBeforePlaying() {
+        players.sort(Comparator.comparing(player -> player.getCharacter().getRole()));
     }
 
     /**
@@ -96,10 +116,11 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     void orderPlayerBeforeChoosingCharacter() {
-        if (kingPlayer.isPresent()) {
+        players.sort(Comparator.comparing(Player::getId));
+        if (crownedPlayer != null) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
-            int indexOfTheKingPlayer = players.indexOf(kingPlayer.get());
+            int indexOfTheKingPlayer = players.indexOf(crownedPlayer);
             for (int i = indexOfTheKingPlayer; i < players.size(); i++) {
                 orderedPlayers.add((i - indexOfTheKingPlayer) % players.size(), players.get(i));
             }
@@ -122,7 +143,7 @@ public class Game {
     /**
      * Initialize the game
      */
-    private void init() {
+    protected void init() {
         dealCards();
         createCharacters();
     }
@@ -203,13 +224,17 @@ public class Game {
         for (Player player : players) {
             if (hasFiveDifferentDistrictTypes(player)) {
                 player.addBonus(3);
+                view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
             if (player.getCitadel().size() == 8) {
                 if (player.getIsFirstToHaveEightDistricts()) {
                     player.addBonus(2);
+                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre 8 quartiers");
                 }
                 player.addBonus(2);
+                view.displayPlayerGetBonus(player, 2, "8 quartiers");
             }
+            view.displayPlayerScore(player);
         }
     }
 
