@@ -24,9 +24,9 @@ import static org.mockito.Mockito.*;
 
 class GameTest {
 
-    Game game;
-    Game gameWithThreePlayer;
-    Game gameWithFourPlayer;
+    Game gameWithFivePlayers;
+    Game gameWithThreePlayers;
+    Game gameWithFourPlayers;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
@@ -36,9 +36,9 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = spy(new Game(5,view));
-        gameWithThreePlayer = new Game(3,view);
-        gameWithFourPlayer = spy(new Game(4,view));
+        gameWithFivePlayers = spy(new Game(5, view));
+        gameWithThreePlayers = new Game(3, view);
+        gameWithFourPlayers = spy(new Game(4, view));
 
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
@@ -80,7 +80,7 @@ class GameTest {
 
         when(playerWithEightDistricts.getCitadel()).thenReturn(citadelWithEightDistricts);
 
-        gameWithThreePlayer.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
+        gameWithThreePlayers.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
 
         charactersList = List.of(
                 new Assassin(),
@@ -103,31 +103,23 @@ class GameTest {
         when(p3.getScore()).thenReturn(7);
         Player p4 = mock(Player.class);
         when(p4.getScore()).thenReturn(6);
-        game.setPlayers(List.of(p1, p2, p3, p4));
-        assertEquals(p3, game.getWinner());
+        gameWithFivePlayers.setPlayers(List.of(p1, p2, p3, p4));
+        assertEquals(p3, gameWithFivePlayers.getWinner());
     }
 
     @Test
-    void createCharacterAdd5CharactersToAvailableCharacters() {
-        game.createCharacters();
-        assertEquals(5, game.getAvailableCharacters().size());
-    }
+    void createCharactersCreatesAsMuchCharactersAsWanted() {
+        gameWithFourPlayers.createCharacters();
 
-    @Test
-    void createCharactersCreatesAllWantedCharacters() {
-        // Test the createCharacters method
-        game.createCharacters();
-        //PENSER À METTRE LES BOTS DANS L'ORDRE
-
-        assertEquals(charactersList, game.getAvailableCharacters());
+        assertEquals(charactersList.size(), gameWithFourPlayers.getAvailableCharacters().size());
     }
 
     @Test
     void playersChoseCharactersMakeAllPlayersChooseACharacter() {
-        List<Player> players = game.players;
-        game.getAvailableCharacters().addAll(charactersList);
+        List<Player> players = gameWithFivePlayers.players;
+        gameWithFivePlayers.getAvailableCharacters().addAll(charactersList);
 
-        game.playersChooseCharacters();
+        gameWithFivePlayers.playersChooseCharacters();
 
         for (Player player : players) {
             assertNotNull(player.getCharacter());
@@ -138,7 +130,7 @@ class GameTest {
     void retrieveCharactersRetrieveAllCharacters() {
         // Test the playersChooseCharacters method
         int nbCharactersInitial = charactersList.size();
-        List<Player> players = game.players;
+        List<Player> players = gameWithFivePlayers.players;
         for (int i = 0; i < players.size(); i++) {
             Player currentPlayer = players.get(i);
             Character currentCharacter = charactersList.get(i);
@@ -146,12 +138,11 @@ class GameTest {
         }
 
         // Reset the available characters list
-        game.retrieveCharacters();
+        gameWithFivePlayers.retrieveCharacters();
 
         // Check if the available characters list is equal to charactersList
         assertEquals(nbCharactersInitial, charactersList.size());
     }
-
 
 
     /**
@@ -160,10 +151,10 @@ class GameTest {
     @Test
     void isFirstBotToHaveEightDistrictsTest() {
         //playerWithEightDistrictsAndFiveDistrictTypes is the first who has eight districts in that game so +7 in bonus
-        gameWithThreePlayer.isTheFirstOneToHaveEightDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
+        gameWithThreePlayers.isTheFirstOneToHaveEightDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
         //playerWithEightDistricts is not the first who has eight districts +2 in bonus
-        gameWithThreePlayer.isTheFirstOneToHaveEightDistricts(playerWithEightDistricts);
-        gameWithThreePlayer.updatePlayersBonus();
+        gameWithThreePlayers.isTheFirstOneToHaveEightDistricts(playerWithEightDistricts);
+        gameWithThreePlayers.updatePlayersBonus();
 
         assertEquals(7, playerWIthEightDistrictsAndFiveDistrictTypes.getBonus());
         assertEquals(2, playerWithEightDistricts.getBonus());
@@ -175,8 +166,8 @@ class GameTest {
     @Test
     void hasDifferentDistrictTypeTestWithPlayerHavingFiveTypesShouldReturnTrue() {
         //botWithFiveDifferentDistrictType
-        gameWithThreePlayer.updatePlayersBonus();
-        assertTrue(gameWithThreePlayer.hasFiveDifferentDistrictTypes(playerWIthEightDistrictsAndFiveDistrictTypes));
+        gameWithThreePlayers.updatePlayersBonus();
+        assertTrue(gameWithThreePlayers.hasFiveDifferentDistrictTypes(playerWIthEightDistrictsAndFiveDistrictTypes));
     }
 
     /**
@@ -185,8 +176,8 @@ class GameTest {
     @Test
     void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
         //botWithLessThanFiveDifferentDistrictType
-        gameWithThreePlayer.updatePlayersBonus();
-        assertFalse(gameWithThreePlayer.hasFiveDifferentDistrictTypes(playerWithNoBonus));
+        gameWithThreePlayers.updatePlayersBonus();
+        assertFalse(gameWithThreePlayers.hasFiveDifferentDistrictTypes(playerWithNoBonus));
     }
 
     /**
@@ -194,70 +185,106 @@ class GameTest {
      */
     @Test
     void botWithEightDistrictInItCitadelTest() {
-        gameWithThreePlayer.updatePlayersBonus();
+        gameWithThreePlayers.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
     }
 
     @Test
     void orderPlayerBeforePlaying() {
-        game.createCharacters();
-        List<Character> availableCharacters = new ArrayList<>(game.getAvailableCharacters());
+        gameWithFourPlayers.createCharacters();
+        List<Character> availableCharacters = new ArrayList<>(gameWithFourPlayers.getAvailableCharacters());
         availableCharacters.sort(Comparator.comparing(Character::getRole));
-        game.playersChooseCharacters();
-        availableCharacters.removeAll(game.getAvailableCharacters());
-        game.orderPlayerBeforePlaying();
-        int size  = availableCharacters.size();
-        assertEquals(size, game.players.size());
+        gameWithFourPlayers.playersChooseCharacters();
+        availableCharacters.removeAll(gameWithFourPlayers.getAvailableCharacters());
+        gameWithFourPlayers.orderPlayerBeforePlaying();
+        int size = availableCharacters.size();
+        assertEquals(size, gameWithFourPlayers.players.size());
         for (int i = 0; i < size; i++) {
-            assertEquals(game.players.get(i).getCharacter(), availableCharacters.get(i));
+            assertEquals(gameWithFourPlayers.players.get(i).getCharacter(), availableCharacters.get(i));
         }
     }
 
     @Test
     void run() {
-        game.run();
-        verify(game,times(1)).init();
-        int nbRoundPlayed = game.getNbCurrentRound()-1;
-        verify(game, times(nbRoundPlayed)).playARound();
-        verify(game, times(1)).updatePlayersBonus();
+        gameWithFourPlayers.run();
+        verify(gameWithFourPlayers, times(1)).init();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
 
     @Test
     void playARound() {
-        game.createCharacters();
-        game.playARound();
+        gameWithFourPlayers.createCharacters();
+        gameWithFourPlayers.playARound();
         verify(view, times(1)).displayRound(anyInt());
-        verify(game, times(1)).orderPlayerBeforeChoosingCharacter();
-        verify(game, times(1)).playersChooseCharacters();
-        verify(game, times(1)).orderPlayerBeforePlaying();
-        verify(game, atMost(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
-        verify(game, atLeast(game.players.size()-1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
-        verify(game, times(1)).retrieveCharacters();
-        for(Character character : game.getAvailableCharacters()){
+        verify(gameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
+        verify(gameWithFourPlayers, times(1)).playersChooseCharacters();
+        verify(gameWithFourPlayers, times(1)).orderPlayerBeforePlaying();
+        verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(gameWithFourPlayers, times(1)).retrieveCharacters();
+        for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
             assertFalse(character.isDead());
         }
     }
 
     @Test
-    void crownedPlayerIsUpdatedWhilePlayingARoundANdKingIsAlive(){
-        gameWithFourPlayer.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
+    void crownedPlayerIsUpdatedWhilePlayingARoundANdKingIsAlive() {
+        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
 
-        gameWithFourPlayer.playARound();
+        gameWithFourPlayers.playARound();
 
-        assertEquals(gameWithFourPlayer.players.get(0), gameWithFourPlayer.crownedPlayer);
+        assertEquals(gameWithFourPlayers.players.get(0), gameWithFourPlayers.crownedPlayer);
     }
 
     @Test
-    void kingPlayerIsNotUpdatedWhilePlayingARoundANdKingIsDead(){
+    void kingPlayerIsNotUpdatedWhilePlayingARoundANdKingIsDead() {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
-        gameWithFourPlayer.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
+        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
 
-        gameWithFourPlayer.playARound();
+        gameWithFourPlayers.playARound();
 
-        verify(gameWithFourPlayer,times(gameWithFourPlayer.players.size()-1)).updateCrownedPlayer(any(Player.class));
-        assertNull(gameWithFourPlayer.crownedPlayer);
+        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size() - 1)).updateCrownedPlayer(any(Player.class));
+        assertNull(gameWithFourPlayers.crownedPlayer);
+    }
+
+    @Test
+    void newGameWithTwoPlayers() {
+        assertThrows(IllegalArgumentException.class, () -> new Game(2, view));
+    }
+
+    @Test
+    void newGameWithSevenPlayers() {
+        assertThrows(IllegalArgumentException.class, () -> new Game(7, view));
+    }
+
+    @Test
+    void createCharactersWithFourPlayers() {
+        gameWithFourPlayers.createCharacters();
+        assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+    }
+
+    @Test
+    void createCharactersWithFivePlayers() {
+        assertThrows(UnsupportedOperationException.class, () -> gameWithFivePlayers.createCharacters());
+//        TODO UNCOMMENT these lines when a sixth character is added and remove the assertThrows one
+//        gameWithFivePlayers.createCharacters();
+//        assertEquals(5, gameWithFivePlayers.getAvailableCharacters().size());
+//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+    }
+
+    @Test
+    void createCharactersWithSixPlayers() {
+        Game gameWithSixPlayers = new Game(6, view);
+        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
+//        TODO UNCOMMENT this line when a sixth character is added and remove the assertThrows one
+//        gameWithSixPlayers.createCharacters();
+//        assertEquals(6, gameWithSixPlayers.getAvailableCharacters().size());
+//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
     }
 }

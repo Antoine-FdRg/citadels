@@ -16,10 +16,13 @@ import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class Game {
+    private static final int NB_PLAYER_MAX = 6;
+    private static final int NB_PLAYER_MIN = 3;
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
 
@@ -38,6 +41,9 @@ public class Game {
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers, IView view) {
+        if(nbPlayers > NB_PLAYER_MAX || nbPlayers< NB_PLAYER_MIN) {
+            throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
+        }
         this.view = view;
         this.deck = new Deck();
         this.players = new ArrayList<>();
@@ -152,12 +158,21 @@ public class Game {
      * Create the list of characters ordered
      */
     protected void createCharacters() {
-        availableCharacters.add(new Assassin());
-        availableCharacters.add(new King());
-        availableCharacters.add(new Bishop());
-        availableCharacters.add(new Merchant());
-        // availableCharacters.add(new Architect());
-        availableCharacters.add(new Condottiere());
+        int nbPlayers = this.players.size();
+        availableCharacters.add(new King()); // the king is always available
+        List<Character> unnecessaryCharacters = new ArrayList<>(List.of(
+                new Assassin(),
+                new Bishop(),
+                new Merchant(),
+                new Condottiere()));
+        if(nbPlayers > unnecessaryCharacters.size()) {
+            throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
+        }
+        Collections.shuffle(unnecessaryCharacters);
+        //adding as much characters as there are players is putting some characters away for this round
+        for (int i = 0; i < nbPlayers; i++) {
+            availableCharacters.add(unnecessaryCharacters.get(i));
+        }
     }
 
     /**
@@ -253,4 +268,5 @@ public class Game {
         }
         return (listDifferentDistrictType.size() == 5);
     }
+
 }
