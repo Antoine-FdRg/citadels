@@ -33,6 +33,9 @@ public class SmartBot extends Player {
 
     @Override
     public void play() {
+        if(this.getCharacter().isDead()){
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);

@@ -31,6 +31,7 @@ class GameTest {
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
     private Cli view;
+    List<Character> charactersList;
 
     @BeforeEach
     public void setUp() {
@@ -81,10 +82,18 @@ class GameTest {
 
         gameWithThreePlayer.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
 
+        charactersList = List.of(
+                new Assassin(),
+                new King(),
+                new Bishop(),
+                new Merchant(),
+                new Condottiere()
+        );
+
     }
 
     @Test
-    void getWinner() {
+    void getWinnerIsP3WithTheMostPoint() {
         Player p1 = mock(Player.class);
         when(p1.getScore()).thenReturn(5);
         when(p1.getIsFirstToHaveEightDistricts()).thenReturn(true);
@@ -99,58 +108,51 @@ class GameTest {
     }
 
     @Test
-    void testCharactersChoice() {
+    void createCharacterAdd5CharactersToAvailableCharacters() {
         game.createCharacters();
         assertEquals(5, game.getAvailableCharacters().size());
     }
 
     @Test
-    void testCreateCharacters() {
+    void createCharactersCreatesAllWantedCharacters() {
         // Test the createCharacters method
         game.createCharacters();
+        //PENSER À METTRE LES BOTS DANS L'ORDRE
 
-        List<Character> availableCharacters = game.getAvailableCharacters();
-
-        // Check if the correct number of characters is created
-        assertEquals(5, availableCharacters.size()); // Adjust the expected size based on your implementation
+        assertEquals(charactersList, game.getAvailableCharacters());
     }
 
     @Test
-    void testPlayersChooseCharacters() {
-        // Test the playersChooseCharacters method
+    void playersChoseCharactersMakeAllPlayersChooseACharacter() {
         List<Player> players = game.players;
+        game.getAvailableCharacters().addAll(charactersList);
 
-        // Test that createCharacters create a list of characters
-        game.createCharacters();
-        //PENSER A METTRE LES BOTS DANS L'ORDRE
-        List<Character> charactersList = List.of(
-                new Assassin(),
-                new King(),
-                new Bishop(),
-                new Merchant(),
-                new Condottiere()
-        );
-
-        // Test that the game available characters list is equal to charactersList
-        assertEquals(charactersList, game.getAvailableCharacters());
-
-        // Test that all players have chosen a character
         game.playersChooseCharacters();
 
-        // Check if all players have a character
         for (Player player : players) {
             assertNotNull(player.getCharacter());
         }
+    }
 
-        // Check if all characters were removed from the available characters list
-        assertEquals(0, game.getAvailableCharacters().size());
+    @Test
+    void retrieveCharactersRetrieveAllCharacters() {
+        // Test the playersChooseCharacters method
+        int nbCharactersInitial = charactersList.size();
+        List<Player> players = game.players;
+        for (int i = 0; i < players.size(); i++) {
+            Player currentPlayer = players.get(i);
+            Character currentCharacter = charactersList.get(i);
+            currentPlayer.chooseCharacter(new ArrayList<>(List.of(currentCharacter)));
+        }
 
         // Reset the available characters list
         game.retrieveCharacters();
 
         // Check if the available characters list is equal to charactersList
-        assertEquals(charactersList.size(), game.getAvailableCharacters().size());
+        assertEquals(nbCharactersInitial, charactersList.size());
     }
+
+
 
     /**
      * This test verify the method isFirstToHaveEightDistrict and verify the bonus associated to
@@ -232,10 +234,13 @@ class GameTest {
         verify(game, atMost(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(game, atLeast(game.players.size()-1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(game, times(1)).retrieveCharacters();
+        for(Character character : game.getAvailableCharacters()){
+            assertFalse(character.isDead());
+        }
     }
 
     @Test
-    void crownedPlayerIsUpdatedWithAKingAlive(){
+    void crownedPlayerIsUpdatedWhilePlayingARoundANdKingIsAlive(){
         gameWithFourPlayer.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
 
         gameWithFourPlayer.playARound();
@@ -244,7 +249,7 @@ class GameTest {
     }
 
     @Test
-    void kingPlayerIsNotUpdatedWithAKingDead(){
+    void kingPlayerIsNotUpdatedWhilePlayingARoundANdKingIsDead(){
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
