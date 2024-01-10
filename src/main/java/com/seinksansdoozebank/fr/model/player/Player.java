@@ -73,7 +73,7 @@ public abstract class Player {
     public List<DistrictType>  findDistrictTypeMissing(){
         List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
         for(DistrictType districtType : DistrictType.values()){
-            if(this.citadel.stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
                 listOfDistrictTypeMissing.add(districtType);
             }
         }

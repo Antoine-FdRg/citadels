@@ -222,25 +222,28 @@ public class SmartBot extends Player {
                 //Il joue comme un joueur normal
                 view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
             }
-        }
-    }
+        }    }
 
     /**
      * @param numberCards
      * @return the price of all the cards needed
      */
     private int priceOfNumbersOfCards(int numberCards) {
-        this.hand.sort(Comparator.comparing(card -> card.getDistrict().getCost()));
-        return this.hand.stream().limit(numberCards).mapToInt(card -> card.getDistrict().getCost()).sum();
+        this.getHand().sort(Comparator.comparing(card -> card.getDistrict().getCost()));
+        return this.getHand().stream().limit(numberCards).mapToInt(card -> card.getDistrict().getCost()).sum();
+    }
+
+    public int getPriceOfNumbersOfCards(int numbersCards){
+        return priceOfNumbersOfCards(numbersCards);
     }
 
     /**
      * L'architecte essaye de compléter au maxim le nombre de couleurs de district dans sa citadelle
      */
-    private void architectTryToCompleteFiveDistrictTypes() {
+    public void architectTryToCompleteFiveDistrictTypes() {
         //Création de la liste des cartes qu'il pourrait poser de sa main dans la citadelle intéressante pour lui en appelant la liste des
         //districtType manquant
-        List<Card> cardNeeded = this.hand.stream()
+        List<Card> cardNeeded = this.getHand().stream()
                 .filter(card -> findDistrictTypeMissing().contains(card.getDistrict().getDistrictType()))
                 .toList();
         cardNeeded = new ArrayList<>(cardNeeded);
