@@ -4,7 +4,6 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.SmartBot;
 
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
@@ -73,8 +72,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseAssasinEffect(SmartBot smartBot, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ smartBot, target});
+    public void displayPlayerUseAssasinEffect(Player player, Character target) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ player, target});
     }
 
     private void displayPlayerHand(Player player) {

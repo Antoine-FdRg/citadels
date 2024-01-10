@@ -4,7 +4,6 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.SmartBot;
 
 import java.util.List;
 
@@ -35,5 +34,5 @@ public interface IView {
 
     void displayGameFinished();
 
-    void displayPlayerUseAssasinEffect(SmartBot smartBot, Character target);
+    void displayPlayerUseAssasinEffect(Player player, Character target);
 }
