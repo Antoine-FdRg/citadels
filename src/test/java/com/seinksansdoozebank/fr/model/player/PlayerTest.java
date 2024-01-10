@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 class PlayerTest {
     Player player;
@@ -248,5 +249,14 @@ class PlayerTest {
         assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(-1));
         assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(0));
         assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
+    }
+
+    @Test
+    void playCardWithAGivenCard(){
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
+        spyPlayer.playCard(new Card(District.TEMPLE));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
 }

@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -98,7 +99,7 @@ class GameTest {
     @Test
     void testCharactersChoice() {
         game.createCharacters();
-        assertEquals(4, game.getAvailableCharacters().size());
+        assertEquals(5, game.getAvailableCharacters().size());
     }
 
     @Test
@@ -109,7 +110,7 @@ class GameTest {
         List<Character> availableCharacters = game.getAvailableCharacters();
 
         // Check if the correct number of characters is created
-        assertEquals(4, availableCharacters.size()); // Adjust the expected size based on your implementation
+        assertEquals(5, availableCharacters.size()); // Adjust the expected size based on your implementation
     }
 
     @Test
@@ -123,6 +124,7 @@ class GameTest {
                 new King(),
                 new Bishop(),
                 new Merchant(),
+                new Architect(),
                 new Condottiere()
         );
 
@@ -137,14 +139,14 @@ class GameTest {
             assertNotNull(player.getCharacter());
         }
 
-        // Check if all characters were removed from the available characters list
-        assertEquals(0, game.getAvailableCharacters().size());
+        // Check if only one character remains in the available characters list
+        assertEquals(1, game.getAvailableCharacters().size());
 
         // Reset the available characters list
         game.retrieveCharacters();
 
         // Check if the available characters list is equal to charactersList
-        assertEquals(4, game.getAvailableCharacters().size());
+        assertEquals(5, game.getAvailableCharacters().size());
     }
 
     /**
