@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
@@ -102,6 +103,26 @@ public class RandomBot extends Player {
             this.useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.character instanceof Assassin assassin) {
+            this.useEffectAssassin(assassin);
+        }
+    }
+
+    /**
+     * Effect of assassin character (kill a player)
+     *
+     * @param assassin the assassin character
+     */
+    private void useEffectAssassin(Assassin assassin) {
+        Player playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+        // try to kill the playerToKill and if throw retry until the playerToKill is dead
+        while (!playerToKill.getCharacter().isDead()) {
+            try {
+                assassin.useEffect(playerToKill.getCharacter());
+                break;
+            } catch (IllegalArgumentException e) {
+                playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            }
         }
     }
 
