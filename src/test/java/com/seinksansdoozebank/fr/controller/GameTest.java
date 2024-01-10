@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -226,5 +227,27 @@ class GameTest {
         verify(game, times(1)).orderPlayerBeforePlaying();
         verify(game, times(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(game, times(1)).retrieveCharacters();
+    }
+
+    @Test
+    void crownedPlayerIsUpdatedWithAKingAlive(){
+        game.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
+
+        game.playARound();
+
+        assertEquals(game.players.get(0), game.crownedPlayer);
+    }
+
+    @Test
+    void kingPlayerIsNotUpdatedWithAKingDead(){
+        King king = new King();
+        Assassin assassin = new Assassin();
+        assassin.useEffect(king);
+        game.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
+
+        game.playARound();
+
+        assertTrue(king.isDead());
+        assertNull(game.crownedPlayer);
     }
 }
