@@ -2,7 +2,9 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
+
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 import java.util.List;
@@ -69,6 +71,11 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
     }
 
+    @Override
+    public void displayPlayerUseAssasinEffect(Player player, Character target) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ player, target});
+    }
+
     private void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
@@ -116,6 +123,11 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
+    }
+
+    @Override
+    public void displayUnusedCharacterInRound(Character character) {
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE+"Le {0} a été écraté pour cette manche.\u001B", character);
     }
 
     @Override

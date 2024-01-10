@@ -23,6 +23,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -56,6 +57,14 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
         verify(view, atMostOnce()).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+    }
+
+    @Test
+    void playWhereCharacterIsDead(){
+        King king = new King();
+        when(spyRandomBot.getCharacter()).thenReturn(king);
+        king.kill();
+        assertThrows(IllegalStateException.class, () -> spyRandomBot.play());
     }
 
     @Test

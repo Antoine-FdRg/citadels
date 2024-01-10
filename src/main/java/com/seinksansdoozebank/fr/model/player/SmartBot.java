@@ -9,8 +9,12 @@ import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,9 @@ public class SmartBot extends Player {
 
     @Override
     public void play() {
+        if(this.getCharacter().isDead()){
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
@@ -164,6 +171,10 @@ public class SmartBot extends Player {
     protected void useEffect() {
         if (this.character instanceof Merchant merchant) {
             merchant.useEffect();
+        } else if (this.character instanceof Assassin assassin) {
+            Character target = this.choseAssassinTarget();
+            assassin.useEffect(target);
+            view.displayPlayerUseAssasinEffect(this,target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
@@ -205,6 +216,29 @@ public class SmartBot extends Player {
             }
         }
         // Do nothing otherwise
+    }
+
+    /**
+     * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
+     * @return the target of the assassin
+     */
+    protected Character choseAssassinTarget() {
+        List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
+        Collections.shuffle(roleInterestingToKill);
+        Character target = null;
+        List<Character> charactersList = this.getOpponents().stream().map(Player::getCharacter).toList();
+        for (Role role : roleInterestingToKill) {
+            for (Character character : charactersList) {
+                if (character.getRole() == role) {
+                    target = character;
+                    break;
+                }
+            }
+        }
+        if(target == null) {
+            target = charactersList.get(random.nextInt(charactersList.size()));
+        }
+        return target;
     }
 
     @Override

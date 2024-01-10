@@ -25,6 +25,9 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
+        if(this.getCharacter().isDead()){
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
@@ -120,6 +123,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));

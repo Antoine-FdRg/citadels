@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
@@ -49,4 +50,8 @@ public interface IView {
      * @param strategy the message to display
      */
     void displayPlayerStrategy(Player player, String strategy);
+
+    void displayPlayerUseAssasinEffect(Player player, Character target);
+
+    void displayUnusedCharacterInRound(Character character);
 }

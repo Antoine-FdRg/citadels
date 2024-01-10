@@ -10,16 +10,20 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class Game {
+    private static final int NB_PLAYER_MAX = 6;
+    private static final int NB_PLAYER_MIN = 3;
     private static final int NB_GOLD_INIT = 2;
     private static final int NB_CARD_BY_PLAYER = 4;
 
@@ -38,6 +42,9 @@ public class Game {
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers, IView view) {
+        if(nbPlayers > NB_PLAYER_MAX || nbPlayers< NB_PLAYER_MIN) {
+            throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
+        }
         this.view = view;
         this.deck = new Deck();
         this.players = new ArrayList<>();
@@ -78,17 +85,20 @@ public class Game {
         playersChooseCharacters();
         orderPlayerBeforePlaying();
         for (Player player : players) {
-            if (player.getCharacter().isDead()) {
-                continue;
+            if (!player.getCharacter().isDead()) {
+                this.updateCrownedPlayer(player);
+                player.play();
             }
-            crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
-            player.play();
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
         }
         retrieveCharacters();
         finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
         this.nbCurrentRound++;
+    }
+
+    void updateCrownedPlayer(Player player) {
+        crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
     }
 
     protected int getNbCurrentRound() {
@@ -149,12 +159,28 @@ public class Game {
      * Create the list of characters ordered
      */
     protected void createCharacters() {
-        // availableCharacters.add(new Assassin());
+        int nbPlayers = this.players.size();
+        List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
+                new Assassin(),
+                new Bishop(),
+                new Merchant(),
+                new Condottiere()));
+        if(nbPlayers > notMandatoryCharacters.size()) {
+            throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
+        }
+        Collections.shuffle(notMandatoryCharacters);
+        // the king must always be available
         availableCharacters.add(new King());
-        availableCharacters.add(new Bishop());
-        availableCharacters.add(new Merchant());
-        // availableCharacters.add(new Architect());
-        availableCharacters.add(new Condottiere());
+        //adding as much characters as there are players because the king is already added and the rules say that the number of characters must be equal to the number of players +1
+        for (int i = 0; i < nbPlayers; i++) {
+            availableCharacters.add(notMandatoryCharacters.get(i));
+        }
+        //remove the characters that are available from the list of not mandatory characters
+        notMandatoryCharacters.removeAll(availableCharacters);
+        //display the characters that are not in availableCharacters
+        for(Character unusedCharacter : notMandatoryCharacters) {
+            view.displayUnusedCharacterInRound(unusedCharacter);
+        }
     }
 
     /**

@@ -221,6 +221,7 @@ public abstract class Player {
         }
         Character characterToRetrieve = this.character;
         this.character = null;
+        characterToRetrieve.resurrect();
         characterToRetrieve.setPlayer(null);
         return characterToRetrieve;
     }
