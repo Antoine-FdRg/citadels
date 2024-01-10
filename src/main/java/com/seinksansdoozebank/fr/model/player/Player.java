@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -66,6 +65,18 @@ public abstract class Player {
     protected abstract void pickTwoCardKeepOneDiscardOne();
 
     /**
+     * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
+     */
+    public final void pickACard() {
+        this.hand.add(this.deck.pick());
+    }
+
+    public final void discardACard(Card card) {
+        this.hand.remove(card);
+        this.deck.discard(card);
+    }
+
+    /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
      *
      * @return the district built by the player
@@ -83,12 +94,25 @@ public abstract class Player {
     }
 
     public List<Card> playCards(int numberOfCards) {
+        if (numberOfCards <= 0) {
+            throw new IllegalArgumentException("Number of cards to play must be positive");
+        } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
+            throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
+        }
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
             card.ifPresent(cards::add);
         }
         return cards;
+    }
+
+    /**
+     * Effect of architect character (pick 2 cards)
+     */
+    protected void useEffectArchitectPickCards() {
+        this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
     }
 
     /**
@@ -140,7 +164,7 @@ public abstract class Player {
     /**
      * We add bonus with the final state of the game to a specific player
      *
-     * @param bonus
+     * @param bonus point to add to a player
      */
     public void addBonus(int bonus) {
         this.bonus += bonus;
@@ -196,14 +220,6 @@ public abstract class Player {
         return characterToRetrieve;
     }
 
-    public boolean isTheKing() {
-        //TODO remove this if when player are able to choose a character
-        if (this.character == null) {
-            return false;
-        }
-        return Role.KING.equals(this.character.getRole());
-    }
-
     @Override
     public String toString() {
         return "Le joueur " + this.id;
@@ -224,5 +240,13 @@ public abstract class Player {
 
     public void setOpponents(List<Player> opponents) {
         this.opponents.addAll(opponents);
+    }
+
+    public void switchHandWith(Player player) {
+        List<Card> handToSwitch = new ArrayList<>(this.getHand());
+        this.hand.clear();
+        this.hand.addAll(player.getHand());
+        player.hand.clear();
+        player.hand.addAll(handToSwitch);
     }
 }

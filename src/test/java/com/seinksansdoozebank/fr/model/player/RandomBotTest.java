@@ -8,6 +8,8 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,7 @@ class RandomBotTest {
     void play() {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spyRandomBot).playACard();
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
@@ -52,8 +55,46 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, times(1)).displayPlayerPlaysCard(spyRandomBot, optDistrict);
+        verify(view, atMostOnce()).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
     }
+
+    @Test
+    void playWithArchitect() {
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spyRandomBot).playACard();
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyRandomBot.play();
+
+        verify(spyRandomBot, times(1)).pickSomething();
+        verify(spyRandomBot, atMost(3)).playACard();
+        verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
+        verify(view, times(2)).displayPlayerInfo(spyRandomBot);
+        verify(view, atMost(3)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+    }
+
+    @Test
+    void playWithAssassinWithOneGoodCharacterToKill() {
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spyRandomBot).playACard();
+        Assassin assassin = spy(new Assassin());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
+        List<Player> opponents = new ArrayList<>();
+        RandomBot opponent = new RandomBot(10, deck, view);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        opponents.add(opponent);
+        when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        spyRandomBot.play();
+
+        verify(spyRandomBot, times(1)).pickSomething();
+        verify(spyRandomBot, atMost(3)).playACard();
+        verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
+        verify(view, times(2)).displayPlayerInfo(spyRandomBot);
+        verify(view, atMost(1)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(assassin, times(1)).useEffect(opponent.getCharacter());
+    }
+
 
     @Test
     void pickSomething() {
@@ -152,4 +193,6 @@ class RandomBotTest {
         verify(spyRandomBot, times(1)).useEffect();
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
+
+
 }
