@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -233,7 +234,7 @@ public class Game {
     }
 
     protected boolean hasCourtyardOfMiracleAndItsNotTheLastCard(Player player) {
-        return player.getCitadel().stream().anyMatch(card -> card.getDistrict().getName().equals("Cour des miracles"))
+        return player.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 && !player.isLastCardPlacedCourtyardOfMiracle();
     }
 
