@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
@@ -188,6 +189,22 @@ public class SmartBot extends Player {
                 }
             }
         }
+    }
+
+    public void chooseColorCourtyardOfMiracle() {
+        // if the player has all different district types except one DistrictType, the bot will choose the missing one
+        List<DistrictType> listDifferentDistrictType = getDistrictTypeFrequencyList(this.getCitadel());
+        if (listDifferentDistrictType.size() == 4) {
+            for (DistrictType districtType : DistrictType.values()) {
+                if (!listDifferentDistrictType.contains(districtType)) {
+                    this.getCitadel().stream()
+                            .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                            .forEach(card -> this.setColorCourtyardOfMiracleType(districtType));
+                    return;
+                }
+            }
+        }
+        // Do nothing otherwise
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,6 +12,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,17 +28,22 @@ class GameTest {
 
     Game game;
     Game gameWithThreePlayer;
+    Game gameWithFourPlayer;
+    Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
+    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracle;
+    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition;
     private Cli view;
 
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        game = spy(new Game(4, view));
+        game = spy(new Game(4,view));
         gameWithThreePlayer = new Game(3, view);
-
+        gameWithFourPlayer = new Game(4, view);
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(1, view);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -79,6 +86,27 @@ class GameTest {
 
         gameWithThreePlayer.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
 
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view));
+
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle);
+
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = spy(new SmartBot(5, new Deck(), view));
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition);
     }
 
     @Test
@@ -193,6 +221,25 @@ class GameTest {
     }
 
     @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleGetTheBonus() {
+        gameWithFourPlayer.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
+        // Update the bonus of all players
+        gameWithFourPlayer.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(3, playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getBonus());
+    }
+
+    @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        // Update the bonus of all players
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(0, playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getBonus());
+    }
+
+    @Test
     void orderPlayerBeforePlaying() {
         game.createCharacters();
         List<Character> availableCharacters = new ArrayList<>(game.getAvailableCharacters());
@@ -227,6 +274,18 @@ class GameTest {
         verify(game, times(1)).orderPlayerBeforePlaying();
         verify(game, times(game.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(game, times(1)).retrieveCharacters();
+    }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsNotTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(false);
+        assertTrue(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+    }
+
+    @Test
+    void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        assertFalse(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
     }
 
     @Test
