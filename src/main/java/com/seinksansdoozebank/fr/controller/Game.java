@@ -11,7 +11,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -44,7 +43,7 @@ public class Game {
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers, IView view) {
-        if(nbPlayers > NB_PLAYER_MAX || nbPlayers< NB_PLAYER_MIN) {
+        if (nbPlayers > NB_PLAYER_MAX || nbPlayers < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
         this.view = view;
@@ -89,9 +88,7 @@ public class Game {
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
                 this.updateCrownedPlayer(player);
-                if (player.getCharacter().getSavedThief()!=null) {
-                    playerHasSavedThief(player);
-                }
+                checkPlayerStolen(player);
                 player.play();
             }
             //We set the attribute to true if player is the first who has eight districts
@@ -103,7 +100,7 @@ public class Game {
     }
 
     void updateCrownedPlayer(Player player) {
-        crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
+        crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
     }
 
     protected int getNbCurrentRound() {
@@ -170,7 +167,7 @@ public class Game {
                 new Bishop(),
                 new Merchant(),
                 new Condottiere()));
-        if(nbPlayers > notMandatoryCharacters.size()) {
+        if (nbPlayers > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
         Collections.shuffle(notMandatoryCharacters);
@@ -183,7 +180,7 @@ public class Game {
         //remove the characters that are available from the list of not mandatory characters
         notMandatoryCharacters.removeAll(availableCharacters);
         //display the characters that are not in availableCharacters
-        for(Character unusedCharacter : notMandatoryCharacters) {
+        for (Character unusedCharacter : notMandatoryCharacters) {
             view.displayUnusedCharacterInRound(unusedCharacter);
         }
     }
@@ -318,14 +315,17 @@ public class Game {
 
     /**
      * we apply this if the player has savedThief==true
+     *
      * @param player
      * @return a boolean
      */
-    public void playerHasSavedThief(Player player){
-        player.getCharacter().isStolen();
-        view.displayStolenCharacter(player.getCharacter());
-        if (getPlayerByRole(Role.THIEF).isPresent()) {
-            view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
+    public void checkPlayerStolen(Player player) {
+        if (player.getCharacter().getSavedThief() != null) {
+            player.getCharacter().isStolen();
+            view.displayStolenCharacter(player.getCharacter());
+            if (getPlayerByRole(Role.THIEF).isPresent()) {
+                view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
+            }
         }
     }
 }
