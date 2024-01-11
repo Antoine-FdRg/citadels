@@ -170,7 +170,6 @@ class GameTest {
     @Test
     void hasDifferentDistrictTypeTestWithPlayerHavingFiveTypesShouldReturnTrue() {
         //botWithFiveDifferentDistrictType
-        gameWithThreePlayer.updatePlayersBonus();
         assertTrue(playerWIthEightDistrictsAndFiveDistrictTypes.hasFiveDifferentDistrictTypes());
     }
 
@@ -180,7 +179,6 @@ class GameTest {
     @Test
     void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
         //botWithLessThanFiveDifferentDistrictType
-        gameWithThreePlayer.updatePlayersBonus();
         assertFalse(playerWithNoBonus.hasFiveDifferentDistrictTypes());
     }
 

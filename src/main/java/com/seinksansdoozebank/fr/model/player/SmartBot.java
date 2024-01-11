@@ -84,7 +84,7 @@ public class SmartBot extends Player {
 
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCard(this, 1);
+        this.view.displayPlayerPickCards(this, 1);
         //Pick two district
         Card card1 = this.deck.pick();
         Card card2 = this.deck.pick();
@@ -222,7 +222,8 @@ public class SmartBot extends Player {
                 //Il joue comme un joueur normal
                 view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
             }
-        }    }
+        }
+    }
 
     /**
      * @param numberCards
@@ -233,7 +234,7 @@ public class SmartBot extends Player {
         return this.getHand().stream().limit(numberCards).mapToInt(card -> card.getDistrict().getCost()).sum();
     }
 
-    public int getPriceOfNumbersOfCards(int numbersCards){
+    public int getPriceOfNumbersOfCards(int numbersCards) {
         return priceOfNumbersOfCards(numbersCards);
     }
 
@@ -243,16 +244,18 @@ public class SmartBot extends Player {
     public void architectTryToCompleteFiveDistrictTypes() {
         //Création de la liste des cartes qu'il pourrait poser de sa main dans la citadelle intéressante pour lui en appelant la liste des
         //districtType manquant
+        List<DistrictType> missingDistrictTypeInCitadel = findDistrictTypesMissingInCitadel();
         List<Card> cardNeeded = this.getHand().stream()
-                .filter(card -> findDistrictTypeMissing().contains(card.getDistrict().getDistrictType()))
+                .filter(card -> missingDistrictTypeInCitadel.contains(card.getDistrict().getDistrictType()))
                 .toList();
         cardNeeded = new ArrayList<>(cardNeeded);
 
         int numberOfCards = 0;
         int i = 0;
         while (i < 3) {
-            if (getCheaperCard(cardNeeded).isPresent()) {
-                Card cardChosen = getCheaperCard(cardNeeded).get();
+            Optional<Card> optionalChosenCard = getCheaperCard(cardNeeded);
+            if (optionalChosenCard.isPresent()) {
+                Card cardChosen = optionalChosenCard.get();
                 if (numberOfCards < 3 && (canPlayCard(cardChosen))) {
                     view.displayPlayerPlaysCard(this, playCard(cardChosen));
                     numberOfCards++;

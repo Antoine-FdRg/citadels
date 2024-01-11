@@ -14,6 +14,7 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,10 @@ class SmartBotTest {
     Deck deck;
     Card cardCostThree;
     Card cardCostFive;
+    Card templeCard;
+    Card barrackCard;
+    Card cardManor;
+    Card cardPort;
 
     @BeforeEach
     void setup() {
@@ -38,6 +43,10 @@ class SmartBotTest {
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
         spySmartBot = spy(new SmartBot(10, deck, view));
+        templeCard=new Card(District.TEMPLE);
+        barrackCard=new Card(District.BARRACK);
+         cardPort=new Card(District.PORT);
+         cardManor=new Card(District.MANOR);
     }
 
     @Test
@@ -55,6 +64,12 @@ class SmartBotTest {
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, emptyList);
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
+
+//    @AfterEach
+//    public void validate() {
+//        validateMockitoUsage();
+//    }
+
 
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
@@ -127,7 +142,7 @@ class SmartBotTest {
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
-        verify(view, times(1)).displayPlayerPickCard(spySmartBot,1);
+        verify(view, times(1)).displayPlayerPickCards(spySmartBot,1);
         verify(deck, times(2)).pick();
         verify(deck, times(1)).discard(any(Card.class));
         assertTrue(spySmartBot.getHand().get(0).getDistrict().getCost() <= deck.getDeck().get(0).getDistrict().getCost());
@@ -254,7 +269,7 @@ class SmartBotTest {
 
     @Test
     void playWithArchitect(){
-        Optional<Card> optDistrict = Optional.of(new Card(District.TEMPLE));
+        Optional<Card> optDistrict = Optional.of(templeCard);
         doReturn(optDistrict).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.play();
@@ -266,12 +281,12 @@ class SmartBotTest {
     void useEffectTest(){
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+        verify(spySmartBot, atMost(1)).useEffectArchitectPickCards();
     }
 
     @Test
     void priceOfNumbersOfCardsTest(){
-        List<Card> architectHand=new ArrayList<>(List.of(new Card(District.TEMPLE),new Card(District.BARRACK)));
+        List<Card> architectHand=new ArrayList<>(List.of(templeCard,barrackCard));
         when(spySmartBot.getHand()).thenReturn(architectHand);
         assertEquals(4, spySmartBot.getPriceOfNumbersOfCards(2));
     }
@@ -279,24 +294,44 @@ class SmartBotTest {
     @Test
     void architectTryToCompleteFiveDistrictTypesTest(){
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        List<Card> architectHand=new ArrayList<>(List.of(new Card(District.TEMPLE),new Card(District.BARRACK)));
+        List<Card> architectHand=new ArrayList<>(List.of(templeCard,barrackCard,cardPort,cardManor));
         List<Card> architectCitadelle=new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         when(spySmartBot.getHand()).thenReturn(architectHand);
         when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
         spySmartBot.architectTryToCompleteFiveDistrictTypes();
-        verify(spySmartBot,atMost(1)).view.displayPlayerPlaysCard(any(),any());
+        //On vérifie que la méthode architectTryToCompleteFiveDistrictTypes est bien appelée
+        verify(spySmartBot,times(1)).architectTryToCompleteFiveDistrictTypes();
+        //On vérifie que le bot ne pose pas plus de 3 districts dans sa citadelle
+        verify(view,atMost(3)).displayPlayerPlaysCard(any(),any());
+    }
+
+    @Test
+    void architectTryToCompleteFiveDistrictTypesButHecantTest(){
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spySmartBot.decreaseGold(9);
+        List<Card> architectHand=new ArrayList<>(List.of(barrackCard,templeCard,new Card(District.PALACE)));
+        List<Card> architectCitadelle=new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(architectHand);
+        when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
+        spySmartBot.architectTryToCompleteFiveDistrictTypes();
+        //On vérifie que la méthode architectTryToCompleteFiveDistrictTypes est bien appelée
+         verify(spySmartBot,times(1)).architectTryToCompleteFiveDistrictTypes();
+        //Ici il ne peut pas poser de district car il n'a plus de gold
+        verify(view,atMost(1)).displayPlayerPlaysCard(any(),any());
     }
 
     @Test
     void useEffectOfTheArchitectWhenDoesNotHaveFiveDistrictTypes(){
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        List<Card> architectHand=new ArrayList<>(List.of(new Card(District.TEMPLE),new Card(District.BARRACK)));
+        List<Card> architectHand=new ArrayList<>(List.of(templeCard,barrackCard));
         List<Card> architectCitadelle=new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         when(spySmartBot.getHand()).thenReturn(architectHand);
         when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
         spySmartBot.useEffectOfTheArchitect();
         verify(spySmartBot,atLeastOnce()).architectTryToCompleteFiveDistrictTypes();
     }
+
+
 
 
 

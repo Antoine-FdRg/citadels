@@ -70,7 +70,7 @@ public abstract class Player {
     /**
      * @return list of districtType missing in the citadel of the player
      */
-    public List<DistrictType>  findDistrictTypeMissing(){
+    public List<DistrictType> findDistrictTypesMissingInCitadel(){
         List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
         for(DistrictType districtType : DistrictType.values()){
             if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
@@ -137,7 +137,7 @@ public abstract class Player {
     }
 
     /**
-     * Represents the phase where the player build a district chosen by the variable
+     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
      *
      * @return the district built by the player
      */
@@ -157,7 +157,7 @@ public abstract class Player {
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
-        view.displayPlayerPickCard(this,2);
+        view.displayPlayerPickCards(this,2);
     }
 
     /**

@@ -17,7 +17,7 @@ public interface IView {
 
     void displayPlayerStartPlaying(Player player);
 
-    void displayPlayerPickCard(Player player, int numberOfCards);
+    void displayPlayerPickCards(Player player, int numberOfCards);
 
     void displayPlayerPicksGold(Player player);
 
