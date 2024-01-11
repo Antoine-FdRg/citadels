@@ -53,23 +53,15 @@ public class CharacterTest {
 
     /**
      * We verify that the number of gold of the thief increases well thanks
-     * to the number of golf of the character which is stolen
+     * to the number of golf of the character which is stolen and that the stolen character gold is 0.
      */
     @Test
-    void isStolenGetNumberOfGoldOfThiefTest() {
+    void isStolenOnMerchantShouldSetThiefGoldTo8AndMerchantGoldTo0() {
         merchant.isStolen();
         assertEquals(8, thiefPlayer.getNbGold());
-    }
-
-    /**
-     * We verify that the number of gold of the marchant decreases well because all it gold
-     * has been stolen by the thief
-     */
-    @Test
-    void isStolenGetNumberOfGoldOfMerchantTest() {
-        merchant.isStolen();
         assertEquals(0, merchantPlayer.getNbGold());
     }
+ 
 
 
 }
