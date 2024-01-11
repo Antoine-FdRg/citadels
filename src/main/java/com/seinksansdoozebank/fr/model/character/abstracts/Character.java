@@ -1,10 +1,8 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
+
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
-
-import java.util.List;
-import java.util.Optional;
 
 public abstract class Character {
     private Player player;
@@ -31,16 +29,10 @@ public abstract class Character {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Character character)) {
-            return false;
-        }
-        return this.toString().equals(character.toString());
+        return (obj instanceof Character character) && this.toString().equals(character.toString());
     }
 
     @Override
@@ -69,17 +61,17 @@ public abstract class Character {
     public boolean isDead() {
         return this.isDead;
     }
-
+    public void resurrect() {
+        this.isDead = false;
+    }
 
     /**
      * @param player
      */
     public void setSavedThief(Player player) {
-        if(savedThief==null){
-            savedThief=player;
-        }
-        else{savedThief = null;}
+        savedThief=player;
     }
+
 
     /**
      * getter
@@ -97,7 +89,6 @@ public abstract class Character {
     public void isStolen() {
         //We add the number of gold stolen to the number of gold of the thief
         getSavedThief().increaseGold(this.getPlayer().getNbGold());
-
         this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
         this.setSavedThief(null);
     }

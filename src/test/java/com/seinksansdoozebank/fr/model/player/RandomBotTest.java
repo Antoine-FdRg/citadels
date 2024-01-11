@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -58,6 +60,14 @@ class RandomBotTest {
     }
 
     @Test
+    void playWhereCharacterIsDead(){
+        King king = new King();
+        when(spyRandomBot.getCharacter()).thenReturn(king);
+        king.kill();
+        assertThrows(IllegalStateException.class, () -> spyRandomBot.play());
+    }
+
+    @Test
     void playWithArchitect() {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spyRandomBot).playACard();
@@ -71,6 +81,29 @@ class RandomBotTest {
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
         verify(view, atMost(3)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
     }
+
+    @Test
+    void playWithAssassinWithOneGoodCharacterToKill() {
+        Optional<Card> optDistrict = Optional.of(cardCostThree);
+        doReturn(optDistrict).when(spyRandomBot).playACard();
+        Assassin assassin = spy(new Assassin());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
+        List<Player> opponents = new ArrayList<>();
+        RandomBot opponent = new RandomBot(10, deck, view);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        opponents.add(opponent);
+        when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        spyRandomBot.play();
+
+        verify(spyRandomBot, times(1)).pickSomething();
+        verify(spyRandomBot, atMost(3)).playACard();
+        verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
+        verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
+        verify(view, times(2)).displayPlayerInfo(spyRandomBot);
+        verify(view, atMost(1)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(assassin, times(1)).useEffect(opponent.getCharacter());
+    }
+
 
     @Test
     void pickSomething() {

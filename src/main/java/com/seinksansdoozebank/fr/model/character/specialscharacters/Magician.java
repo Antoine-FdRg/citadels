@@ -21,7 +21,7 @@ public class Magician extends Character {
     public void useEffect(Optional<Player> optTargetPlayer) {
         if (optTargetPlayer.isPresent()) { //picking card from target player's hand
             this.getPlayer().switchHandWith(optTargetPlayer.get());
-        }else{ //picking card from deck
+        } else { //picking card from deck
             int numberOfCardsToPick = this.getPlayer().getHand().size();
             for (int i = 0; i < numberOfCardsToPick; i++) {
                 this.getPlayer().discardACard(this.getPlayer().getHand().get(i));

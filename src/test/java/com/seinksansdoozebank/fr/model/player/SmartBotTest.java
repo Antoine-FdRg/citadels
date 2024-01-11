@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -203,6 +205,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
 
@@ -223,6 +227,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(2), spySmartBot.getCharacter());
     }
 
@@ -248,6 +254,53 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
+    }
+
+    @Test
+    void testChooseColorCourtyardOfMiracleGetTheCorrectColor() {
+        // Set a citadel with 4 district with different colors
+        Card manorCard = new Card(District.TEMPLE);
+        Card castleCard = new Card(District.MANOR);
+        Card palaceCard = new Card(District.TAVERN);
+        Card laboratoryCard = new Card(District.CEMETERY);
+        // Add the Courtyard of miracle
+        Card courtyardOfMiracleCard = new Card(District.COURTYARD_OF_MIRACLE);
+        ArrayList<Card> citadel = new ArrayList<>(
+                List.of(manorCard, castleCard, palaceCard, laboratoryCard, courtyardOfMiracleCard)
+        );
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseColorCourtyardOfMiracle();
+        assertEquals(DistrictType.SOLDIERLY, spySmartBot.getColorCourtyardOfMiracleType());
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Architect());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertInstanceOf(Architect.class, target);
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetNotInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Bishop());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer, merchantPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertTrue(target instanceof Bishop || target instanceof Merchant);
     }
 }

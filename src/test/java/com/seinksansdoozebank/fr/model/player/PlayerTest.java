@@ -4,9 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -128,31 +126,6 @@ class PlayerTest {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree, cardCostFive));
         int sum = cardCostThree.getDistrict().getCost() + cardCostFive.getDistrict().getCost();
         assertEquals(sum, spyPlayer.getScore());
-    }
-
-    @Test
-    void isTheKingWithAPlayerBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new King());
-
-        player.chooseCharacter(characters);
-
-        assertTrue(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerNotBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-
-        player.chooseCharacter(characters);
-
-        assertFalse(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerWithNoCharacter() {
-        assertFalse(player.isTheKing());
     }
 
     @Test

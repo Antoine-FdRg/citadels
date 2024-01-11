@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -28,6 +29,8 @@ public abstract class Player {
     protected Random random = new Random();
     protected Character character;
     private final List<Player> opponents = new ArrayList<>();
+    private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -89,6 +92,8 @@ public abstract class Player {
         }
         Card chosenCard = optChosenCard.get();
         this.hand.remove(chosenCard);
+        // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
+        this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
         this.decreaseGold(chosenCard.getDistrict().getCost());
         return optChosenCard;
@@ -217,16 +222,9 @@ public abstract class Player {
         }
         Character characterToRetrieve = this.character;
         this.character = null;
+        characterToRetrieve.resurrect();
         characterToRetrieve.setPlayer(null);
         return characterToRetrieve;
-    }
-
-    public boolean isTheKing() {
-        //TODO remove this if when player are able to choose a character
-        if (this.character == null) {
-            return false;
-        }
-        return Role.KING.equals(this.character.getRole());
     }
 
     @Override
@@ -258,4 +256,24 @@ public abstract class Player {
         player.hand.clear();
         player.hand.addAll(handToSwitch);
     }
+
+    public abstract void chooseColorCourtyardOfMiracle();
+
+    public boolean isLastCardPlacedCourtyardOfMiracle() {
+        return this.lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public void setLastCardPlacedCourtyardOfMiracle(boolean lastCardPlacedCourtyardOfMiracle) {
+        this.lastCardPlacedCourtyardOfMiracle = lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public DistrictType getColorCourtyardOfMiracleType() {
+        return this.colorCourtyardOfMiracleType;
+    }
+
+    public void setColorCourtyardOfMiracleType(DistrictType colorCourtyardOfMiracleType) {
+        this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
+    }
+
+
 }
