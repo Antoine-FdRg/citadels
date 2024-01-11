@@ -54,4 +54,8 @@ public interface IView {
     void displayPlayerUseAssasinEffect(Player player, Character target);
 
     void displayUnusedCharacterInRound(Character character);
+
+    void displayStolenCharacter(Character character);
+
+    void displayActualNumberOfGold(Player player);
 }

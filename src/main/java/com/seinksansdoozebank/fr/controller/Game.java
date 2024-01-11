@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     private static final int NB_PLAYER_MAX = 6;
@@ -42,7 +43,7 @@ public class Game {
      * @param nbPlayers the number of players playing
      */
     public Game(int nbPlayers, IView view) {
-        if(nbPlayers > NB_PLAYER_MAX || nbPlayers< NB_PLAYER_MIN) {
+        if (nbPlayers > NB_PLAYER_MAX || nbPlayers < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
         this.view = view;
@@ -87,6 +88,7 @@ public class Game {
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
                 this.updateCrownedPlayer(player);
+                checkPlayerStolen(player);
                 player.play();
             }
             //We set the attribute to true if player is the first who has eight districts
@@ -98,7 +100,7 @@ public class Game {
     }
 
     void updateCrownedPlayer(Player player) {
-        crownedPlayer = player.getCharacter().getRole().equals(Role.KING)? player : crownedPlayer;
+        crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
     }
 
     protected int getNbCurrentRound() {
@@ -165,7 +167,7 @@ public class Game {
                 new Bishop(),
                 new Merchant(),
                 new Condottiere()));
-        if(nbPlayers > notMandatoryCharacters.size()) {
+        if (nbPlayers > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
         Collections.shuffle(notMandatoryCharacters);
@@ -178,7 +180,7 @@ public class Game {
         //remove the characters that are available from the list of not mandatory characters
         notMandatoryCharacters.removeAll(availableCharacters);
         //display the characters that are not in availableCharacters
-        for(Character unusedCharacter : notMandatoryCharacters) {
+        for (Character unusedCharacter : notMandatoryCharacters) {
             view.displayUnusedCharacterInRound(unusedCharacter);
         }
     }
@@ -216,6 +218,13 @@ public class Game {
      */
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+    /**
+     * @return the list of players
+     */
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**
@@ -288,5 +297,35 @@ public class Game {
             listDifferentDistrictType.add(player.getColorCourtyardOfMiracleType());
         }
         return (listDifferentDistrictType.size() == 5);
+    }
+
+    /**
+     * @param role
+     * @return an optional of Player with the given role
+     */
+    public Optional<Player> getPlayerByRole(Role role) {
+        for (Player player : players) {
+            if (player.getCharacter().getRole() == role) {
+                return Optional.of(player);
+            }
+        }
+        return Optional.empty();
+    }
+
+
+    /**
+     * we apply this if the player has savedThief==true
+     *
+     * @param player
+     * @return a boolean
+     */
+    public void checkPlayerStolen(Player player) {
+        if (player.getCharacter().getSavedThief() != null) {
+            player.getCharacter().isStolen();
+            view.displayStolenCharacter(player.getCharacter());
+            if (getPlayerByRole(Role.THIEF).isPresent()) {
+                view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
+            }
+        }
     }
 }

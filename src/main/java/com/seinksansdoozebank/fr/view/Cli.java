@@ -149,4 +149,12 @@ public class Cli implements IView {
     public void displayPlayerStrategy(Player player, String message) {
         CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
     }
+    @Override
+    public void displayStolenCharacter(Character character){
+        CustomLogger.log(Level.INFO,"Le {0} a été volé et perd {1} pièces d''or ", new Object[]{ character, character.getPlayer().getNbGold() });
+    }
+    @Override
+    public void displayActualNumberOfGold(Player player){
+        CustomLogger.log(Level.INFO,"Le {0} a maintenant {1} pièces d''or.", new Object[]{ player.getCharacter(), player.getNbGold() });
+    }
 }

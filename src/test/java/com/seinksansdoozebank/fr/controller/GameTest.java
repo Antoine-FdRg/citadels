@@ -10,6 +10,9 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -20,9 +23,24 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 class GameTest {
 
@@ -347,4 +365,28 @@ class GameTest {
 //        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
 //        verify(view, times(charactersList.size()-7)).displayUnusedCharacterInRound(any(Character.class));
     }
+
+    /**
+     * we verify that the method getPlayerWithRoleTest return the right Optional
+     */
+    @Test
+    void getPlayerWithRoleTest() {
+        //Création du player de type architecte
+        Player playerArchitect = spy(new RandomBot(5, new Deck(), view));
+        Architect architect = new Architect();
+        architect.setPlayer(playerArchitect);
+        when(playerArchitect.getCharacter()).thenReturn(architect);
+        //Création du player de type voleur
+        Player playerThief = spy(new RandomBot(5, new Deck(), view));
+        Thief thief = new Thief();
+        thief.setPlayer(playerThief);
+        when(playerThief.getCharacter()).thenReturn(thief);
+
+        gameWithFivePlayers.setPlayers(List.of(playerThief, playerArchitect));
+        //The player architect is present in the game
+        assertEquals(Optional.of(playerArchitect), gameWithFivePlayers.getPlayerByRole(Role.ARCHITECT));
+        //The player merchant is not present in the game
+        assertEquals(Optional.empty(), gameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
+    }
+
 }

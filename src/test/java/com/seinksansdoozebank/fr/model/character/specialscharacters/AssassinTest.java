@@ -1,6 +1,7 @@
-package com.seinksansdoozebank.fr.model.character.commoncharacters;
+package com.seinksansdoozebank.fr.model.character.specialscharacters;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
