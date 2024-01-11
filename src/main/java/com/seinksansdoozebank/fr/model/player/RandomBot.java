@@ -3,12 +3,14 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
@@ -23,6 +25,9 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
+        if(this.getCharacter().isDead()){
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
@@ -102,6 +107,27 @@ public class RandomBot extends Player {
             this.useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.character instanceof Assassin assassin) {
+            this.useEffectAssassin(assassin);
+        }
+    }
+
+    /**
+     * Effect of assassin character (kill a player)
+     *
+     * @param assassin the assassin character
+     */
+    private void useEffectAssassin(Assassin assassin) {
+        Player playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+        // try to kill the playerToKill and if throw retry until the playerToKill is dead
+        while (!playerToKill.getCharacter().isDead()) {
+            try {
+                assassin.useEffect(playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
+                break;
+            } catch (IllegalArgumentException e) {
+                playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            }
         }
     }
 
@@ -124,9 +150,21 @@ public class RandomBot extends Player {
             // Check if the number of golds of the player is enough to destroy the district
             if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
                 // destroy the district
-                condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
+                try {
+                    condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
+                } catch (IllegalArgumentException e) {
+                    view.displayPlayerError(this, e.getMessage());
+                }
             }
         }
+    }
+
+    public void chooseColorCourtyardOfMiracle() {
+        // Set a random DistricType to the Courtyard of Miracle
+        this.getCitadel().stream()
+                .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                .findFirst()
+                .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
     }
 
     @Override

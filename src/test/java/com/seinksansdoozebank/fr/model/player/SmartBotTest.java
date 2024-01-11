@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -65,11 +66,6 @@ class SmartBotTest {
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }
 
-//    @AfterEach
-//    public void validate() {
-//        validateMockitoUsage();
-//    }
-
 
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
@@ -77,7 +73,7 @@ class SmartBotTest {
         doReturn(optDistrict).when(spySmartBot).chooseCard();
         doReturn(false).when(spySmartBot).canPlayCard(any(Card.class));
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(),new Architect(), new Condottiere())));
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
@@ -219,6 +215,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
     }
 
@@ -239,6 +237,8 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(2), spySmartBot.getCharacter());
     }
 
@@ -264,7 +264,54 @@ class SmartBotTest {
 
         when(spySmartBot.getCitadel()).thenReturn(citadel);
         spySmartBot.chooseCharacter(characters);
+
+        verify(view, times(1)).displayPlayerChooseCharacter(spySmartBot);
         assertEquals(characters.get(1), spySmartBot.getCharacter());
+    }
+
+    @Test
+    void testChooseColorCourtyardOfMiracleGetTheCorrectColor() {
+        // Set a citadel with 4 district with different colors
+        Card manorCard = new Card(District.TEMPLE);
+        Card castleCard = new Card(District.MANOR);
+        Card palaceCard = new Card(District.TAVERN);
+        Card laboratoryCard = new Card(District.CEMETERY);
+        // Add the Courtyard of miracle
+        Card courtyardOfMiracleCard = new Card(District.COURTYARD_OF_MIRACLE);
+        ArrayList<Card> citadel = new ArrayList<>(
+                List.of(manorCard, castleCard, palaceCard, laboratoryCard, courtyardOfMiracleCard)
+        );
+        when(spySmartBot.getCitadel()).thenReturn(citadel);
+        spySmartBot.chooseColorCourtyardOfMiracle();
+        assertEquals(DistrictType.SOLDIERLY, spySmartBot.getColorCourtyardOfMiracleType());
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Architect());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertInstanceOf(Architect.class, target);
+    }
+
+    @Test
+    void choseAssassinTargetWithTargetNotInList() {
+        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        when(architectPlayer.getCharacter()).thenReturn(new Bishop());
+        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer, merchantPlayer));
+
+        Character target = spySmartBot.choseAssassinTarget();
+
+        assertTrue(target instanceof Bishop || target instanceof Merchant);
     }
 
     @Test
@@ -315,7 +362,7 @@ class SmartBotTest {
         when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
         spySmartBot.architectTryToCompleteFiveDistrictTypes();
         //On vérifie que la méthode architectTryToCompleteFiveDistrictTypes est bien appelée
-         verify(spySmartBot,times(1)).architectTryToCompleteFiveDistrictTypes();
+        verify(spySmartBot,times(1)).architectTryToCompleteFiveDistrictTypes();
         //Ici il ne peut pas poser de district car il n'a plus de gold
         verify(view,atMost(1)).displayPlayerPlaysCard(any(),any());
     }
@@ -330,11 +377,5 @@ class SmartBotTest {
         spySmartBot.useEffectOfTheArchitect();
         verify(spySmartBot,atLeastOnce()).architectTryToCompleteFiveDistrictTypes();
     }
-
-
-
-
-
-
 
 }

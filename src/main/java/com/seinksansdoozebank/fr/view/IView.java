@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
@@ -32,4 +33,29 @@ public interface IView {
     void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName);
 
     void displayGameFinished();
+
+    /**
+     * Display the error message of a player action
+     *
+     * @param player  the player
+     * @param message the message to display
+     */
+    void displayPlayerError(Player player, String message);
+
+    /**
+     * Display the strategy of the player
+     * Here we use a function which take a message because the log level is fine and this will be the only function which log the strategy
+     *
+     * @param player  the player
+     * @param strategy the message to display
+     */
+    void displayPlayerStrategy(Player player, String strategy);
+
+    void displayPlayerUseAssasinEffect(Player player, Character target);
+
+    void displayUnusedCharacterInRound(Character character);
+
+    void displayStolenCharacter(Character character);
+
+    void displayActualNumberOfGold(Player player);
 }
