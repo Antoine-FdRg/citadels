@@ -17,6 +17,9 @@ public class GameFactory {
      * @return the game created
      */
     public static Game createGameOfRandomBot(IView view, int nbPlayers) {
+        if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
+            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+        }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addRandomBot();

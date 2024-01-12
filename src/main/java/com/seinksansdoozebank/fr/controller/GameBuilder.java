@@ -24,11 +24,15 @@ public class GameBuilder {
         this.deck = deck;
     }
 
+    int getPlayerListSize() {
+        return playerList.size();
+    }
+
     /**
      * Check if the number of players is not too high, if it is, throw an exception
      */
     void checkNbPlayers() {
-        if (playerList.size() > 6) {
+        if (getPlayerListSize() > 6) {
             throw new IllegalStateException("You can't add more than 6 players to the game");
         }
     }
@@ -58,8 +62,8 @@ public class GameBuilder {
      * @return the game built
      */
     public Game build() {
-        if (playerList.size() > Game.NB_PLAYER_MAX || playerList.size() < Game.NB_PLAYER_MIN) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+        if (playerList.size() < Game.NB_PLAYER_MIN) {
+            throw new IllegalStateException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
         }
         for (Player player : playerList) {
             List<Player> opponents = new ArrayList<>(playerList);
