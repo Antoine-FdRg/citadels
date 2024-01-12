@@ -110,6 +110,7 @@ class GameTest {
                 new King(),
                 new Bishop(),
                 new Merchant(),
+                new Architect(),
                 new Condottiere()
         );
 
@@ -149,13 +150,6 @@ class GameTest {
         when(p4.getScore()).thenReturn(6);
         gameWithFivePlayers.setPlayers(List.of(p1, p2, p3, p4));
         assertEquals(p3, gameWithFivePlayers.getWinner());
-    }
-
-    @Test
-    void createCharactersCreatesAsMuchCharactersAsWanted() {
-        gameWithFourPlayers.createCharacters();
-
-        assertEquals(charactersList.size(), gameWithFourPlayers.getAvailableCharacters().size());
     }
 
     @Test
@@ -211,7 +205,7 @@ class GameTest {
     void hasDifferentDistrictTypeTestWithPlayerHavingFiveTypesShouldReturnTrue() {
         //botWithFiveDifferentDistrictType
         gameWithThreePlayers.updatePlayersBonus();
-        assertTrue(gameWithThreePlayers.hasFiveDifferentDistrictTypes(playerWIthEightDistrictsAndFiveDistrictTypes));
+        assertTrue(playerWIthEightDistrictsAndFiveDistrictTypes.hasFiveDifferentDistrictTypes());
     }
 
     /**
@@ -221,7 +215,7 @@ class GameTest {
     void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
         //botWithLessThanFiveDifferentDistrictType
         gameWithThreePlayers.updatePlayersBonus();
-        assertFalse(gameWithThreePlayers.hasFiveDifferentDistrictTypes(playerWithNoBonus));
+        assertFalse(playerWithNoBonus.hasFiveDifferentDistrictTypes());
     }
 
     /**
@@ -296,13 +290,13 @@ class GameTest {
     @Test
     void testHasCourtyardOfMiracleAndItsNotTheLastCardPlaced() {
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(false);
-        assertTrue(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        assertTrue(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard());
     }
 
     @Test
     void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
-        assertFalse(gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        assertFalse(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard());
     }
 
     @Test
@@ -342,17 +336,14 @@ class GameTest {
         gameWithFourPlayers.createCharacters();
         assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-        verify(view, times(charactersList.size()-5)).displayUnusedCharacterInRound(any(Character.class));
+        verify(view, times(charactersList.size() - 5)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithFivePlayers() {
-        assertThrows(UnsupportedOperationException.class, () -> gameWithFivePlayers.createCharacters());
-//        TODO UNCOMMENT these lines when a sixth character is added and remove the assertThrows one
-//        gameWithFivePlayers.createCharacters();
-//        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, times(charactersList.size()-6)).displayUnusedCharacterInRound(any(Character.class));
+        gameWithFivePlayers.createCharacters();
+        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
+        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test

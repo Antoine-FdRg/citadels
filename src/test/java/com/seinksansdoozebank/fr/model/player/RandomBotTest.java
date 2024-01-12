@@ -117,7 +117,7 @@ class RandomBotTest {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
         spyRandomBot.pickTwoCardKeepOneDiscardOne();
 
-        verify(view, times(1)).displayPlayerPickCard(spyRandomBot);
+        verify(view, times(1)).displayPlayerPickCards(spyRandomBot,1);
 
         verify(deck, times(2)).pick();
         assertEquals(handSizeBeforePicking + 1, spyRandomBot.getHand().size());

@@ -239,4 +239,13 @@ class PlayerTest {
         when(spyPlayer.getCitadel()).thenReturn(citadelle);
         assertFalse(spyPlayer.canPlayCard(new Card(District.PALACE)));
     }
+
+    @Test
+    void playCardWithAGivenCard(){
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
+        spyPlayer.playCard(new Card(District.TEMPLE));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
+    }
 }

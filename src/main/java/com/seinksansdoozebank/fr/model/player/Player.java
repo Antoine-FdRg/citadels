@@ -55,6 +55,43 @@ public abstract class Player {
     protected abstract void pickSomething();
 
     /**
+     * if the bot has got in its citadel 5 different types of districts it returns true else return false
+     *
+     * @return a boolean
+     */
+    public boolean hasFiveDifferentDistrictTypes() {
+        List<DistrictType> listDifferentDistrictType = new ArrayList<>();
+        for (Card card : this.getCitadel()) {
+            if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
+                listDifferentDistrictType.add(card.getDistrict().getDistrictType());
+            }
+        }
+        // if there is 4 different district types and there is a courtyard of miracle in the citadel, we add the last district type
+        if (listDifferentDistrictType.size() == 4 && this.hasCourtyardOfMiracleAndItsNotTheLastCard()) {
+            listDifferentDistrictType.add(this.getColorCourtyardOfMiracleType());
+        }
+        return (listDifferentDistrictType.size() == 5);
+    }
+
+    public boolean hasCourtyardOfMiracleAndItsNotTheLastCard() {
+        return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                && !this.isLastCardPlacedCourtyardOfMiracle();
+    }
+
+
+    /**
+     * @return list of districtType missing in the citadel of the player
+     */
+    public List<DistrictType> findDistrictTypesMissingInCitadel(){
+        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
+        for(DistrictType districtType : DistrictType.values()){
+            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+                listOfDistrictTypeMissing.add(districtType);
+            }
+        }
+        return listOfDistrictTypeMissing;
+    }
+    /**
      * Represents the player's choice to draw 2 gold coins
      */
     protected final void pickGold() {
@@ -87,7 +124,7 @@ public abstract class Player {
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -114,11 +151,27 @@ public abstract class Player {
     }
 
     /**
+     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     *
+     * @return the district built by the player
+     */
+    public List<Card> playCard(Card card){
+        if(!canPlayCard(card)){
+            return List.of();
+        }
+        this.hand.remove(card);
+        this.citadel.add(card);
+        this.decreaseGold(card.getDistrict().getCost());
+        return List.of(card);
+    }
+
+    /**
      * Effect of architect character (pick 2 cards)
      */
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
+        view.displayPlayerPickCards(this,2);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -166,6 +167,7 @@ public class Game {
                 new Assassin(),
                 new Bishop(),
                 new Merchant(),
+                new Architect(),
                 new Condottiere()));
         if (nbPlayers > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
@@ -255,10 +257,10 @@ public class Game {
     public void updatePlayersBonus() {
         for (Player player : players) {
             // Check if the player contain the district COURTYARD_OF_MIRACLE
-            if (this.hasCourtyardOfMiracleAndItsNotTheLastCard(player)) {
+            if (player.hasCourtyardOfMiracleAndItsNotTheLastCard()) {
                 player.chooseColorCourtyardOfMiracle();
             }
-            if (hasFiveDifferentDistrictTypes(player)) {
+            if (player.hasFiveDifferentDistrictTypes()) {
                 player.addBonus(3);
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
@@ -274,30 +276,8 @@ public class Game {
         }
     }
 
-    protected boolean hasCourtyardOfMiracleAndItsNotTheLastCard(Player player) {
-        return player.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
-                && !player.isLastCardPlacedCourtyardOfMiracle();
-    }
 
-    /**
-     * if the bot has got in its citadel 5 different types of districts it returns true else return false
-     *
-     * @param player Player
-     * @return a boolean
-     */
-    public boolean hasFiveDifferentDistrictTypes(Player player) {
-        List<DistrictType> listDifferentDistrictType = new ArrayList<>();
-        for (Card card : player.getCitadel()) {
-            if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
-                listDifferentDistrictType.add(card.getDistrict().getDistrictType());
-            }
-        }
-        // if there is 4 different district types and there is a courtyard of miracle in the citadel, we add the last district type
-        if (listDifferentDistrictType.size() == 4 && this.hasCourtyardOfMiracleAndItsNotTheLastCard(player)) {
-            listDifferentDistrictType.add(player.getColorCourtyardOfMiracleType());
-        }
-        return (listDifferentDistrictType.size() == 5);
-    }
+
 
     /**
      * @param role
