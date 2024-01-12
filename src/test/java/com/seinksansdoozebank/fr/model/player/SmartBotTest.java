@@ -14,13 +14,11 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterEach;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.seinksansdoozebank.fr.model.cards.District.PORT_FOR_DRAGONS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -338,7 +336,7 @@ class SmartBotTest {
     void priceOfNumbersOfCardsTest(){
         List<Card> architectHand=new ArrayList<>(List.of(templeCard,barrackCard));
         when(spySmartBot.getHand()).thenReturn(architectHand);
-        assertEquals(4, spySmartBot.getPriceOfNumbersOfCards(2));
+        assertEquals(4, spySmartBot.getPriceOfNumbersOfCheaperCards(2));
     }
 
     @Test

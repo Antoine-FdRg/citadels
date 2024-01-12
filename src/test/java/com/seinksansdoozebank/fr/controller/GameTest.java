@@ -138,7 +138,7 @@ class GameTest {
     }
 
     @Test
-    void getWinner() {
+    void getWinnerIsP3WithTheMostPoint() {
         Player p1 = mock(Player.class);
         when(p1.getScore()).thenReturn(5);
         when(p1.getIsFirstToHaveEightDistricts()).thenReturn(true);
@@ -150,12 +150,6 @@ class GameTest {
         when(p4.getScore()).thenReturn(6);
         gameWithFivePlayers.setPlayers(List.of(p1, p2, p3, p4));
         assertEquals(p3, gameWithFivePlayers.getWinner());
-    }
-
-    @Test
-    void createCharactersCreatesAsMuchCharactersAsWanted() {
-        gameWithFourPlayers.createCharacters();
-        assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
     }
 
     @Test

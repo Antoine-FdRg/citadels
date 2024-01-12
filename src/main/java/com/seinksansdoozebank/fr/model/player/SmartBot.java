@@ -226,7 +226,7 @@ public class SmartBot extends Player {
         int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
         //On regarde s'il peut finir la partie en un coup en vérifiant si la citadelle a plus de 4 cartes, si dans sa main il a au moins 3 cartes
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
-        if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
+        if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
             view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         } else {
             //on vérifie s'il y a une merveille dans sa main, si oui et qu'il peut la jouer alors il le fait
@@ -248,7 +248,7 @@ public class SmartBot extends Player {
      * @param numberCards
      * @return the price of all the cards needed
      */
-    public int getPriceOfNumbersOfCards(int numberCards) {
+    public int getPriceOfNumbersOfCheaperCards(int numberCards) {
         this.getHand().sort(Comparator.comparing(card -> card.getDistrict().getCost()));
         return this.getHand().stream().limit(numberCards).mapToInt(card -> card.getDistrict().getCost()).sum();
     }
