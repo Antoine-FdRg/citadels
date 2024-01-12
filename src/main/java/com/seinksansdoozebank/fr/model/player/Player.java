@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -28,6 +29,8 @@ public abstract class Player {
     protected Random random = new Random();
     protected Character character;
     private final List<Player> opponents = new ArrayList<>();
+    private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -52,6 +55,43 @@ public abstract class Player {
     protected abstract void pickSomething();
 
     /**
+     * if the bot has got in its citadel 5 different types of districts it returns true else return false
+     *
+     * @return a boolean
+     */
+    public boolean hasFiveDifferentDistrictTypes() {
+        List<DistrictType> listDifferentDistrictType = new ArrayList<>();
+        for (Card card : this.getCitadel()) {
+            if (!listDifferentDistrictType.contains(card.getDistrict().getDistrictType())) {
+                listDifferentDistrictType.add(card.getDistrict().getDistrictType());
+            }
+        }
+        // if there is 4 different district types and there is a courtyard of miracle in the citadel, we add the last district type
+        if (listDifferentDistrictType.size() == 4 && this.hasCourtyardOfMiracleAndItsNotTheLastCard()) {
+            listDifferentDistrictType.add(this.getColorCourtyardOfMiracleType());
+        }
+        return (listDifferentDistrictType.size() == 5);
+    }
+
+    public boolean hasCourtyardOfMiracleAndItsNotTheLastCard() {
+        return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
+                && !this.isLastCardPlacedCourtyardOfMiracle();
+    }
+
+
+    /**
+     * @return list of districtType missing in the citadel of the player
+     */
+    public List<DistrictType> findDistrictTypesMissingInCitadel(){
+        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
+        for(DistrictType districtType : DistrictType.values()){
+            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+                listOfDistrictTypeMissing.add(districtType);
+            }
+        }
+        return listOfDistrictTypeMissing;
+    }
+    /**
      * Represents the player's choice to draw 2 gold coins
      */
     protected final void pickGold() {
@@ -66,30 +106,72 @@ public abstract class Player {
     protected abstract void pickTwoCardKeepOneDiscardOne();
 
     /**
+     * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
+     */
+    public final void pickACard() {
+        this.hand.add(this.deck.pick());
+    }
+
+    public final void discardACard(Card card) {
+        this.hand.remove(card);
+        this.deck.discard(card);
+    }
+
+    /**
      * Represents the phase where the player build a district chosen by chooseDistrict()
      *
      * @return the district built by the player
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
         this.hand.remove(chosenCard);
+        // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
+        this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
         this.decreaseGold(chosenCard.getDistrict().getCost());
         return optChosenCard;
     }
 
-    public Optional<List<Card>> playCards(int numberOfCards) {
-        Optional<List<Card>> cards = Optional.of(new ArrayList<>());
+    public List<Card> playCards(int numberOfCards) {
+        if (numberOfCards <= 0) {
+            throw new IllegalArgumentException("Number of cards to play must be positive");
+        } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
+            throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
+        }
+        List<Card> cards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
-            if (playACard().isPresent()) {
-                cards.get().add(playACard().get());
-            }
+            Optional<Card> card = playACard();
+            card.ifPresent(cards::add);
         }
         return cards;
+    }
+
+    /**
+     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     *
+     * @return the district built by the player
+     */
+    public List<Card> playCard(Card card){
+        if(!canPlayCard(card)){
+            return List.of();
+        }
+        this.hand.remove(card);
+        this.citadel.add(card);
+        this.decreaseGold(card.getDistrict().getCost());
+        return List.of(card);
+    }
+
+    /**
+     * Effect of architect character (pick 2 cards)
+     */
+    protected void useEffectArchitectPickCards() {
+        this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
+        view.displayPlayerPickCards(this,2);
     }
 
     /**
@@ -107,7 +189,7 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card);
+        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size()<8;
     }
 
     public void decreaseGold(int gold) {
@@ -141,7 +223,7 @@ public abstract class Player {
     /**
      * We add bonus with the final state of the game to a specific player
      *
-     * @param bonus
+     * @param bonus point to add to a player
      */
     public void addBonus(int bonus) {
         this.bonus += bonus;
@@ -193,16 +275,9 @@ public abstract class Player {
         }
         Character characterToRetrieve = this.character;
         this.character = null;
+        characterToRetrieve.resurrect();
         characterToRetrieve.setPlayer(null);
         return characterToRetrieve;
-    }
-
-    public boolean isTheKing() {
-        //TODO remove this if when player are able to choose a character
-        if (this.character == null) {
-            return false;
-        }
-        return Role.KING.equals(this.character.getRole());
     }
 
     @Override
@@ -226,4 +301,32 @@ public abstract class Player {
     public void setOpponents(List<Player> opponents) {
         this.opponents.addAll(opponents);
     }
+
+    public void switchHandWith(Player player) {
+        List<Card> handToSwitch = new ArrayList<>(this.getHand());
+        this.hand.clear();
+        this.hand.addAll(player.getHand());
+        player.hand.clear();
+        player.hand.addAll(handToSwitch);
+    }
+
+    public abstract void chooseColorCourtyardOfMiracle();
+
+    public boolean isLastCardPlacedCourtyardOfMiracle() {
+        return this.lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public void setLastCardPlacedCourtyardOfMiracle(boolean lastCardPlacedCourtyardOfMiracle) {
+        this.lastCardPlacedCourtyardOfMiracle = lastCardPlacedCourtyardOfMiracle;
+    }
+
+    public DistrictType getColorCourtyardOfMiracleType() {
+        return this.colorCourtyardOfMiracleType;
+    }
+
+    public void setColorCourtyardOfMiracleType(DistrictType colorCourtyardOfMiracleType) {
+        this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
+    }
+
+
 }

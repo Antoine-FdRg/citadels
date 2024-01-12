@@ -1,6 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
-import com.seinksansdoozebank.fr.model.cards.District;
+
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
@@ -8,6 +8,7 @@ public abstract class Character {
     private Player player;
     private final Role role;
     private boolean isDead = false;
+    private Player savedThief ;
 
     protected Character(Role role) {
         this.role = role;
@@ -28,16 +29,10 @@ public abstract class Character {
 
     @Override
     public boolean equals(Object obj) {
-    	if (obj == null) {
-    		return false;
-    	}
-    	if (obj == this) {
-    		return true;
-    	}
-    	if (!(obj instanceof Character character)) {
-    		return false;
-    	}
-        return this.toString().equals(character.toString());
+        if (this == obj) {
+            return true;
+        }
+        return (obj instanceof Character character) && this.toString().equals(character.toString());
     }
 
     @Override
@@ -65,5 +60,36 @@ public abstract class Character {
 
     public boolean isDead() {
         return this.isDead;
+    }
+    public void resurrect() {
+        this.isDead = false;
+    }
+
+    /**
+     * @param player
+     */
+    public void setSavedThief(Player player) {
+        savedThief=player;
+    }
+
+
+    /**
+     * getter
+     * @return a player
+     */
+    public Player getSavedThief() {
+        return savedThief;
+    }
+
+
+    /**
+     * this method decrease the number of gold of the character which is stolen and
+     * refreshes the attribute goldWillBeStolen
+     */
+    public void isStolen() {
+        //We add the number of gold stolen to the number of gold of the thief
+        getSavedThief().increaseGold(this.getPlayer().getNbGold());
+        this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
+        this.setSavedThief(null);
     }
 }

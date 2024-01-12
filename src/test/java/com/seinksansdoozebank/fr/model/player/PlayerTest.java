@@ -4,13 +4,11 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,7 +85,6 @@ class PlayerTest {
         assertFalse(spyPlayer.canPlayCard(tooExpensiveCard));
     }
 
-    @Disabled("This test is not working because we are adding some cards to the citadel with add method, by the way, we don't see the goal of this test")
     @Test
     void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
@@ -132,31 +129,6 @@ class PlayerTest {
     }
 
     @Test
-    void isTheKingWithAPlayerBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new King());
-
-        player.chooseCharacter(characters);
-
-        assertTrue(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerNotBeingTheKing() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-
-        player.chooseCharacter(characters);
-
-        assertFalse(player.isTheKing());
-    }
-
-    @Test
-    void isTheKingWithAPlayerWithNoCharacter() {
-        assertFalse(player.isTheKing());
-    }
-
-    @Test
     void retrieveCharacter() {
         List<Character> characters = new ArrayList<>();
         Character condottiere = new Condottiere();
@@ -181,5 +153,99 @@ class PlayerTest {
         spyPlayer.addBonus(4);
         int sum = (new Card(District.PORT)).getDistrict().getCost() + (new Card(District.PALACE)).getDistrict().getCost() + spyPlayer.getBonus();
         assertEquals(sum, spyPlayer.getScore());
+    }
+
+    @Test
+    void pickACard() {
+        int handSize = spyPlayer.hand.size();
+        this.spyPlayer.pickACard();
+        assertEquals(handSize + 1, spyPlayer.hand.size());
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithTwoFilledHand() {
+        spyPlayer.hand.add(cardCostFive);
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        otherPlayer.hand.add(cardCostThree);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertEquals(cardCostThree, spyPlayer.hand.get(0));
+        assertEquals(cardCostFive, otherPlayer.hand.get(0));
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithOneFilledHand() {
+        spyPlayer.hand.add(cardCostFive);
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertEquals(cardCostFive, otherPlayer.hand.get(0));
+        assertTrue(spyPlayer.hand.isEmpty());
+    }
+
+    @Test
+    void switchHandBetweenTwoPlayersWithTwoEmptyHand() {
+        RandomBot otherPlayer = new RandomBot(10, deck, view);
+
+        spyPlayer.switchHandWith(otherPlayer);
+
+        assertTrue(spyPlayer.hand.isEmpty());
+        assertTrue(otherPlayer.hand.isEmpty());
+    }
+
+    @Test
+    void discardACard() {
+        spyPlayer.hand.add(cardCostFive);
+        spyPlayer.discardACard(cardCostFive);
+        assertTrue(spyPlayer.hand.isEmpty());
+        verify(deck, times(1)).discard(cardCostFive);
+    }
+
+    @Test
+    void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
+        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
+
+        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyPlayer.play();
+
+        // assert between 2 and 3 districts are gained
+        assertTrue(spyPlayer.getHand().size() >= 2 && spyPlayer.getHand().size() <= 3);
+    }
+
+    @Test
+    void playCardsWithUncorrectBoundaries() {
+        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(-1));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(0));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
+    }
+
+    /**
+     * We verify if a player has already 8 districts then he can't play another card
+     */
+    @Test
+    void canPlayCardWhenAlreadyHaveEightDistrict(){
+        List<Card> citadelle=new ArrayList<>(List.of(new Card(District.PALACE),
+                new Card(District.MANOR),
+                new Card(District.BARRACK),
+                new Card(District.OBSERVATORY),
+                new Card(District.UNIVERSITY),
+                new Card(District.CORNER_SHOP),
+                new Card(District.CASTLE),
+                new Card(District.LIBRARY)));
+        when(spyPlayer.getCitadel()).thenReturn(citadelle);
+        assertFalse(spyPlayer.canPlayCard(new Card(District.PALACE)));
+    }
+
+    @Test
+    void playCardWithAGivenCard(){
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
+        spyPlayer.playCard(new Card(District.TEMPLE));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
 }

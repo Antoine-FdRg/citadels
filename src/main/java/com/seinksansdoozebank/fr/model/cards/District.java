@@ -109,6 +109,6 @@ public enum District implements Comparable<District> {
      */
     @Override
     public String toString(){
-        return "Le/la : "+ this.name + ", son type : " + this.districtType+ ", son coût :  "+this.cost+" pièces d'or";
+        return "Le/la : " + this.name + ", son type : " + this.districtType + ", son coût :  " + this.cost + " pièces d''or";
     }
 }
