@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.seinksansdoozebank.fr.model.cards.District.PORT_FOR_DRAGONS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,6 +37,7 @@ class SmartBotTest {
     Card barrackCard;
     Card cardManor;
     Card cardPort;
+    Card dracoport;
 
     @BeforeEach
     void setup() {
@@ -48,6 +50,7 @@ class SmartBotTest {
         barrackCard=new Card(District.BARRACK);
          cardPort=new Card(District.PORT);
          cardManor=new Card(District.MANOR);
+         dracoport=new  Card(District.PORT_FOR_DRAGONS);
     }
 
     @Test
@@ -376,6 +379,35 @@ class SmartBotTest {
         when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
         spySmartBot.useEffectOfTheArchitect();
         verify(spySmartBot,atLeastOnce()).architectTryToCompleteFiveDistrictTypes();
+    }
+
+    /**
+     * On vérifie que le smartBot joue bien la prestige qu'il a dans sa main  si il n'a pas 5 cartes dans sa citadelle
+     */
+    @Test
+    void useEffectOfTheArchitectWhenHasAPrestigeCardTest(){
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> architectHand=new ArrayList<>(List.of(dracoport,cardPort));
+        List<Card> architectCitadelle=spy(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
+        when(spySmartBot.getHand()).thenReturn(architectHand);
+        when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
+        spySmartBot.useEffectOfTheArchitect();
+        verify(view,times(1)).displayPlayerPlaysCard(spySmartBot, new ArrayList<>(List.of(dracoport)) );
+    }
+
+    /**
+     * On vérifie que le samrtBot ne joue pas la carte prestige qu'il a dans sa main car il n'a pas assez d'argent
+     */
+    @Test
+    void useEffectOfTheArchitectWhenHasAPrestigeCardButCantPlayItTest(){
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> architectHand=new ArrayList<>(List.of(dracoport,cardPort));
+        List<Card> architectCitadelle=spy(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
+        when(spySmartBot.getHand()).thenReturn(architectHand);
+        when(spySmartBot.getCitadel()).thenReturn(architectCitadelle);
+        spySmartBot.decreaseGold(5);
+        spySmartBot.useEffectOfTheArchitect();
+        verify(view,times(0)).displayPlayerPlaysCard(spySmartBot, new ArrayList<>(List.of(dracoport)) );
     }
 
 }

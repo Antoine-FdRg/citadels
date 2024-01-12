@@ -226,12 +226,12 @@ public class SmartBot extends Player {
         int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
         //On regarde s'il peut finir la partie en un coup en vérifiant si la citadelle a plus de 4 cartes, si dans sa main il a au moins 3 cartes
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
-        if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && priceOfNumbersOfCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
+        if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
             view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         } else {
             //on vérifie s'il y a une merveille dans sa main, si oui et qu'il peut la jouer alors il le fait
-            Optional<Card> prestigeCard = this.hand.stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
-            if (prestigeCard.isPresent() && !canPlayCard(prestigeCard.get())) {
+            Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
+            if (prestigeCard.isPresent() && canPlayCard(prestigeCard.get())) {
                 view.displayPlayerPlaysCard(this, playCard(prestigeCard.get()));
             } else if (!this.hasFiveDifferentDistrictTypes()) {
                 //il cherche à avoir les 5 districts de couleur dans sa citadelle sinon
@@ -243,17 +243,14 @@ public class SmartBot extends Player {
         }
     }
 
+
     /**
      * @param numberCards
      * @return the price of all the cards needed
      */
-    private int priceOfNumbersOfCards(int numberCards) {
+    public int getPriceOfNumbersOfCards(int numberCards) {
         this.getHand().sort(Comparator.comparing(card -> card.getDistrict().getCost()));
         return this.getHand().stream().limit(numberCards).mapToInt(card -> card.getDistrict().getCost()).sum();
-    }
-
-    public int getPriceOfNumbersOfCards(int numbersCards) {
-        return priceOfNumbersOfCards(numbersCards);
     }
 
     /**
