@@ -68,6 +68,7 @@ public class Game {
         this.init();
         this.nbCurrentRound = 1;
         while (!finished) {
+            createCharacters();
             this.playARound();
         }
         view.displayGameFinished();
@@ -79,7 +80,6 @@ public class Game {
      * Play a round
      */
     protected void playARound() {
-        createCharacters();
         view.displayRound(nbCurrentRound);
         orderPlayerBeforeChoosingCharacter();
         playersChooseCharacters();

@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -266,6 +265,7 @@ class GameTest {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
