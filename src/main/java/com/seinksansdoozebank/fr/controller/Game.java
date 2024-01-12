@@ -79,6 +79,7 @@ public class Game {
      * Play a round
      */
     protected void playARound() {
+        createCharacters();
         view.displayRound(nbCurrentRound);
         orderPlayerBeforeChoosingCharacter();
         playersChooseCharacters();
@@ -152,7 +153,6 @@ public class Game {
      */
     protected void init() {
         dealCards();
-        createCharacters();
     }
 
     /**
