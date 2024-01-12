@@ -223,6 +223,23 @@ class PlayerTest {
         assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
     }
 
+    /**
+     * We verify if a player has already 8 districts then he can't play another card
+     */
+    @Test
+    void canPlayCardWhenAlreadyHaveEightDistrict(){
+        List<Card> citadelle=new ArrayList<>(List.of(new Card(District.PALACE),
+                new Card(District.MANOR),
+                new Card(District.BARRACK),
+                new Card(District.OBSERVATORY),
+                new Card(District.UNIVERSITY),
+                new Card(District.CORNER_SHOP),
+                new Card(District.CASTLE),
+                new Card(District.LIBRARY)));
+        when(spyPlayer.getCitadel()).thenReturn(citadelle);
+        assertFalse(spyPlayer.canPlayCard(new Card(District.PALACE)));
+    }
+
     @Test
     void playCardWithAGivenCard(){
         spyPlayer.getHand().add(new Card(District.TEMPLE));
