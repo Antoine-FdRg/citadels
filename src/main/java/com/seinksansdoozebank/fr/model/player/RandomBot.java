@@ -9,8 +9,10 @@ import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
-        if(this.getCharacter().isDead()){
+        if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
         view.displayPlayerStartPlaying(this);
@@ -61,7 +63,7 @@ public class RandomBot extends Player {
 
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this,1);
+        this.view.displayPlayerPickCards(this, 1);
         Card card1 = this.deck.pick();
         Card card2 = this.deck.pick();
         if (random.nextBoolean()) {
@@ -109,6 +111,13 @@ public class RandomBot extends Player {
             this.useEffectArchitectPickCards();
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
+        } else if (this.character instanceof Thief thief) {
+            Optional<Player> victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole()!= Role.ASSASSIN).findFirst();
+            victim.ifPresent(player -> {
+                thief.useEffect(player.getCharacter());
+                view.displayThiefAction();
+            });
+
         }
     }
 
@@ -123,7 +132,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this, playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
@@ -165,6 +174,10 @@ public class RandomBot extends Player {
                 .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 .findFirst()
                 .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
+    }
+
+    public void useEffectOfTheThief() {
+
     }
 
     @Override

@@ -58,4 +58,6 @@ public interface IView {
     void displayStolenCharacter(Character character);
 
     void displayActualNumberOfGold(Player player);
+
+    void displayThiefAction();
 }

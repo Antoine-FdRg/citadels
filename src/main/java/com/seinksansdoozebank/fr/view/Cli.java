@@ -157,4 +157,8 @@ public class Cli implements IView {
     public void displayActualNumberOfGold(Player player){
         CustomLogger.log(Level.INFO,"Le {0} a maintenant {1} pièces d''or.", new Object[]{ player.getCharacter(), player.getNbGold() });
     }
+
+    public void displayThiefAction(){
+        CustomLogger.log(Level.INFO,"Il vient d''appliquer son pouvoir.");
+    }
 }
