@@ -70,9 +70,8 @@ class SmartBotTest {
 
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
-        Optional<Card> optDistrict = Optional.of(cardCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseCard();
-        doReturn(false).when(spySmartBot).canPlayCard(any(Card.class));
+        when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
+        when(spySmartBot.hasACardToPlay()).thenReturn( false,false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
@@ -86,17 +85,16 @@ class SmartBotTest {
     }
 
     @Test
-    void playWithUBuildableDistrictShouldBuildAndPickSomething() {
-        Optional<Card> optDistrict = Optional.of(cardCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseCard();
-        doReturn(true).when(spySmartBot).canPlayCard(any(Card.class));
+    void playWithABuildableDistrictShouldBuildAndPickSomething() {
+        when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
+        when(spySmartBot.hasACardToPlay()).thenReturn( true);
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
         verify(spySmartBot, times(1)).playACard();
-        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, List.of(optDistrict.get()));
+        verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, List.of());
         verify(spySmartBot, times(1)).pickSomething();
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
     }

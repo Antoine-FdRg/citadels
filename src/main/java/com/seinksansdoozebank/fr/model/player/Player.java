@@ -9,6 +9,7 @@ import java.util.List;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -141,12 +142,12 @@ public abstract class Player {
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        List<Card> cards = new ArrayList<>();
+        List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(cards::add);
+            card.ifPresent(playedCards::add);
         }
-        return cards;
+        return playedCards;
     }
 
     /**
@@ -164,6 +165,16 @@ public abstract class Player {
         return List.of(card);
     }
 
+
+    /**
+     * Collect gold with the effect of the character if it is a common character
+     */
+    void useCommonCharacterEffect() {
+        if (this.character instanceof CommonCharacter commonCharacter) {
+            commonCharacter.goldCollectedFromDisctrictType();
+        }
+    }
+
     /**
      * Effect of architect character (pick 2 cards)
      */
@@ -173,9 +184,12 @@ public abstract class Player {
         view.displayPlayerPickCards(this,2);
     }
 
+    protected boolean hasACardToPlay(){
+        return this.hand.stream().anyMatch(this::canPlayCard);
+    }
+
     /**
      * Choose a district to build from the hand
-     * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
      *
      * @return the district to build
      */
