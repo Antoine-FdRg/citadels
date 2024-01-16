@@ -335,9 +335,9 @@ class GameTest {
     @Test
     void createCharactersWithFourPlayers() {
         gameWithFourPlayers.createCharacters();
-        assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
+        assertEquals(4, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-        verify(view, times(charactersList.size() - 5)).displayUnusedCharacterInRound(any(Character.class));
+        verify(view, times(charactersList.size() - 4)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
