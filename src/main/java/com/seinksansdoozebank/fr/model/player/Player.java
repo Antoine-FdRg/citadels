@@ -2,18 +2,12 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Player {
     private static int counter = 1;
@@ -81,15 +75,16 @@ public abstract class Player {
     /**
      * @return list of districtType missing in the citadel of the player
      */
-    public List<DistrictType> findDistrictTypesMissingInCitadel(){
-        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
-        for(DistrictType districtType : DistrictType.values()){
-            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+    public List<DistrictType> findDistrictTypesMissingInCitadel() {
+        List<DistrictType> listOfDistrictTypeMissing = new ArrayList<>();
+        for (DistrictType districtType : DistrictType.values()) {
+            if (this.getCitadel().stream().anyMatch(card -> card.getDistrict().getDistrictType() == districtType)) {
                 listOfDistrictTypeMissing.add(districtType);
             }
         }
         return listOfDistrictTypeMissing;
     }
+
     /**
      * Represents the player's choice to draw 2 gold coins
      */
@@ -123,7 +118,7 @@ public abstract class Player {
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -144,23 +139,27 @@ public abstract class Player {
         List<Card> cards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(cards::add);
+            if (card.isPresent()) {
+                card.ifPresent(cards::add);
+                this.view.displayPlayerPlaysCard(this, card.get());
+            }
         }
         return cards;
     }
 
     /**
-     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
      *
      * @return the district built by the player
      */
-    public List<Card> playCard(Card card){
-        if(!canPlayCard(card)){
+    public List<Card> playCard(Card card) {
+        if (!canPlayCard(card)) {
             return List.of();
         }
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
+        this.view.displayPlayerPlaysCard(this, card);
         return List.of(card);
     }
 
@@ -170,7 +169,7 @@ public abstract class Player {
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this,2);
+        view.displayPlayerPickCards(this, 2);
     }
 
     /**
@@ -188,7 +187,7 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size()<8;
+        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
     }
 
     public void decreaseGold(int gold) {

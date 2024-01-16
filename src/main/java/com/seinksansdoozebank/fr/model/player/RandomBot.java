@@ -25,7 +25,7 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
-        if(this.getCharacter().isDead()){
+        if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
         view.displayPlayerStartPlaying(this);
@@ -39,11 +39,11 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickSomething();
             if (nbDistrictsToBuild > 0) {
-                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+                this.playCards(nbDistrictsToBuild);
             }
         } else {
             if (nbDistrictsToBuild > 0) {
-                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+                this.playCards(nbDistrictsToBuild);
             }
             pickSomething();
         }
@@ -61,7 +61,7 @@ public class RandomBot extends Player {
 
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this,1);
+        this.view.displayPlayerPickCards(this, 1);
         Card card1 = this.deck.pick();
         Card card2 = this.deck.pick();
         if (random.nextBoolean()) {
@@ -123,7 +123,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this, playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
