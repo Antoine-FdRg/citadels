@@ -111,7 +111,8 @@ class GameTest {
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere()
+                new Condottiere(),
+                new Thief()
         );
 
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view));
@@ -342,19 +343,17 @@ class GameTest {
     @Test
     void createCharactersWithFivePlayers() {
         gameWithFivePlayers.createCharacters();
-        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
-        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
+        assertEquals(5, gameWithFivePlayers.getAvailableCharacters().size());
+        verify(view, times(charactersList.size() - 5)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithSixPlayers() {
         Game gameWithSixPlayers = new Game(6, view);
-        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line when a sixth character is added and remove the assertThrows one
-//        gameWithSixPlayers.createCharacters();
-//        assertEquals(7, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, times(charactersList.size()-7)).displayUnusedCharacterInRound(any(Character.class));
+        gameWithSixPlayers.createCharacters();
+        assertEquals(6, gameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(charactersList.size()-6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**

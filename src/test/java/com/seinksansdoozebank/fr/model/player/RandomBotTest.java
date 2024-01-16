@@ -10,6 +10,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -202,6 +203,44 @@ class RandomBotTest {
         verify(spyRandomBot, times(1)).useEffect();
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
+
+    /**
+     * On vérifie que le randomBot qui est un voleur utilise son effet sur son opposant.
+     */
+     @Test
+    void randomBotUseEffectOfTheThiefTest(){
+        Player player = spy(new RandomBot(2, deck, view));
+         Thief thief = spy(new Thief());
+         thief.setPlayer(spyRandomBot);
+         Bishop bishop=spy(new Bishop());
+         bishop.setPlayer(player);
+         List<Player> opponents=new ArrayList<>(List.of(player));
+         when(spyRandomBot.getOpponents()).thenReturn(opponents);
+         when(spyRandomBot.getCharacter()).thenReturn(thief);
+         when(player.getCharacter()).thenReturn(bishop);
+         spyRandomBot.useEffect();
+         verify(view,times(1)).displayPlayerAction(spyRandomBot);
+    }
+
+    /**
+     * On vérifie que le randomBot qui est un voleur ne peut pas utiliser l'effet sur un assassin.
+     */
+    @Test
+    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest(){
+        Player player = spy(new RandomBot(2, deck, view));
+        Thief thief = spy(new Thief());
+        thief.setPlayer(spyRandomBot);
+        Assassin assassin=spy(new Assassin());
+        assassin.setPlayer(player);
+        List<Player> opponents=new ArrayList<>(List.of(player));
+        when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(spyRandomBot.getCharacter()).thenReturn(thief);
+        when(player.getCharacter()).thenReturn(assassin);
+        spyRandomBot.useEffect();
+        verify(view,times(0)).displayPlayerAction(spyRandomBot);
+    }
+
+
 
 
 }
