@@ -1,9 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
-import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -225,13 +222,6 @@ public class Game {
     }
 
     /**
-     * @return the list of players
-     */
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    /**
      * Get the characters that are still available.
      *
      * @return the list of characters available
@@ -282,7 +272,7 @@ public class Game {
 
 
     /**
-     * @param role
+     * @param role the role of the player we want to get
      * @return an optional of Player with the given role
      */
     public Optional<Player> getPlayerByRole(Role role) {
@@ -298,16 +288,15 @@ public class Game {
     /**
      * we apply this if the player has savedThief==true
      *
-     * @param player
-     * @return a boolean
+     * @param player player to check
      */
     public void checkPlayerStolen(Player player) {
         if (player.getCharacter().getSavedThief() != null) {
             view.displayStolenCharacter(player.getCharacter());
             player.getCharacter().isStolen();
-            if (getPlayerByRole(Role.THIEF).isPresent()) {
-                view.displayActualNumberOfGold(getPlayerByRole(Role.THIEF).get());
-            }
+            view.displayStolenCharacter(player.getCharacter());
+            Optional<Player> playerByRole = getPlayerByRole(Role.THIEF);
+            playerByRole.ifPresent(view::displayActualNumberOfGold);
         }
     }
 }

@@ -13,7 +13,7 @@ import java.util.logging.Level;
 
 public class Cli implements IView {
 
-    String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
+    static final String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
 
     @Override
     public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {

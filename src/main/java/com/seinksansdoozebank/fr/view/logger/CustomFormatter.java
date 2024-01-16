@@ -6,12 +6,12 @@ import java.util.logging.LogRecord;
 
 public class CustomFormatter extends Formatter {
     @Override
-    public String format(LogRecord record) {
-        Object[] params = record.getParameters();
+    public String format(LogRecord logRecord) {
+        Object[] params = logRecord.getParameters();
         if (params != null && params.length > 0) {
-            return MessageFormat.format(record.getMessage(), params) + "\n";
+            return MessageFormat.format(logRecord.getMessage(), params) + "\n";
         } else {
-            return record.getMessage() + "\n";
+            return logRecord.getMessage() + "\n";
         }
     }
 }

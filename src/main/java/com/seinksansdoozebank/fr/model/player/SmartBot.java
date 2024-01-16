@@ -183,7 +183,7 @@ public class SmartBot extends Player {
             view.displayPlayerUseAssasinEffect(this,target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
-        else if (this.character instanceof Condottiere condottiere) {
+        else if (this.character instanceof Condottiere) {
             useEffectOfTheCondottiere();
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
@@ -245,7 +245,7 @@ public class SmartBot extends Player {
 
 
     /**
-     * @param numberCards
+     * @param numberCards the number of cards needed
      * @return the price of all the cards needed
      */
     public int getPriceOfNumbersOfCheaperCards(int numberCards) {

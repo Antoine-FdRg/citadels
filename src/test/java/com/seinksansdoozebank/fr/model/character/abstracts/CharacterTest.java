@@ -9,23 +9,13 @@ import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public class CharacterTest {
+class CharacterTest {
 
-    private Thief thief;
     private Merchant merchant;
-    private List<Player> listOfPlayer;
-
     private Player thiefPlayer;
     private Player merchantPlayer;
     @Mock
@@ -36,7 +26,7 @@ public class CharacterTest {
         //Création d'un player de type voleur
         Deck thiefDeck = new Deck();
         thiefPlayer = spy(new RandomBot(5, thiefDeck, view));
-        thief = new Thief();
+        Thief thief = new Thief();
         when(thiefPlayer.getCharacter()).thenReturn(thief);
         thief.setPlayer(thiefPlayer);
 
@@ -47,8 +37,6 @@ public class CharacterTest {
         when(merchantPlayer.getCharacter()).thenReturn(merchant);
         merchant.setPlayer(merchantPlayer);
         when(merchant.getSavedThief()).thenReturn(thiefPlayer);
-
-        listOfPlayer = new ArrayList<>(List.of(merchantPlayer, thiefPlayer));
     }
 
     /**
