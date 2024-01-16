@@ -47,7 +47,18 @@ public abstract class Player {
      * Represents the player's turn
      * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
      */
-    public abstract void play();
+    public void play() {
+        if (this.getCharacter().isDead()) {
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
+        view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
+        view.displayPlayerInfo(this);
+        this.playTheRound();
+        view.displayPlayerInfo(this);
+    }
+
+    public abstract void playTheRound();
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district
@@ -82,15 +93,16 @@ public abstract class Player {
     /**
      * @return list of districtType missing in the citadel of the player
      */
-    public List<DistrictType> findDistrictTypesMissingInCitadel(){
-        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
-        for(DistrictType districtType : DistrictType.values()){
-            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+    public List<DistrictType> findDistrictTypesMissingInCitadel() {
+        List<DistrictType> listOfDistrictTypeMissing = new ArrayList<>();
+        for (DistrictType districtType : DistrictType.values()) {
+            if (this.getCitadel().stream().anyMatch(card -> card.getDistrict().getDistrictType() == districtType)) {
                 listOfDistrictTypeMissing.add(districtType);
             }
         }
         return listOfDistrictTypeMissing;
     }
+
     /**
      * Represents the player's choice to draw 2 gold coins
      */
@@ -124,7 +136,7 @@ public abstract class Player {
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -151,12 +163,12 @@ public abstract class Player {
     }
 
     /**
-     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
      *
      * @return the district built by the player
      */
-    public List<Card> playCard(Card card){
-        if(!canPlayCard(card)){
+    public List<Card> playCard(Card card) {
+        if (!canPlayCard(card)) {
             return List.of();
         }
         this.hand.remove(card);
@@ -181,10 +193,10 @@ public abstract class Player {
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this,2);
+        view.displayPlayerPickCards(this, 2);
     }
 
-    protected boolean hasACardToPlay(){
+    protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);
     }
 
@@ -202,7 +214,7 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size()<8;
+        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
     }
 
     public void decreaseGold(int gold) {

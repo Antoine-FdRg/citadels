@@ -34,13 +34,7 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public void play() {
-        if (this.getCharacter().isDead()) {
-            throw new IllegalStateException("The player is dead, he can't play.");
-        }
-        view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
-        view.displayPlayerInfo(this);
+    public void playTheRound() {
         this.useEffect();
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
@@ -48,7 +42,6 @@ public class SmartBot extends Player {
             this.pickTwoCardKeepOneDiscardOne(); //
             view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         }
-        view.displayPlayerInfo(this);
     }
 
     private void playWhenHandIsNotEmpty() {

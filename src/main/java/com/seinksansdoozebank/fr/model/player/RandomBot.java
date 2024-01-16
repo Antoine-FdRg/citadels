@@ -23,13 +23,8 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void play() {
-        if(this.getCharacter().isDead()){
-            throw new IllegalStateException("The player is dead, he can't play.");
-        }
-        view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
-        view.displayPlayerInfo(this);
+    public void playTheRound() {
+
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
@@ -38,7 +33,6 @@ public class RandomBot extends Player {
         } else {
             this.playBeforePicking(nbDistrictsToBuild);
         }
-        view.displayPlayerInfo(this);
     }
 
     /**
