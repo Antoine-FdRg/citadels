@@ -111,11 +111,12 @@ public class RandomBot extends Player {
             this.useEffectArchitectPickCards();
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
-        } else if (this.character instanceof Thief thief) {
-            Optional<Player> victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole()!= Role.ASSASSIN).findFirst();
+        } else if (this.getCharacter() instanceof Thief thief) {
+            Optional<Player> victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
+                    !player.getCharacter().isDead()).findFirst();
             victim.ifPresent(player -> {
                 thief.useEffect(player.getCharacter());
-                view.displayThiefAction();
+                view.displayPlayerAction(this);
             });
 
         }
@@ -174,10 +175,6 @@ public class RandomBot extends Player {
                 .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 .findFirst()
                 .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
-    }
-
-    public void useEffectOfTheThief() {
-
     }
 
     @Override
