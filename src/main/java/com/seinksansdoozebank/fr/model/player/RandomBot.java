@@ -11,8 +11,10 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -25,7 +27,7 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
-        if(this.getCharacter().isDead()){
+        if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
         view.displayPlayerStartPlaying(this);
@@ -61,7 +63,7 @@ public class RandomBot extends Player {
 
     @Override
     protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this,1);
+        this.view.displayPlayerPickCards(this, 1);
         Card card1 = this.deck.pick();
         Card card2 = this.deck.pick();
         if (random.nextBoolean()) {
@@ -109,6 +111,42 @@ public class RandomBot extends Player {
             this.useEffectArchitectPickCards();
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
+        } else if (this.character instanceof Magician magician) {
+            this.useEffectMagician(magician);
+        }
+    }
+
+    /**
+     * The magician can exchange all it's card with another player or
+     * can exchange some card with the same number of cards with the deck
+     *
+     * @param magician the magician character
+     */
+    private void useEffectMagician(Magician magician) {
+        // get a value 0 or 1
+        boolean randomValue = random.nextBoolean();
+        // if the value is 0, the bot is not using the magician effect, else it is using it
+        if (randomValue) {
+            randomValue = random.nextBoolean();
+            // if true exchange all the card with a player
+            if (randomValue) {
+                // get a random player
+                Player playerToExchangeCards = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+                // exchange all the cards with the player
+                magician.useEffect(playerToExchangeCards, List.of());
+                this.view.displayPlayerUseMagicianEffect(this, playerToExchangeCards);
+                return;
+            }
+            // if false exchange some cards with the deck
+            // exchange some cards with the deck
+            int nbCardsToExchange = random.nextInt(this.getHand().size() + 1);
+            // Choose the cards from the district to exchange
+            Collections.shuffle(this.getHand());
+            List<Card> cardsToExchange = this.getHand().stream()
+                    .limit(nbCardsToExchange)
+                    .toList();
+            magician.useEffect(null, cardsToExchange);
+            this.view.displayPlayerUseMagicianEffect(this, null);
         }
     }
 
@@ -123,7 +161,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this, playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));

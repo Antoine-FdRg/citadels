@@ -11,14 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class MagicianTest {
 
@@ -30,12 +25,17 @@ class MagicianTest {
     Card firstPickedCard;
     Card secondPickedCard;
 
+    Card firstExchangeCard;
+    Card secondExchangeCard;
+
     @BeforeEach
     void setUp() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
         firstPickedCard = new Card(District.DONJON);
         secondPickedCard = new Card(District.FORTRESS);
+        firstExchangeCard = new Card(District.CEMETERY);
+        secondExchangeCard = new Card(District.CASTLE);
         spyPlayer = spy(new RandomBot(2, deck, view));
         otherSpyPlayer = spy(new RandomBot(2, deck, view));
         magician = new Magician();
@@ -45,8 +45,13 @@ class MagicianTest {
 
     @Test
     void useEffectSwitchHandWithPlayer() {
-        ((Magician) spyPlayer.getCharacter()).useEffect(Optional.of(otherSpyPlayer));
+        List<Card> handSave = spyPlayer.getHand();
+        List<Card> otherHandSave = otherSpyPlayer.getHand();
+        ((Magician) spyPlayer.getCharacter()).useEffect(otherSpyPlayer, null);
         verify(spyPlayer, times(1)).switchHandWith(otherSpyPlayer);
+        // Check that the other player has the same hand as the ancient hand spyPlayer
+        assertEquals(handSave, otherSpyPlayer.getHand());
+        assertEquals(otherHandSave, spyPlayer.getHand());
     }
 
     @Test
@@ -54,10 +59,16 @@ class MagicianTest {
         when(deck.pick()).thenReturn(firstPickedCard, secondPickedCard);
         spyPlayer.pickACard();
 
-        ((Magician) spyPlayer.getCharacter()).useEffect(Optional.empty());
+        // Set the player hand to the firstExchangeCard and secondExchangeCard
+        spyPlayer.getHand().add(firstExchangeCard);
+        spyPlayer.getHand().add(secondExchangeCard);
 
-        assertEquals(1, spyPlayer.getHand().size());
-        assertEquals(secondPickedCard, spyPlayer.getHand().get(0));
+        assertEquals(3, spyPlayer.getHand().size());
+
+        ((Magician) spyPlayer.getCharacter()).useEffect(null, List.of(firstExchangeCard, secondExchangeCard));
+
+        assertEquals(3, spyPlayer.getHand().size());
+        assertEquals(firstPickedCard, spyPlayer.getHand().get(0));
     }
 }
 
