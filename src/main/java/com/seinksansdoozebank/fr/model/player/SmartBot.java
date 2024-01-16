@@ -105,19 +105,23 @@ public class SmartBot extends Player {
         }
     }
 
+    /**
+     * Choose the cheaper card among those wich are not already ine teh citadel OR by trying to play a DistrictType not already in the citadel if it has a CommonCharacter
+     * @return the chosenCard
+     */
     @Override
     protected Optional<Card> chooseCard() {
+        //Gathering districts which are not already built in player's citadel
+        List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
         if (this.character instanceof CommonCharacter commonCharacter) {
             DistrictType target = commonCharacter.getTarget();
-            Optional<Card> optCard = this.hand.stream()
+            Optional<Card> optCard = notAlreadyPlayedCardList.stream()
                     .filter(card -> card.getDistrict().getDistrictType() == target) // filter the cards that are the same as the character's target
                     .min(Comparator.comparing(card -> card.getDistrict().getCost())); // choose the cheaper one
             if (optCard.isPresent()) {
                 return optCard;
             }
         }
-        //Gathering districts which are not already built in player's citadel
-        List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
         //Choosing the cheaper one
         return this.getCheaperCard(notAlreadyPlayedCardList);
     }
