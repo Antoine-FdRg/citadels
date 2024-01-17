@@ -168,14 +168,15 @@ public class Game {
                 new Merchant(),
                 new Architect(),
                 new Condottiere()));
-        if (nbPlayers > notMandatoryCharacters.size()) {
+        if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
         Collections.shuffle(notMandatoryCharacters);
         // the king must always be available
         availableCharacters.add(new King());
-        //adding as much characters as there are players because the king is already added and the rules say that the number of characters must be equal to the number of players +1
-        for (int i = 0; i < nbPlayers; i++) {
+        //adding as much characters as there are players because the king is already added and
+        // the rules say that the number of characters must be equal to the number of players +1
+        for (int i = 0; i < nbPlayers + 1; i++) {
             availableCharacters.add(notMandatoryCharacters.get(i));
         }
         //remove the characters that are available from the list of not mandatory characters
@@ -267,8 +268,6 @@ public class Game {
             view.displayPlayerScore(player);
         }
     }
-
-
 
 
     /**
