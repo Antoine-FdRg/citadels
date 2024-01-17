@@ -54,11 +54,11 @@ public abstract class Player {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
-        this.playTheRound();
+        this.playARound();
         view.displayPlayerInfo(this);
     }
 
-    public abstract void playTheRound();
+    public abstract void playARound();
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district

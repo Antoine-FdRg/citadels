@@ -34,7 +34,7 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public void playTheRound() {
+    public void playARound() {
         this.useEffect();
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();

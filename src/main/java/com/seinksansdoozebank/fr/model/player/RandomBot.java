@@ -23,8 +23,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void playTheRound() {
-
+    public void playARound() {
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
