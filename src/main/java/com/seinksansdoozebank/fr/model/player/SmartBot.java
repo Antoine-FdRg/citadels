@@ -180,7 +180,7 @@ public class SmartBot extends Player {
         } else if (this.character instanceof Assassin assassin) {
             Character target = this.choseAssassinTarget();
             assassin.useEffect(target);
-            view.displayPlayerUseAssasinEffect(this,target);
+            view.displayPlayerUseAssassinEffect(this,target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere) {

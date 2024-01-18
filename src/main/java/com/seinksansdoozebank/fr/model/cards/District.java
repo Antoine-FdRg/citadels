@@ -109,6 +109,9 @@ public enum District implements Comparable<District> {
      */
     @Override
     public String toString(){
-        return "Le/la : " + this.name + ", son type : " + this.districtType + ", son coût :  " + this.cost + " pièces d''or";
+        // TODO: check why using String is not formatting to UTF-8
+        StringBuilder sb = new StringBuilder();
+        sb.append("Le/la : ").append(this.name).append(", son type : ").append(this.districtType).append(", son coût :  ").append(this.cost).append(" pièces d'or");
+        return sb.toString();
     }
 }

@@ -6,7 +6,6 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IView {
     void displayPlayerInfo(Player player);
@@ -52,7 +51,7 @@ public interface IView {
      */
     void displayPlayerStrategy(Player player, String strategy);
 
-    void displayPlayerUseAssasinEffect(Player player, Character target);
+    void displayPlayerUseAssassinEffect(Player player, Character target);
 
     void displayUnusedCharacterInRound(Character character);
 

@@ -123,13 +123,10 @@ public class RandomBot extends Player {
      * @param magician the magician character
      */
     private void useEffectMagician(Magician magician) {
-        // get a value 0 or 1
-        boolean randomValue = random.nextBoolean();
         // if the value is 0, the bot is not using the magician effect, else it is using it
-        if (randomValue) {
-            randomValue = random.nextBoolean();
+        if (random.nextBoolean()) {
             // if true exchange all the card with a player
-            if (randomValue) {
+            if (random.nextBoolean()) {
                 // get a random player
                 Player playerToExchangeCards = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
                 // exchange all the cards with the player
@@ -161,7 +158,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssasinEffect(this, playerToKill.getCharacter());
+                view.displayPlayerUseAssassinEffect(this, playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
@@ -170,10 +167,8 @@ public class RandomBot extends Player {
     }
 
     void useEffectCondottiere(Condottiere condottiere) {
-        // get a value 0 or 1
-        boolean randomValue = random.nextBoolean();
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
-        if (randomValue) {
+        if (random.nextBoolean()) {
             // get a random player, and destroy a district of this player randomly
             Player playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             // if the player has no district, the bot will not use the condottiere effect
