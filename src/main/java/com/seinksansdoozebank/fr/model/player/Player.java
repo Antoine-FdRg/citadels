@@ -7,7 +7,11 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.view.IView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public abstract class Player {
     private static int counter = 1;
