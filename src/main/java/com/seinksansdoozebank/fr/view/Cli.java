@@ -15,17 +15,12 @@ public class Cli implements IView {
     static final String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
 
     @Override
-    public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
-        if (optionalCard.isEmpty()) {
-            CustomLogger.log(Level.INFO, "{0} ne pose pas de quartier. ", player);
-        } else {
-            for (Card card : optionalCard) {
-                District builtDistrict = card.getDistrict();
-                CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
-            }
-        }
+    public void displayPlayerPlaysCard(Player player, Card card) {
+        District builtDistrict = card.getDistrict();
+        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
     }
 
+    @Override
     public void displayWinner(Player winner) {
         CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
@@ -57,7 +52,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or'.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or''.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
     }
 
     @Override

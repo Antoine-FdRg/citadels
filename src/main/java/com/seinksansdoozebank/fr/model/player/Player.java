@@ -2,10 +2,6 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
@@ -16,6 +12,8 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -161,7 +159,10 @@ public abstract class Player {
         List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(playedCards::add);
+            if (card.isPresent()) {
+                card.ifPresent(playedCards::add);
+                this.view.displayPlayerPlaysCard(this, card.get());
+            }
         }
         return playedCards;
     }
@@ -178,6 +179,7 @@ public abstract class Player {
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
+        this.view.displayPlayerPlaysCard(this, card);
         return List.of(card);
     }
 

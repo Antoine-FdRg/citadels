@@ -5,14 +5,12 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Player;
 
-import java.util.List;
-
 public interface IView {
     void displayPlayerInfo(Player player);
 
     void displayRound(int roundNumber);
 
-    void displayPlayerPlaysCard(Player player, List<Card> optionalCard);
+    void displayPlayerPlaysCard(Player player, Card card);
 
     void displayWinner(Player winner);
 
