@@ -59,10 +59,10 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        gameWithFivePlayers = spy(new Game(5, view));
-        gameWithThreePlayers = new Game(3, view);
-        gameWithFourPlayers = spy(new Game(4, view));
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(3, view);
+        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
+        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
+        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -267,6 +267,7 @@ class GameTest {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
@@ -324,12 +325,12 @@ class GameTest {
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(2, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 2));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(7, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 7));
     }
 
     @Test
@@ -349,7 +350,7 @@ class GameTest {
 
     @Test
     void createCharactersWithSixPlayers() {
-        Game gameWithSixPlayers = new Game(6, view);
+        Game gameWithSixPlayers = GameFactory.createGameOfRandomBot(view, 6);
         assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
 //        TODO UNCOMMENT this line the last character is added and remove the assertThrows one
 //        gameWithSixPlayers.createCharacters();

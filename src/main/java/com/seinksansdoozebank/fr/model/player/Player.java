@@ -31,7 +31,7 @@ public abstract class Player {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
-    private final List<Player> opponents = new ArrayList<>();
+    private List<Player> opponents;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private DistrictType colorCourtyardOfMiracleType;
 
@@ -41,6 +41,7 @@ public abstract class Player {
         this.deck = deck;
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
+        this.opponents = new ArrayList<>();
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
@@ -333,7 +334,7 @@ public abstract class Player {
     }
 
     public void setOpponents(List<Player> opponents) {
-        this.opponents.addAll(opponents);
+        this.opponents=opponents;
     }
 
     public void switchHandWith(Player player) {
