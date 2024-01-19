@@ -190,6 +190,8 @@ public class SmartBot extends Player {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.character instanceof Magician magician) {
+            this.useEffectMagician(magician);
         }
     }
 
@@ -220,7 +222,29 @@ public class SmartBot extends Player {
 
     @Override
     protected void useEffectMagician(Magician magician) {
-        // TODO
+        // if the player has no card in hand, the bot will exchange all its card with another player that have the most
+        // districts in its hand
+        int numberOfCardsToExchange = this.getHand().size();
+        Player playerWithTheMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparing(player -> player.getHand().size()))
+                .orElse(null);
+        if (numberOfCardsToExchange == 0) {
+            Optional<Player> playerWithMostDistricts = this.getOpponents().stream()
+                    .max(Comparator.comparing(player -> player.getHand().size()));
+            playerWithMostDistricts.ifPresent(player -> magician.useEffect(player, List.of()));
+        }
+        // else if the player has less card than another player that have the most districts in its hand, the bot will exchange
+        // all its card with this player
+        else if (playerWithTheMostDistricts != null && numberOfCardsToExchange < playerWithTheMostDistricts.getHand().size()) {
+            magician.useEffect(playerWithTheMostDistricts, List.of());
+        }
+        // Else the bot will exchange all the cards that cost more than 2 golds with the deck
+        else if (this.getHand().stream().anyMatch(card -> card.getDistrict().getCost() > 2)) {
+            List<Card> cardsToExchange = this.getHand().stream()
+                    .filter(card -> card.getDistrict().getCost() > 2)
+                    .toList();
+            magician.useEffect(null, cardsToExchange);
+        }
     }
 
     @Override

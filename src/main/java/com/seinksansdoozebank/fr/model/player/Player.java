@@ -123,11 +123,11 @@ public abstract class Player {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-        this.hand.add(this.deck.pick());
+        this.getHand().add(this.deck.pick());
     }
 
     public final void discardACard(Card card) {
-        this.hand.remove(card);
+        this.getHand().remove(card);
         this.deck.discard(card);
     }
 
@@ -142,7 +142,7 @@ public abstract class Player {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
-        this.hand.remove(chosenCard);
+        this.getHand().remove(chosenCard);
         // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
         this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
@@ -341,10 +341,10 @@ public abstract class Player {
 
     public void switchHandWith(Player player) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
-        this.hand.clear();
-        this.hand.addAll(player.getHand());
-        player.hand.clear();
-        player.hand.addAll(handToSwitch);
+        this.getHand().clear();
+        this.getHand().addAll(player.getHand());
+        player.getHand().clear();
+        player.getHand().addAll(handToSwitch);
     }
 
     public abstract void chooseColorCourtyardOfMiracle();
