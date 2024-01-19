@@ -147,7 +147,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
     }
     @Override
     public void displayStolenCharacter(Character character){

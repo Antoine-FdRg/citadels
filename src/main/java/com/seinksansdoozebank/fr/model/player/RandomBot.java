@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static java.util.Collections.shuffle;
+
 public class RandomBot extends Player {
 
     public RandomBot(int nbGold, Deck deck, IView view) {
@@ -25,7 +27,7 @@ public class RandomBot extends Player {
 
     @Override
     public void play() {
-        if(this.getCharacter().isDead()){
+        if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
         view.displayPlayerStartPlaying(this);
@@ -55,22 +57,20 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickGold();
         } else {
-            pickTwoCardKeepOneDiscardOne();
+            addCardToHand();
         }
     }
 
+    /**
+     * On choisit une carte aléatoire parmi celles proposées
+     *
+     * @param pickedCards
+     * @return the card that will be kept
+     */
     @Override
-    protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this,1);
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        if (random.nextBoolean()) {
-            this.hand.add(card1);
-            this.deck.discard(card2);
-        } else {
-            this.hand.add(card2);
-            this.deck.discard(card1);
-        }
+    protected Optional<Card> keepOneDiscardOthers(List<Card> pickedCards) {
+        shuffle(pickedCards);
+        return Optional.of(pickedCards.get(0));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class RandomBot extends Player {
         while (!playerToKill.getCharacter().isDead()) {
             try {
                 assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssasinEffect(this,playerToKill.getCharacter());
+                view.displayPlayerUseAssasinEffect(this, playerToKill.getCharacter());
                 break;
             } catch (IllegalArgumentException e) {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));

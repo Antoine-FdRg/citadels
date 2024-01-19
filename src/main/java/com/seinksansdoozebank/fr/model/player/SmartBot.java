@@ -35,7 +35,7 @@ public class SmartBot extends Player {
 
     @Override
     public void play() {
-        if(this.getCharacter().isDead()){
+        if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
         view.displayPlayerStartPlaying(this);
@@ -68,7 +68,7 @@ public class SmartBot extends Player {
                 }
             }
         } else {//la main est vide
-            this.pickTwoCardKeepOneDiscardOne(); //
+            this.addCardToHand(); //
             view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         }
         view.displayPlayerInfo(this);
@@ -78,31 +78,27 @@ public class SmartBot extends Player {
     protected void pickSomething() {
         Optional<Card> optCheaperPlayableCard = this.chooseCard();
         if (optCheaperPlayableCard.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher
+            this.addCardToHand(); // => il faut piocher
         } else { //s'il y a un district le moins cher
             Card cheaperCard = optCheaperPlayableCard.get();
             if (this.getNbGold() < cheaperCard.getDistrict().getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.addCardToHand(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
 
+
+    /**
+     * On choisit ici la carte qui coùte la moins chère des cartes proposées
+     *
+     * @param pickedCards
+     * @return the card that will be kept
+     */
     @Override
-    protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this, 1);
-        //Pick two district
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        //Keep the cheaper one and discard the other one
-        if (card1.getDistrict().getCost() < card2.getDistrict().getCost()) {
-            this.hand.add(card1);
-            this.deck.discard(card2);
-        } else {
-            this.hand.add(card2);
-            this.deck.discard(card1);
-        }
+    protected Optional<Card> keepOneDiscardOthers(List<Card> pickedCards) {
+        return pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
     }
 
     @Override
@@ -180,7 +176,7 @@ public class SmartBot extends Player {
         } else if (this.character instanceof Assassin assassin) {
             Character target = this.choseAssassinTarget();
             assassin.useEffect(target);
-            view.displayPlayerUseAssasinEffect(this,target);
+            view.displayPlayerUseAssasinEffect(this, target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere) {
@@ -204,7 +200,7 @@ public class SmartBot extends Player {
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
-                Condottiere condottiere= (Condottiere) this.character;
+                Condottiere condottiere = (Condottiere) this.character;
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
                     return;
@@ -214,7 +210,6 @@ public class SmartBot extends Player {
             }
         }
     }
-
 
 
     /**
@@ -286,9 +281,9 @@ public class SmartBot extends Player {
     }
 
 
-
     /**
      * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
+     *
      * @return the target of the assassin
      */
     protected Character choseAssassinTarget() {
@@ -304,7 +299,7 @@ public class SmartBot extends Player {
                 }
             }
         }
-        if(target == null) {
+        if (target == null) {
             target = charactersList.get(random.nextInt(charactersList.size()));
         }
         return target;
@@ -325,6 +320,7 @@ public class SmartBot extends Player {
         }
         // Do nothing otherwise
     }
+
     @Override
     public String toString() {
         return "Le bot malin " + this.id;

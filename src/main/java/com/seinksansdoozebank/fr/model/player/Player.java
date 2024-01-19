@@ -81,15 +81,16 @@ public abstract class Player {
     /**
      * @return list of districtType missing in the citadel of the player
      */
-    public List<DistrictType> findDistrictTypesMissingInCitadel(){
-        List<DistrictType> listOfDistrictTypeMissing= new ArrayList<>();
-        for(DistrictType districtType : DistrictType.values()){
-            if(this.getCitadel().stream().anyMatch(card->card.getDistrict().getDistrictType()==districtType)){
+    public List<DistrictType> findDistrictTypesMissingInCitadel() {
+        List<DistrictType> listOfDistrictTypeMissing = new ArrayList<>();
+        for (DistrictType districtType : DistrictType.values()) {
+            if (this.getCitadel().stream().anyMatch(card -> card.getDistrict().getDistrictType() == districtType)) {
                 listOfDistrictTypeMissing.add(districtType);
             }
         }
         return listOfDistrictTypeMissing;
     }
+
     /**
      * Represents the player's choice to draw 2 gold coins
      */
@@ -99,10 +100,29 @@ public abstract class Player {
     }
 
     /**
-     * Represents the player's choice to draw 2 districts keep one and discard the other one
+     * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    protected abstract void pickTwoCardKeepOneDiscardOne();
+    protected void addCardToHand() {
+        List<Card> pickedCards = new ArrayList<>();
+        pickedCards.add(this.deck.pick());
+        pickedCards.add(this.deck.pick());
+        Optional<Card> observatory = getCitadel().stream().filter(card -> card.getDistrict() == District.OBSERVATORY).findFirst();
+        if (observatory.isPresent()) {
+            this.view.displayPlayerStrategy(this, " possède le district Observatoire il pioche donc 3 cartes et en choisit une.");
+            pickedCards.add(this.deck.pick());
+        } else {
+            this.view.displayPlayerPickCards(this, 1);
+        }
+        Optional<Card> chosenCard = keepOneDiscardOthers(pickedCards);
+        if (chosenCard.isPresent()) {
+            this.hand.add(chosenCard.get());
+            pickedCards.stream().filter(card -> !(card.equals(chosenCard.get()))).forEach(card -> this.deck.discard(card));
+        }
+
+    }
+
+    protected abstract Optional<Card> keepOneDiscardOthers(List<Card> pickedCards);
 
     /**
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
@@ -123,7 +143,7 @@ public abstract class Player {
      */
     protected final Optional<Card> playACard() {
         Optional<Card> optChosenCard = chooseCard();
-        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get()) ) {
+        if (optChosenCard.isEmpty() || !canPlayCard(optChosenCard.get())) {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
@@ -150,12 +170,12 @@ public abstract class Player {
     }
 
     /**
-     *  make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
      *
      * @return the district built by the player
      */
-    public List<Card> playCard(Card card){
-        if(!canPlayCard(card)){
+    public List<Card> playCard(Card card) {
+        if (!canPlayCard(card)) {
             return List.of();
         }
         this.hand.remove(card);
@@ -170,7 +190,7 @@ public abstract class Player {
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this,2);
+        view.displayPlayerPickCards(this, 2);
     }
 
     /**
@@ -188,7 +208,7 @@ public abstract class Player {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     protected final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size()<8;
+        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
     }
 
     public void decreaseGold(int gold) {
