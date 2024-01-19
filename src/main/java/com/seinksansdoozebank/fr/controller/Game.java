@@ -10,6 +10,7 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 
@@ -146,6 +147,7 @@ public class Game {
         int nbPlayers = this.players.size();
         List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
+                new Thief(),
                 new Bishop(),
                 new Magician(),
                 new Merchant(),

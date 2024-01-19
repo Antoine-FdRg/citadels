@@ -13,6 +13,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -190,6 +191,8 @@ public class SmartBot extends Player {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.character instanceof Thief thief) {
+            this.chooseVictim(thief);
         }
     }
 
@@ -336,6 +339,23 @@ public class SmartBot extends Player {
             }
         }
         // Do nothing otherwise
+    }
+
+    /**
+     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     * @param thief
+     */
+    public void chooseVictim(Thief thief){
+        Optional<Player> victim= this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
+                !player.getCharacter().isDead() && (player.getCharacter().getRole() == Role.ARCHITECT || player.getCharacter().getRole() == Role.MERCHANT)).findFirst();
+        if(victim.isEmpty()){
+            victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
+                    !player.getCharacter().isDead()).findFirst();
+        }
+        victim.ifPresent(player -> {
+            thief.useEffect(player.getCharacter());
+            view.displayPlayerUseThiefEffect(this);
+        });
     }
 
     @Override

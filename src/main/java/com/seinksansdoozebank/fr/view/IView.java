@@ -58,4 +58,6 @@ public interface IView {
     void displayActualNumberOfGold(Player player);
 
     void displayPlayerUseMagicianEffect(Player player, Player targetPlayer);
+
+    void displayPlayerUseThiefEffect(Player player);
 }

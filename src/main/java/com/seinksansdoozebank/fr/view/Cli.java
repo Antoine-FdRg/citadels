@@ -162,4 +162,9 @@ public class Cli implements IView {
         }
         CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
     }
+
+    @Override
+    public void displayPlayerUseThiefEffect(Player player){
+        CustomLogger.log(Level.INFO,"{0} vient de voler l'or d'un joueur.", player);
+    }
 }
