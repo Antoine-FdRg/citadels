@@ -61,7 +61,7 @@ public class GameBuilder {
 
     public GameBuilder addCustomBot(IPickingStrategy pickingStrategy) {
         checkNbPlayers();
-        playerList.add(new CustomBotBuilder(this.view, this.deck)
+        playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
                 .setPickingStrategy(pickingStrategy)
                 .build());
         return this;
