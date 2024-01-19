@@ -265,6 +265,7 @@ class GameTest {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
