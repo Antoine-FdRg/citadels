@@ -25,7 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SmartBotTest {
     SmartBot spySmartBot;
@@ -71,7 +78,7 @@ class SmartBotTest {
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
         when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
-        when(spySmartBot.hasACardToPlay()).thenReturn( false,false, true);
+        when(spySmartBot.hasACardToPlay()).thenReturn(false, false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
@@ -88,7 +95,7 @@ class SmartBotTest {
     void playWithABuildableDistrictShouldBuildAndPickSomething() {
         List<Card> hand = new ArrayList<>(List.of(cardCostFive));
         when(spySmartBot.getHand()).thenReturn(hand);
-        when(spySmartBot.hasACardToPlay()).thenReturn( true);
+        when(spySmartBot.hasACardToPlay()).thenReturn(true);
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
@@ -478,6 +485,50 @@ class SmartBotTest {
 
         // Set the opponents of the player
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
+        // Set the player to switch hand with the other player
+        spySmartBot.useEffectMagician(magician);
+
+        // Check that the magician effect is used
+        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
+        assertFalse(spySmartBot.getHand().contains(monasteryCard));
+        assertFalse(spySmartBot.getHand().contains(cathedralCard));
+    }
+
+    /**
+     * We check that the player will use a specific strategy using the magician effect :
+     * - The player has the same number of cards as the other player, so he will change the cards that cost more than 2 golds with the deck
+     */
+    @Test
+    void useEffectOfTheMagicianWhenThePlayerHasTheSameNumberOfCardsTest() {
+        Magician magician = new Magician();
+        magician.setPlayer(spySmartBot);
+        // Set the player character to magician
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        // Set the Hand of the player to 3 cards
+        spySmartBot.getHand().clear();
+        Card monasteryCard = new Card(District.MONASTERY);
+        Card cathedralCard = new Card(District.CATHEDRAL);
+        List<Card> playerList = new ArrayList<>(
+                List.of(
+                        new Card(District.TEMPLE),
+                        monasteryCard,
+                        cathedralCard
+                )
+        );
+        spySmartBot.getHand().addAll(playerList);
+        when(spySmartBot.getHand()).thenReturn(playerList);
+        // Set the hand of the other player and another player to 3 cards
+        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        otherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        when(otherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        anotherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+
+        // Set the opponents of the player
+        when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
+
         // Set the player to switch hand with the other player
         spySmartBot.useEffectMagician(magician);
 
