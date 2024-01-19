@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,9 +53,8 @@ class SmartBotTest {
 
     @Test
     void playWithEmptyChosenDistrictShouldPickDistrictAndBuild() {
-        Optional<Card> optDistrict = Optional.empty();
         Optional<Card> optDistrictCardCostFive = Optional.of(cardCostFive);
-        doReturn(optDistrict, optDistrictCardCostFive).when(spySmartBot).chooseCard();
+        doReturn(optDistrictCardCostFive).when(spySmartBot).chooseCard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new King())));
         spySmartBot.play();
 
@@ -67,9 +68,8 @@ class SmartBotTest {
 
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
-        Optional<Card> optDistrict = Optional.of(cardCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseCard();
-        doReturn(false).when(spySmartBot).canPlayCard(any(Card.class));
+        when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
+        when(spySmartBot.hasACardToPlay()).thenReturn( false,false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
@@ -83,10 +83,9 @@ class SmartBotTest {
     }
 
     @Test
-    void playWithUBuildableDistrictShouldBuildAndPickSomething() {
-        Optional<Card> optDistrict = Optional.of(cardCostThree);
-        doReturn(optDistrict).when(spySmartBot).chooseCard();
-        doReturn(true).when(spySmartBot).canPlayCard(any(Card.class));
+    void playWithABuildableDistrictShouldBuildAndPickSomething() {
+        when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
+        when(spySmartBot.hasACardToPlay()).thenReturn( true);
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
