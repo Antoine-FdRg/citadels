@@ -203,5 +203,18 @@ class RandomBotTest {
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 
+    /**
+     * On vérifie que le bot garde une carte aléatoirement dans tous les cas
+     */
+    @Test
+    void keepOneDiscardOthersTest(){
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+
+        Optional<Card> card=spyRandomBot.keepOneDiscardOthers(cardPicked);
+        assertTrue(card.isPresent());
+    }
+
 
 }

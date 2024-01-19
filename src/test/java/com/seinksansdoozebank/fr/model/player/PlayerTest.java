@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -249,4 +250,14 @@ class PlayerTest {
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
+
+    @Test
+    void playWithObservatoryInCitadelle(){
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE),new Card(District.OBSERVATORY)));
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayer.addCardToHand();
+        verify(view,times(1)).displayPlayerStrategy(any(),anyString());
+        verify(spyPlayer.deck,times(3)).pick();
+    }
+
 }

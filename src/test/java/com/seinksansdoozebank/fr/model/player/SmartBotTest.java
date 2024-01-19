@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -406,6 +407,16 @@ class SmartBotTest {
         spySmartBot.decreaseGold(5);
         spySmartBot.useEffectOfTheArchitect();
         verify(view,times(0)).displayPlayerPlaysCard(spySmartBot, new ArrayList<>(List.of(dracoport)) );
+    }
+
+    /**
+     * On vérifie que le smartBot garde dans sa main la carte la moins chère
+     */
+    @Test
+    void keepOneDiscardOthersTest(){
+        Random mockRandom = mock(Random.class);
+        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+        assertEquals(Optional.of( new Card(District.TAVERN)),spySmartBot.keepOneDiscardOthers(cardPicked));
     }
 
 }
