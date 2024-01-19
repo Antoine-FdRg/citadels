@@ -61,7 +61,7 @@ class SmartBotTest {
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).addCardToHand();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, emptyList);
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
@@ -108,7 +108,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
 
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).addCardToHand();
     }
 
     @Test
@@ -119,7 +119,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() < cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(0)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(0)).addCardToHand();
     }
 
     @Test
@@ -129,13 +129,13 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() >= cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).addCardToHand();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOneShouldKeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        spySmartBot.pickTwoCardKeepOneDiscardOne();
+        spySmartBot.addCardToHand();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());

@@ -205,13 +205,14 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
-
-        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        spyPlayer.play();
+        Player spyPlayerSmart= spy(new SmartBot(10, deck, view));
+        when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyPlayerSmart.play();
 
         // assert between 2 and 3 districts are gained
-        assertTrue(spyPlayer.getHand().size() >= 2 && spyPlayer.getHand().size() <= 3);
+        assertTrue(spyPlayerSmart.getHand().size() >= 2 && spyPlayerSmart.getHand().size() <= 3);
     }
 
     @Test

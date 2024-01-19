@@ -109,13 +109,13 @@ class RandomBotTest {
     void pickSomething() {
         spyRandomBot.pickSomething();
         verify(spyRandomBot, atMostOnce()).pickGold();
-        verify(spyRandomBot, atMostOnce()).pickTwoCardKeepOneDiscardOne();
+        verify(spyRandomBot, atMostOnce()).addCardToHand();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOne() {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
-        spyRandomBot.pickTwoCardKeepOneDiscardOne();
+        spyRandomBot.addCardToHand();
 
         verify(view, times(1)).displayPlayerPickCards(spyRandomBot,1);
 
