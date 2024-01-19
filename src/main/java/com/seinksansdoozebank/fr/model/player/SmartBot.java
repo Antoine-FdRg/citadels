@@ -84,7 +84,7 @@ public class SmartBot extends Player {
     }
 
     @Override
-    protected void pickTwoCardKeepOneDiscardOne() {
+    public void pickTwoCardKeepOneDiscardOne() {
         this.view.displayPlayerPickCards(this, 1);
         //Pick two district
         Card card1 = this.deck.pick();

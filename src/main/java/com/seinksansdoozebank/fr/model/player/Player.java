@@ -107,7 +107,7 @@ public abstract class Player {
     /**
      * Represents the player's choice to draw 2 gold coins
      */
-    protected final void pickGold() {
+    public final void pickGold() {
         view.displayPlayerPicksGold(this);
         this.nbGold += 2;
     }
@@ -116,7 +116,7 @@ public abstract class Player {
      * Represents the player's choice to draw 2 districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    protected abstract void pickTwoCardKeepOneDiscardOne();
+    public abstract void pickTwoCardKeepOneDiscardOne();
 
     /**
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)

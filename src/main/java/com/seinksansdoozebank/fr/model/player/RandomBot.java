@@ -66,7 +66,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    protected void pickTwoCardKeepOneDiscardOne() {
+    public void pickTwoCardKeepOneDiscardOne() {
         this.view.displayPlayerPickCards(this,1);
         Card card1 = this.deck.pick();
         Card card2 = this.deck.pick();

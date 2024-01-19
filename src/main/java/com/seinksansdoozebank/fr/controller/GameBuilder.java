@@ -4,6 +4,8 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
+import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
+import com.seinksansdoozebank.fr.model.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -54,6 +56,14 @@ public class GameBuilder {
     public GameBuilder addRandomBot() {
         checkNbPlayers();
         playerList.add(new RandomBot(PLAYER_NB_GOLD_INIT, this.deck, this.view));
+        return this;
+    }
+
+    public GameBuilder addCustomBot(IPickingStrategy pickingStrategy) {
+        checkNbPlayers();
+        playerList.add(new CustomBotBuilder(this.view, this.deck)
+                .setPickingStrategy(pickingStrategy)
+                .build());
         return this;
     }
 
