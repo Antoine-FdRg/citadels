@@ -112,13 +112,7 @@ public class RandomBot extends Player {
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
         } else if (this.getCharacter() instanceof Thief thief) {
-            Optional<Player> victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
-                    !player.getCharacter().isDead()).findFirst();
-            victim.ifPresent(player -> {
-                thief.useEffect(player.getCharacter());
-                view.displayPlayerAction(this);
-            });
-
+            this.useEffectThief(thief);
         }
     }
 
@@ -139,6 +133,19 @@ public class RandomBot extends Player {
                 playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             }
         }
+    }
+
+    /**
+     * Effect of thief character (chose victim)
+     * @param thief
+     */
+    public void useEffectThief(Thief thief){
+        Optional<Player> victim = this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
+                !player.getCharacter().isDead()).findFirst();
+        victim.ifPresent(player -> {
+            thief.useEffect(player.getCharacter());
+            view.displayPlayerUseThiefEffect(this);
+        });
     }
 
     void useEffectCondottiere(Condottiere condottiere) {

@@ -163,10 +163,10 @@ public class Game {
         int nbPlayers = this.players.size();
         List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
+                new Thief(),
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Thief(),
                 new Condottiere()));
         if (nbPlayers+1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");

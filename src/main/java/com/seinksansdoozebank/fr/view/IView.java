@@ -59,5 +59,5 @@ public interface IView {
 
     void displayActualNumberOfGold(Player player);
 
-    void displayPlayerAction(Player player);
+    void displayPlayerUseThiefEffect(Player player);
 }

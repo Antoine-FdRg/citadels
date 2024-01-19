@@ -219,7 +219,7 @@ class RandomBotTest {
          when(spyRandomBot.getCharacter()).thenReturn(thief);
          when(player.getCharacter()).thenReturn(bishop);
          spyRandomBot.useEffect();
-         verify(view,times(1)).displayPlayerAction(spyRandomBot);
+         verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
     }
 
     /**
@@ -237,10 +237,7 @@ class RandomBotTest {
         when(spyRandomBot.getCharacter()).thenReturn(thief);
         when(player.getCharacter()).thenReturn(assassin);
         spyRandomBot.useEffect();
-        verify(view,times(0)).displayPlayerAction(spyRandomBot);
+        verify(view,times(0)).displayPlayerUseThiefEffect(spyRandomBot);
     }
-
-
-
 
 }
