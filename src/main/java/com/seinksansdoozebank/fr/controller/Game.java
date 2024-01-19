@@ -28,7 +28,7 @@ public class Game {
     private final Deck deck;
     protected List<Player> players;
     Player crownedPlayer;
-    private final List<Character> availableCharacters;
+    private List<Character> availableCharacters;
     private List<Character> charactersInTheRound;
     private final IView view;
     private int nbCurrentRound;
@@ -146,6 +146,7 @@ public class Game {
      */
     protected void createCharacters() {
         int nbPlayers = this.players.size();
+        availableCharacters = new ArrayList<>();
         List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
                 new Bishop(),

@@ -171,7 +171,7 @@ public class RandomBot extends Player {
                 view.displayPlayerUseAssassinEffect(this, playerToKill);
                 break;
             } catch (IllegalArgumentException e) {
-                playerToKill = this.getAvailableCharacters().get(random.nextInt(this.getOpponents().size()));
+                playerToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
             }
         }
     }
@@ -193,7 +193,7 @@ public class RandomBot extends Player {
             // get the district to destroy
             District districtToDestroy = playerToDestroyDistrict.getCitadel().get(index).getDistrict();
             // Check if the number of golds of the player is enough to destroy the district
-            if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
+            if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
                 try {
                     condottiere.useEffect(opponentCharacter, districtToDestroy);
