@@ -69,6 +69,7 @@ public class Game {
         orderPlayerBeforePlaying();
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
+                player.setAvailableCharacters(availableCharacters);
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();

@@ -291,8 +291,7 @@ class SmartBotTest {
         when(architectPlayer.getCharacter()).thenReturn(new Architect());
         Player merchantPlayer = spy(new SmartBot(10, deck, view));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
-
-        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Architect()));
 
         Character target = spySmartBot.choseAssassinTarget();
 
@@ -301,12 +300,13 @@ class SmartBotTest {
 
     @Test
     void choseAssassinTargetWithTargetNotInList() {
-        Player architectPlayer = spy(new SmartBot(10, deck, view));
-        when(architectPlayer.getCharacter()).thenReturn(new Bishop());
+        Player bishopPlayer = spy(new SmartBot(10, deck, view));
+        when(bishopPlayer.getCharacter()).thenReturn(new Bishop());
         Player merchantPlayer = spy(new SmartBot(10, deck, view));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Bishop(), new Merchant()));
 
-        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer, merchantPlayer));
+        when(spySmartBot.getOpponents()).thenReturn(List.of(bishopPlayer, merchantPlayer));
 
         Character target = spySmartBot.choseAssassinTarget();
 

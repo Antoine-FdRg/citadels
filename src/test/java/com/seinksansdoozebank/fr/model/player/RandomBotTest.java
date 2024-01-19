@@ -88,11 +88,13 @@ class RandomBotTest {
         doReturn(optDistrict).when(spyRandomBot).playACard();
         Assassin assassin = spy(new Assassin());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
-        List<Player> opponents = new ArrayList<>();
+        List<Opponent> opponents = new ArrayList<>();
         RandomBot opponent = new RandomBot(10, deck, view);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
+
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();

@@ -54,12 +54,12 @@ public class SmartBot extends Player {
                 this.useCommonCharacterEffect();
                 this.pickSomething(); //il pioche quelque chose
             }
-        }else{
+        } else {
             this.useCommonCharacterEffect();
-            if(this.hasACardToPlay()){
+            if (this.hasACardToPlay()) {
                 view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
                 pickSomething();
-            }else{
+            } else {
                 pickGold();
                 if (this.hasACardToPlay()) {
                     view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
@@ -194,9 +194,9 @@ public class SmartBot extends Player {
 
     protected void useEffectOfTheCondottiere() {
         // Get the player with the most districts
-        Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
-        if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().character instanceof Bishop) {
+        if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().getOpponentCharacter() instanceof Bishop) {
             return;
         }
         // Sort the districts of the player by cost
@@ -208,10 +208,10 @@ public class SmartBot extends Player {
             if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
                 Condottiere condottiere = (Condottiere) this.character;
                 try {
-                    condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
+                    condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;
                 } catch (IllegalArgumentException e) {
-                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get().id + ", il passe donc à la carte suivante");
+                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");
                 }
             }
         }
@@ -296,7 +296,7 @@ public class SmartBot extends Player {
         List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
         Collections.shuffle(roleInterestingToKill);
         Character target = null;
-        List<Character> charactersList = this.getOpponents().stream().map(Player::getCharacter).toList();
+        List<Character> charactersList = this.getAvailableCharacters();
         for (Role role : roleInterestingToKill) {
             for (Character character : charactersList) {
                 if (character.getRole() == role) {
@@ -329,8 +329,8 @@ public class SmartBot extends Player {
 
     @Override
     public boolean wantToUseManufactureEffect() {
-        //TODO: Implement strategy for manufacture effect
-        return false;
+        // if the bot has less than 2 cards in hand, it will use the manufacture effect to get more cards
+        return this.hand.size() < 2;
     }
 
 

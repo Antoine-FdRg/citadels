@@ -134,7 +134,7 @@ class PlayerTest {
         Character condottiere = new Condottiere();
         characters.add(condottiere);
         player.chooseCharacter(characters);
-
+        player.reveal();
         Character retrievedCharacter = player.retrieveCharacter();
 
         assertEquals(condottiere, retrievedCharacter);

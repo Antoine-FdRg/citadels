@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class Player {
+public abstract class Player implements Opponent {
     private static int counter = 1;
     protected final int id;
     private int nbGold;
@@ -28,8 +28,11 @@ public abstract class Player {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
-    private List<Player> opponents;
+    private List<Opponent> opponents;
+
+    private List<Character> availableCharacters;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private boolean revealed = false;
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -52,6 +55,7 @@ public abstract class Player {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
+        this.reveal();
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
@@ -303,6 +307,7 @@ public abstract class Player {
         if (this.character == null) {
             throw new IllegalStateException("No character to retrieve");
         }
+        this.hide();
         Character characterToRetrieve = this.character;
         this.character = null;
         characterToRetrieve.resurrect();
@@ -324,11 +329,11 @@ public abstract class Player {
         }
     }
 
-    public List<Player> getOpponents() {
+    public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
     }
 
-    public void setOpponents(List<Player> opponents) {
+    public void setOpponents(List<Opponent> opponents) {
         this.opponents = opponents;
     }
 
@@ -359,4 +364,44 @@ public abstract class Player {
     }
 
     public abstract boolean wantToUseManufactureEffect();
+
+    public boolean isRevealed() {
+        return this.revealed;
+    }
+
+    public void reveal() {
+        if (this.revealed) {
+            throw new IllegalStateException("The player is already revealed");
+        }
+        this.revealed = true;
+    }
+
+    public void hide() {
+        if (!this.revealed && !this.character.isDead()) {
+            throw new IllegalStateException("The player is already hidden");
+        }
+        this.revealed = false;
+    }
+
+    @Override
+    public Character getOpponentCharacter() {
+        if (this.isRevealed()) {
+            return this.getCharacter();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int nbDistrictsInCitadel() {
+        return this.getCitadel().size();
+    }
+
+    public List<Character> getAvailableCharacters() {
+        return availableCharacters;
+    }
+
+    public void setAvailableCharacters(List<Character> availableCharacters) {
+        this.availableCharacters = availableCharacters;
+    }
 }
