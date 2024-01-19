@@ -57,7 +57,7 @@ public class SmartBot extends Player {
             }
         } else {
             this.useCommonCharacterEffect();
-            if(this.hasACardToPlay()){
+            if (this.hasACardToPlay()) {
                 this.playCards(this.getNbDistrictsCanBeBuild());
                 pickSomething();
             } else {
@@ -222,29 +222,29 @@ public class SmartBot extends Player {
 
     @Override
     protected void useEffectMagician(Magician magician) {
-        // if the player has no card in hand, the bot will exchange all its card with another player that have the most
-        // districts in its hand
         int numberOfCardsToExchange = this.getHand().size();
-        Player playerWithTheMostDistricts = this.getOpponents().stream()
-                .max(Comparator.comparing(player -> player.getHand().size()))
-                .orElse(null);
-        if (numberOfCardsToExchange == 0) {
-            Optional<Player> playerWithMostDistricts = this.getOpponents().stream()
-                    .max(Comparator.comparing(player -> player.getHand().size()));
-            playerWithMostDistricts.ifPresent(player -> magician.useEffect(player, List.of()));
+
+        Optional<Player> playerWithMostDistricts = findPlayerWithMostDistricts(this.getOpponents());
+
+        // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
+        if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHand().size()) {
+            playerWithMostDistricts.ifPresent(player -> magician.useEffect(player, null));
+            return;
         }
-        // else if the player has less card than another player that have the most districts in its hand, the bot will exchange
-        // all its card with this player
-        else if (playerWithTheMostDistricts != null && numberOfCardsToExchange < playerWithTheMostDistricts.getHand().size()) {
-            magician.useEffect(playerWithTheMostDistricts, List.of());
-        }
-        // Else the bot will exchange all the cards that cost more than 2 golds with the deck
-        else if (this.getHand().stream().anyMatch(card -> card.getDistrict().getCost() > 2)) {
-            List<Card> cardsToExchange = this.getHand().stream()
-                    .filter(card -> card.getDistrict().getCost() > 2)
-                    .toList();
+
+        // Case 2: Player exchanges cards with the deck (cost > 2 gold)
+        List<Card> cardsToExchange = this.getHand().stream()
+                .filter(card -> card.getDistrict().getCost() > 2)
+                .toList();
+
+        if (!cardsToExchange.isEmpty()) {
             magician.useEffect(null, cardsToExchange);
         }
+    }
+
+    private Optional<Player> findPlayerWithMostDistricts(List<Player> players) {
+        return players.stream()
+                .max(Comparator.comparingInt(player -> player.getHand().size()));
     }
 
     @Override
@@ -319,7 +319,6 @@ public class SmartBot extends Player {
             this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
-
 
 
     /**
