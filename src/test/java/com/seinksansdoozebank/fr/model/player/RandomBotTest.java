@@ -205,5 +205,18 @@ class RandomBotTest {
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 
+    @Test
+    void testWantToUseManufactureEffect() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+
+        // Test the wantToUseEffect method
+        assertTrue(spyRandomBot.wantToUseManufactureEffect());
+    }
+
 
 }

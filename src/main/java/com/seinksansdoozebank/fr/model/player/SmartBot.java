@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -330,9 +331,25 @@ public class SmartBot extends Player {
     @Override
     public boolean wantToUseManufactureEffect() {
         // if the bot has less than 2 cards in hand, it will use the manufacture effect to get more cards
-        return this.hand.size() < 2;
+        return this.getHand().size() < 2 || this.isLate();
     }
 
+    /**
+     * Determines if the bot is late or not
+     *
+     * @return true if the bot has less cards in his citadel than the average of the opponents
+     */
+    public boolean isLate() {
+        return averageOpponentCitadelSize() > this.getCitadel().size();
+    }
+
+    public double averageOpponentCitadelSize() {
+        OptionalDouble average = this.getOpponents().stream().mapToInt(opponent -> opponent.getCitadel().size()).average();
+        if (average.isEmpty()) {
+            return 0;
+        }
+        return average.getAsDouble();
+    }
 
     @Override
     public String toString() {

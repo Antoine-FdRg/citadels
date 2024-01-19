@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -404,6 +405,63 @@ class SmartBotTest {
         spySmartBot.decreaseGold(5);
         spySmartBot.useEffectOfTheArchitect();
         verify(view,times(0)).displayPlayerPlaysCard(spySmartBot, new ArrayList<>(List.of(dracoport)) );
+    }
+
+    @Test
+    void testIsLateByHavingLessCardInHisCitadel() {
+        // test when player has less card in his citadel than the average opponents districts in their citadel
+        List<Opponent> opponents = new ArrayList<>();
+        Player opponent1 = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        opponents.add(opponent1);
+        opponents.add(opponent2);
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        assertTrue(spySmartBot.isLate());
+
+    }
+
+    @Test
+    void testIsNotLateByHavingMoreOrEqualsCardInHisCitadel() {
+        // test when player has more card in his citadel than the average opponents districts in their citadel
+        List<Opponent> opponents = new ArrayList<>();
+        Player opponent1 = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        opponents.add(opponent1);
+        opponents.add(opponent2);
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        assertFalse(spySmartBot.isLate());
+
+        // test when player has the same number of card in his citadel than the average opponents districts in their citadel
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        assertFalse(spySmartBot.isLate());
+    }
+
+    @Test
+    void testWantToUseManufactureEffectWhenHavingLessThan2CardInHisHand() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        assertTrue(spySmartBot.wantToUseManufactureEffect());
+    }
+
+    @Test
+    void testDoesNotWantToUseManufactureEffectWhenHavingMoreThan2CardInHisHand() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard, barrackCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        assertFalse(spySmartBot.wantToUseManufactureEffect());
     }
 
 }
