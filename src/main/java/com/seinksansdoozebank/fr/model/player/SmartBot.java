@@ -328,6 +328,13 @@ public class SmartBot extends Player {
     }
 
     @Override
+    public boolean wantToUseManufactureEffect() {
+        //TODO: Implement strategy for manufacture effect
+        return false;
+    }
+
+
+    @Override
     public String toString() {
         return "Le bot malin " + this.id;
     }

@@ -55,6 +55,10 @@ public abstract class Player {
         view.displayPlayerStartPlaying(this);
         view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
+        Card cardToSearch = new Card(District.MANUFACTURE);
+        if (getCitadel().contains(cardToSearch) && (this.wantToUseManufactureEffect())) {
+            getCitadel().get(getCitadel().indexOf(cardToSearch)).getDistrict().useActiveEffect(this);
+        }
         this.playARound();
         view.displayPlayerInfo(this);
     }
@@ -325,7 +329,7 @@ public abstract class Player {
     }
 
     public void setOpponents(List<Player> opponents) {
-        this.opponents=opponents;
+        this.opponents = opponents;
     }
 
     public void switchHandWith(Player player) {
@@ -354,5 +358,5 @@ public abstract class Player {
         this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
     }
 
-
+    public abstract boolean wantToUseManufactureEffect();
 }

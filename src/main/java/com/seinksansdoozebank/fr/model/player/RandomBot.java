@@ -174,6 +174,11 @@ public class RandomBot extends Player {
     }
 
     @Override
+    public boolean wantToUseManufactureEffect() {
+        return random.nextBoolean();
+    }
+
+    @Override
     public String toString() {
         return "Le bot aléatoire " + this.id;
     }
