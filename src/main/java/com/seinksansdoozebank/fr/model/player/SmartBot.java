@@ -12,6 +12,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -185,14 +186,15 @@ public class SmartBot extends Player {
             view.displayPlayerUseAssassinEffect(this, target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
-        else if (this.character instanceof Condottiere) {
-            useEffectOfTheCondottiere();
+        else if (this.character instanceof Condottiere condottiere) {
+            useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
         }
     }
 
-    protected void useEffectOfTheCondottiere() {
+    @Override
+    protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
@@ -206,7 +208,6 @@ public class SmartBot extends Player {
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
-                Condottiere condottiere = (Condottiere) this.character;
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
                     return;
@@ -215,6 +216,16 @@ public class SmartBot extends Player {
                 }
             }
         }
+    }
+
+    @Override
+    protected void useEffectMagician(Magician magician) {
+        // TODO
+    }
+
+    @Override
+    protected void useEffectAssassin(Assassin assassin) {
+        // TODO
     }
 
 
