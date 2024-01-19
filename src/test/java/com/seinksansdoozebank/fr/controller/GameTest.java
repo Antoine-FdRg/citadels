@@ -17,7 +17,6 @@ import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -273,7 +272,6 @@ class GameTest {
         verify(view, times(1)).displayWinner(any(Player.class));
     }
 
-    @Disabled("TODO: fix this test")
     @Test
     void playARound() {
         gameWithFourPlayers.createCharacters();
@@ -285,8 +283,9 @@ class GameTest {
         verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, times(1)).retrieveCharacters();
-        for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
-            assertFalse(character.isDead());
+        List<Player> players = gameWithFourPlayers.players;
+        for (Player player : players) {
+            assertNull(player.getCharacter());
         }
     }
 
