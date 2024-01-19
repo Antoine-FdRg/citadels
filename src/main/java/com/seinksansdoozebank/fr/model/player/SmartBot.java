@@ -12,6 +12,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class SmartBot extends Player {
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
             this.pickTwoCardKeepOneDiscardOne(); //
-            view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+            this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
 
@@ -51,19 +52,19 @@ public class SmartBot extends Player {
                 this.pickSomething();
                 useEffectOfTheArchitect();
             } else {
-                view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild())); //il joue
+                this.playCards(this.getNbDistrictsCanBeBuild()); //il joue
                 this.useCommonCharacterEffect();
                 this.pickSomething(); //il pioche quelque chose
             }
         } else {
             this.useCommonCharacterEffect();
             if (this.hasACardToPlay()) {
-                view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+                this.playCards(this.getNbDistrictsCanBeBuild());
                 pickSomething();
             } else {
                 pickGold();
                 if (this.hasACardToPlay()) {
-                    view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+                    this.playCards(this.getNbDistrictsCanBeBuild());
                 }
             }
         }
@@ -108,7 +109,7 @@ public class SmartBot extends Player {
     @Override
     protected Optional<Card> chooseCard() {
         //Gathering districts which are not already built in player's citadel
-        List<Card> notAlreadyPlayedCardList = this.hand.stream().filter(d -> !this.getCitadel().contains(d)).toList();
+        List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(d -> !this.getCitadel().contains(d)).toList();
         Optional<Card> cardToPlay;
         if (this.character instanceof CommonCharacter commonCharacter) {
             DistrictType target = commonCharacter.getTarget();
@@ -121,7 +122,7 @@ public class SmartBot extends Player {
         if (cardToPlay.isPresent() && this.canPlayCard(cardToPlay.get())) {
             return cardToPlay;
         } else {
-            return Optional.empty();
+            return this.getCheaperCard(notAlreadyPlayedCardList);
         }
     }
 
@@ -183,17 +184,18 @@ public class SmartBot extends Player {
         } else if (this.character instanceof Assassin assassin) {
             Character target = this.choseAssassinTarget();
             assassin.useEffect(target);
-            view.displayPlayerUseAssasinEffect(this, target);
+            view.displayPlayerUseAssassinEffect(this, target);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
-        else if (this.character instanceof Condottiere) {
-            useEffectOfTheCondottiere();
+        else if (this.character instanceof Condottiere condottiere) {
+            useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
         }
     }
 
-    protected void useEffectOfTheCondottiere() {
+    @Override
+    protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
@@ -207,7 +209,6 @@ public class SmartBot extends Player {
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
-                Condottiere condottiere = (Condottiere) this.character;
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;
@@ -218,33 +219,42 @@ public class SmartBot extends Player {
         }
     }
 
+    @Override
+    protected void useEffectMagician(Magician magician) {
+        // TODO
+    }
+
+    @Override
+    protected void useEffectAssassin(Assassin assassin) {
+        // TODO
+    }
+
 
     /**
      * Il finit sa citadelle s'il peut en un coup, sinon il pose une merveille, sinon il complète les 5
      * couleurs de districtType sinon il joue comme un joueur normal
      */
     protected void useEffectOfTheArchitect() {
-
         int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
         //On regarde s'il peut finir la partie en un coup en vérifiant si la citadelle a plus de 4 cartes, si dans sa main il a au moins 3 cartes
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
+        int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();
         if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
-            view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+            this.playCards(nbDistrictsCanBeBuild);
         } else {
             //on vérifie s'il y a une merveille dans sa main, si oui et qu'il peut la jouer alors il le fait
             Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
             if (prestigeCard.isPresent() && canPlayCard(prestigeCard.get())) {
-                view.displayPlayerPlaysCard(this, playCard(prestigeCard.get()));
+                playCard(prestigeCard.get());
             } else if (!this.hasFiveDifferentDistrictTypes()) {
                 //il cherche à avoir les 5 districts de couleur dans sa citadelle sinon
                 architectTryToCompleteFiveDistrictTypes();
             } else {
                 //Il joue comme un joueur normal
-                view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+                this.playCards(nbDistrictsCanBeBuild);
             }
         }
     }
-
 
     /**
      * @param numberCards the number of cards needed
@@ -274,7 +284,7 @@ public class SmartBot extends Player {
             if (optionalChosenCard.isPresent()) {
                 Card cardChosen = optionalChosenCard.get();
                 if (numberOfCards < 3 && (canPlayCard(cardChosen))) {
-                    view.displayPlayerPlaysCard(this, playCard(cardChosen));
+                    playCard(cardChosen);
                     numberOfCards++;
                     cardNeeded.remove(cardChosen);
                 }
@@ -283,7 +293,7 @@ public class SmartBot extends Player {
         }
         //S'il n'y a aucune carte disponible ou bien qu'il ne peut en poser aucune alors il joue comme un joueur normal
         if (numberOfCards == 0) {
-            view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
+            this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
 

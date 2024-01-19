@@ -2,17 +2,18 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -166,7 +167,10 @@ public abstract class Player implements Opponent {
         List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(playedCards::add);
+            if (card.isPresent()) {
+                card.ifPresent(playedCards::add);
+                this.view.displayPlayerPlaysCard(this, card.get());
+            }
         }
         return playedCards;
     }
@@ -183,6 +187,7 @@ public abstract class Player implements Opponent {
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
+        this.view.displayPlayerPlaysCard(this, card);
         return List.of(card);
     }
 
@@ -204,6 +209,12 @@ public abstract class Player implements Opponent {
         this.hand.add(this.deck.pick());
         view.displayPlayerPickCards(this, 2);
     }
+
+    abstract void useEffectMagician(Magician magician);
+
+    abstract void useEffectAssassin(Assassin assassin);
+
+    abstract void useEffectCondottiere(Condottiere condottiere);
 
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);
@@ -337,12 +348,12 @@ public abstract class Player implements Opponent {
         this.opponents = opponents;
     }
 
-    public void switchHandWith(Player player) {
+    public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.hand.clear();
-        this.hand.addAll(player.getHand());
-        player.hand.clear();
-        player.hand.addAll(handToSwitch);
+        this.hand.addAll(magician.getHand());
+        magician.hand.clear();
+        magician.hand.addAll(handToSwitch);
     }
 
     public abstract void chooseColorCourtyardOfMiracle();

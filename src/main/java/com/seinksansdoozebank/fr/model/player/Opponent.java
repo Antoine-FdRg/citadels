@@ -14,4 +14,6 @@ public interface Opponent {
     List<Card> getCitadel();
 
     Character getOpponentCharacter();
+
+    void switchHandWith(Player player);
 }
