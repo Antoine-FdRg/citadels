@@ -66,7 +66,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseAssasinEffect(Player player, Character target) {
+    public void displayPlayerUseAssassinEffect(Player player, Character target) {
         CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .", new Object[]{player, target});
     }
 
@@ -152,5 +152,14 @@ public class Cli implements IView {
     @Override
     public void displayActualNumberOfGold(Player player) {
         CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()});
+    }
+
+    @Override
+    public void displayPlayerUseMagicianEffect(Player player, Player targetPlayer) {
+        if (targetPlayer == null) {
+            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", new Object[]{player});
+            return;
+        }
+        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
     }
 }

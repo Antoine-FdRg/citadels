@@ -49,11 +49,13 @@ public interface IView {
      */
     void displayPlayerStrategy(Player player, String strategy);
 
-    void displayPlayerUseAssasinEffect(Player player, Character target);
+    void displayPlayerUseAssassinEffect(Player player, Character target);
 
     void displayUnusedCharacterInRound(Character character);
 
     void displayStolenCharacter(Character character);
 
     void displayActualNumberOfGold(Player player);
+
+    void displayPlayerUseMagicianEffect(Player player, Player targetPlayer);
 }

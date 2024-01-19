@@ -6,6 +6,9 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -198,6 +201,12 @@ public abstract class Player {
         this.hand.add(this.deck.pick());
         view.displayPlayerPickCards(this, 2);
     }
+
+    abstract void useEffectMagician(Magician magician);
+
+    abstract void useEffectAssassin(Assassin assassin);
+
+    abstract void useEffectCondottiere(Condottiere condottiere);
 
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);

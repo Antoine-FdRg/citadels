@@ -11,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
@@ -106,6 +107,7 @@ class GameTest {
 
         charactersList = List.of(
                 new Assassin(),
+                new Magician(),
                 new King(),
                 new Bishop(),
                 new Merchant(),
@@ -334,27 +336,27 @@ class GameTest {
     @Test
     void createCharactersWithFourPlayers() {
         gameWithFourPlayers.createCharacters();
-        assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
+        assertEquals(6, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-        verify(view, times(charactersList.size() - 5)).displayUnusedCharacterInRound(any(Character.class));
+        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithFivePlayers() {
         gameWithFivePlayers.createCharacters();
-        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
-        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
+        assertEquals(7, gameWithFivePlayers.getAvailableCharacters().size());
+        verify(view, times(charactersList.size() - 7)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithSixPlayers() {
         Game gameWithSixPlayers = GameFactory.createGameOfRandomBot(view, 6);
         assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line when a sixth character is added and remove the assertThrows one
+//        TODO UNCOMMENT this line the last character is added and remove the assertThrows one
 //        gameWithSixPlayers.createCharacters();
-//        assertEquals(7, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, times(charactersList.size()-7)).displayUnusedCharacterInRound(any(Character.class));
+//        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
+//        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+//        verify(view, 0).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**
