@@ -5,7 +5,6 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
@@ -24,30 +23,37 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void play() {
-        if(this.getCharacter().isDead()){
-            throw new IllegalStateException("The player is dead, he can't play.");
-        }
-        view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
-        view.displayPlayerInfo(this);
-        if (character instanceof CommonCharacter commonCharacter) {
-            commonCharacter.goldCollectedFromDisctrictType();
-        }
+    public void playARound() {
+        this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
         if (random.nextBoolean()) {
-            pickSomething();
-            if (nbDistrictsToBuild > 0) {
-                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
-            }
+            this.pickBeforePlaying(nbDistrictsToBuild);
         } else {
-            if (nbDistrictsToBuild > 0) {
-                view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
-            }
-            pickSomething();
+            this.playBeforePicking(nbDistrictsToBuild);
         }
-        view.displayPlayerInfo(this);
+    }
+
+    /**
+     * Represents the player's choice to pick something before playing
+     * @param nbDistrictsToBuild the number of districts the bot choose to build
+     */
+    protected void pickBeforePlaying(int nbDistrictsToBuild){
+        pickSomething();
+        if (nbDistrictsToBuild > 0) {
+            view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+        }
+    }
+
+    /**
+     * Represents the player's choice to play something before picking
+     * @param nbDistrictsToBuild the number of districts the bot choose to build
+     */
+    protected void playBeforePicking(int nbDistrictsToBuild){
+        if (nbDistrictsToBuild > 0) {
+            view.displayPlayerPlaysCard(this, this.playCards(nbDistrictsToBuild));
+        }
+        pickSomething();
     }
 
     @Override
