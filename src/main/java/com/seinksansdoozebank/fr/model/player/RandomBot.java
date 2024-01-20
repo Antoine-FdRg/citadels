@@ -163,15 +163,15 @@ public class RandomBot extends Player {
      */
     @Override
     void useEffectAssassin(Assassin assassin) {
-        Character playerToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+        Character characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
-        while (!playerToKill.isDead()) {
+        while (!characterToKill.isDead()) {
             try {
-                assassin.useEffect(playerToKill);
-                view.displayPlayerUseAssassinEffect(this, playerToKill);
+                assassin.useEffect(characterToKill);
+                view.displayPlayerUseAssassinEffect(this, characterToKill);
                 break;
             } catch (IllegalArgumentException e) {
-                playerToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+                characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
             }
         }
     }
@@ -181,17 +181,17 @@ public class RandomBot extends Player {
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
         if (random.nextBoolean()) {
             // get a random player, and destroy a district of this player randomly
-            Opponent playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            Opponent opponentToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             // if the player has no district, the bot will not use the condottiere effect
             // Or check if the player choose is not the bishop
-            Character opponentCharacter = playerToDestroyDistrict.getOpponentCharacter();
-            if (playerToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter instanceof Bishop || opponentCharacter == null) {
+            Character opponentCharacter = opponentToDestroyDistrict.getOpponentCharacter();
+            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter instanceof Bishop || opponentCharacter == null) {
                 return;
             }
             // get the random district
-            int index = random.nextInt(playerToDestroyDistrict.nbDistrictsInCitadel());
+            int index = random.nextInt(opponentToDestroyDistrict.nbDistrictsInCitadel());
             // get the district to destroy
-            District districtToDestroy = playerToDestroyDistrict.getCitadel().get(index).getDistrict();
+            District districtToDestroy = opponentToDestroyDistrict.getCitadel().get(index).getDistrict();
             // Check if the number of golds of the player is enough to destroy the district
             if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
@@ -214,7 +214,7 @@ public class RandomBot extends Player {
 
     @Override
     public boolean wantToUseManufactureEffect() {
-        return random.nextBoolean();
+        return this.getNbGold() > 3 && random.nextBoolean();
     }
 
     @Override

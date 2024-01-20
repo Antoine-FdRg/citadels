@@ -33,7 +33,7 @@ public abstract class Player implements Opponent {
 
     private List<Character> availableCharacters;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
-    private boolean revealed = false;
+    private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -58,7 +58,6 @@ public abstract class Player implements Opponent {
         }
         this.reveal();
         view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
         Card cardToSearch = new Card(District.MANUFACTURE);
         if (getCitadel().contains(cardToSearch) && (this.wantToUseManufactureEffect())) {
@@ -376,27 +375,28 @@ public abstract class Player implements Opponent {
 
     public abstract boolean wantToUseManufactureEffect();
 
-    public boolean isRevealed() {
-        return this.revealed;
+    public boolean isCharacterIsRevealed() {
+        return this.characterIsRevealed;
     }
 
     public void reveal() {
-        if (this.revealed) {
+        if (this.characterIsRevealed) {
             throw new IllegalStateException("The player is already revealed");
         }
-        this.revealed = true;
+        view.displayPlayerRevealCharacter(this);
+        this.characterIsRevealed = true;
     }
 
     public void hide() {
-        if (!this.revealed && !this.character.isDead()) {
+        if (!this.characterIsRevealed && !this.character.isDead()) {
             throw new IllegalStateException("The player is already hidden");
         }
-        this.revealed = false;
+        this.characterIsRevealed = false;
     }
 
     @Override
     public Character getOpponentCharacter() {
-        if (this.isRevealed()) {
+        if (this.isCharacterIsRevealed()) {
             return this.getCharacter();
         } else {
             return null;

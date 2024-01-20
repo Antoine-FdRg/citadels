@@ -2,7 +2,7 @@ package com.seinksansdoozebank.fr.model.cards.effect;
 
 import com.seinksansdoozebank.fr.model.player.Player;
 
-public class ManufactureEffect extends ActiveEffect {
+public class ManufactureEffect implements ActiveEffect {
 
     /**
      * Once per turn, the player can pay three gold coins to draw three cards.

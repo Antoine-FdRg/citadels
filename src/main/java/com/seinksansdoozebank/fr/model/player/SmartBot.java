@@ -198,8 +198,9 @@ public class SmartBot extends Player {
     protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
+                .filter(opponent -> opponent.getOpponentCharacter() instanceof Bishop) // can't destroy the districts of the bishop
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
-        if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().getOpponentCharacter() instanceof Bishop) {
+        if (playerWithMostDistricts.isEmpty()) {
             return;
         }
         // Sort the districts of the player by cost
@@ -341,7 +342,7 @@ public class SmartBot extends Player {
     @Override
     public boolean wantToUseManufactureEffect() {
         // if the bot has less than 2 cards in hand, it will use the manufacture effect to get more cards
-        return this.getHand().size() < 2 || this.isLate();
+        return this.getNbGold() > 3 && (this.getHand().size() < 2 || this.isLate());
     }
 
     /**
