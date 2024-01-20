@@ -9,10 +9,9 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.RandomBot;
-import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -22,9 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Game {
-    private static final int NB_PLAYER_MAX = 6;
-    private static final int NB_PLAYER_MIN = 3;
-    private static final int NB_GOLD_INIT = 2;
+    protected static final int NB_PLAYER_MAX = 6;
+    protected static final int NB_PLAYER_MIN = 4;
     private static final int NB_CARD_BY_PLAYER = 4;
 
     private boolean findFirstPlayerWithEightDistricts = false;
@@ -36,29 +34,15 @@ public class Game {
     private int nbCurrentRound;
     private boolean finished;
 
-    /**
-     * Constructor of the Game class
-     *
-     * @param nbPlayers the number of players playing
-     */
-    public Game(int nbPlayers, IView view) {
-        if (nbPlayers > NB_PLAYER_MAX || nbPlayers < NB_PLAYER_MIN) {
+    Game(IView view, Deck deck, List<Player> playerList){
+        if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
         this.view = view;
-        this.deck = new Deck();
-        this.players = new ArrayList<>();
-        players.add(new SmartBot(NB_GOLD_INIT, this.deck, this.view));
-        for (int i = 0; i < nbPlayers - 1; i++) {
-            players.add(new RandomBot(NB_GOLD_INIT, this.deck, this.view));
-        }
-        for (Player player : players) {
-            List<Player> opponents = new ArrayList<>(players);
-            opponents.remove(player);
-            player.setOpponents(opponents);
-        }
-        availableCharacters = new ArrayList<>();
-        crownedPlayer = null;
+        this.deck = deck;
+        this.players = playerList;
+        this.availableCharacters = new ArrayList<>();
+        this.crownedPlayer = null;
         this.finished = false;
     }
 
@@ -69,6 +53,7 @@ public class Game {
         this.init();
         this.nbCurrentRound = 1;
         while (!finished) {
+            createCharacters();
             this.playARound();
         }
         view.displayGameFinished();
@@ -165,18 +150,19 @@ public class Game {
                 new Assassin(),
                 new Thief(),
                 new Bishop(),
+                new Magician(),
                 new Merchant(),
                 new Architect(),
                 new Condottiere()));
-        if (nbPlayers+1 > notMandatoryCharacters.size()) {
+        if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
         Collections.shuffle(notMandatoryCharacters);
         // the king must always be available
         availableCharacters.add(new King());
         //adding as much characters as there are players because the king is already added and
-        // the rules say that the number of characters must be equal to the number of players +2
-        for (int i = 0; i < nbPlayers+1; i++) {
+        // the rules say that the number of characters must be equal to the number of players +1
+        for (int i = 0; i < nbPlayers + 1; i++) {
             availableCharacters.add(notMandatoryCharacters.get(i));
         }
         //remove the characters that are available from the list of not mandatory characters
@@ -268,8 +254,6 @@ public class Game {
             view.displayPlayerScore(player);
         }
     }
-
-
 
 
     /**

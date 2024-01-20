@@ -11,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
@@ -46,6 +47,7 @@ class GameTest {
     Game gameWithFivePlayers;
     Game gameWithThreePlayers;
     Game gameWithFourPlayers;
+    Game gameWithSixPlayers;
     Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
@@ -58,10 +60,11 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        gameWithFivePlayers = spy(new Game(5, view));
-        gameWithThreePlayers = new Game(3, view);
-        gameWithFourPlayers = spy(new Game(4, view));
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(3, view);
+        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
+        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
+        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
+        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view,6 ));
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -106,12 +109,13 @@ class GameTest {
 
         charactersList = List.of(
                 new Assassin(),
+                new Thief(),
+                new Magician(),
                 new King(),
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere(),
-                new Thief()
+                new Condottiere()
         );
 
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view));
@@ -265,8 +269,9 @@ class GameTest {
     void run() {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() ;
+        verify(gameWithFourPlayers, times(nbRoundPlayed )).createCharacters();
+        verify(gameWithFourPlayers, times(nbRoundPlayed-1)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -323,12 +328,12 @@ class GameTest {
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(2, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 2));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(7, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 7));
     }
 
     @Test
@@ -336,7 +341,6 @@ class GameTest {
         gameWithFourPlayers.createCharacters();
         assertEquals(6, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-        //TODO chnage this test with real values when all characters are implemented
         verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
@@ -344,19 +348,15 @@ class GameTest {
     void createCharactersWithFivePlayers() {
         gameWithFivePlayers.createCharacters();
         assertEquals(7, gameWithFivePlayers.getAvailableCharacters().size());
-        //TODO chnage this test with real values when all characters are implemented
         verify(view, times(charactersList.size() - 7)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithSixPlayers() {
-        Game gameWithSixPlayers = new Game(6, view);
-        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line the last character is added and remove the assertThrows one
-//        gameWithSixPlayers.createCharacters();
-//        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, 0).displayUnusedCharacterInRound(any(Character.class));
+        gameWithSixPlayers.createCharacters();
+        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(0)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**
