@@ -24,6 +24,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -227,6 +228,7 @@ class RandomBotTest {
          when(player.getCharacter()).thenReturn(bishop);
          spyRandomBot.useEffect();
          verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
+         assertEquals(spyRandomBot,bishop.getSavedThief());
     }
 
     /**
@@ -245,6 +247,7 @@ class RandomBotTest {
         when(player.getCharacter()).thenReturn(assassin);
         spyRandomBot.useEffect();
         verify(view,times(0)).displayPlayerUseThiefEffect(spyRandomBot);
+        assertNull(assassin.getSavedThief());
     }
 
 }
