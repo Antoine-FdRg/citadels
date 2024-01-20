@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -411,7 +412,7 @@ class SmartBotTest {
      * On vérifie que le smartBot qui est un voleur utilise son effet sur son opposant bishop.
      */
     @Test
-    void randomBotUseEffectOfTheThiefTest(){
+    void smartBotUseEffectOfTheThiefWhenNoArchitectAndMerchantAvailablesTest(){
         Player player = spy(new SmartBot(2, deck, view));
         Bishop bishop=spy(new Bishop());
         bishop.setPlayer(player);
@@ -426,6 +427,7 @@ class SmartBotTest {
 
         spySmartBot.useEffect();
         verify(view,times(1)).displayPlayerUseThiefEffect(spySmartBot);
+        assertEquals(spySmartBot,bishop.getSavedThief());
     }
 
     /**
@@ -447,13 +449,14 @@ class SmartBotTest {
 
         spySmartBot.useEffect();
         verify(view,times(0)).displayPlayerUseThiefEffect(spySmartBot);
+        assertNull(assassin.getSavedThief());
     }
 
     /**
      * On vérifie que lorsque chooseVictim est appelée, le SmartBot vole bien l'architecte avant de voler un autre personnage moins important
      */
     @Test
-    void chooseVictimTest(){
+    void useEffectThiefWhenArchitectAvailableTest(){
         Player bishopPlayer = spy(new SmartBot(2, deck, view));
         Bishop bishop=spy(new Bishop());
         bishop.setPlayer(bishopPlayer);
@@ -473,6 +476,8 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(opponents);
 
         spySmartBot.useEffect();
+        assertEquals(spySmartBot,architect.getSavedThief());
+        assertNull(bishop.getSavedThief());
         assertEquals(spySmartBot,architect.getSavedThief());
     }
 

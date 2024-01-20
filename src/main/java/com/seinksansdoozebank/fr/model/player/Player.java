@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -207,6 +208,7 @@ public abstract class Player {
     abstract void useEffectAssassin(Assassin assassin);
 
     abstract void useEffectCondottiere(Condottiere condottiere);
+    abstract void useEffectThief(Thief thief);
 
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);

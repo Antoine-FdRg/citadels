@@ -192,7 +192,7 @@ public class SmartBot extends Player {
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
         } else if (this.getCharacter() instanceof Thief thief) {
-            this.chooseVictim(thief);
+            this.useEffectThief(thief);
         }
     }
 
@@ -230,6 +230,8 @@ public class SmartBot extends Player {
     protected void useEffectAssassin(Assassin assassin) {
         // TODO
     }
+
+
 
 
     /**
@@ -345,7 +347,8 @@ public class SmartBot extends Player {
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
      * @param thief
      */
-    public void chooseVictim(Thief thief){
+    @Override
+    protected void useEffectThief(Thief thief){
         Optional<Player> victim= this.getOpponents().stream().filter(player -> player.getCharacter().getRole() != Role.ASSASSIN &&
                 !player.getCharacter().isDead() && (player.getCharacter().getRole() == Role.ARCHITECT || player.getCharacter().getRole() == Role.MERCHANT)).findFirst();
         if(victim.isEmpty()){
