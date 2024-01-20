@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 
@@ -27,12 +28,13 @@ public class Game {
     private final Deck deck;
     protected List<Player> players;
     Player crownedPlayer;
-    private final List<Character> availableCharacters;
+    private List<Character> availableCharacters;
+    private List<Character> charactersInTheRound;
     private final IView view;
     private int nbCurrentRound;
     private boolean finished;
 
-    Game(IView view, Deck deck, List<Player> playerList){
+    Game(IView view, Deck deck, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
@@ -69,6 +71,7 @@ public class Game {
         orderPlayerBeforePlaying();
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
+                player.setAvailableCharacters(charactersInTheRound);
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
@@ -143,22 +146,26 @@ public class Game {
      */
     protected void createCharacters() {
         int nbPlayers = this.players.size();
+        availableCharacters = new ArrayList<>();
         List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
                 new Bishop(),
+                new Magician(),
                 new Merchant(),
                 new Architect(),
                 new Condottiere()));
-        if (nbPlayers > notMandatoryCharacters.size()) {
+        if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }
         Collections.shuffle(notMandatoryCharacters);
         // the king must always be available
         availableCharacters.add(new King());
-        //adding as much characters as there are players because the king is already added and the rules say that the number of characters must be equal to the number of players +1
-        for (int i = 0; i < nbPlayers; i++) {
+        //adding as much characters as there are players because the king is already added and
+        // the rules say that the number of characters must be equal to the number of players +1
+        for (int i = 0; i < nbPlayers + 1; i++) {
             availableCharacters.add(notMandatoryCharacters.get(i));
         }
+        charactersInTheRound = new ArrayList<>(availableCharacters);
         //remove the characters that are available from the list of not mandatory characters
         notMandatoryCharacters.removeAll(availableCharacters);
         //display the characters that are not in availableCharacters
@@ -248,8 +255,6 @@ public class Game {
             view.displayPlayerScore(player);
         }
     }
-
-
 
 
     /**

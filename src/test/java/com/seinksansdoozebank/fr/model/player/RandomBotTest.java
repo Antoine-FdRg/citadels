@@ -26,7 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class RandomBotTest {
     RandomBot spyRandomBot;
@@ -56,11 +63,11 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMostOnce()).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMostOnce()).displayPlayerPlaysCard(any(), any());
     }
 
     @Test
-    void playWhereCharacterIsDead(){
+    void playWhereCharacterIsDead() {
         King king = new King();
         when(spyRandomBot.getCharacter()).thenReturn(king);
         king.kill();
@@ -79,7 +86,7 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMost(3)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMost(3)).displayPlayerPlaysCard(any(), any());
     }
 
     @Test
@@ -88,11 +95,13 @@ class RandomBotTest {
         doReturn(optDistrict).when(spyRandomBot).playACard();
         Assassin assassin = spy(new Assassin());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
-        List<Player> opponents = new ArrayList<>();
+        List<Opponent> opponents = new ArrayList<>();
         RandomBot opponent = new RandomBot(10, deck, view);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
+
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
@@ -100,7 +109,7 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMost(1)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMost(1)).displayPlayerPlaysCard(any(), any());
         verify(assassin, times(1)).useEffect(opponent.getCharacter());
     }
 
@@ -117,7 +126,7 @@ class RandomBotTest {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
         spyRandomBot.pickTwoCardKeepOneDiscardOne();
 
-        verify(view, times(1)).displayPlayerPickCards(spyRandomBot,1);
+        verify(view, times(1)).displayPlayerPickCards(spyRandomBot, 1);
 
         verify(deck, times(2)).pick();
         assertEquals(handSizeBeforePicking + 1, spyRandomBot.getHand().size());
@@ -201,6 +210,19 @@ class RandomBotTest {
         spyRandomBot.useEffect();
         verify(spyRandomBot, times(1)).useEffect();
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
+    }
+
+    @Test
+    void testWantToUseManufactureEffect() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+
+        // Test the wantToUseEffect method
+        assertTrue(spyRandomBot.wantToUseManufactureEffect());
     }
 
 

@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
@@ -76,7 +77,7 @@ public class GameBuilder {
             throw new IllegalStateException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
         }
         for (Player player : playerList) {
-            List<Player> opponents = new ArrayList<>(playerList);
+            List<Opponent> opponents = new ArrayList<>(playerList);
             opponents.remove(player);
             player.setOpponents(opponents);
         }

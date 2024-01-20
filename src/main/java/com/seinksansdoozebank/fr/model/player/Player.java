@@ -2,21 +2,22 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class Player {
+public abstract class Player implements Opponent {
     private static int counter = 1;
     protected final int id;
     private int nbGold;
@@ -28,8 +29,11 @@ public abstract class Player {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
-    private List<Player> opponents;
+    private List<Opponent> opponents;
+
+    private List<Character> availableCharacters;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -52,9 +56,13 @@ public abstract class Player {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
+        this.reveal();
         view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
+        Card cardToSearch = new Card(District.MANUFACTURE);
+        if (getCitadel().contains(cardToSearch) && (this.wantToUseManufactureEffect())) {
+            getCitadel().get(getCitadel().indexOf(cardToSearch)).getDistrict().useActiveEffect(this);
+        }
         this.playARound();
         view.displayPlayerInfo(this);
     }
@@ -158,7 +166,10 @@ public abstract class Player {
         List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(playedCards::add);
+            if (card.isPresent()) {
+                card.ifPresent(playedCards::add);
+                this.view.displayPlayerPlaysCard(this, card.get());
+            }
         }
         return playedCards;
     }
@@ -175,6 +186,7 @@ public abstract class Player {
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
+        this.view.displayPlayerPlaysCard(this, card);
         return List.of(card);
     }
 
@@ -196,6 +208,12 @@ public abstract class Player {
         this.hand.add(this.deck.pick());
         view.displayPlayerPickCards(this, 2);
     }
+
+    abstract void useEffectMagician(Magician magician);
+
+    abstract void useEffectAssassin(Assassin assassin);
+
+    abstract void useEffectCondottiere(Condottiere condottiere);
 
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);
@@ -299,6 +317,7 @@ public abstract class Player {
         if (this.character == null) {
             throw new IllegalStateException("No character to retrieve");
         }
+        this.hide();
         Character characterToRetrieve = this.character;
         this.character = null;
         characterToRetrieve.resurrect();
@@ -320,20 +339,20 @@ public abstract class Player {
         }
     }
 
-    public List<Player> getOpponents() {
+    public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
     }
 
-    public void setOpponents(List<Player> opponents) {
-        this.opponents=opponents;
+    public void setOpponents(List<Opponent> opponents) {
+        this.opponents = opponents;
     }
 
-    public void switchHandWith(Player player) {
+    public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.hand.clear();
-        this.hand.addAll(player.getHand());
-        player.hand.clear();
-        player.hand.addAll(handToSwitch);
+        this.hand.addAll(magician.getHand());
+        magician.hand.clear();
+        magician.hand.addAll(handToSwitch);
     }
 
     public abstract void chooseColorCourtyardOfMiracle();
@@ -354,5 +373,46 @@ public abstract class Player {
         this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
     }
 
+    public abstract boolean wantToUseManufactureEffect();
 
+    public boolean isCharacterIsRevealed() {
+        return this.characterIsRevealed;
+    }
+
+    public void reveal() {
+        if (this.characterIsRevealed) {
+            throw new IllegalStateException("The player is already revealed");
+        }
+        view.displayPlayerRevealCharacter(this);
+        this.characterIsRevealed = true;
+    }
+
+    public void hide() {
+        if (!this.characterIsRevealed && !this.character.isDead()) {
+            throw new IllegalStateException("The player is already hidden");
+        }
+        this.characterIsRevealed = false;
+    }
+
+    @Override
+    public Character getOpponentCharacter() {
+        if (this.isCharacterIsRevealed()) {
+            return this.getCharacter();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int nbDistrictsInCitadel() {
+        return this.getCitadel().size();
+    }
+
+    public List<Character> getAvailableCharacters() {
+        return availableCharacters;
+    }
+
+    public void setAvailableCharacters(List<Character> availableCharacters) {
+        this.availableCharacters = availableCharacters;
+    }
 }
