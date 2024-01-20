@@ -220,8 +220,7 @@ class RandomBotTest {
         when(mockRandom.nextBoolean()).thenReturn(false);
         List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
 
-        Card card=spyRandomBot.keepOneDiscardOthers(cardPicked);
-        assertNotNull(card);
+        assertNotNull(spyRandomBot.keepOneDiscardOthers(cardPicked));
     }
 
 

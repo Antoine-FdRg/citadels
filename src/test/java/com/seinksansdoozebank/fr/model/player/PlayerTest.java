@@ -264,11 +264,17 @@ class PlayerTest {
     }
 
     @Test
-    void numberOfCardsToPickTest(){
+    void numberOfCardsToPickWhenTheBotHasObservatoryInHisCitadelTest(){
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE),new Card(District.OBSERVATORY)));
         assertEquals(3,spyPlayer.numberOfCardsToPick());
+    }
+
+
+    @Test
+    void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest(){
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
         assertEquals(2,spyPlayer.numberOfCardsToPick());
     }
+
 
 }
