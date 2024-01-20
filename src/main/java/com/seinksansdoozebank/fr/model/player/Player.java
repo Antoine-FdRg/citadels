@@ -245,6 +245,11 @@ public abstract class Player {
         return Collections.unmodifiableList(this.citadel);
     }
 
+    void setCitadel(List<Card> citadel) {
+        this.citadel.clear();
+        this.citadel.addAll(citadel);
+    }
+
     public int getNbGold() {
         return this.nbGold;
     }

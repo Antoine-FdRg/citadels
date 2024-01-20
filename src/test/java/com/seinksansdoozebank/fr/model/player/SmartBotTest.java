@@ -69,7 +69,7 @@ class SmartBotTest {
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
         when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
-        when(spySmartBot.hasACardToPlay()).thenReturn( false,false, true);
+        when(spySmartBot.hasACardToPlay()).thenReturn(false, false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
@@ -85,7 +85,7 @@ class SmartBotTest {
     @Test
     void playWithABuildableDistrictShouldBuildAndPickSomething() {
         when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
-        when(spySmartBot.hasACardToPlay()).thenReturn( true);
+        when(spySmartBot.hasACardToPlay()).thenReturn(true);
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
@@ -404,4 +404,36 @@ class SmartBotTest {
         verify(view, times(0)).displayPlayerPlaysCard(any(), any());
     }
 
+    @Test
+    void testUseEffectCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        // construct Opponent Citadel
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.setCitadel(opponentCitadel);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        int lastGold = spySmartBot.getNbGold();
+        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        assertEquals(0, opponent.getCitadel().size());
+        assertEquals(lastGold - District.MARKET_PLACE.getCost() + 1, spySmartBot.getNbGold());
+    }
+
+
+    @Test
+    void testCantUseEffectCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        // construct Opponent Citadel
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.setCitadel(opponentCitadel);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        int lastGold = spySmartBot.getNbGold();
+        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        assertEquals(1, opponent.getCitadel().size());
+        assertEquals(lastGold, spySmartBot.getNbGold());
+    }
 }

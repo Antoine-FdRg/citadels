@@ -196,7 +196,7 @@ class RandomBotTest {
     }
 
     @Test
-    void testRandomBotUseEffect() {
+    void testRandomBotUseEffectCondottiere() {
         // Create a mock Random object that always returns true
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);

@@ -6,7 +6,6 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
@@ -198,7 +197,7 @@ public class SmartBot extends Player {
         // Get the player with the most districts
         Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
-        if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().character instanceof Bishop) {
+        if (playerWithMostDistricts.isEmpty()) {
             return;
         }
         // Sort the districts of the player by cost
@@ -207,7 +206,7 @@ public class SmartBot extends Player {
                 .toList();
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
-            if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
+            if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
                     return;
