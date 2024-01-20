@@ -462,4 +462,15 @@ class SmartBotTest {
         assertFalse(spySmartBot.wantToUseManufactureEffect());
     }
 
+    @Test
+    void testDoesNotWantToUseManufactureEffectWhenHaving2CardInHisHandButNotEnoughGold() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard, barrackCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        spySmartBot.decreaseGold(7);
+        assertFalse(spySmartBot.wantToUseManufactureEffect());
+    }
+
 }
