@@ -11,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Collections;
@@ -154,6 +155,11 @@ public class RandomBot extends Player {
             magician.useEffect(null, cardsToExchange);
             this.view.displayPlayerUseMagicianEffect(this, null);
         }
+    }
+
+    @Override
+    protected void useEffectThief(Thief thief){
+        //TODO
     }
 
     /**

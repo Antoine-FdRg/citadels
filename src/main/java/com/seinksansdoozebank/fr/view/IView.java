@@ -60,4 +60,5 @@ public interface IView {
 
     void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer);
     void displayPlayerHasGotObservatory(Player player);
+    void displayPlayerUseThiefEffect(Player player);
 }

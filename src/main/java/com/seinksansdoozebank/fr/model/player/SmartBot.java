@@ -13,6 +13,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -188,6 +189,8 @@ public class SmartBot extends Player {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.getCharacter() instanceof Thief thief) {
+            this.useEffectThief(thief);
         } else if (this.character instanceof Magician magician) {
             this.useEffectMagician(magician);
         }
@@ -376,6 +379,24 @@ public class SmartBot extends Player {
             return 0;
         }
         return average.getAsDouble();
+    }
+
+    /**
+     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     * @param thief
+     */
+    @Override
+    protected void useEffectThief(Thief thief){
+        Optional<Opponent> victim= this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                !player.getOpponentCharacter().isDead() && (player.getOpponentCharacter().getRole() == Role.ARCHITECT || player.getOpponentCharacter().getRole() == Role.MERCHANT)).findFirst();
+        if(victim.isEmpty()){
+            victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                    !player.getOpponentCharacter().isDead()).findFirst();
+        }
+        victim.ifPresent(player -> {
+            thief.useEffect(player.getOpponentCharacter());
+            view.displayPlayerUseThiefEffect(this);
+        });
     }
 
     @Override
