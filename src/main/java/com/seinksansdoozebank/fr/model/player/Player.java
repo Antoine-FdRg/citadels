@@ -2,16 +2,18 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-
-import java.util.Collections;
-import java.util.List;
-
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -27,7 +29,7 @@ public abstract class Player {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
-    private final List<Player> opponents = new ArrayList<>();
+    private List<Player> opponents;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private DistrictType colorCourtyardOfMiracleType;
 
@@ -37,6 +39,7 @@ public abstract class Player {
         this.deck = deck;
         this.hand = new ArrayList<>();
         this.citadel = new ArrayList<>();
+        this.opponents = new ArrayList<>();
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
@@ -46,7 +49,18 @@ public abstract class Player {
      * Represents the player's turn
      * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
      */
-    public abstract void play();
+    public void play() {
+        if (this.getCharacter().isDead()) {
+            throw new IllegalStateException("The player is dead, he can't play.");
+        }
+        view.displayPlayerStartPlaying(this);
+        view.displayPlayerRevealCharacter(this);
+        view.displayPlayerInfo(this);
+        this.playARound();
+        view.displayPlayerInfo(this);
+    }
+
+    public abstract void playARound();
 
     /**
      * Represents the player's choice between drawing 2 gold coins or a district
@@ -167,12 +181,15 @@ public abstract class Player {
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        List<Card> cards = new ArrayList<>();
+        List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            card.ifPresent(cards::add);
+            if (card.isPresent()) {
+                card.ifPresent(playedCards::add);
+                this.view.displayPlayerPlaysCard(this, card.get());
+            }
         }
-        return cards;
+        return playedCards;
     }
 
     /**
@@ -187,7 +204,18 @@ public abstract class Player {
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
+        this.view.displayPlayerPlaysCard(this, card);
         return List.of(card);
+    }
+
+
+    /**
+     * Collect gold with the effect of the character if it is a common character
+     */
+    void useCommonCharacterEffect() {
+        if (this.character instanceof CommonCharacter commonCharacter) {
+            commonCharacter.goldCollectedFromDisctrictType();
+        }
     }
 
     /**
@@ -199,9 +227,18 @@ public abstract class Player {
         view.displayPlayerPickCards(this, 2);
     }
 
+    abstract void useEffectMagician(Magician magician);
+
+    abstract void useEffectAssassin(Assassin assassin);
+
+    abstract void useEffectCondottiere(Condottiere condottiere);
+
+    protected boolean hasACardToPlay() {
+        return this.hand.stream().anyMatch(this::canPlayCard);
+    }
+
     /**
      * Choose a district to build from the hand
-     * Is automatically called in buildADistrict() to build the choosen district if canBuildDistrict(<choosenDistrcit>) is true
      *
      * @return the district to build
      */
@@ -324,7 +361,7 @@ public abstract class Player {
     }
 
     public void setOpponents(List<Player> opponents) {
-        this.opponents.addAll(opponents);
+        this.opponents=opponents;
     }
 
     public void switchHandWith(Player player) {

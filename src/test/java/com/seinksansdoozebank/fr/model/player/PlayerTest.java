@@ -1,7 +1,7 @@
 package com.seinksansdoozebank.fr.model.player;
 
-import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,7 +11,15 @@ import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -19,10 +27,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 class PlayerTest {
     Player player;
@@ -228,8 +232,8 @@ class PlayerTest {
      * We verify if a player has already 8 districts then he can't play another card
      */
     @Test
-    void canPlayCardWhenAlreadyHaveEightDistrict(){
-        List<Card> citadelle=new ArrayList<>(List.of(new Card(District.PALACE),
+    void canPlayCardWhenAlreadyHaveEightDistrict() {
+        List<Card> citadelle = new ArrayList<>(List.of(new Card(District.PALACE),
                 new Card(District.MANOR),
                 new Card(District.BARRACK),
                 new Card(District.OBSERVATORY),
@@ -242,7 +246,7 @@ class PlayerTest {
     }
 
     @Test
-    void playCardWithAGivenCard(){
+    void playCardWithAGivenCard() {
         spyPlayer.getHand().add(new Card(District.TEMPLE));
         doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
         spyPlayer.playCard(new Card(District.TEMPLE));

@@ -27,7 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class RandomBotTest {
     RandomBot spyRandomBot;
@@ -57,11 +64,11 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMostOnce()).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMostOnce()).displayPlayerPlaysCard(any(), any());
     }
 
     @Test
-    void playWhereCharacterIsDead(){
+    void playWhereCharacterIsDead() {
         King king = new King();
         when(spyRandomBot.getCharacter()).thenReturn(king);
         king.kill();
@@ -80,7 +87,7 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMost(3)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMost(3)).displayPlayerPlaysCard(any(), any());
     }
 
     @Test
@@ -101,7 +108,7 @@ class RandomBotTest {
         verify(view, times(1)).displayPlayerStartPlaying(spyRandomBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spyRandomBot);
         verify(view, times(2)).displayPlayerInfo(spyRandomBot);
-        verify(view, atMost(1)).displayPlayerPlaysCard(spyRandomBot, List.of(optDistrict.get()));
+        verify(view, atMost(1)).displayPlayerPlaysCard(any(), any());
         verify(assassin, times(1)).useEffect(opponent.getCharacter());
     }
 
@@ -118,7 +125,7 @@ class RandomBotTest {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
         spyRandomBot.pickCardsKeepSomeAndDiscardOthers();
 
-        verify(view, times(1)).displayPlayerPickCards(spyRandomBot,1);
+        verify(view, times(1)).displayPlayerPickCards(spyRandomBot, 1);
 
         verify(deck, times(2)).pick();
         assertEquals(handSizeBeforePicking + 1, spyRandomBot.getHand().size());

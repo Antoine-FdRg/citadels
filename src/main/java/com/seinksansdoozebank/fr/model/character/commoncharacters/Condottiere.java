@@ -25,14 +25,14 @@ public class Condottiere extends CommonCharacter {
         if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
-        if (character.getPlayer().equals(this.getPlayer())) {
-            throw new IllegalArgumentException("The player can't destroy his own district");
-        }
         if (character instanceof Bishop) {
             throw new IllegalArgumentException("The player can't destroy the district of the bishop");
         }
         if (district.equals(District.DONJON)) {
             throw new IllegalArgumentException("The player can't destroy the donjon");
+        }
+        if (character.getPlayer().getCitadel().size() >= 8) {
+            throw new IllegalArgumentException("The player can't destroy a district if the player has a complete citadel");
         }
         if (character.getPlayer().destroyDistrict(this.getPlayer(), district)) {
             this.getPlayer().decreaseGold(district.getCost() - 1);
