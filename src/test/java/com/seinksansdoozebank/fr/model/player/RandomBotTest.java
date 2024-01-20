@@ -203,11 +203,38 @@ class RandomBotTest {
 
         // Set the mockRandom in the RandomBot for testing
         spyRandomBot.setRandom(mockRandom);
-
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = new SmartBot(10, deck, view);
+        opponent.setCitadel(opponentCitadel);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         spyRandomBot.useEffect();
         verify(spyRandomBot, times(1)).useEffect();
-        verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
+        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+    }
+
+    @Test
+    void testRandomBotCantUseEffectCondottiere() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = new SmartBot(10, deck, view);
+        opponent.setCitadel(opponentCitadel);
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
+        // Test the useEffect method
+        int nbGold = spyRandomBot.getNbGold();
+        spyRandomBot.useEffect();
+        verify(spyRandomBot, times(1)).useEffect();
+        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+        assertEquals(nbGold, spyRandomBot.getNbGold());
     }
 
 

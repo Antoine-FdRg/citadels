@@ -10,6 +10,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -322,10 +323,29 @@ class SmartBotTest {
     }
 
     @Test
-    void useEffectTest() {
+    void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, atMost(1)).useEffectArchitectPickCards();
+        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+    }
+
+    @Test
+    void useEffectTestCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        spySmartBot.useEffect();
+        verify(spySmartBot, times(1)).useEffectCondottiere(any());
+    }
+
+    @Test
+    void useEffectTestAssassin() {
+        Assassin assassin = spy(new Assassin());
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
+        // give assassin a target
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        spySmartBot.useEffect();
+        verify(assassin, times(1)).useEffect(any());
     }
 
     @Test

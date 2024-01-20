@@ -5,7 +5,6 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -184,7 +183,7 @@ public class RandomBot extends Player {
             Player playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             // if the player has no district, the bot will not use the condottiere effect
             // Or check if the player choose is not the bishop
-            if (playerToDestroyDistrict.getCitadel().isEmpty() || playerToDestroyDistrict.getCharacter() instanceof Bishop) {
+            if (playerToDestroyDistrict.getCitadel().isEmpty()) {
                 return;
             }
             // get the random district
@@ -192,7 +191,7 @@ public class RandomBot extends Player {
             // get the district to destroy
             District districtToDestroy = playerToDestroyDistrict.getCitadel().get(index).getDistrict();
             // Check if the number of golds of the player is enough to destroy the district
-            if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
+            if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
                 try {
                     condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);

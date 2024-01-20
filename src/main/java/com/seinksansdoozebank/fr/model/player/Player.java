@@ -332,7 +332,7 @@ public abstract class Player {
             this.view.displayPlayerDestroyDistrict(attacker, this, district);
             return true;
         } else {
-            throw new IllegalStateException("The player doesn't have the district to destroy");
+            throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
 

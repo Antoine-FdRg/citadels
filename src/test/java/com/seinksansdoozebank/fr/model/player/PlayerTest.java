@@ -252,4 +252,12 @@ class PlayerTest {
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
+
+    @Test
+    void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
+        Player player = new RandomBot(10, deck, view);
+        Player player2 = new RandomBot(10, deck, view);
+        player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    }
 }
