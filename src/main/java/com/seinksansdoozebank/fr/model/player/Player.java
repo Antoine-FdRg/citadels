@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class Player {
+public abstract class Player implements Opponent {
     private static int counter = 1;
     protected final int id;
     private int nbGold;
@@ -30,8 +30,11 @@ public abstract class Player {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
-    private List<Player> opponents;
+    private List<Opponent> opponents;
+
+    private List<Character> availableCharacters;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
+    private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -54,9 +57,13 @@ public abstract class Player {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
+        this.reveal();
         view.displayPlayerStartPlaying(this);
-        view.displayPlayerRevealCharacter(this);
         view.displayPlayerInfo(this);
+        Card cardToSearch = new Card(District.MANUFACTURE);
+        if (getCitadel().contains(cardToSearch) && (this.wantToUseManufactureEffect())) {
+            getCitadel().get(getCitadel().indexOf(cardToSearch)).getDistrict().useActiveEffect(this);
+        }
         this.playARound();
         view.displayPlayerInfo(this);
     }
@@ -115,10 +122,35 @@ public abstract class Player {
     }
 
     /**
-     * Represents the player's choice to draw 2 districts keep one and discard the other one
+     * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    protected abstract void pickTwoCardKeepOneDiscardOne();
+    protected void pickCardsKeepSomeAndDiscardOthers() {
+        List<Card> pickedCards = new ArrayList<>();
+        int numberOfCardsToPick=numberOfCardsToPick();
+        for(int i=0;i<numberOfCardsToPick;i++){
+            pickedCards.add(this.deck.pick());
+        }
+        this.view.displayPlayerPickCards(this, 1);
+        Card chosenCard = keepOneDiscardOthers(pickedCards);
+        this.hand.add(chosenCard);
+        pickedCards.stream().filter(card -> !(card.equals(chosenCard))).forEach(card -> this.deck.discard(card));
+    }
+
+    /**
+     * On regarde si dans la citadelle du joueur le player à l'observatoire, on retourne le nombre de cartes à piocher en fonction
+     * @return nombre de cartes à piocher
+     */
+    protected int numberOfCardsToPick() {
+        Optional<Card> observatory = getCitadel().stream().filter(card -> card.getDistrict() == District.OBSERVATORY).findFirst();
+        if (observatory.isPresent()) {
+            this.view.displayPlayerHasGotObservatory(this);
+            return 3;
+        }
+        return 2;
+    }
+
+    protected abstract Card keepOneDiscardOthers(List<Card> pickedCards);
 
     /**
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
@@ -312,6 +344,7 @@ public abstract class Player {
         if (this.character == null) {
             throw new IllegalStateException("No character to retrieve");
         }
+        this.hide();
         Character characterToRetrieve = this.character;
         this.character = null;
         characterToRetrieve.resurrect();
@@ -333,20 +366,20 @@ public abstract class Player {
         }
     }
 
-    public List<Player> getOpponents() {
+    public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
     }
 
-    public void setOpponents(List<Player> opponents) {
-        this.opponents=opponents;
+    public void setOpponents(List<Opponent> opponents) {
+        this.opponents = opponents;
     }
 
-    public void switchHandWith(Player player) {
+    public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.hand.clear();
-        this.hand.addAll(player.getHand());
-        player.hand.clear();
-        player.hand.addAll(handToSwitch);
+        this.hand.addAll(magician.getHand());
+        magician.hand.clear();
+        magician.hand.addAll(handToSwitch);
     }
 
     public abstract void chooseColorCourtyardOfMiracle();
@@ -367,5 +400,46 @@ public abstract class Player {
         this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
     }
 
+    public abstract boolean wantToUseManufactureEffect();
 
+    public boolean isCharacterIsRevealed() {
+        return this.characterIsRevealed;
+    }
+
+    public void reveal() {
+        if (this.characterIsRevealed) {
+            throw new IllegalStateException("The player is already revealed");
+        }
+        view.displayPlayerRevealCharacter(this);
+        this.characterIsRevealed = true;
+    }
+
+    public void hide() {
+        if (!this.characterIsRevealed && !this.character.isDead()) {
+            throw new IllegalStateException("The player is already hidden");
+        }
+        this.characterIsRevealed = false;
+    }
+
+    @Override
+    public Character getOpponentCharacter() {
+        if (this.isCharacterIsRevealed()) {
+            return this.getCharacter();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int nbDistrictsInCitadel() {
+        return this.getCitadel().size();
+    }
+
+    public List<Character> getAvailableCharacters() {
+        return availableCharacters;
+    }
+
+    public void setAvailableCharacters(List<Character> availableCharacters) {
+        this.availableCharacters = availableCharacters;
+    }
 }

@@ -24,6 +24,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -97,11 +98,13 @@ class RandomBotTest {
         doReturn(optDistrict).when(spyRandomBot).playACard();
         Assassin assassin = spy(new Assassin());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
-        List<Player> opponents = new ArrayList<>();
+        List<Opponent> opponents = new ArrayList<>();
         RandomBot opponent = new RandomBot(10, deck, view);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
+
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
@@ -118,13 +121,13 @@ class RandomBotTest {
     void pickSomething() {
         spyRandomBot.pickSomething();
         verify(spyRandomBot, atMostOnce()).pickGold();
-        verify(spyRandomBot, atMostOnce()).pickTwoCardKeepOneDiscardOne();
+        verify(spyRandomBot, atMostOnce()).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOne() {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
-        spyRandomBot.pickTwoCardKeepOneDiscardOne();
+        spyRandomBot.pickCardsKeepSomeAndDiscardOthers();
 
         verify(view, times(1)).displayPlayerPickCards(spyRandomBot, 1);
 
@@ -212,23 +215,49 @@ class RandomBotTest {
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 
+    @Test
+    void testWantToUseManufactureEffect() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+
+        // Test the wantToUseEffect method
+        assertTrue(spyRandomBot.wantToUseManufactureEffect());
+    }
+
+    /**
+     * On vérifie que le bot garde une carte aléatoirement dans tous les cas
+     */
+    @Test
+    void keepOneDiscardOthersTest(){
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+
+        assertNotNull(spyRandomBot.keepOneDiscardOthers(cardPicked));
+    }
+
     /**
      * On vérifie que le randomBot qui est un voleur utilise son effet sur son opposant.
      */
-     @Test
+    @Test
     void randomBotUseEffectOfTheThiefTest(){
         Player player = spy(new RandomBot(2, deck, view));
-         Thief thief = spy(new Thief());
-         thief.setPlayer(spyRandomBot);
-         Bishop bishop=spy(new Bishop());
-         bishop.setPlayer(player);
-         List<Player> opponents=new ArrayList<>(List.of(player));
-         when(spyRandomBot.getOpponents()).thenReturn(opponents);
-         when(spyRandomBot.getCharacter()).thenReturn(thief);
-         when(player.getCharacter()).thenReturn(bishop);
-         spyRandomBot.useEffect();
-         verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
-         assertEquals(spyRandomBot,bishop.getSavedThief());
+        Thief thief = spy(new Thief());
+        thief.setPlayer(spyRandomBot);
+        Bishop bishop=spy(new Bishop());
+        bishop.setPlayer(player);
+        List<Opponent> opponents=new ArrayList<>(List.of(player));
+        when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(player.getOpponentCharacter()).thenReturn(bishop);
+        when(spyRandomBot.getCharacter()).thenReturn(thief);
+        when(player.getCharacter()).thenReturn(bishop);
+        spyRandomBot.useEffect();
+        verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
+        assertEquals(spyRandomBot,bishop.getSavedThief());
     }
 
     /**
@@ -241,13 +270,15 @@ class RandomBotTest {
         thief.setPlayer(spyRandomBot);
         Assassin assassin=spy(new Assassin());
         assassin.setPlayer(player);
-        List<Player> opponents=new ArrayList<>(List.of(player));
+        List<Opponent> opponents=new ArrayList<>(List.of(player));
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
         when(spyRandomBot.getCharacter()).thenReturn(thief);
         when(player.getCharacter()).thenReturn(assassin);
+        when(player.getOpponentCharacter()).thenReturn(assassin);
         spyRandomBot.useEffect();
         verify(view,times(0)).displayPlayerUseThiefEffect(spyRandomBot);
         assertNull(assassin.getSavedThief());
     }
+
 
 }
