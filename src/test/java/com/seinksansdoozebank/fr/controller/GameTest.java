@@ -175,6 +175,7 @@ class GameTest {
             Player currentPlayer = players.get(i);
             Character currentCharacter = charactersList.get(i);
             currentPlayer.chooseCharacter(new ArrayList<>(List.of(currentCharacter)));
+            currentPlayer.reveal();
         }
 
         // Reset the available characters list
@@ -285,8 +286,9 @@ class GameTest {
         verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, times(1)).retrieveCharacters();
-        for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
-            assertFalse(character.isDead());
+        List<Player> players = gameWithFourPlayers.players;
+        for (Player player : players) {
+            assertNull(player.getCharacter());
         }
     }
 

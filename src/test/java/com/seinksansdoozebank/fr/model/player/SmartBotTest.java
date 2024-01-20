@@ -20,8 +20,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,7 +66,7 @@ class SmartBotTest {
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(any(), any());
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
@@ -108,7 +110,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
 
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -119,7 +121,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() < cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(0)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(0)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -129,13 +131,13 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() >= cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOneShouldKeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        spySmartBot.pickTwoCardKeepOneDiscardOne();
+        spySmartBot.pickCardsKeepSomeAndDiscardOthers();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
@@ -293,8 +295,7 @@ class SmartBotTest {
         when(architectPlayer.getCharacter()).thenReturn(new Architect());
         Player merchantPlayer = spy(new SmartBot(10, deck, view));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
-
-        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Architect()));
 
         Character target = spySmartBot.choseAssassinTarget();
 
@@ -303,12 +304,13 @@ class SmartBotTest {
 
     @Test
     void choseAssassinTargetWithTargetNotInList() {
-        Player architectPlayer = spy(new SmartBot(10, deck, view));
-        when(architectPlayer.getCharacter()).thenReturn(new Bishop());
+        Player bishopPlayer = spy(new SmartBot(10, deck, view));
+        when(bishopPlayer.getCharacter()).thenReturn(new Bishop());
         Player merchantPlayer = spy(new SmartBot(10, deck, view));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Bishop(), new Merchant()));
 
-        when(spySmartBot.getOpponents()).thenReturn(List.of(architectPlayer, merchantPlayer));
+        when(spySmartBot.getOpponents()).thenReturn(List.of(bishopPlayer, merchantPlayer));
 
         Character target = spySmartBot.choseAssassinTarget();
 
@@ -408,6 +410,84 @@ class SmartBotTest {
         verify(view, times(0)).displayPlayerPlaysCard(any(), any());
     }
 
+    @Test
+    void testIsLateByHavingLessCardInHisCitadel() {
+        // test when player has less card in his citadel than the average opponents districts in their citadel
+        List<Opponent> opponents = new ArrayList<>();
+        Player opponent1 = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        opponents.add(opponent1);
+        opponents.add(opponent2);
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        assertTrue(spySmartBot.isLate());
+
+    }
+
+    @Test
+    void testIsNotLateByHavingMoreOrEqualsCardInHisCitadel() {
+        // test when player has more card in his citadel than the average opponents districts in their citadel
+        List<Opponent> opponents = new ArrayList<>();
+        Player opponent1 = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        opponents.add(opponent1);
+        opponents.add(opponent2);
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        assertFalse(spySmartBot.isLate());
+
+        // test when player has the same number of card in his citadel than the average opponents districts in their citadel
+        when(spySmartBot.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent1.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.TEMPLE)));
+        when(opponent2.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        assertFalse(spySmartBot.isLate());
+    }
+
+    @Test
+    void testWantToUseManufactureEffectWhenHavingLessThan2CardInHisHand() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        assertTrue(spySmartBot.wantToUseManufactureEffect());
+    }
+
+    @Test
+    void testDoesNotWantToUseManufactureEffectWhenHavingMoreThan2CardInHisHand() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard, barrackCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        assertFalse(spySmartBot.wantToUseManufactureEffect());
+    }
+
+    @Test
+    void testDoesNotWantToUseManufactureEffectWhenHaving2CardInHisHandButNotEnoughGold() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> bishopHand = new ArrayList<>(List.of(templeCard, barrackCard));
+        List<Card> bishopCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        when(spySmartBot.getHand()).thenReturn(bishopHand);
+        when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
+        spySmartBot.decreaseGold(7);
+        assertFalse(spySmartBot.wantToUseManufactureEffect());
+    }
+
+    /**
+     * On vérifie que le smartBot garde dans sa main la carte la moins chère
+     */
+    @Test
+    void keepOneDiscardOthersTest(){
+        Random mockRandom = mock(Random.class);
+        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+        assertEquals(new Card(District.TAVERN),spySmartBot.keepOneDiscardOthers(cardPicked));
+    }
+
     /**
      * On vérifie que le smartBot qui est un voleur utilise son effet sur son opposant bishop.
      */
@@ -416,13 +496,13 @@ class SmartBotTest {
         Player player = spy(new SmartBot(2, deck, view));
         Bishop bishop=spy(new Bishop());
         bishop.setPlayer(player);
-        when(player.getCharacter()).thenReturn(bishop);
+        when(player.getOpponentCharacter()).thenReturn(bishop);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Player> opponents=new ArrayList<>(List.of(player));
+        List<Opponent> opponents=new ArrayList<>(List.of(player));
         when(spySmartBot.getOpponents()).thenReturn(opponents);
 
         spySmartBot.useEffect();
@@ -438,13 +518,13 @@ class SmartBotTest {
         Player player = spy(new SmartBot(2, deck, view));
         Assassin assassin=spy(new Assassin());
         assassin.setPlayer(player);
-        when(player.getCharacter()).thenReturn(assassin);
+        when(player.getOpponentCharacter()).thenReturn(assassin);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Player> opponents=new ArrayList<>(List.of(player));
+        List<Opponent> opponents=new ArrayList<>(List.of(player));
         when(spySmartBot.getOpponents()).thenReturn(opponents);
 
         spySmartBot.useEffect();
@@ -460,18 +540,18 @@ class SmartBotTest {
         Player bishopPlayer = spy(new SmartBot(2, deck, view));
         Bishop bishop=spy(new Bishop());
         bishop.setPlayer(bishopPlayer);
-        when(bishopPlayer.getCharacter()).thenReturn(bishop);
+        when(bishopPlayer.getOpponentCharacter()).thenReturn(bishop);
 
         Player architectplayer=spy(new  SmartBot(2, deck, view));
         Architect architect=spy(new Architect());
         architect.setPlayer(architectplayer);
-        when(architectplayer.getCharacter()).thenReturn(architect);
+        when(architectplayer.getOpponentCharacter()).thenReturn(architect);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Player> opponents=new ArrayList<>(List.of(bishopPlayer));
+        List<Opponent> opponents=new ArrayList<>(List.of(bishopPlayer));
         opponents.add(architectplayer);
         when(spySmartBot.getOpponents()).thenReturn(opponents);
 
@@ -480,7 +560,6 @@ class SmartBotTest {
         assertNull(bishop.getSavedThief());
         assertEquals(spySmartBot,architect.getSavedThief());
     }
-
 
 
 }
