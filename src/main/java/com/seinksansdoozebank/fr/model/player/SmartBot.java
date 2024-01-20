@@ -224,11 +224,12 @@ public class SmartBot extends Player {
     protected void useEffectMagician(Magician magician) {
         int numberOfCardsToExchange = this.getHand().size();
 
-        Optional<Player> playerWithMostDistricts = findPlayerWithMostDistricts(this.getOpponents());
+        Optional<Player> playerWithMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparingInt(player -> player.getHand().size()));
 
         // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
         if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHand().size()) {
-            playerWithMostDistricts.ifPresent(player -> magician.useEffect(player, null));
+            magician.useEffect(playerWithMostDistricts.get(), null);
             return;
         }
 
@@ -240,11 +241,6 @@ public class SmartBot extends Player {
         if (!cardsToExchange.isEmpty()) {
             magician.useEffect(null, cardsToExchange);
         }
-    }
-
-    private Optional<Player> findPlayerWithMostDistricts(List<Player> players) {
-        return players.stream()
-                .max(Comparator.comparingInt(player -> player.getHand().size()));
     }
 
     @Override
