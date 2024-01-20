@@ -57,7 +57,7 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickGold();
         } else {
-            addCardToHand();
+            pickCardsKeepSomeAndDiscardOthers();
         }
     }
 
@@ -68,9 +68,9 @@ public class RandomBot extends Player {
      * @return the card that will be kept
      */
     @Override
-    protected Optional<Card> keepOneDiscardOthers(List<Card> pickedCards) {
+    protected Card keepOneDiscardOthers(List<Card> pickedCards) {
         shuffle(pickedCards);
-        return Optional.of(pickedCards.get(0));
+        return pickedCards.get(0);
     }
 
     @Override

@@ -147,7 +147,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
     }
     @Override
     public void displayStolenCharacter(Character character){
@@ -156,5 +156,9 @@ public class Cli implements IView {
     @Override
     public void displayActualNumberOfGold(Player player){
         CustomLogger.log(Level.INFO,"Le {0} a maintenant {1} pièces d''or.", new Object[]{ player.getCharacter(), player.getNbGold() });
+    }
+    @Override
+    public void displayPlayerHasGotObservatory(Player player){
+        CustomLogger.log(Level.INFO,"Le {0} possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.", player);
     }
 }

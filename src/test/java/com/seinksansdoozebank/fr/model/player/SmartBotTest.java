@@ -62,7 +62,7 @@ class SmartBotTest {
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
-        verify(spySmartBot, times(1)).addCardToHand();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(spySmartBot, emptyList);
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
@@ -109,7 +109,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
 
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).addCardToHand();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -120,7 +120,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() < cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(0)).addCardToHand();
+        verify(spySmartBot, times(0)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -130,13 +130,13 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() >= cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).addCardToHand();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOneShouldKeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        spySmartBot.addCardToHand();
+        spySmartBot.pickCardsKeepSomeAndDiscardOthers();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
@@ -416,7 +416,7 @@ class SmartBotTest {
     void keepOneDiscardOthersTest(){
         Random mockRandom = mock(Random.class);
         List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
-        assertEquals(Optional.of( new Card(District.TAVERN)),spySmartBot.keepOneDiscardOthers(cardPicked));
+        assertEquals(new Card(District.TAVERN),spySmartBot.keepOneDiscardOthers(cardPicked));
     }
 
 }

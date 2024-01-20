@@ -103,26 +103,32 @@ public abstract class Player {
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
      */
-    protected void addCardToHand() {
+    protected void pickCardsKeepSomeAndDiscardOthers() {
         List<Card> pickedCards = new ArrayList<>();
-        pickedCards.add(this.deck.pick());
-        pickedCards.add(this.deck.pick());
-        Optional<Card> observatory = getCitadel().stream().filter(card -> card.getDistrict() == District.OBSERVATORY).findFirst();
-        if (observatory.isPresent()) {
-            this.view.displayPlayerStrategy(this, " possède le district Observatoire il pioche donc 3 cartes et en choisit une.");
+        int numberOfCardsToPick=numberOfCardsToPick();
+        for(int i=0;i<numberOfCardsToPick;i++){
             pickedCards.add(this.deck.pick());
-        } else {
-            this.view.displayPlayerPickCards(this, 1);
         }
-        Optional<Card> chosenCard = keepOneDiscardOthers(pickedCards);
-        if (chosenCard.isPresent()) {
-            this.hand.add(chosenCard.get());
-            pickedCards.stream().filter(card -> !(card.equals(chosenCard.get()))).forEach(card -> this.deck.discard(card));
-        }
-
+        this.view.displayPlayerPickCards(this, 1);
+        Card chosenCard = keepOneDiscardOthers(pickedCards);
+        this.hand.add(chosenCard);
+        pickedCards.stream().filter(card -> !(card.equals(chosenCard))).forEach(card -> this.deck.discard(card));
     }
 
-    protected abstract Optional<Card> keepOneDiscardOthers(List<Card> pickedCards);
+    /**
+     * On regarde si dans la citadelle du joueur le player à l'observatoire, on retourne le nombre de cartes à piocher en fonction
+     * @return nombre de cartes à piocher
+     */
+    protected int numberOfCardsToPick() {
+        Optional<Card> observatory = getCitadel().stream().filter(card -> card.getDistrict() == District.OBSERVATORY).findFirst();
+        if (observatory.isPresent()) {
+            this.view.displayPlayerHasGotObservatory(this);
+            return 3;
+        }
+        return 2;
+    }
+
+    protected abstract Card keepOneDiscardOthers(List<Card> pickedCards);
 
     /**
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)

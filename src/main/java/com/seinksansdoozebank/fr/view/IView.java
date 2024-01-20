@@ -58,4 +58,5 @@ public interface IView {
     void displayStolenCharacter(Character character);
 
     void displayActualNumberOfGold(Player player);
+    void displayPlayerHasGotObservatory(Player player);
 }

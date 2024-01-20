@@ -68,7 +68,7 @@ public class SmartBot extends Player {
                 }
             }
         } else {//la main est vide
-            this.addCardToHand(); //
+            this.pickCardsKeepSomeAndDiscardOthers(); //
             view.displayPlayerPlaysCard(this, this.playCards(this.getNbDistrictsCanBeBuild()));
         }
         view.displayPlayerInfo(this);
@@ -78,13 +78,13 @@ public class SmartBot extends Player {
     protected void pickSomething() {
         Optional<Card> optCheaperPlayableCard = this.chooseCard();
         if (optCheaperPlayableCard.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.addCardToHand(); // => il faut piocher
+            this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher
         } else { //s'il y a un district le moins cher
             Card cheaperCard = optCheaperPlayableCard.get();
             if (this.getNbGold() < cheaperCard.getDistrict().getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.addCardToHand(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
@@ -97,8 +97,9 @@ public class SmartBot extends Player {
      * @return the card that will be kept
      */
     @Override
-    protected Optional<Card> keepOneDiscardOthers(List<Card> pickedCards) {
-        return pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+    protected Card keepOneDiscardOthers(List<Card> pickedCards) {
+        Optional<Card> cardKept=pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+        return cardKept.orElse(null);
     }
 
     @Override

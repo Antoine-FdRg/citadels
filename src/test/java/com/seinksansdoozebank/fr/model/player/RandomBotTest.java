@@ -23,6 +23,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -109,13 +110,13 @@ class RandomBotTest {
     void pickSomething() {
         spyRandomBot.pickSomething();
         verify(spyRandomBot, atMostOnce()).pickGold();
-        verify(spyRandomBot, atMostOnce()).addCardToHand();
+        verify(spyRandomBot, atMostOnce()).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOne() {
         int handSizeBeforePicking = spyRandomBot.getHand().size();
-        spyRandomBot.addCardToHand();
+        spyRandomBot.pickCardsKeepSomeAndDiscardOthers();
 
         verify(view, times(1)).displayPlayerPickCards(spyRandomBot,1);
 
@@ -212,8 +213,8 @@ class RandomBotTest {
         when(mockRandom.nextBoolean()).thenReturn(false);
         List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
 
-        Optional<Card> card=spyRandomBot.keepOneDiscardOthers(cardPicked);
-        assertTrue(card.isPresent());
+        Card card=spyRandomBot.keepOneDiscardOthers(cardPicked);
+        assertNotNull(card);
     }
 
 
