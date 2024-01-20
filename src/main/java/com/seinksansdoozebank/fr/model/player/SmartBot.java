@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class SmartBot extends Player {
             }
         } else {
             this.useCommonCharacterEffect();
-            if(this.hasACardToPlay()){
+            if (this.hasACardToPlay()) {
                 this.playCards(this.getNbDistrictsCanBeBuild());
                 pickSomething();
             } else {
@@ -193,9 +194,10 @@ public class SmartBot extends Player {
     @Override
     protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
-        Optional<Player> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
+                .filter(opponent -> opponent.getOpponentCharacter() instanceof Bishop) // can't destroy the districts of the bishop
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
-        if (playerWithMostDistricts.isEmpty() || playerWithMostDistricts.get().character instanceof Bishop) {
+        if (playerWithMostDistricts.isEmpty()) {
             return;
         }
         // Sort the districts of the player by cost
@@ -206,10 +208,10 @@ public class SmartBot extends Player {
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
                 try {
-                    condottiere.useEffect(playerWithMostDistricts.get().getCharacter(), card.getDistrict());
+                    condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;
                 } catch (IllegalArgumentException e) {
-                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get().id + ", il passe donc à la carte suivante");
+                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");
                 }
             }
         }
@@ -302,7 +304,7 @@ public class SmartBot extends Player {
         List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
         Collections.shuffle(roleInterestingToKill);
         Character target = null;
-        List<Character> charactersList = this.getOpponents().stream().map(Player::getCharacter).toList();
+        List<Character> charactersList = this.getAvailableCharacters();
         for (Role role : roleInterestingToKill) {
             for (Character character : charactersList) {
                 if (character.getRole() == role) {
@@ -331,6 +333,29 @@ public class SmartBot extends Player {
             }
         }
         // Do nothing otherwise
+    }
+
+    @Override
+    public boolean wantToUseManufactureEffect() {
+        // if the bot has less than 2 cards in hand, it will use the manufacture effect to get more cards
+        return this.getNbGold() > 3 && (this.getHand().size() < 2 || this.isLate());
+    }
+
+    /**
+     * Determines if the bot is late or not
+     *
+     * @return true if the bot has less cards in his citadel than the average of the opponents
+     */
+    public boolean isLate() {
+        return averageOpponentCitadelSize() > this.getCitadel().size();
+    }
+
+    public double averageOpponentCitadelSize() {
+        OptionalDouble average = this.getOpponents().stream().mapToInt(opponent -> opponent.getCitadel().size()).average();
+        if (average.isEmpty()) {
+            return 0;
+        }
+        return average.getAsDouble();
     }
 
     @Override

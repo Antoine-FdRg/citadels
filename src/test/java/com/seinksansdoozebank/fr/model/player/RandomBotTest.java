@@ -96,11 +96,13 @@ class RandomBotTest {
         doReturn(optDistrict).when(spyRandomBot).playACard();
         Assassin assassin = spy(new Assassin());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
-        List<Player> opponents = new ArrayList<>();
+        List<Opponent> opponents = new ArrayList<>();
         RandomBot opponent = new RandomBot(10, deck, view);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
+
         spyRandomBot.play();
 
         verify(spyRandomBot, times(1)).pickSomething();
@@ -211,6 +213,19 @@ class RandomBotTest {
         verify(spyRandomBot, atMostOnce()).useEffectCondottiere(any(Condottiere.class));
     }
 
+    @Test
+    void testWantToUseManufactureEffect() {
+        // Create a mock Random object that always returns true
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+
+        // Test the wantToUseEffect method
+        assertTrue(spyRandomBot.wantToUseManufactureEffect());
+    }
+
     /**
      * On vérifie que le bot garde une carte aléatoirement dans tous les cas
      */
@@ -222,6 +237,7 @@ class RandomBotTest {
 
         assertNotNull(spyRandomBot.keepOneDiscardOthers(cardPicked));
     }
+
 
 
 }

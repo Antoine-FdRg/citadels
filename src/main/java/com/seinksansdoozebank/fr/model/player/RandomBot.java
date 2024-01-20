@@ -137,10 +137,10 @@ public class RandomBot extends Player {
             // if true exchange all the card with a player
             if (random.nextBoolean()) {
                 // get a random player
-                Player playerToExchangeCards = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+                Opponent opponentToExchangeCards = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
                 // exchange all the cards with the player
-                magician.useEffect(playerToExchangeCards, List.of());
-                this.view.displayPlayerUseMagicianEffect(this, playerToExchangeCards);
+                magician.useEffect(opponentToExchangeCards, List.of());
+                this.view.displayPlayerUseMagicianEffect(this, opponentToExchangeCards);
                 return;
             }
             // if false exchange some cards with the deck
@@ -163,15 +163,15 @@ public class RandomBot extends Player {
      */
     @Override
     void useEffectAssassin(Assassin assassin) {
-        Player playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+        Character characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
-        while (!playerToKill.getCharacter().isDead()) {
+        while (!characterToKill.isDead()) {
             try {
-                assassin.useEffect(playerToKill.getCharacter());
-                view.displayPlayerUseAssassinEffect(this, playerToKill.getCharacter());
+                assassin.useEffect(characterToKill);
+                view.displayPlayerUseAssassinEffect(this, characterToKill);
                 break;
             } catch (IllegalArgumentException e) {
-                playerToKill = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+                characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
             }
         }
     }
@@ -181,21 +181,22 @@ public class RandomBot extends Player {
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
         if (random.nextBoolean()) {
             // get a random player, and destroy a district of this player randomly
-            Player playerToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            Opponent opponentToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             // if the player has no district, the bot will not use the condottiere effect
             // Or check if the player choose is not the bishop
-            if (playerToDestroyDistrict.getCitadel().isEmpty() || playerToDestroyDistrict.getCharacter() instanceof Bishop) {
+            Character opponentCharacter = opponentToDestroyDistrict.getOpponentCharacter();
+            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter instanceof Bishop || opponentCharacter == null) {
                 return;
             }
             // get the random district
-            int index = random.nextInt(playerToDestroyDistrict.getCitadel().size());
+            int index = random.nextInt(opponentToDestroyDistrict.nbDistrictsInCitadel());
             // get the district to destroy
-            District districtToDestroy = playerToDestroyDistrict.getCitadel().get(index).getDistrict();
+            District districtToDestroy = opponentToDestroyDistrict.getCitadel().get(index).getDistrict();
             // Check if the number of golds of the player is enough to destroy the district
-            if (this.getNbGold() >= districtToDestroy.getCost() + 1) {
+            if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
                 try {
-                    condottiere.useEffect(playerToDestroyDistrict.getCharacter(), districtToDestroy);
+                    condottiere.useEffect(opponentCharacter, districtToDestroy);
                 } catch (IllegalArgumentException e) {
                     view.displayPlayerError(this, e.getMessage());
                 }
@@ -209,6 +210,11 @@ public class RandomBot extends Player {
                 .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 .findFirst()
                 .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
+    }
+
+    @Override
+    public boolean wantToUseManufactureEffect() {
+        return this.getNbGold() > 3 && random.nextBoolean();
     }
 
     @Override
