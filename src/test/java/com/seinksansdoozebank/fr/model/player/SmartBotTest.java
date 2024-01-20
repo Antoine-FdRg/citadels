@@ -10,6 +10,8 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +51,7 @@ class SmartBotTest {
         cardPort = new Card(District.PORT);
         cardManor = new Card(District.MANOR);
         dracoport = new Card(District.PORT_FOR_DRAGONS);
+        spySmartBot = spy(new SmartBot(10, deck, view));
     }
 
     @Test
@@ -403,5 +406,76 @@ class SmartBotTest {
         spySmartBot.useEffectOfTheArchitect();
         verify(view, times(0)).displayPlayerPlaysCard(any(), any());
     }
+
+    /**
+     * On vérifie que le smartBot qui est un voleur utilise son effet sur son opposant bishop.
+     */
+    @Test
+    void randomBotUseEffectOfTheThiefTest(){
+        Player player = spy(new SmartBot(2, deck, view));
+        Bishop bishop=spy(new Bishop());
+        bishop.setPlayer(player);
+        when(player.getCharacter()).thenReturn(bishop);
+
+        Thief thief = spy(new Thief());
+        thief.setPlayer(spySmartBot);
+        when(spySmartBot.getCharacter()).thenReturn(thief);
+
+        List<Player> opponents=new ArrayList<>(List.of(player));
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+
+        spySmartBot.useEffect();
+        verify(view,times(1)).displayPlayerUseThiefEffect(spySmartBot);
+    }
+
+    /**
+     * On vérifie que le smartBot qui est un voleur ne peut pas utiliser l'effet sur un assassin.
+     */
+    @Test
+    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest(){
+        Player player = spy(new SmartBot(2, deck, view));
+        Assassin assassin=spy(new Assassin());
+        assassin.setPlayer(player);
+        when(player.getCharacter()).thenReturn(assassin);
+
+        Thief thief = spy(new Thief());
+        thief.setPlayer(spySmartBot);
+        when(spySmartBot.getCharacter()).thenReturn(thief);
+
+        List<Player> opponents=new ArrayList<>(List.of(player));
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+
+        spySmartBot.useEffect();
+        verify(view,times(0)).displayPlayerUseThiefEffect(spySmartBot);
+    }
+
+    /**
+     * On vérifie que lorsque chooseVictim est appelée, le SmartBot vole bien l'architecte avant de voler un autre personnage moins important
+     */
+    @Test
+    void chooseVictimTest(){
+        Player bishopPlayer = spy(new SmartBot(2, deck, view));
+        Bishop bishop=spy(new Bishop());
+        bishop.setPlayer(bishopPlayer);
+        when(bishopPlayer.getCharacter()).thenReturn(bishop);
+
+        Player architectplayer=spy(new  SmartBot(2, deck, view));
+        Architect architect=spy(new Architect());
+        architect.setPlayer(architectplayer);
+        when(architectplayer.getCharacter()).thenReturn(architect);
+
+        Thief thief = spy(new Thief());
+        thief.setPlayer(spySmartBot);
+        when(spySmartBot.getCharacter()).thenReturn(thief);
+
+        List<Player> opponents=new ArrayList<>(List.of(bishopPlayer));
+        opponents.add(architectplayer);
+        when(spySmartBot.getOpponents()).thenReturn(opponents);
+
+        spySmartBot.useEffect();
+        assertEquals(spySmartBot,architect.getSavedThief());
+    }
+
+
 
 }

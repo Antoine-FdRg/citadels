@@ -107,6 +107,7 @@ class GameTest {
 
         charactersList = List.of(
                 new Assassin(),
+                new Thief(),
                 new Magician(),
                 new King(),
                 new Bishop(),
@@ -351,12 +352,11 @@ class GameTest {
     @Test
     void createCharactersWithSixPlayers() {
         Game gameWithSixPlayers = GameFactory.createGameOfRandomBot(view, 6);
-        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line the last character is added and remove the assertThrows one
-//        gameWithSixPlayers.createCharacters();
-//        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, 0).displayUnusedCharacterInRound(any(Character.class));
+
+        gameWithSixPlayers.createCharacters();
+        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(0)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**
