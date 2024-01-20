@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -61,7 +62,7 @@ class SmartBotTest {
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
         verify(view, times(1)).displayPlayerRevealCharacter(spySmartBot);
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
         verify(spySmartBot, times(1)).playACard();
         verify(view, times(1)).displayPlayerPlaysCard(any(), any());
         verify(view, times(2)).displayPlayerInfo(spySmartBot);
@@ -105,7 +106,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
 
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -116,7 +117,7 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() < cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(1)).pickGold();
-        verify(spySmartBot, times(0)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(0)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
@@ -126,13 +127,13 @@ class SmartBotTest {
         spySmartBot.pickSomething();
         assertTrue(spySmartBot.getNbGold() >= cardCostThree.getDistrict().getCost());
         verify(spySmartBot, times(0)).pickGold();
-        verify(spySmartBot, times(1)).pickTwoCardKeepOneDiscardOne();
+        verify(spySmartBot, times(1)).pickCardsKeepSomeAndDiscardOthers();
     }
 
     @Test
     void pickTwoDistrictKeepOneDiscardOneShouldKeepTheCheaperOne() {
         boolean handIsEmpty = spySmartBot.getHand().isEmpty();
-        spySmartBot.pickTwoCardKeepOneDiscardOne();
+        spySmartBot.pickCardsKeepSomeAndDiscardOthers();
 
         assertTrue(handIsEmpty);
         assertEquals(1, spySmartBot.getHand().size());
@@ -471,6 +472,16 @@ class SmartBotTest {
         when(spySmartBot.getCitadel()).thenReturn(bishopCitadel);
         spySmartBot.decreaseGold(7);
         assertFalse(spySmartBot.wantToUseManufactureEffect());
+    }
+
+    /**
+     * On vérifie que le smartBot garde dans sa main la carte la moins chère
+     */
+    @Test
+    void keepOneDiscardOthersTest(){
+        Random mockRandom = mock(Random.class);
+        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+        assertEquals(new Card(District.TAVERN),spySmartBot.keepOneDiscardOthers(cardPicked));
     }
 
 }

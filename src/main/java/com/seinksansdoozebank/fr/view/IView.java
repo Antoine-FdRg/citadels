@@ -59,4 +59,5 @@ public interface IView {
     void displayActualNumberOfGold(Player player);
 
     void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer);
+    void displayPlayerHasGotObservatory(Player player);
 }

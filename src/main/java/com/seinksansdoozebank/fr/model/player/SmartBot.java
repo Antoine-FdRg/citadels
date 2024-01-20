@@ -41,7 +41,7 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickTwoCardKeepOneDiscardOne(); //
+            this.pickCardsKeepSomeAndDiscardOthers(); //
             this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
@@ -74,31 +74,28 @@ public class SmartBot extends Player {
     protected void pickSomething() {
         Optional<Card> optCheaperPlayableCard = this.chooseCard();
         if (optCheaperPlayableCard.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher
+            this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher
         } else { //s'il y a un district le moins cher
             Card cheaperCard = optCheaperPlayableCard.get();
             if (this.getNbGold() < cheaperCard.getDistrict().getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
 
+
+    /**
+     * On choisit ici la carte qui coùte la moins chère des cartes proposées
+     *
+     * @param pickedCards
+     * @return the card that will be kept
+     */
     @Override
-    protected void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this, 1);
-        //Pick two district
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        //Keep the cheaper one and discard the other one
-        if (card1.getDistrict().getCost() < card2.getDistrict().getCost()) {
-            this.hand.add(card1);
-            this.deck.discard(card2);
-        } else {
-            this.hand.add(card2);
-            this.deck.discard(card1);
-        }
+    protected Card keepOneDiscardOthers(List<Card> pickedCards) {
+        Optional<Card> cardKept=pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+        return cardKept.orElse(null);
     }
 
     /**
@@ -229,7 +226,6 @@ public class SmartBot extends Player {
     protected void useEffectAssassin(Assassin assassin) {
         // TODO
     }
-
 
     /**
      * Il finit sa citadelle s'il peut en un coup, sinon il pose une merveille, sinon il complète les 5
