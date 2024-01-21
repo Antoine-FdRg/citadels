@@ -200,7 +200,7 @@ public class SmartBot extends Player {
     protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
-                .filter(opponent -> opponent.getOpponentCharacter() instanceof Bishop) // can't destroy the districts of the bishop
+                .filter(opponent -> !(opponent.getOpponentCharacter() instanceof Bishop)) // can't destroy the districts of the bishop
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
         if (playerWithMostDistricts.isEmpty()) {
             return;
@@ -211,7 +211,7 @@ public class SmartBot extends Player {
                 .toList();
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
-            if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
+            if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;

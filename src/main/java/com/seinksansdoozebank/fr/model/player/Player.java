@@ -281,6 +281,11 @@ public abstract class Player implements Opponent {
         return Collections.unmodifiableList(this.citadel);
     }
 
+    void setCitadel(List<Card> citadel) {
+        this.citadel.clear();
+        this.citadel.addAll(citadel);
+    }
+
     public int getNbGold() {
         return this.nbGold;
     }
@@ -364,7 +369,7 @@ public abstract class Player implements Opponent {
             this.view.displayPlayerDestroyDistrict(attacker, this, district);
             return true;
         } else {
-            throw new IllegalStateException("The player doesn't have the district to destroy");
+            throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
 

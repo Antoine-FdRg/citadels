@@ -337,10 +337,32 @@ class SmartBotTest {
     }
 
     @Test
-    void useEffectTest() {
+    void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, atMost(1)).useEffectArchitectPickCards();
+        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+    }
+
+    @Test
+    void useEffectTestCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        spySmartBot.useEffect();
+        verify(spySmartBot, times(1)).useEffectCondottiere(any());
+    }
+
+    @Test
+    void useEffectTestAssassin() {
+        Assassin assassin = spy(new Assassin());
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
+        // give assassin a target
+        Player opponent = spy(new SmartBot(10, deck, view));
+        List<Character> opponentCharacters = new ArrayList<>(List.of(new Merchant()));
+        opponent.chooseCharacter(opponentCharacters);
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        opponentCharacters = new ArrayList<>(List.of(new Merchant()));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(opponentCharacters);
+        spySmartBot.useEffect();
+        verify(assassin, times(1)).useEffect(any());
     }
 
     @Test
@@ -698,4 +720,40 @@ class SmartBotTest {
     }
 
 
+    @Test
+    void testUseEffectCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        // construct Opponent Citadel
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.setCitadel(opponentCitadel);
+        Merchant merchant = new Merchant();
+        opponent.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(opponent.getOpponentCharacter()).thenReturn(merchant);
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
+        int lastGold = spySmartBot.getNbGold();
+        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        assertEquals(0, opponent.getCitadel().size());
+        assertEquals(lastGold - District.MARKET_PLACE.getCost() + 1, spySmartBot.getNbGold());
+    }
+
+
+    @Test
+    void testCantUseEffectCondottiere() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        // construct Opponent Citadel
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.setCitadel(opponentCitadel);
+        Bishop bishop = new Bishop();
+        opponent.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        when(opponent.getOpponentCharacter()).thenReturn(bishop);
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+
+        int lastGold = spySmartBot.getNbGold();
+        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        assertEquals(1, opponent.getCitadel().size());
+        assertEquals(lastGold, spySmartBot.getNbGold());
+    }
 }
