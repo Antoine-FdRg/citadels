@@ -16,4 +16,7 @@ public interface Opponent {
     Character getOpponentCharacter();
 
     void switchHandWith(Player player);
+
+    int getHandSize();
+
 }

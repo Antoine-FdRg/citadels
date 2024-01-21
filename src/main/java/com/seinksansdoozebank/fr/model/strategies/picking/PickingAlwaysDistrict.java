@@ -8,6 +8,6 @@ import com.seinksansdoozebank.fr.model.player.Player;
 public class PickingAlwaysDistrict implements IPickingStrategy{
     @Override
     public void apply(Player player) {
-        player.pickTwoCardKeepOneDiscardOne();
+        player.pickCardsKeepSomeAndDiscardOthers();
     }
 }

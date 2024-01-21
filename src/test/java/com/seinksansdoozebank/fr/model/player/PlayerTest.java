@@ -209,13 +209,14 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
-
-        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        spyPlayer.play();
+        Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
+        when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyPlayerSmart.play();
 
         // assert between 2 and 3 districts are gained
-        assertTrue(spyPlayer.getHand().size() >= 2 && spyPlayer.getHand().size() <= 3);
+        assertTrue(spyPlayerSmart.getHand().size() >= 2 && spyPlayerSmart.getHand().size() <= 3);
     }
 
     @Test
@@ -252,4 +253,28 @@ class PlayerTest {
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
+
+    @Test
+    void playWithObservatoryInCitadelle() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayer.pickCardsKeepSomeAndDiscardOthers();
+        verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
+        verify(spyPlayer.deck, times(3)).pick();
+    }
+
+    @Test
+    void numberOfCardsToPickWhenTheBotHasObservatoryInHisCitadelTest() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
+        assertEquals(3, spyPlayer.numberOfCardsToPick());
+    }
+
+
+    @Test
+    void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        assertEquals(2, spyPlayer.numberOfCardsToPick());
+    }
+
+
 }

@@ -11,12 +11,15 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import static java.util.Collections.shuffle;
 
 public class RandomBot extends Player {
 
@@ -65,22 +68,20 @@ public class RandomBot extends Player {
         if (random.nextBoolean()) {
             pickGold();
         } else {
-            pickTwoCardKeepOneDiscardOne();
+            pickCardsKeepSomeAndDiscardOthers();
         }
     }
 
+    /**
+     * On choisit une carte aléatoire parmi celles proposées
+     *
+     * @param pickedCards
+     * @return the card that will be kept
+     */
     @Override
-    public void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this, 1);
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        if (random.nextBoolean()) {
-            this.hand.add(card1);
-            this.deck.discard(card2);
-        } else {
-            this.hand.add(card2);
-            this.deck.discard(card1);
-        }
+    protected Card keepOneDiscardOthers(List<Card> pickedCards) {
+        shuffle(pickedCards);
+        return pickedCards.get(0);
     }
 
     @Override
@@ -154,6 +155,11 @@ public class RandomBot extends Player {
             magician.useEffect(null, cardsToExchange);
             this.view.displayPlayerUseMagicianEffect(this, null);
         }
+    }
+
+    @Override
+    protected void useEffectThief(Thief thief) {
+        //TODO
     }
 
     /**

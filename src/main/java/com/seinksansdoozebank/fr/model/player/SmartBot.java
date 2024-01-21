@@ -13,6 +13,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickTwoCardKeepOneDiscardOne(); //
+            this.pickCardsKeepSomeAndDiscardOthers(); //
             this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
@@ -74,31 +75,28 @@ public class SmartBot extends Player {
     protected void pickSomething() {
         Optional<Card> optCheaperPlayableCard = this.chooseCard();
         if (optCheaperPlayableCard.isEmpty()) { //s'il n'y a pas de district le moins cher => la main est vide
-            this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher
+            this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher
         } else { //s'il y a un district le moins cher
             Card cheaperCard = optCheaperPlayableCard.get();
             if (this.getNbGold() < cheaperCard.getDistrict().getCost()) { //si le joueur n'a pas assez d'or pour acheter le district le moins cher
                 this.pickGold(); // => il faut piocher de l'or
             } else { //si le joueur a assez d'or pour construire le district le moins cher
-                this.pickTwoCardKeepOneDiscardOne(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
+                this.pickCardsKeepSomeAndDiscardOthers(); // => il faut piocher un quartier pour savoir combien d'or sera nécessaire
             }
         }
     }
 
+
+    /**
+     * On choisit ici la carte qui coùte la moins chère des cartes proposées
+     *
+     * @param pickedCards
+     * @return the card that will be kept
+     */
     @Override
-    public void pickTwoCardKeepOneDiscardOne() {
-        this.view.displayPlayerPickCards(this, 1);
-        //Pick two district
-        Card card1 = this.deck.pick();
-        Card card2 = this.deck.pick();
-        //Keep the cheaper one and discard the other one
-        if (card1.getDistrict().getCost() < card2.getDistrict().getCost()) {
-            this.hand.add(card1);
-            this.deck.discard(card2);
-        } else {
-            this.hand.add(card2);
-            this.deck.discard(card1);
-        }
+    protected Card keepOneDiscardOthers(List<Card> pickedCards) {
+        Optional<Card> cardKept = pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+        return cardKept.orElse(null);
     }
 
     /**
@@ -191,6 +189,10 @@ public class SmartBot extends Player {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.getCharacter() instanceof Thief thief) {
+            this.useEffectThief(thief);
+        } else if (this.character instanceof Magician magician) {
+            this.useEffectMagician(magician);
         }
     }
 
@@ -222,14 +224,31 @@ public class SmartBot extends Player {
 
     @Override
     protected void useEffectMagician(Magician magician) {
-        // TODO
+        int numberOfCardsToExchange = this.getHand().size();
+
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparingInt(Opponent::getHandSize));
+
+        // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
+        if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHandSize()) {
+            magician.useEffect(playerWithMostDistricts.get(), null);
+            return;
+        }
+
+        // Case 2: Player exchanges cards with the deck (cost > 2 gold)
+        List<Card> cardsToExchange = this.getHand().stream()
+                .filter(card -> card.getDistrict().getCost() > 2)
+                .toList();
+
+        if (!cardsToExchange.isEmpty()) {
+            magician.useEffect(null, cardsToExchange);
+        }
     }
 
     @Override
     protected void useEffectAssassin(Assassin assassin) {
         // TODO
     }
-
 
     /**
      * Il finit sa citadelle s'il peut en un coup, sinon il pose une merveille, sinon il complète les 5
@@ -360,6 +379,25 @@ public class SmartBot extends Player {
             return 0;
         }
         return average.getAsDouble();
+    }
+
+    /**
+     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
+     * @param thief
+     */
+    @Override
+    protected void useEffectThief(Thief thief) {
+        Optional<Opponent> victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                !player.getOpponentCharacter().isDead() && (player.getOpponentCharacter().getRole() == Role.ARCHITECT || player.getOpponentCharacter().getRole() == Role.MERCHANT)).findFirst();
+        if (victim.isEmpty()) {
+            victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                    !player.getOpponentCharacter().isDead()).findFirst();
+        }
+        victim.ifPresent(player -> {
+            thief.useEffect(player.getOpponentCharacter());
+            view.displayPlayerUseThiefEffect(this);
+        });
     }
 
     @Override

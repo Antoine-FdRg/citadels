@@ -30,7 +30,7 @@ class PickingAlwaysDistrictTest {
         assertEquals(2, customBot.getNbGold());
         assertEquals(0, customBot.getHand().size());
         pickingAlwaysDistrict.apply(customBot);
-        verify(customBot).pickTwoCardKeepOneDiscardOne();
+        verify(customBot).pickCardsKeepSomeAndDiscardOthers();
         assertEquals(2, customBot.getNbGold());
         assertEquals(1, customBot.getHand().size());
     }
