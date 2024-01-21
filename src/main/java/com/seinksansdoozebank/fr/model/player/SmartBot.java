@@ -191,6 +191,8 @@ public class SmartBot extends Player {
             this.useEffectArchitectPickCards();
         } else if (this.getCharacter() instanceof Thief thief) {
             this.useEffectThief(thief);
+        } else if (this.character instanceof Magician magician) {
+            this.useEffectMagician(magician);
         }
     }
 
@@ -222,7 +224,25 @@ public class SmartBot extends Player {
 
     @Override
     protected void useEffectMagician(Magician magician) {
-        // TODO
+        int numberOfCardsToExchange = this.getHand().size();
+
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparingInt(Opponent::getHandSize));
+
+        // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
+        if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHandSize()) {
+            magician.useEffect(playerWithMostDistricts.get(), null);
+            return;
+        }
+
+        // Case 2: Player exchanges cards with the deck (cost > 2 gold)
+        List<Card> cardsToExchange = this.getHand().stream()
+                .filter(card -> card.getDistrict().getCost() > 2)
+                .toList();
+
+        if (!cardsToExchange.isEmpty()) {
+            magician.useEffect(null, cardsToExchange);
+        }
     }
 
     @Override

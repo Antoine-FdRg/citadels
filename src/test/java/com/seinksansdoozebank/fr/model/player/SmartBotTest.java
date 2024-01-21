@@ -11,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -28,7 +29,14 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SmartBotTest {
     SmartBot spySmartBot;
@@ -75,7 +83,7 @@ class SmartBotTest {
     @Test
     void playWithUnbuildableDistrictShouldPickGoldAndBuild() {
         when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
-        when(spySmartBot.hasACardToPlay()).thenReturn( false,false, true);
+        when(spySmartBot.hasACardToPlay()).thenReturn(false, false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
@@ -90,8 +98,9 @@ class SmartBotTest {
 
     @Test
     void playWithABuildableDistrictShouldBuildAndPickSomething() {
-        when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
-        when(spySmartBot.hasACardToPlay()).thenReturn( true);
+        List<Card> hand = new ArrayList<>(List.of(cardCostFive));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        when(spySmartBot.hasACardToPlay()).thenReturn(true);
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
         spySmartBot.play();
 
@@ -410,6 +419,133 @@ class SmartBotTest {
         verify(view, times(0)).displayPlayerPlaysCard(any(), any());
     }
 
+    /**
+     * We check that the player will use a specific strategy using the magician effect :
+     * - The player has no card, so he will switch his hand with the player that have the most cards
+     */
+    @Test
+    void useEffectOfTheMagicianWhenThePlayerHasNoCardTest() {
+        Magician magician = new Magician();
+        magician.setPlayer(spySmartBot);
+        // Set the player character to magician
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        // Set the Hand of the player to Empty
+        spySmartBot.getHand().clear();
+        when(spySmartBot.getHand()).thenReturn(new ArrayList<>());
+        // Set the hand of the other player to 2 cards
+        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        List<Card> otherPlayerHand = new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.CASTLE)));
+        List<Card> otherPlayerHandCopy = new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.CASTLE)));
+        otherPlayer.getHand().addAll(otherPlayerHand);
+        when(otherPlayer.getHand()).thenReturn(otherPlayerHand);
+        // Set the hand of another player to 1 card
+        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        anotherPlayer.getHand().add(new Card(District.CEMETERY));
+        when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
+        // Set the opponents of the player
+        when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
+
+        // Set the player to switch hand with the other player
+        spySmartBot.useEffectMagician(magician);
+
+        // Check that the magician effect is used
+        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        // Check that the magician have the old hand of the other player
+        assertEquals(otherPlayerHandCopy, spySmartBot.getHand());
+        // Check that the other player have the old hand of the magician
+        assertEquals(0, otherPlayer.getHand().size());
+    }
+
+    /**
+     * We check that the player will use a specific strategy using the magician effect :
+     * - The player has the most cards, so he will switch his cards that cost more than 2 golds with the deck
+     */
+    @Test
+    void useEffectOfTheMagicianWhenThePlayerHasTheMostCardsTest() {
+        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        Magician magician = new Magician();
+        magician.setPlayer(spySmartBot);
+        // Set the player character to magician
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        // Set the Hand of the player to 3 cards
+        spySmartBot.getHand().clear();
+        Card monasteryCard = new Card(District.MONASTERY);
+        Card cathedralCard = new Card(District.CATHEDRAL);
+        List<Card> playerList = new ArrayList<>(
+                List.of(
+                        new Card(District.TEMPLE),
+                        new Card(District.CHURCH),
+                        monasteryCard,
+                        cathedralCard
+                )
+        );
+        spySmartBot.getHand().addAll(playerList);
+        when(spySmartBot.getHand()).thenReturn(playerList);
+        // Set the hand of the other player and another player to 1 cards
+        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        otherPlayer.getHand().add(new Card(District.CEMETERY));
+        when(otherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        anotherPlayer.getHand().add(new Card(District.CEMETERY));
+        when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
+
+        // Set the opponents of the player
+        when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
+        // Set the player to switch hand with the other player
+        spySmartBot.useEffectMagician(magician);
+
+        // Check that the magician effect is used
+        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
+        assertFalse(spySmartBot.getHand().contains(monasteryCard));
+        assertFalse(spySmartBot.getHand().contains(cathedralCard));
+    }
+
+    /**
+     * We check that the player will use a specific strategy using the magician effect :
+     * - The player has the same number of cards as the other player, so he will change the cards that cost more than 2 golds with the deck
+     */
+    @Test
+    void useEffectOfTheMagicianWhenThePlayerHasTheSameNumberOfCardsTest() {
+        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        Magician magician = new Magician();
+        magician.setPlayer(spySmartBot);
+        // Set the player character to magician
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        // Set the Hand of the player to 3 cards
+        spySmartBot.getHand().clear();
+        Card monasteryCard = new Card(District.MONASTERY);
+        Card cathedralCard = new Card(District.CATHEDRAL);
+        List<Card> playerList = new ArrayList<>(
+                List.of(
+                        new Card(District.TEMPLE),
+                        monasteryCard,
+                        cathedralCard
+                )
+        );
+        spySmartBot.getHand().addAll(playerList);
+        when(spySmartBot.getHand()).thenReturn(playerList);
+        // Set the hand of the other player and another player to 3 cards
+        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        otherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        when(otherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        anotherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+        when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
+
+        // Set the opponents of the player
+        when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
+
+        // Set the player to switch hand with the other player
+        spySmartBot.useEffectMagician(magician);
+
+        // Check that the magician effect is used
+        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
+        assertFalse(spySmartBot.getHand().contains(monasteryCard));
+        assertFalse(spySmartBot.getHand().contains(cathedralCard));
+    }
+
     @Test
     void testIsLateByHavingLessCardInHisCitadel() {
         // test when player has less card in his citadel than the average opponents districts in their citadel
@@ -482,10 +618,10 @@ class SmartBotTest {
      * On vérifie que le smartBot garde dans sa main la carte la moins chère
      */
     @Test
-    void keepOneDiscardOthersTest(){
-        Random mockRandom = mock(Random.class);
-        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
-        assertEquals(new Card(District.TAVERN),spySmartBot.keepOneDiscardOthers(cardPicked));
+    void keepOneDiscardOthersTest() {
+        mock(Random.class);
+        List<Card> cardPicked = new ArrayList<>(List.of(new Card(District.MANOR), new Card(District.TAVERN), new Card(District.PORT)));
+        assertEquals(new Card(District.TAVERN), spySmartBot.keepOneDiscardOthers(cardPicked));
     }
 
     /**
