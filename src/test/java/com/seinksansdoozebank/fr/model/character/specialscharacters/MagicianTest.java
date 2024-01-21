@@ -48,7 +48,7 @@ class MagicianTest {
         List<Card> handSave = spyPlayer.getHand();
         List<Card> otherHandSave = otherSpyPlayer.getHand();
         ((Magician) spyPlayer.getCharacter()).useEffect(otherSpyPlayer, null);
-        verify(spyPlayer, times(1)).switchHandWith(otherSpyPlayer);
+        verify(otherSpyPlayer, times(1)).switchHandWith(spyPlayer);
         // Check that the other player has the same hand as the ancient hand spyPlayer
         assertEquals(handSave, otherSpyPlayer.getHand());
         assertEquals(otherHandSave, spyPlayer.getHand());

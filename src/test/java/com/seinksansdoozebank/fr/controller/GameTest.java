@@ -107,6 +107,7 @@ class GameTest {
 
         charactersList = List.of(
                 new Assassin(),
+                new Thief(),
                 new Magician(),
                 new King(),
                 new Bishop(),
@@ -174,6 +175,7 @@ class GameTest {
             Player currentPlayer = players.get(i);
             Character currentCharacter = charactersList.get(i);
             currentPlayer.chooseCharacter(new ArrayList<>(List.of(currentCharacter)));
+            currentPlayer.reveal();
         }
 
         // Reset the available characters list
@@ -284,8 +286,9 @@ class GameTest {
         verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, times(1)).retrieveCharacters();
-        for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
-            assertFalse(character.isDead());
+        List<Player> players = gameWithFourPlayers.players;
+        for (Player player : players) {
+            assertNull(player.getCharacter());
         }
     }
 
@@ -351,12 +354,11 @@ class GameTest {
     @Test
     void createCharactersWithSixPlayers() {
         Game gameWithSixPlayers = GameFactory.createGameOfRandomBot(view, 6);
-        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line the last character is added and remove the assertThrows one
-//        gameWithSixPlayers.createCharacters();
-//        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, 0).displayUnusedCharacterInRound(any(Character.class));
+
+        gameWithSixPlayers.createCharacters();
+        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(0)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**
