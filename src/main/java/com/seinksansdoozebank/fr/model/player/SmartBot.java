@@ -90,12 +90,12 @@ public class SmartBot extends Player {
     /**
      * On choisit ici la carte qui coùte la moins chère des cartes proposées
      *
-     * @param pickedCards
+     * @param pickedCards the cards picked
      * @return the card that will be kept
      */
     @Override
     protected Card keepOneDiscardOthers(List<Card> pickedCards) {
-        Optional<Card> cardKept=pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+        Optional<Card> cardKept = pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
         return cardKept.orElse(null);
     }
 
@@ -383,13 +383,14 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     * @param thief
+     *
+     * @param thief the thief
      */
     @Override
-    protected void useEffectThief(Thief thief){
-        Optional<Opponent> victim= this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+    protected void useEffectThief(Thief thief) {
+        Optional<Opponent> victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
                 !player.getOpponentCharacter().isDead() && (player.getOpponentCharacter().getRole() == Role.ARCHITECT || player.getOpponentCharacter().getRole() == Role.MERCHANT)).findFirst();
-        if(victim.isEmpty()){
+        if (victim.isEmpty()) {
             victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
                     !player.getOpponentCharacter().isDead()).findFirst();
         }

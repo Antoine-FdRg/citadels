@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -230,14 +231,26 @@ class RandomBotTest {
      * On vérifie que le bot garde une carte aléatoirement dans tous les cas
      */
     @Test
-    void keepOneDiscardOthersTest(){
+    void keepOneDiscardOthersTest() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(false);
-        List<Card> cardPicked=new ArrayList<>(List.of(new Card(District.MANOR),new Card(District.TAVERN),new Card(District.PORT)));
+        List<Card> cardPicked = new ArrayList<>(List.of(new Card(District.MANOR), new Card(District.TAVERN), new Card(District.PORT)));
 
         assertNotNull(spyRandomBot.keepOneDiscardOthers(cardPicked));
     }
 
 
+    @Test
+    void testChooseColorCourtyardOfMiracle() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextInt(DistrictType.values().length)).thenReturn(DistrictType.SOLDIERLY.ordinal());
+        when(spyRandomBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.COURTYARD_OF_MIRACLE))));
+        // Set the mockRandom in the RandomBot for testing
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.chooseColorCourtyardOfMiracle();
+        DistrictType districtType = spyRandomBot.getColorCourtyardOfMiracleType();
+        assertEquals(DistrictType.SOLDIERLY, districtType);
+
+    }
 
 }

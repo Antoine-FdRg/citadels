@@ -163,13 +163,14 @@ public class Cli implements IView {
         }
         CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
     }
+
     @Override
-    public void displayPlayerHasGotObservatory(Player player){
-        CustomLogger.log(Level.INFO,"Le {0} possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.", player);
+    public void displayPlayerHasGotObservatory(Player player) {
+        CustomLogger.log(Level.INFO, "Le {0} possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.", player);
     }
 
     @Override
-    public void displayPlayerUseThiefEffect(Player player){
-        CustomLogger.log(Level.INFO,"{0} vient de voler l'or d'un joueur.", player);
+    public void displayPlayerUseThiefEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} vient de voler l'or d'un joueur.", player);
     }
 }

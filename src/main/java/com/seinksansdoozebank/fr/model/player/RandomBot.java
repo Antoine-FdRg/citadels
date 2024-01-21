@@ -75,7 +75,7 @@ public class RandomBot extends Player {
     /**
      * On choisit une carte aléatoire parmi celles proposées
      *
-     * @param pickedCards
+     * @param pickedCards the cards picked
      * @return the card that will be kept
      */
     @Override
@@ -158,7 +158,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    protected void useEffectThief(Thief thief){
+    protected void useEffectThief(Thief thief) {
         //TODO
     }
 

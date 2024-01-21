@@ -127,8 +127,8 @@ public abstract class Player implements Opponent {
      */
     protected void pickCardsKeepSomeAndDiscardOthers() {
         List<Card> pickedCards = new ArrayList<>();
-        int numberOfCardsToPick=numberOfCardsToPick();
-        for(int i=0;i<numberOfCardsToPick;i++){
+        int numberOfCardsToPick = numberOfCardsToPick();
+        for (int i = 0; i < numberOfCardsToPick; i++) {
             pickedCards.add(this.deck.pick());
         }
         this.view.displayPlayerPickCards(this, 1);
@@ -139,6 +139,7 @@ public abstract class Player implements Opponent {
 
     /**
      * On regarde si dans la citadelle du joueur le player à l'observatoire, on retourne le nombre de cartes à piocher en fonction
+     *
      * @return nombre de cartes à piocher
      */
     protected int numberOfCardsToPick() {
@@ -240,6 +241,7 @@ public abstract class Player implements Opponent {
     abstract void useEffectAssassin(Assassin assassin);
 
     abstract void useEffectCondottiere(Condottiere condottiere);
+
     abstract void useEffectThief(Thief thief);
 
     protected boolean hasACardToPlay() {
