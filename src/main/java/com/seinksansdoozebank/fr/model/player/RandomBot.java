@@ -100,7 +100,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public Character choseCharacterImpl(List<Character> characters) {
+    protected Character chooseCharacterImpl(List<Character> characters) {
         return characters.get(random.nextInt(characters.size()));
     }
 

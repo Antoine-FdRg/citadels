@@ -134,7 +134,7 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public Character choseCharacterImpl(List<Character> characters) {
+    public Character chooseCharacterImpl(List<Character> characters) {
         // Choose the character by getting the frequency of each districtType in the citadel
         // and choosing the districtType with the highest frequency for the character
         List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());

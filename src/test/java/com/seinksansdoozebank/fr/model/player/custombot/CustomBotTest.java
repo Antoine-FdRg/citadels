@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
-import com.seinksansdoozebank.fr.model.strategies.picking.IPickingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +12,15 @@ class CustomBotTest {
 
     CustomBot customBot;
     IPickingStrategy mockPickingStrategy;
+    ICharacterChoosingStrategy mockCharacterChoosingStrategy;
 
     @BeforeEach
     void setUp() {
         mockPickingStrategy = mock(IPickingStrategy.class);
-        customBot = new CustomBot(2, null, null, mockPickingStrategy);
+        mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
+        customBot = new CustomBot(2, null, null,
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy);
     }
 
     @Test

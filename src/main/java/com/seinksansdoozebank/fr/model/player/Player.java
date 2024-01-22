@@ -30,6 +30,10 @@ public abstract class Player implements Opponent {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
+
+    /**
+     * List of all the players in the game
+     */
     private List<Opponent> opponents;
 
     private List<Character> availableCharacters;
@@ -344,7 +348,7 @@ public abstract class Player implements Opponent {
      * @return the chosen character
      */
     public Character chooseCharacter(List<Character> characters) {
-        this.character = this.choseCharacterImpl(characters);
+        this.character = this.chooseCharacterImpl(characters);
         this.character.setPlayer(this);
         this.view.displayPlayerChooseCharacter(this);
         return this.character;
@@ -356,7 +360,7 @@ public abstract class Player implements Opponent {
      * @param characters the list of characters to choose from
      * @return the chosen character
      */
-    protected abstract Character choseCharacterImpl(List<Character> characters);
+    protected abstract Character chooseCharacterImpl(List<Character> characters);
 
     public Character getCharacter() {
         return this.character;
@@ -472,5 +476,17 @@ public abstract class Player implements Opponent {
     @Override
     public int getHandSize() {
         return this.getHand().size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player player)) return false;
+        return this.getId() == player.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId();
     }
 }

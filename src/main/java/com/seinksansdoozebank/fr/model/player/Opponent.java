@@ -19,4 +19,6 @@ public interface Opponent {
 
     int getHandSize();
 
+    boolean equals(Object o);
+
 }

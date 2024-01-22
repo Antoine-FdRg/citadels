@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.model.strategies.picking;
+package com.seinksansdoozebank.fr.model.player.custombot.strategies.picking;
 
 import com.seinksansdoozebank.fr.model.player.Player;
 

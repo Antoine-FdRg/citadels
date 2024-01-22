@@ -3,6 +3,8 @@ package com.seinksansdoozebank.fr.model.strategies.picking;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.PickingAlwaysGold;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ class PickingAlwaysGoldTest {
         pickingAlwaysGold = new PickingAlwaysGold();
         customBot = spy(new CustomBotBuilder(2,mock(IView.class), new Deck())
                 .setPickingStrategy(pickingAlwaysGold)
+                .setCharacterChoosingStrategy(mock(ICharacterChoosingStrategy.class))
                 .build());
     }
 
