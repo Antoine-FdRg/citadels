@@ -1,10 +1,9 @@
-package com.seinksansdoozebank.fr.model.strategies.picking;
+package com.seinksansdoozebank.fr.model.player.custombot.strategies.picking;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.PickingAlwaysGold;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
