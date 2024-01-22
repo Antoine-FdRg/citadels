@@ -170,7 +170,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseThiefEffect(Player player) {
-        CustomLogger.log(Level.INFO, "{0} vient de voler l'or d'un joueur.", player);
+    public void displayPlayerUseThiefEffect(Player player){
+        CustomLogger.log(Level.INFO,"{0} vient de choisir le personnage qu'il volera.", player);
     }
 }

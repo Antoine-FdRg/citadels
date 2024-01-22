@@ -134,7 +134,7 @@ public abstract class Player implements Opponent {
         this.view.displayPlayerPickCards(this, 1);
         Card chosenCard = keepOneDiscardOthers(pickedCards);
         this.hand.add(chosenCard);
-        pickedCards.stream().filter(card -> !(card.equals(chosenCard))).forEach(card -> this.deck.discard(card));
+        pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
     }
 
     /**
@@ -241,7 +241,6 @@ public abstract class Player implements Opponent {
     abstract void useEffectAssassin(Assassin assassin);
 
     abstract void useEffectCondottiere(Condottiere condottiere);
-
     abstract void useEffectThief(Thief thief);
 
     protected boolean hasACardToPlay() {

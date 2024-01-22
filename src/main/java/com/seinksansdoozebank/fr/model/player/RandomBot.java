@@ -7,6 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
@@ -121,6 +122,8 @@ public class RandomBot extends Player {
             this.useEffectAssassin(assassin);
         } else if (this.character instanceof Magician magician) {
             this.useEffectMagician(magician);
+        } else if (this.getCharacter() instanceof Thief thief) {
+            this.useEffectThief(thief);
         }
     }
 
@@ -154,11 +157,6 @@ public class RandomBot extends Player {
             magician.useEffect(null, cardsToExchange);
             this.view.displayPlayerUseMagicianEffect(this, null);
         }
-    }
-
-    @Override
-    protected void useEffectThief(Thief thief) {
-        //TODO
     }
 
     /**
@@ -208,6 +206,22 @@ public class RandomBot extends Player {
             }
         }
     }
+
+    /**
+     * Effect of thief character (chose victim)
+     * @param thief the thief character
+     */
+    @Override
+    public void useEffectThief(Thief thief){
+        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+                character.getRole() != Role.THIEF &&
+                !character.isDead()).findFirst();
+        victim.ifPresent(characterVictim -> {
+            thief.useEffect(characterVictim);
+            view.displayPlayerUseThiefEffect(this);
+        });
+    }
+
 
     public void chooseColorCourtyardOfMiracle() {
         // Set a random DistricType to the Courtyard of Miracle

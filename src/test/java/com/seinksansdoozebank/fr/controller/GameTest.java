@@ -47,6 +47,7 @@ class GameTest {
     Game gameWithFivePlayers;
     Game gameWithThreePlayers;
     Game gameWithFourPlayers;
+    Game gameWithSixPlayers;
     Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
@@ -62,6 +63,7 @@ class GameTest {
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
         gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
+        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view,6 ));
         gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
@@ -268,9 +270,9 @@ class GameTest {
     void run() {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() ;
+        verify(gameWithFourPlayers, times(nbRoundPlayed )).createCharacters();
+        verify(gameWithFourPlayers, times(nbRoundPlayed-1)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -353,8 +355,6 @@ class GameTest {
 
     @Test
     void createCharactersWithSixPlayers() {
-        Game gameWithSixPlayers = GameFactory.createGameOfRandomBot(view, 6);
-
         gameWithSixPlayers.createCharacters();
         assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
         assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
