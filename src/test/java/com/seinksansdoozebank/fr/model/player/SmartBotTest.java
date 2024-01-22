@@ -654,14 +654,14 @@ class SmartBotTest {
         Player player = spy(new SmartBot(2, deck, view));
         Bishop bishop = spy(new Bishop());
         bishop.setPlayer(player);
-        when(player.getOpponentCharacter()).thenReturn(bishop);
+        when(player.getCharacter()).thenReturn(bishop);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Opponent> opponents = new ArrayList<>(List.of(player));
-        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        List<Character> opponents = new ArrayList<>(List.of(bishop));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
         spySmartBot.useEffect();
         verify(view, times(1)).displayPlayerUseThiefEffect(spySmartBot);
@@ -672,18 +672,18 @@ class SmartBotTest {
      * On vérifie que le smartBot qui est un voleur ne peut pas utiliser l'effet sur un assassin.
      */
     @Test
-    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
+    void smartBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
         Player player = spy(new SmartBot(2, deck, view));
         Assassin assassin = spy(new Assassin());
         assassin.setPlayer(player);
-        when(player.getOpponentCharacter()).thenReturn(assassin);
+        when(player.getCharacter()).thenReturn(assassin);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Opponent> opponents = new ArrayList<>(List.of(player));
-        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        List<Character> opponents = new ArrayList<>(List.of(assassin));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
         spySmartBot.useEffect();
         verify(view, times(0)).displayPlayerUseThiefEffect(spySmartBot);
@@ -698,20 +698,20 @@ class SmartBotTest {
         Player bishopPlayer = spy(new SmartBot(2, deck, view));
         Bishop bishop = spy(new Bishop());
         bishop.setPlayer(bishopPlayer);
-        when(bishopPlayer.getOpponentCharacter()).thenReturn(bishop);
+        when(bishopPlayer.getCharacter()).thenReturn(bishop);
 
         Player architectplayer = spy(new SmartBot(2, deck, view));
         Architect architect = spy(new Architect());
         architect.setPlayer(architectplayer);
-        when(architectplayer.getOpponentCharacter()).thenReturn(architect);
+        when(architectplayer.getCharacter()).thenReturn(architect);
 
         Thief thief = spy(new Thief());
         thief.setPlayer(spySmartBot);
         when(spySmartBot.getCharacter()).thenReturn(thief);
 
-        List<Opponent> opponents = new ArrayList<>(List.of(bishopPlayer));
-        opponents.add(architectplayer);
-        when(spySmartBot.getOpponents()).thenReturn(opponents);
+        List<Character> opponents = new ArrayList<>(List.of(bishop));
+        opponents.add(architect);
+        when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
         spySmartBot.useEffect();
         assertEquals(spySmartBot, architect.getSavedThief());
