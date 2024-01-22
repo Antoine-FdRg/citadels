@@ -383,7 +383,6 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     *
      * @param thief the thief
      */
     @Override

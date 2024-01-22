@@ -277,7 +277,6 @@ class PlayerTest {
     }
 
 
-
     @Test
     void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
         Player player = new RandomBot(10, deck, view);
