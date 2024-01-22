@@ -90,7 +90,7 @@ public class SmartBot extends Player {
     /**
      * On choisit ici la carte qui coùte la moins chère des cartes proposées
      *
-     * @param pickedCards
+     * @param pickedCards the cards picked
      * @return the card that will be kept
      */
     @Override
@@ -200,7 +200,7 @@ public class SmartBot extends Player {
     protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
-                .filter(opponent -> opponent.getOpponentCharacter() instanceof Bishop) // can't destroy the districts of the bishop
+                .filter(opponent -> !(opponent.getOpponentCharacter() instanceof Bishop)) // can't destroy the districts of the bishop
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
         if (playerWithMostDistricts.isEmpty()) {
             return;
@@ -211,7 +211,7 @@ public class SmartBot extends Player {
                 .toList();
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
-            if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
+            if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;
@@ -383,8 +383,7 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     *
-     * @param thief
+     * @param thief the thief
      */
     @Override
     protected void useEffectThief(Thief thief) {
