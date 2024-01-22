@@ -653,12 +653,10 @@ class SmartBotTest {
     void smartBotUseEffectOfTheThiefWhenNoArchitectAndMerchantAvailablesTest() {
         Player player = spy(new SmartBot(2, deck, view));
         Bishop bishop = spy(new Bishop());
-        bishop.setPlayer(player);
-        when(player.getCharacter()).thenReturn(bishop);
+        player.chooseCharacter(new ArrayList<>(List.of(bishop)));
 
         Thief thief = spy(new Thief());
-        thief.setPlayer(spySmartBot);
-        when(spySmartBot.getCharacter()).thenReturn(thief);
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
         List<Character> opponents = new ArrayList<>(List.of(bishop));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
@@ -675,12 +673,10 @@ class SmartBotTest {
     void smartBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
         Player player = spy(new SmartBot(2, deck, view));
         Assassin assassin = spy(new Assassin());
-        assassin.setPlayer(player);
-        when(player.getCharacter()).thenReturn(assassin);
+        player.chooseCharacter(new ArrayList<>(List.of(assassin)));
 
         Thief thief = spy(new Thief());
-        thief.setPlayer(spySmartBot);
-        when(spySmartBot.getCharacter()).thenReturn(thief);
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
         List<Character> opponents = new ArrayList<>(List.of(assassin));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
@@ -697,17 +693,14 @@ class SmartBotTest {
     void useEffectThiefWhenArchitectAvailableTest() {
         Player bishopPlayer = spy(new SmartBot(2, deck, view));
         Bishop bishop = spy(new Bishop());
-        bishop.setPlayer(bishopPlayer);
-        when(bishopPlayer.getCharacter()).thenReturn(bishop);
+        bishopPlayer.chooseCharacter(new ArrayList<>(List.of(bishop)));
 
         Player architectplayer = spy(new SmartBot(2, deck, view));
         Architect architect = spy(new Architect());
-        architect.setPlayer(architectplayer);
-        when(architectplayer.getCharacter()).thenReturn(architect);
+        architectplayer.chooseCharacter(new ArrayList<>(List.of(architect)));
 
         Thief thief = spy(new Thief());
-        thief.setPlayer(spySmartBot);
-        when(spySmartBot.getCharacter()).thenReturn(thief);
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(thief)));;
 
         List<Character> opponents = new ArrayList<>(List.of(bishop));
         opponents.add(architect);
