@@ -100,12 +100,8 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public Character chooseCharacter(List<Character> characters) {
-        this.character = characters.get(random.nextInt(characters.size()));
-        this.character.setPlayer(this);
-        characters.remove(this.character);
-        this.view.displayPlayerChooseCharacter(this);
-        return this.character;
+    public Character choseCharacterImpl(List<Character> characters) {
+        return characters.get(random.nextInt(characters.size()));
     }
 
     protected void useEffect() {

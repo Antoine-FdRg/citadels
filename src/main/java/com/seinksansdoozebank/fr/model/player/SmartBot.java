@@ -134,30 +134,22 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public Character chooseCharacter(List<Character> characters) {
+    public Character choseCharacterImpl(List<Character> characters) {
         // Choose the character by getting the frequency of each districtType in the citadel
         // and choosing the districtType with the highest frequency for the character
-
         List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());
         if (!districtTypeFrequencyList.isEmpty()) {
             // Choose the character with the mostOwnedDistrictType
             for (DistrictType districtType : districtTypeFrequencyList) {
                 for (Character character : characters) {
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
-                        this.character = commonCharacter;
-                        this.character.setPlayer(this);
-                        this.view.displayPlayerChooseCharacter(this);
-                        return this.character;
+                        return character;
                     }
                 }
             }
         }
         // If no character has the mostOwnedDistrictType, choose a random character
-        this.character = characters.get(random.nextInt(characters.size()));
-        this.character.setPlayer(this);
-        characters.remove(this.character);
-        this.view.displayPlayerChooseCharacter(this);
-        return this.character;
+        return characters.get(random.nextInt(characters.size()));
     }
 
     /**
