@@ -209,7 +209,7 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        Player spyPlayerSmart= spy(new SmartBot(10, deck, view));
+        Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
         when(deck.pick()).thenReturn(new Card(District.MANOR));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
@@ -255,26 +255,34 @@ class PlayerTest {
     }
 
     @Test
-    void playWithObservatoryInCitadelle(){
-        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE),new Card(District.OBSERVATORY)));
+    void playWithObservatoryInCitadelle() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
         when(deck.pick()).thenReturn(new Card(District.MANOR));
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
-        verify(view,times(1)).displayPlayerHasGotObservatory(spyPlayer);
-        verify(spyPlayer.deck,times(3)).pick();
+        verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
+        verify(spyPlayer.deck, times(3)).pick();
     }
 
     @Test
-    void numberOfCardsToPickWhenTheBotHasObservatoryInHisCitadelTest(){
-        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE),new Card(District.OBSERVATORY)));
-        assertEquals(3,spyPlayer.numberOfCardsToPick());
+    void numberOfCardsToPickWhenTheBotHasObservatoryInHisCitadelTest() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
+        assertEquals(3, spyPlayer.numberOfCardsToPick());
     }
 
 
     @Test
-    void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest(){
+    void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
-        assertEquals(2,spyPlayer.numberOfCardsToPick());
+        assertEquals(2, spyPlayer.numberOfCardsToPick());
     }
 
 
+
+    @Test
+    void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
+        Player player = new RandomBot(10, deck, view);
+        Player player2 = new RandomBot(10, deck, view);
+        player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    }
 }

@@ -90,12 +90,12 @@ public class SmartBot extends Player {
     /**
      * On choisit ici la carte qui coùte la moins chère des cartes proposées
      *
-     * @param pickedCards
+     * @param pickedCards the cards picked
      * @return the card that will be kept
      */
     @Override
     protected Card keepOneDiscardOthers(List<Card> pickedCards) {
-        Optional<Card> cardKept=pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
+        Optional<Card> cardKept = pickedCards.stream().min(Comparator.comparing(card -> card.getDistrict().getCost()));
         return cardKept.orElse(null);
     }
 
@@ -189,6 +189,10 @@ public class SmartBot extends Player {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
             this.useEffectArchitectPickCards();
+        } else if (this.getCharacter() instanceof Thief thief) {
+            this.useEffectThief(thief);
+        } else if (this.character instanceof Magician magician) {
+            this.useEffectMagician(magician);
         }
     }
 
@@ -196,7 +200,7 @@ public class SmartBot extends Player {
     protected void useEffectCondottiere(Condottiere condottiere) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
-                .filter(opponent -> opponent.getOpponentCharacter() instanceof Bishop) // can't destroy the districts of the bishop
+                .filter(opponent -> !(opponent.getOpponentCharacter() instanceof Bishop)) // can't destroy the districts of the bishop
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
         if (playerWithMostDistricts.isEmpty()) {
             return;
@@ -207,7 +211,7 @@ public class SmartBot extends Player {
                 .toList();
         // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
-            if (this.getNbGold() >= card.getDistrict().getCost() + 1) {
+            if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
                     condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
                     return;
@@ -220,16 +224,29 @@ public class SmartBot extends Player {
 
     @Override
     protected void useEffectMagician(Magician magician) {
-        // TODO
+        int numberOfCardsToExchange = this.getHand().size();
+
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparingInt(Opponent::getHandSize));
+
+        // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
+        if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHandSize()) {
+            magician.useEffect(playerWithMostDistricts.get(), null);
+            return;
+        }
+
+        // Case 2: Player exchanges cards with the deck (cost > 2 gold)
+        List<Card> cardsToExchange = this.getHand().stream()
+                .filter(card -> card.getDistrict().getCost() > 2)
+                .toList();
+
+        if (!cardsToExchange.isEmpty()) {
+            magician.useEffect(null, cardsToExchange);
+        }
     }
 
     @Override
     protected void useEffectAssassin(Assassin assassin) {
-        // TODO
-    }
-
-    @Override
-    protected void useEffectThief(Thief thief){
         // TODO
     }
 
@@ -362,6 +379,25 @@ public class SmartBot extends Player {
             return 0;
         }
         return average.getAsDouble();
+    }
+
+    /**
+     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
+     * @param thief the thief
+     */
+    @Override
+    protected void useEffectThief(Thief thief) {
+        Optional<Opponent> victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                !player.getOpponentCharacter().isDead() && (player.getOpponentCharacter().getRole() == Role.ARCHITECT || player.getOpponentCharacter().getRole() == Role.MERCHANT)).findFirst();
+        if (victim.isEmpty()) {
+            victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
+                    !player.getOpponentCharacter().isDead()).findFirst();
+        }
+        victim.ifPresent(player -> {
+            thief.useEffect(player.getOpponentCharacter());
+            view.displayPlayerUseThiefEffect(this);
+        });
     }
 
     @Override

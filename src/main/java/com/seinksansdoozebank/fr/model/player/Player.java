@@ -127,8 +127,8 @@ public abstract class Player implements Opponent {
      */
     protected void pickCardsKeepSomeAndDiscardOthers() {
         List<Card> pickedCards = new ArrayList<>();
-        int numberOfCardsToPick=numberOfCardsToPick();
-        for(int i=0;i<numberOfCardsToPick;i++){
+        int numberOfCardsToPick = numberOfCardsToPick();
+        for (int i = 0; i < numberOfCardsToPick; i++) {
             pickedCards.add(this.deck.pick());
         }
         this.view.displayPlayerPickCards(this, 1);
@@ -139,6 +139,7 @@ public abstract class Player implements Opponent {
 
     /**
      * On regarde si dans la citadelle du joueur le player à l'observatoire, on retourne le nombre de cartes à piocher en fonction
+     *
      * @return nombre de cartes à piocher
      */
     protected int numberOfCardsToPick() {
@@ -156,11 +157,11 @@ public abstract class Player implements Opponent {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-        this.hand.add(this.deck.pick());
+        this.getHand().add(this.deck.pick());
     }
 
     public final void discardACard(Card card) {
-        this.hand.remove(card);
+        this.getHand().remove(card);
         this.deck.discard(card);
     }
 
@@ -175,7 +176,7 @@ public abstract class Player implements Opponent {
             return Optional.empty();
         }
         Card chosenCard = optChosenCard.get();
-        this.hand.remove(chosenCard);
+        this.getHand().remove(chosenCard);
         // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
         this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
@@ -279,6 +280,11 @@ public abstract class Player implements Opponent {
         return Collections.unmodifiableList(this.citadel);
     }
 
+    void setCitadel(List<Card> citadel) {
+        this.citadel.clear();
+        this.citadel.addAll(citadel);
+    }
+
     public int getNbGold() {
         return this.nbGold;
     }
@@ -362,7 +368,7 @@ public abstract class Player implements Opponent {
             this.view.displayPlayerDestroyDistrict(attacker, this, district);
             return true;
         } else {
-            throw new IllegalStateException("The player doesn't have the district to destroy");
+            throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
 
@@ -376,10 +382,10 @@ public abstract class Player implements Opponent {
 
     public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
-        this.hand.clear();
-        this.hand.addAll(magician.getHand());
-        magician.hand.clear();
-        magician.hand.addAll(handToSwitch);
+        this.getHand().clear();
+        this.getHand().addAll(magician.getHand());
+        magician.getHand().clear();
+        magician.getHand().addAll(handToSwitch);
     }
 
     public abstract void chooseColorCourtyardOfMiracle();
@@ -441,5 +447,10 @@ public abstract class Player implements Opponent {
 
     public void setAvailableCharacters(List<Character> availableCharacters) {
         this.availableCharacters = availableCharacters;
+    }
+
+    @Override
+    public int getHandSize() {
+        return this.getHand().size();
     }
 }

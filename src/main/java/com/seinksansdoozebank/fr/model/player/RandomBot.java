@@ -5,7 +5,6 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
@@ -189,7 +188,7 @@ public class RandomBot extends Player {
             // if the player has no district, the bot will not use the condottiere effect
             // Or check if the player choose is not the bishop
             Character opponentCharacter = opponentToDestroyDistrict.getOpponentCharacter();
-            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter instanceof Bishop || opponentCharacter == null) {
+            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter == null) {
                 return;
             }
             // get the random district

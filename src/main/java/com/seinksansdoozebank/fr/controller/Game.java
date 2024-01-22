@@ -152,8 +152,8 @@ public class Game {
         List<Character> notMandatoryCharacters = new ArrayList<>(List.of(
                 new Assassin(),
                 new Thief(),
-                new Bishop(),
                 new Magician(),
+                new Bishop(),
                 new Merchant(),
                 new Architect(),
                 new Condottiere()));
