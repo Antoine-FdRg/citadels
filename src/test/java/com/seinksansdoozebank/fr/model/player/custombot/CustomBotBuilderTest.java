@@ -23,18 +23,12 @@ class CustomBotBuilderTest {
     }
 
     @Test
-    void buildWithMissingStrategySet() {
-        customBotBuilder.setPickingStrategy(null);
-        customBotBuilder.setCharacterChoosingStrategy(mockCharacterChoosingStrategy);
-        assertThrows(IllegalStateException.class, () -> customBotBuilder.build());
-    }
-
-    @Test
     void buildWithAllStrategiesSet() {
         customBotBuilder.setPickingStrategy(mockPickingStrategy);
         customBotBuilder.setCharacterChoosingStrategy(mockCharacterChoosingStrategy);
         CustomBot customBot = customBotBuilder.build();
         assertEquals(mockPickingStrategy, customBot.pickingStrategy);
+        assertEquals(mockCharacterChoosingStrategy, customBot.characterChoosingStrategy);
         assertEquals(customBotBuilder.nbGold, customBot.getNbGold());
     }
 }

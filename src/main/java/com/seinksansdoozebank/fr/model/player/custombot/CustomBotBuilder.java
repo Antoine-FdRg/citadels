@@ -30,12 +30,6 @@ public class CustomBotBuilder {
     }
 
     public CustomBot build() {
-        if(this.pickingStrategy == null){
-            throw new IllegalStateException("You must set a picking strategy for the custom bot");
-        }
-        if (this.characterChoosingStrategy == null) {
-            throw new IllegalStateException("You must set a character choosing strategy for the custom bot");
-        }
         return new CustomBot(nbGold, this.deck, this.view, this.pickingStrategy, this.characterChoosingStrategy);
     }
 }
