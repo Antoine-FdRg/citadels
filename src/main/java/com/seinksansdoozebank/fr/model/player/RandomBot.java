@@ -76,7 +76,7 @@ public class RandomBot extends Player {
     /**
      * On choisit une carte aléatoire parmi celles proposées
      *
-     * @param pickedCards
+     * @param pickedCards the cards picked
      * @return the card that will be kept
      */
     @Override
@@ -210,14 +210,15 @@ public class RandomBot extends Player {
 
     /**
      * Effect of thief character (chose victim)
-     * @param thief
+     * @param thief the thief character
      */
     @Override
     public void useEffectThief(Thief thief){
-        Optional<Opponent> victim = this.getOpponents().stream().filter(player -> player.getOpponentCharacter().getRole() != Role.ASSASSIN &&
-                !player.getOpponentCharacter().isDead()).findFirst();
-        victim.ifPresent(player -> {
-            thief.useEffect(player.getOpponentCharacter());
+        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+                character.getRole() != Role.THIEF &&
+                !character.isDead()).findFirst();
+        victim.ifPresent(characterVictim -> {
+            thief.useEffect(characterVictim);
             view.displayPlayerUseThiefEffect(this);
         });
     }

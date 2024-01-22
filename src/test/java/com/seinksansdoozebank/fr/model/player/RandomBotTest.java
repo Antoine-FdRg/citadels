@@ -247,15 +247,14 @@ class RandomBotTest {
     void randomBotUseEffectOfTheThiefTest(){
         Player player = spy(new RandomBot(2, deck, view));
         Thief thief = spy(new Thief());
-        thief.setPlayer(spyRandomBot);
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
+
         Bishop bishop=spy(new Bishop());
-        bishop.setPlayer(player);
-        List<Opponent> opponents=new ArrayList<>(List.of(player));
-        when(spyRandomBot.getOpponents()).thenReturn(opponents);
-        when(player.getOpponentCharacter()).thenReturn(bishop);
-        when(spyRandomBot.getCharacter()).thenReturn(thief);
-        when(player.getCharacter()).thenReturn(bishop);
+        player.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(bishop));
+
         spyRandomBot.useEffect();
+
         verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
         assertEquals(spyRandomBot,bishop.getSavedThief());
     }
@@ -267,15 +266,16 @@ class RandomBotTest {
     void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest(){
         Player player = spy(new RandomBot(2, deck, view));
         Thief thief = spy(new Thief());
-        thief.setPlayer(spyRandomBot);
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
+
         Assassin assassin=spy(new Assassin());
-        assassin.setPlayer(player);
-        List<Opponent> opponents=new ArrayList<>(List.of(player));
-        when(spyRandomBot.getOpponents()).thenReturn(opponents);
+        player.chooseCharacter(new ArrayList<>(List.of(assassin)));
+
         when(spyRandomBot.getCharacter()).thenReturn(thief);
-        when(player.getCharacter()).thenReturn(assassin);
-        when(player.getOpponentCharacter()).thenReturn(assassin);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(assassin));
+
         spyRandomBot.useEffect();
+
         verify(view,times(0)).displayPlayerUseThiefEffect(spyRandomBot);
         assertNull(assassin.getSavedThief());
     }
