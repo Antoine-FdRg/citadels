@@ -267,7 +267,7 @@ public class Game {
      * this method check if the district university of port for dragons in the citadel of the player
      * if it's the case we add 2 bonus for each
      *
-     * @param player
+     * @param player the player to check
      */
     public void checkUniversityOrPortForDragonsInCitadel(Player player) {
         for (Card card : player.getCitadel()) {
