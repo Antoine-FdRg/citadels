@@ -1,6 +1,8 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -255,7 +257,24 @@ public class Game {
                 player.addBonus(2);
                 view.displayPlayerGetBonus(player, 2, "8 quartiers");
             }
+            checkUniversityOrPortForDragonsInCitadel(player);
             view.displayPlayerScore(player);
+        }
+    }
+
+
+    /**
+     * this method check if the district university of port for dragons in the citadel of the player
+     * if it's the case we add 2 bonus for each
+     *
+     * @param player
+     */
+    public void checkUniversityOrPortForDragonsInCitadel(Player player) {
+        for (Card card : player.getCitadel()) {
+            if (card.getDistrict() == District.UNIVERSITY || card.getDistrict() == District.PORT_FOR_DRAGONS) {
+                view.displayPlayerGetBonus(player, 2, "présence du district " + card.getDistrict().getName());
+                player.addBonus(2);
+            }
         }
     }
 
