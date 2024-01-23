@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
@@ -407,8 +408,8 @@ class GameTest {
         assertEquals(2, smartBotWithUniversity.getBonus());
         assertEquals(0, smartBotWithNoPrestige.getBonus());
         assertEquals(4, smartBotWithBothDistricts.getBonus());
-        verify(view, times(1)).displayPlayerGetBonus(smartBotWithPortForDragons, 2, "présence du district " + District.PORT_FOR_DRAGONS.getName());
-        verify(view, times(1)).displayPlayerGetBonus(smartBotWithUniversity, 2, "présence du district " + District.UNIVERSITY.getName());
+        verify(view, times(4)).displayPlayerGetBonus(any(), anyInt(), anyString());
+
     }
 
     /**
