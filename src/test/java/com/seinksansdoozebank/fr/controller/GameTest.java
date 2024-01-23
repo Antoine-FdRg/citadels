@@ -63,7 +63,7 @@ class GameTest {
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
         gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
-        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view,6 ));
+        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, 6));
         gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
@@ -270,9 +270,9 @@ class GameTest {
     void run() {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() ;
-        verify(gameWithFourPlayers, times(nbRoundPlayed )).createCharacters();
-        verify(gameWithFourPlayers, times(nbRoundPlayed-1)).playARound();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
+        verify(gameWithFourPlayers, times(nbRoundPlayed - 1)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -383,5 +383,42 @@ class GameTest {
         //The player merchant is not present in the game
         assertEquals(Optional.empty(), gameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
     }
+
+    /**
+     * On vérifie qu'en appelant checkUniversityOrPortForDragonsInCitadel, il met les bons bonus au joueur, c'est-à-dire 2 par cartes
+     */
+    @Test
+    void checkUniversityOrPortForDragonsInCitadelTest() {
+        Player smartBotWithUniversity = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithUniversity.getCitadel()).thenReturn(List.of(new Card(District.UNIVERSITY), new Card(District.PORT)));
+        Player smartBotWithPortForDragons = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithPortForDragons.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.TEMPLE)));
+        Player smartBotWithNoPrestige = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithNoPrestige.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
+        Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithBothDistricts.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.UNIVERSITY)));
+        gameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
+
+        for (Player player : gameWithFourPlayers.players) {
+            gameWithFourPlayers.checkUniversityOrPortForDragonsInCitadel(player);
+        }
+
+        assertEquals(2, smartBotWithPortForDragons.getBonus());
+        assertEquals(2, smartBotWithUniversity.getBonus());
+        assertEquals(0, smartBotWithNoPrestige.getBonus());
+        assertEquals(4, smartBotWithBothDistricts.getBonus());
+        verify(view, times(1)).displayPlayerGetBonus(smartBotWithPortForDragons, 2, "présence du district " + District.PORT_FOR_DRAGONS.getName());
+        verify(view, times(1)).displayPlayerGetBonus(smartBotWithUniversity, 2, "présence du district " + District.UNIVERSITY.getName());
+    }
+
+    /**
+     * On vérifie que l'appel à la méthode checkUniversityOrPortForDragonsInCitadel se fait systématiquement
+     */
+    @Test
+    void checkIfUpdatePlayersBonusCallsSpellcheckUniversityOrPortForDragonsInCitadelTest() {
+        gameWithFourPlayers.updatePlayersBonus();
+        verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
+    }
+
 
 }
