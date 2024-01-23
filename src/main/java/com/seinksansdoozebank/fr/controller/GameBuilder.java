@@ -7,7 +7,9 @@ import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -61,11 +63,15 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder addCustomBot(IPickingStrategy pickingStrategy, ICharacterChoosingStrategy characterChoosingStrategy) {
+    public GameBuilder addCustomBot(IPickingStrategy pickingStrategy,
+                                    ICharacterChoosingStrategy characterChoosingStrategy,
+                                    IUsingThiefEffectStrategy thiefEffectStrategy,
+                                    IUsingMurdererEffectStrategy murdererEffectStrategy) {
         checkNbPlayers();
         playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
-                .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
+                .setUsingThiefEffectStrategy(thiefEffectStrategy)
+                .setUsingMurdererEffectStrategy(murdererEffectStrategy)
                 .build());
         return this;
     }

@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
@@ -14,8 +15,8 @@ class CustomBotBuilderTest {
     CustomBotBuilder customBotBuilder;
     IPickingStrategy mockPickingStrategy;
     ICharacterChoosingStrategy mockCharacterChoosingStrategy;
-
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
+    IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
 
     @BeforeEach
     void setUp() {
@@ -23,6 +24,7 @@ class CustomBotBuilderTest {
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
+        mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
     }
 
     @Test
@@ -30,6 +32,8 @@ class CustomBotBuilderTest {
         customBotBuilder.setPickingStrategy(mockPickingStrategy);
         customBotBuilder.setCharacterChoosingStrategy(mockCharacterChoosingStrategy);
         customBotBuilder.setUsingThiefEffectStrategy(mockUsingThiefEffectStrategy);
+        customBotBuilder.setUsingMurdererEffectStrategy(mockUsingMurdererEffectStrategy);
+
         CustomBot customBot = customBotBuilder.build();
         assertEquals(mockPickingStrategy, customBot.pickingStrategy);
         assertEquals(mockCharacterChoosingStrategy, customBot.characterChoosingStrategy);

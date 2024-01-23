@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -34,16 +35,19 @@ class CustomBotTest {
     IPickingStrategy mockPickingStrategy;
     ICharacterChoosingStrategy mockCharacterChoosingStrategy;
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
+    IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
 
     @BeforeEach
     void setUp() {
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
+        mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         spyCustomBot = spy(new CustomBot(2, new Deck(), mock(IView.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
-                mockUsingThiefEffectStrategy));
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy));
     }
 
     @Test
@@ -90,12 +94,30 @@ class CustomBotTest {
     }
 
     @Test
+    void useAssassinEffectWithAUsingMurdererEffectStrategyShouldUseTheUsingMurdererEffectStrategyMethod() {
+        spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
+        Assassin mockAssassin = mock(Assassin.class);
+        spyCustomBot.useEffectAssassin(mockAssassin);
+        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockAssassin);
+    }
+
+    @Test
+    void useAssassinEffectWithoutAUsingMurdererEffectStrategyShouldCallTheSuperMethod() {
+        Assassin mockAssassin = mock(Assassin.class);
+        spyCustomBot.usingMurdererEffectStrategy = null;
+        spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
+        spyCustomBot.useEffectAssassin(mockAssassin);
+        verify(spyCustomBot).randomUseMurdererEffect(any());
+    }
+
+    @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
         Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
-                mockUsingThiefEffectStrategy);
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy);
         Opponent opponent = mock(Opponent.class);
         when(opponent.getNbGold()).thenReturn(2);
         customBotWithARealChoosingStrat.setOpponents(List.of(opponent));
