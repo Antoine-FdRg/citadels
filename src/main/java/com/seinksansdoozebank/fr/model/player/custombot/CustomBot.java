@@ -25,19 +25,27 @@ public class CustomBot extends RandomBot {
     @Override
     protected void pickSomething() {
         if (pickingStrategy == null) {
-            super.pickSomething();
+            this.randomPickSomething();
         } else {
             pickingStrategy.apply(this);
         }
     }
 
+    protected void randomPickSomething() {
+        super.pickSomething();
+    }
+
     @Override
     protected Character chooseCharacterImpl(List<Character> characters) {
         if (characterChoosingStrategy == null) {
-            return super.chooseCharacterImpl(characters);
+            return this.randomChooseCharacterImpl(characters);
         } else {
             return characterChoosingStrategy.apply(this, characters);
         }
+    }
+
+    protected Character randomChooseCharacterImpl(List<Character> characters) {
+        return super.chooseCharacterImpl(characters);
     }
 
     @Override

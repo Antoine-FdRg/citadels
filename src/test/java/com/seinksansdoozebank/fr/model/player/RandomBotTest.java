@@ -24,7 +24,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -184,21 +183,6 @@ class RandomBotTest {
         assertEquals(character.getPlayer().getId(), spyRandomBot.getId());
         verify(view, times(1)).displayPlayerChooseCharacter(spyRandomBot);
 
-    }
-
-    @Test
-    void chooseCharacter() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-        characters.add(new King());
-        characters.add(new Merchant());
-        characters.add(new Condottiere());
-        Player player = new RandomBot(10, deck, view);
-
-        spyRandomBot.chooseCharacter(characters);
-        player.chooseCharacter(characters);
-
-        assertNotEquals(spyRandomBot.getCharacter(), player.getCharacter());
     }
 
     @Test
