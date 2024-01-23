@@ -11,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -266,6 +268,45 @@ class RandomBotTest {
         assertNotNull(spyRandomBot.keepOneDiscardOthers(cardPicked));
     }
 
+    /**
+     * On vérifie que le randomBot qui est un voleur utilise son effet sur son opposant.
+     */
+    @Test
+    void randomBotUseEffectOfTheThiefTest() {
+        Player player = spy(new RandomBot(2, deck, view));
+        Thief thief = spy(new Thief());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
+
+        Bishop bishop = spy(new Bishop());
+        player.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(bishop));
+
+        spyRandomBot.useEffect();
+
+        verify(view, times(1)).displayPlayerUseThiefEffect(spyRandomBot);
+        assertEquals(spyRandomBot, bishop.getSavedThief());
+    }
+
+    /**
+     * On vérifie que le randomBot qui est un voleur ne peut pas utiliser l'effet sur un assassin.
+     */
+    @Test
+    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
+        Player player = spy(new RandomBot(2, deck, view));
+        Thief thief = spy(new Thief());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
+
+        Assassin assassin = spy(new Assassin());
+        player.chooseCharacter(new ArrayList<>(List.of(assassin)));
+
+        when(spyRandomBot.getCharacter()).thenReturn(thief);
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(assassin));
+
+        spyRandomBot.useEffect();
+
+        verify(view, times(0)).displayPlayerUseThiefEffect(spyRandomBot);
+        assertNull(assassin.getSavedThief());
+    }
 
     @Test
     void testChooseColorCourtyardOfMiracle() {

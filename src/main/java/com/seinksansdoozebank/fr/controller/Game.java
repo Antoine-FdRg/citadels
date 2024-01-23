@@ -140,6 +140,7 @@ public class Game {
      */
     protected void init() {
         dealCards();
+        createCharacters();
     }
 
     /**
@@ -280,6 +281,7 @@ public class Game {
      */
     public void checkPlayerStolen(Player player) {
         if (player.getCharacter().getSavedThief() != null) {
+            view.displayStolenCharacter(player.getCharacter());
             player.getCharacter().isStolen();
             view.displayStolenCharacter(player.getCharacter());
             Optional<Player> playerByRole = getPlayerByRole(Role.THIEF);
