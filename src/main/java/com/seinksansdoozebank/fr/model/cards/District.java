@@ -1,8 +1,10 @@
 package com.seinksansdoozebank.fr.model.cards;
 
 import com.seinksansdoozebank.fr.model.cards.effect.ActiveEffect;
+import com.seinksansdoozebank.fr.model.cards.effect.LaboratoryEffect;
 import com.seinksansdoozebank.fr.model.cards.effect.ManufactureEffect;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.IView;
 
 public enum District implements Comparable<District> {
 
@@ -25,7 +27,7 @@ public enum District implements Comparable<District> {
     FORTRESS("Forteresse", DistrictType.SOLDIERLY, 5, 2, null),
     COURTYARD_OF_MIRACLE("Cour des miracles", DistrictType.PRESTIGE, 2, 1, null),
     DONJON("Donjon", DistrictType.PRESTIGE, 3, 2, null),
-    LABORATORY("Laboratoire", DistrictType.PRESTIGE, 5, 1, null),
+    LABORATORY("Laboratoire", DistrictType.PRESTIGE, 5, 1, new LaboratoryEffect()),
     MANUFACTURE("Manufacture", DistrictType.PRESTIGE, 5, 1, new ManufactureEffect()),
     OBSERVATORY("Observatoire", DistrictType.PRESTIGE, 5, 1, null),
     CEMETERY("Cimetière", DistrictType.PRESTIGE, 5, 1, null),
@@ -101,10 +103,14 @@ public enum District implements Comparable<District> {
         return cost;
     }
 
-    public void useActiveEffect(Player player) {
+    public void useActiveEffect(Player player, IView view) {
         if (this.activeEffect != null) {
-            this.activeEffect.use(player);
+            this.activeEffect.use(player, view);
         }
+    }
+
+    public ActiveEffect getActiveEffect() {
+        return this.activeEffect;
     }
 
     /**

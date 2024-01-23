@@ -63,4 +63,10 @@ public interface IView {
     void displayPlayerHasGotObservatory(Player player);
 
     void displayPlayerUseThiefEffect(Player player);
+
+    void displayPlayerDiscardCard(Player player, Card card);
+
+    void displayPlayerUseLaboratoryEffect(Player player);
+
+    void displayPlayerUseManufactureEffect(Player player);
 }

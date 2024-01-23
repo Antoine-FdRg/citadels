@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -283,5 +284,43 @@ class PlayerTest {
         Player player2 = new RandomBot(10, deck, view);
         player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
         assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    }
+
+    @Test
+    void discardFromHandWhenHandIsNotEmpty() {
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        assertTrue(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        verify(deck, times(1)).discard(new Card(District.TEMPLE));
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
+    @Test
+    void discardFromHandWhenHandIsEmpty() {
+        assertFalse(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        verify(deck, times(0)).discard(new Card(District.TEMPLE));
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
+    @Test
+    void usePrestigesEffectWithLaboratory() {
+        // make a hand with a one cost card
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LABORATORY))));
+        spyPlayer.usePrestigesEffect();
+        verify(view, times(1)).displayPlayerUseLaboratoryEffect(spyPlayer);
+    }
+
+    @Test
+    void usePrestigesEffectWithManufacture() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        ((RandomBot) spyPlayer).setRandom(mockRandom);
+
+        // make a hand with a one card
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MANUFACTURE))));
+        spyPlayer.usePrestigesEffect();
+        verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
     }
 }
