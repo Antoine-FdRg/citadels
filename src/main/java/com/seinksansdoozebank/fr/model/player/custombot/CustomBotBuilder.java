@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.view.IView;
@@ -10,8 +11,8 @@ public class CustomBotBuilder {
     private final Deck deck;
     final int nbGold;
     private IPickingStrategy pickingStrategy;
-
     private ICharacterChoosingStrategy characterChoosingStrategy;
+    private IUsingThiefEffectStrategy usingThiefEffectStrategy;
 
     public CustomBotBuilder(int nbGold, IView view, Deck deck) {
         this.nbGold = nbGold;
@@ -29,7 +30,15 @@ public class CustomBotBuilder {
         return this;
     }
 
+    public CustomBotBuilder setUsingThiefEffectStrategy(IUsingThiefEffectStrategy usingThiefEffectStrategy) {
+        this.usingThiefEffectStrategy = usingThiefEffectStrategy;
+        return this;
+    }
+
     public CustomBot build() {
-        return new CustomBot(nbGold, this.deck, this.view, this.pickingStrategy, this.characterChoosingStrategy);
+        return new CustomBot(nbGold, this.deck, this.view,
+                this.pickingStrategy,
+                this.characterChoosingStrategy,
+                this.usingThiefEffectStrategy);
     }
 }

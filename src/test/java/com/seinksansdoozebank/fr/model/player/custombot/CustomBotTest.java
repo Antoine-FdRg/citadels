@@ -2,11 +2,14 @@ package com.seinksansdoozebank.fr.model.player.custombot;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
@@ -30,14 +33,17 @@ class CustomBotTest {
     CustomBot spyCustomBot;
     IPickingStrategy mockPickingStrategy;
     ICharacterChoosingStrategy mockCharacterChoosingStrategy;
+    IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
 
     @BeforeEach
     void setUp() {
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
+        mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         spyCustomBot = spy(new CustomBot(2, new Deck(), mock(IView.class),
                 mockPickingStrategy,
-                mockCharacterChoosingStrategy));
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy));
     }
 
     @Test
@@ -67,11 +73,29 @@ class CustomBotTest {
     }
 
     @Test
+    void useThiefEffectWithAUsingThiefEffectStrategyShouldUseTheUsingThiefEffectStrategyMethod() {
+        spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
+        Thief mockThief = mock(Thief.class);
+        spyCustomBot.useEffectThief(mockThief);
+        verify(mockUsingThiefEffectStrategy).apply(spyCustomBot, mockThief);
+    }
+
+    @Test
+    void useThiefEffectWithoutAUsingThiefEffectStrategyShouldCallTheSuperMethod() {
+        Thief mockThief = mock(Thief.class);
+        spyCustomBot.usingThiefEffectStrategy = null;
+        spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
+        spyCustomBot.useEffectThief(mockThief);
+        verify(spyCustomBot).randomUseThiefEffect(any());
+    }
+
+    @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
         Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
                 mockPickingStrategy,
-                spyChoosingStrategy);
+                spyChoosingStrategy,
+                mockUsingThiefEffectStrategy);
         Opponent opponent = mock(Opponent.class);
         when(opponent.getNbGold()).thenReturn(2);
         customBotWithARealChoosingStrat.setOpponents(List.of(opponent));
