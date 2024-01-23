@@ -700,7 +700,7 @@ class SmartBotTest {
         architectplayer.chooseCharacter(new ArrayList<>(List.of(architect)));
 
         Thief thief = spy(new Thief());
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(thief)));;
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
         List<Character> opponents = new ArrayList<>(List.of(bishop));
         opponents.add(architect);
@@ -748,5 +748,37 @@ class SmartBotTest {
         spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
+    }
+
+    @Test
+    void chooseCardToDiscardForLaboratoryEffectWhenHavingCardsCostSuperiorToOneWithSpecialCharacter() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.CORNER_SHOP)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+    }
+
+    @Test
+    void chooseCardToDiscardForLaboratoryEffectWhenHavingCardsCostEqualsToOneWithSpecialCharacter() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TEMPLE)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        assertEquals(new Card(District.TEMPLE), spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+    }
+
+    @Test
+    void chooseCardToDiscardForLaboratoryEffectWhenHavingCardsCostEqualsToOneWithCommonCharacterAndACardToDiscard() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TEMPLE), new Card(District.TAVERN)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        assertEquals(new Card(District.TEMPLE), spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+    }
+
+    @Test
+    void chooseCardToDiscardForLaboratoryEffectWhenHavingCardsCostEqualsToOneWithCommonCharacterAndNoCardToDiscard() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
     }
 }

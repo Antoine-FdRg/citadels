@@ -284,4 +284,21 @@ class PlayerTest {
         player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
         assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
     }
+
+    @Test
+    void discardFromHandWhenHandIsNotEmpty() {
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        assertTrue(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        verify(deck, times(1)).discard(new Card(District.TEMPLE));
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
+    @Test
+    void discardFromHandWhenHandIsEmpty() {
+        assertFalse(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        verify(deck, times(0)).discard(new Card(District.TEMPLE));
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
 }

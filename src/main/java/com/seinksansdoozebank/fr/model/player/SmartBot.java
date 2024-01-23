@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents a smart bot which will try to build the cheaper district
@@ -397,6 +398,26 @@ public class SmartBot extends Player {
             thief.useEffect(character);
             view.displayPlayerUseThiefEffect(this);
         });
+    }
+
+    public Card chooseCardToDiscardForLaboratoryEffect() {
+        // find every card at 1 gold
+        Stream<Card> cardsAtOneGold = this.getHand().stream().filter(card -> card.getDistrict().getCost() == 1);
+        if (this.character instanceof CommonCharacter commonCharacter) {
+            // find every card with not the same districtType as the character's target
+            Optional<Card> cardsWithNotSameDistrictTypeAsTarget = cardsAtOneGold.filter(card -> card.getDistrict().getDistrictType() != commonCharacter.getTarget()).findFirst();
+            // if there is a card with not the same districtType as the character's target, discard it
+            if (cardsWithNotSameDistrictTypeAsTarget.isPresent()) {
+                return cardsWithNotSameDistrictTypeAsTarget.get();
+            }
+        } else {
+            // if there is a card at 1 gold, discard it
+            Optional<Card> cardAtOneGold = cardsAtOneGold.findFirst();
+            if (cardAtOneGold.isPresent()) {
+                return cardAtOneGold.get();
+            }
+        }
+        return null;
     }
 
     @Override

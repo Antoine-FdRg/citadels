@@ -173,4 +173,19 @@ public class Cli implements IView {
     public void displayPlayerUseThiefEffect(Player player){
         CustomLogger.log(Level.INFO,"{0} vient de choisir le personnage qu'il volera.", player);
     }
+
+    @Override
+    public void displayPlayerDiscardCard(Player player, Card card) {
+        CustomLogger.log(Level.INFO, "{0} défausse la carte {1}.", new Object[]{player, card});
+    }
+
+    @Override
+    public void displayPlayerUseLaboratoryEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise le laboratoire pour défausser une carte et gagner une pièce d'or.", player);
+    }
+
+    @Override
+    public void displayPlayerUseManufactureEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).", player);
+    }
 }

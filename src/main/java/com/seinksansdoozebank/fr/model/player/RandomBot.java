@@ -244,4 +244,8 @@ public class RandomBot extends Player {
     public void setRandom(Random mockRandom) {
         this.random = mockRandom;
     }
+
+    public Card chooseCardToDiscardForLaboratoryEffect() {
+        return this.hand.get(random.nextInt(this.hand.size()));
+    }
 }
