@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.getCharacterFromRoleInLIst;
+import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.isRoleInCharacterList;
+
 /**
  * Represents a strategy to choose a character by taking the one that will be the
  * most useful to slow down the player who is the closest to win
@@ -66,13 +69,5 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         } else {
             throw new IllegalStateException("No leading opponent found");
         }
-    }
-
-    boolean isRoleInCharacterList(Role role, List<Character> characters) {
-        return characters.stream().anyMatch(character -> character.getRole().equals(role));
-    }
-
-    Character getCharacterFromRoleInLIst(Role role, List<Character> characters) {
-        return characters.stream().filter(character -> character.getRole().equals(role)).findFirst().orElseThrow();
     }
 }
