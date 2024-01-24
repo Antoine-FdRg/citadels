@@ -63,7 +63,7 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
     }
 
     Opponent getLeadingOpponent(Player player) {
-        Optional<Opponent> optionalOpponent = player.getOpponents().stream().filter(o -> !o.equals(player)).min((o1, o2) -> o2.nbDistrictsInCitadel() - o1.nbDistrictsInCitadel());
+        Optional<Opponent> optionalOpponent = player.getOpponents().stream().filter(o -> !o.equals(player)).max((o1, o2) -> o2.nbDistrictsInCitadel() - o1.nbDistrictsInCitadel());
         if (optionalOpponent.isPresent()) {
             return optionalOpponent.get();
         } else {
