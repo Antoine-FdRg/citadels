@@ -45,6 +45,7 @@ public class GameBuilder {
 
     /**
      * Add a smart bot to the game
+     *
      * @return the builder
      */
     public GameBuilder addSmartBot() {
@@ -55,6 +56,7 @@ public class GameBuilder {
 
     /**
      * Add a random bot to the game
+     *
      * @return the builder
      */
     public GameBuilder addRandomBot() {
@@ -69,6 +71,7 @@ public class GameBuilder {
                                     IUsingMurdererEffectStrategy murdererEffectStrategy) {
         checkNbPlayers();
         playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
+                .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
                 .setUsingMurdererEffectStrategy(murdererEffectStrategy)
@@ -78,6 +81,7 @@ public class GameBuilder {
 
     /**
      * Build the game from the arguments given to the builder
+     *
      * @return the game built
      */
     public Game build() {
