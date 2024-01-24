@@ -24,7 +24,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -187,21 +186,6 @@ class RandomBotTest {
     }
 
     @Test
-    void chooseCharacter() {
-        List<Character> characters = new ArrayList<>();
-        characters.add(new Bishop());
-        characters.add(new King());
-        characters.add(new Merchant());
-        characters.add(new Condottiere());
-        Player player = new RandomBot(10, deck, view);
-
-        spyRandomBot.chooseCharacter(characters);
-        player.chooseCharacter(characters);
-
-        assertNotEquals(spyRandomBot.getCharacter(), player.getCharacter());
-    }
-
-    @Test
     void testRandomBotUseEffectCondottiere() {
         // Create a mock Random object that always returns true
         Random mockRandom = mock(Random.class);
@@ -272,31 +256,31 @@ class RandomBotTest {
      * On vérifie que le randomBot qui est un voleur utilise son effet sur son opposant.
      */
     @Test
-    void randomBotUseEffectOfTheThiefTest(){
+    void randomBotUseEffectOfTheThiefTest() {
         Player player = spy(new RandomBot(2, deck, view));
         Thief thief = spy(new Thief());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
-        Bishop bishop=spy(new Bishop());
+        Bishop bishop = spy(new Bishop());
         player.chooseCharacter(new ArrayList<>(List.of(bishop)));
         when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(bishop));
 
         spyRandomBot.useEffect();
 
-        verify(view,times(1)).displayPlayerUseThiefEffect(spyRandomBot);
-        assertEquals(spyRandomBot,bishop.getSavedThief());
+        verify(view, times(1)).displayPlayerUseThiefEffect(spyRandomBot);
+        assertEquals(spyRandomBot, bishop.getSavedThief());
     }
 
     /**
      * On vérifie que le randomBot qui est un voleur ne peut pas utiliser l'effet sur un assassin.
      */
     @Test
-    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest(){
+    void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
         Player player = spy(new RandomBot(2, deck, view));
         Thief thief = spy(new Thief());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
-        Assassin assassin=spy(new Assassin());
+        Assassin assassin = spy(new Assassin());
         player.chooseCharacter(new ArrayList<>(List.of(assassin)));
 
         when(spyRandomBot.getCharacter()).thenReturn(thief);
@@ -304,7 +288,7 @@ class RandomBotTest {
 
         spyRandomBot.useEffect();
 
-        verify(view,times(0)).displayPlayerUseThiefEffect(spyRandomBot);
+        verify(view, times(0)).displayPlayerUseThiefEffect(spyRandomBot);
         assertNull(assassin.getSavedThief());
     }
 

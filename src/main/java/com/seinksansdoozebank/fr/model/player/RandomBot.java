@@ -101,12 +101,8 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public Character chooseCharacter(List<Character> characters) {
-        this.character = characters.get(random.nextInt(characters.size()));
-        this.character.setPlayer(this);
-        characters.remove(this.character);
-        this.view.displayPlayerChooseCharacter(this);
-        return this.character;
+    protected Character chooseCharacterImpl(List<Character> characters) {
+        return characters.get(random.nextInt(characters.size()));
     }
 
     protected void useEffect() {
@@ -165,7 +161,7 @@ public class RandomBot extends Player {
      * @param assassin the assassin character
      */
     @Override
-    void useEffectAssassin(Assassin assassin) {
+    protected void useEffectAssassin(Assassin assassin) {
         Character characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
         while (!characterToKill.isDead()) {
@@ -209,10 +205,11 @@ public class RandomBot extends Player {
 
     /**
      * Effect of thief character (chose victim)
+     *
      * @param thief the thief character
      */
     @Override
-    public void useEffectThief(Thief thief){
+    public void useEffectThief(Thief thief) {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
                 !character.isDead()).findFirst();

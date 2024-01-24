@@ -302,7 +302,6 @@ public class Game {
         if (player.getCharacter().getSavedThief() != null) {
             view.displayStolenCharacter(player.getCharacter());
             player.getCharacter().isStolen();
-            view.displayStolenCharacter(player.getCharacter());
             Optional<Player> playerByRole = getPlayerByRole(Role.THIEF);
             playerByRole.ifPresent(view::displayActualNumberOfGold);
         }

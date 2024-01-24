@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -158,7 +159,7 @@ class GameTest {
     }
 
     @Test
-    void playersChoseCharactersMakeAllPlayersChooseACharacter() {
+    void playersChoseCharactersMakeAllPlayersChooseADifferentCharacter() {
         List<Player> players = gameWithFivePlayers.players;
         gameWithFivePlayers.getAvailableCharacters().addAll(charactersList);
 
@@ -166,6 +167,11 @@ class GameTest {
 
         for (Player player : players) {
             assertNotNull(player.getCharacter());
+            for (Player player2 : players) {
+                if (player != player2) {
+                    assertNotEquals(player.getCharacter(), player2.getCharacter());
+                }
+            }
         }
     }
 
