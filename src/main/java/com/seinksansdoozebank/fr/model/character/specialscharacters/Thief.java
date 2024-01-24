@@ -11,7 +11,7 @@ public class Thief extends Character {
 
     /**
      * the method set the attribute goldWillBeStolen to true for the character which will be stolen
-     * @param character
+     * @param character the character to steal
      */
     public void useEffect(Character character) {
         //We verify if the character is not the thief
