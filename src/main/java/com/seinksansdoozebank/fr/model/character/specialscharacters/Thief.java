@@ -9,12 +9,6 @@ public class Thief extends Character {
         super(Role.THIEF);
     }
 
-    @Override
-    public void useEffect() {
-        //No effect
-    }
-
-
     /**
      * the method set the attribute goldWillBeStolen to true for the character which will be stolen
      * @param character
