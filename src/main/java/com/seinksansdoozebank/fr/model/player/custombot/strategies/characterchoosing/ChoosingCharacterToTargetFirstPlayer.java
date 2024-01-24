@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -63,7 +64,7 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
     }
 
     Opponent getLeadingOpponent(Player player) {
-        Optional<Opponent> optionalOpponent = player.getOpponents().stream().filter(o -> !o.equals(player)).max((o1, o2) -> o2.nbDistrictsInCitadel() - o1.nbDistrictsInCitadel());
+        Optional<Opponent> optionalOpponent = player.getOpponents().stream().filter(o -> !o.equals(player)).max(Comparator.comparingInt(Opponent::nbDistrictsInCitadel));
         if (optionalOpponent.isPresent()) {
             return optionalOpponent.get();
         } else {

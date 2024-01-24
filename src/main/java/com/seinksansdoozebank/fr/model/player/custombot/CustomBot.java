@@ -64,6 +64,7 @@ public class CustomBot extends RandomBot {
             this.randomUseThiefEffect(thief);
         } else {
             usingThiefEffectStrategy.apply(this, thief);
+            view.displayPlayerUseThiefEffect(this);
         }
     }
 
