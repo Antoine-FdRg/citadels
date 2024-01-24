@@ -5,7 +5,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -61,21 +59,6 @@ class ChoosingCharacterToTargetFirstPlayerTest {
         when(mockPlayer.getOpponents()).thenReturn(List.of());
 
         assertThrows(IllegalStateException.class, () -> choosingCharacterToTargetFirstPlayer.getLeadingOpponent(mockPlayer));
-    }
-
-    @Test
-    void isRoleInCharacterListWithRoleInCharacterListShouldBeTrue() {
-        List<Character> characters = List.of(new Assassin(), new Magician(), new Thief());
-        assertTrue(choosingCharacterToTargetFirstPlayer.isRoleInCharacterList(Role.ASSASSIN, characters));
-        assertTrue(choosingCharacterToTargetFirstPlayer.isRoleInCharacterList(Role.MAGICIAN, characters));
-        assertTrue(choosingCharacterToTargetFirstPlayer.isRoleInCharacterList(Role.THIEF, characters));
-    }
-
-    @Test
-    void isRoleInCharacterListWithRoleNotInCharacterListShouldBeFalse() {
-        List<Character> characters = List.of(new Assassin(), new Magician(), new Thief());
-        assertFalse(choosingCharacterToTargetFirstPlayer.isRoleInCharacterList(Role.CONDOTTIERE, characters));
-        assertFalse(choosingCharacterToTargetFirstPlayer.isRoleInCharacterList(Role.ARCHITECT, characters));
     }
 
     @Test

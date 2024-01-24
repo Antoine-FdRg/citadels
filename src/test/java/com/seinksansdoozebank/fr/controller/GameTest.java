@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
@@ -389,5 +390,42 @@ class GameTest {
         //The player merchant is not present in the game
         assertEquals(Optional.empty(), gameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
     }
+
+    /**
+     * On vérifie qu'en appelant checkUniversityOrPortForDragonsInCitadel, il met les bons bonus au joueur, c'est-à-dire 2 par cartes
+     */
+    @Test
+    void checkUniversityOrPortForDragonsInCitadelTest() {
+        Player smartBotWithUniversity = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithUniversity.getCitadel()).thenReturn(List.of(new Card(District.UNIVERSITY), new Card(District.PORT)));
+        Player smartBotWithPortForDragons = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithPortForDragons.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.TEMPLE)));
+        Player smartBotWithNoPrestige = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithNoPrestige.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
+        Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithBothDistricts.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.UNIVERSITY)));
+        gameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
+
+        for (Player player : gameWithFourPlayers.players) {
+            gameWithFourPlayers.checkUniversityOrPortForDragonsInCitadel(player);
+        }
+
+        assertEquals(2, smartBotWithPortForDragons.getBonus());
+        assertEquals(2, smartBotWithUniversity.getBonus());
+        assertEquals(0, smartBotWithNoPrestige.getBonus());
+        assertEquals(4, smartBotWithBothDistricts.getBonus());
+        verify(view, times(4)).displayPlayerGetBonus(any(), anyInt(), anyString());
+
+    }
+
+    /**
+     * On vérifie que l'appel à la méthode checkUniversityOrPortForDragonsInCitadel se fait systématiquement
+     */
+    @Test
+    void checkIfUpdatePlayersBonusCallsSpellcheckUniversityOrPortForDragonsInCitadelTest() {
+        gameWithFourPlayers.updatePlayersBonus();
+        verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
+    }
+
 
 }

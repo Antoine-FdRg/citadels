@@ -2,6 +2,10 @@ package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +53,17 @@ class GameBuilderTest {
     void addRandomBotMakesPlayerListSizeIncrementByOne() {
         int playerListSize = gameBuilder.getPlayerListSize();
         gameBuilder.addRandomBot();
+        assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
+    }
+
+    @Test
+    void addCustomBotMakesPlayerListSizeIncrementByOne() {
+        IPickingStrategy pickingStrategy = mock(IPickingStrategy.class);
+        ICharacterChoosingStrategy characterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
+        IUsingThiefEffectStrategy thiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
+        IUsingMurdererEffectStrategy murdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
+        int playerListSize = gameBuilder.getPlayerListSize();
+        gameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy);
         assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
     }
 

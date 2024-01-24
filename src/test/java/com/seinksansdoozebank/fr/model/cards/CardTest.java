@@ -22,4 +22,9 @@ class CardTest {
         assertNotEquals(monasteryCard, barrackCard);
         assertEquals(monasteryCard, monasteryCardBis);
     }
+
+    @Test
+    void equalsTestOnNull() {
+        assertNotEquals(null, monasteryCard);
+    }
 }

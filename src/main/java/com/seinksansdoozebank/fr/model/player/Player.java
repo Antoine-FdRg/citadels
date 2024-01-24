@@ -64,12 +64,19 @@ public abstract class Player implements Opponent {
         this.reveal();
         view.displayPlayerStartPlaying(this);
         view.displayPlayerInfo(this);
-        Card cardToSearch = new Card(District.MANUFACTURE);
-        if (getCitadel().contains(cardToSearch) && (this.wantToUseManufactureEffect())) {
-            getCitadel().get(getCitadel().indexOf(cardToSearch)).getDistrict().useActiveEffect(this);
-        }
+        this.usePrestigesEffect();
         this.playARound();
         view.displayPlayerInfo(this);
+    }
+
+    public void usePrestigesEffect() {
+        // for every prestiges that the player has, and has effect, we use it
+        this.citadel.stream().filter(
+                        card -> card.getDistrict().getDistrictType().equals(DistrictType.PRESTIGE) &&
+                                card.getDistrict().getActiveEffect() != null)
+                .forEach(card ->
+                        card.getDistrict().useActiveEffect(this, this.view)
+                );
     }
 
     public abstract void playARound();
@@ -245,6 +252,7 @@ public abstract class Player implements Opponent {
     abstract void useEffectAssassin(Assassin assassin);
 
     abstract void useEffectCondottiere(Condottiere condottiere);
+
     abstract void useEffectThief(Thief thief);
 
     protected boolean hasACardToPlay() {
@@ -471,6 +479,21 @@ public abstract class Player implements Opponent {
     public void setAvailableCharacters(List<Character> availableCharacters) {
         this.availableCharacters = availableCharacters;
     }
+
+    /**
+     * Discard a card from the hand of the player (for laboratory effect)
+     */
+    public boolean discardFromHand(Card card) {
+        if (this.hand.isEmpty()) {
+            return false;
+        }
+        this.hand.remove(card);
+        this.deck.discard(card);
+        this.view.displayPlayerDiscardCard(this, card);
+        return true;
+    }
+
+    public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
     @Override
     public int getHandSize() {
