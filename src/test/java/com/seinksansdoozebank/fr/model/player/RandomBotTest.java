@@ -198,6 +198,7 @@ class RandomBotTest {
         Player opponent = new SmartBot(10, deck, view);
         opponent.setCitadel(opponentCitadel);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        opponent.reveal();
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         spyRandomBot.useEffect();
@@ -218,6 +219,7 @@ class RandomBotTest {
         Player opponent = new SmartBot(10, deck, view);
         opponent.setCitadel(opponentCitadel);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        opponent.reveal();
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         int nbGold = spyRandomBot.getNbGold();
