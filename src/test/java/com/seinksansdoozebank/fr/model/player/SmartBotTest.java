@@ -731,6 +731,24 @@ class SmartBotTest {
         assertEquals(lastGold - District.MARKET_PLACE.getCost() + 1, spySmartBot.getNbGold());
     }
 
+    @Test
+    void testUseEffectCondottiereAtSecondCard() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        // construct Opponent Citadel
+        List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.DONJON), new Card(District.OBSERVATORY)));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.setCitadel(opponentCitadel);
+        Merchant merchant = new Merchant();
+        opponent.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(opponent.getOpponentCharacter()).thenReturn(merchant);
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
+        int lastGold = spySmartBot.getNbGold();
+        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        assertEquals(1, opponent.getCitadel().size());
+        assertEquals(lastGold - District.OBSERVATORY.getCost() + 1, spySmartBot.getNbGold());
+    }
+
 
     @Test
     void testCantUseEffectCondottiere() {
