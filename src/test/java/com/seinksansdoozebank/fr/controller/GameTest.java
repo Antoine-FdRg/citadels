@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.controller;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
-import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -12,6 +11,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
@@ -27,12 +27,14 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
@@ -47,6 +49,7 @@ class GameTest {
     Game gameWithFivePlayers;
     Game gameWithThreePlayers;
     Game gameWithFourPlayers;
+    Game gameWithSixPlayers;
     Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
@@ -59,10 +62,11 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        gameWithFivePlayers = spy(new Game(5, view));
-        gameWithThreePlayers = new Game(3, view);
-        gameWithFourPlayers = spy(new Game(4, view));
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = new Game(3, view);
+        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
+        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
+        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
+        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, 6));
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
 
@@ -107,6 +111,8 @@ class GameTest {
 
         charactersList = List.of(
                 new Assassin(),
+                new Thief(),
+                new Magician(),
                 new King(),
                 new Bishop(),
                 new Merchant(),
@@ -153,7 +159,7 @@ class GameTest {
     }
 
     @Test
-    void playersChoseCharactersMakeAllPlayersChooseACharacter() {
+    void playersChoseCharactersMakeAllPlayersChooseADifferentCharacter() {
         List<Player> players = gameWithFivePlayers.players;
         gameWithFivePlayers.getAvailableCharacters().addAll(charactersList);
 
@@ -161,6 +167,11 @@ class GameTest {
 
         for (Player player : players) {
             assertNotNull(player.getCharacter());
+            for (Player player2 : players) {
+                if (player != player2) {
+                    assertNotEquals(player.getCharacter(), player2.getCharacter());
+                }
+            }
         }
     }
 
@@ -173,6 +184,7 @@ class GameTest {
             Player currentPlayer = players.get(i);
             Character currentCharacter = charactersList.get(i);
             currentPlayer.chooseCharacter(new ArrayList<>(List.of(currentCharacter)));
+            currentPlayer.reveal();
         }
 
         // Reset the available characters list
@@ -265,8 +277,9 @@ class GameTest {
     void run() {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
+        verify(gameWithFourPlayers, times(nbRoundPlayed - 1)).playARound();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -282,8 +295,9 @@ class GameTest {
         verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
         verify(gameWithFourPlayers, times(1)).retrieveCharacters();
-        for (Character character : gameWithFourPlayers.getAvailableCharacters()) {
-            assertFalse(character.isDead());
+        List<Player> players = gameWithFourPlayers.players;
+        for (Player player : players) {
+            assertNull(player.getCharacter());
         }
     }
 
@@ -323,38 +337,35 @@ class GameTest {
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(2, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 2));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> new Game(7, view));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 7));
     }
 
     @Test
     void createCharactersWithFourPlayers() {
         gameWithFourPlayers.createCharacters();
-        assertEquals(5, gameWithFourPlayers.getAvailableCharacters().size());
+        assertEquals(6, gameWithFourPlayers.getAvailableCharacters().size());
         assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-        verify(view, times(charactersList.size() - 5)).displayUnusedCharacterInRound(any(Character.class));
+        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithFivePlayers() {
         gameWithFivePlayers.createCharacters();
-        assertEquals(6, gameWithFivePlayers.getAvailableCharacters().size());
-        verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
+        assertEquals(7, gameWithFivePlayers.getAvailableCharacters().size());
+        verify(view, times(charactersList.size() - 7)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithSixPlayers() {
-        Game gameWithSixPlayers = new Game(6, view);
-        assertThrows(UnsupportedOperationException.class, gameWithSixPlayers::createCharacters);
-//        TODO UNCOMMENT this line when a sixth character is added and remove the assertThrows one
-//        gameWithSixPlayers.createCharacters();
-//        assertEquals(7, gameWithSixPlayers.getAvailableCharacters().size());
-//        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
-//        verify(view, times(charactersList.size()-7)).displayUnusedCharacterInRound(any(Character.class));
+        gameWithSixPlayers.createCharacters();
+        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        verify(view, times(0)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     /**
@@ -379,5 +390,42 @@ class GameTest {
         //The player merchant is not present in the game
         assertEquals(Optional.empty(), gameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
     }
+
+    /**
+     * On vérifie qu'en appelant checkUniversityOrPortForDragonsInCitadel, il met les bons bonus au joueur, c'est-à-dire 2 par cartes
+     */
+    @Test
+    void checkUniversityOrPortForDragonsInCitadelTest() {
+        Player smartBotWithUniversity = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithUniversity.getCitadel()).thenReturn(List.of(new Card(District.UNIVERSITY), new Card(District.PORT)));
+        Player smartBotWithPortForDragons = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithPortForDragons.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.TEMPLE)));
+        Player smartBotWithNoPrestige = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithNoPrestige.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
+        Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view));
+        when(smartBotWithBothDistricts.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.UNIVERSITY)));
+        gameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
+
+        for (Player player : gameWithFourPlayers.players) {
+            gameWithFourPlayers.checkUniversityOrPortForDragonsInCitadel(player);
+        }
+
+        assertEquals(2, smartBotWithPortForDragons.getBonus());
+        assertEquals(2, smartBotWithUniversity.getBonus());
+        assertEquals(0, smartBotWithNoPrestige.getBonus());
+        assertEquals(4, smartBotWithBothDistricts.getBonus());
+        verify(view, times(4)).displayPlayerGetBonus(any(), anyInt(), anyString());
+
+    }
+
+    /**
+     * On vérifie que l'appel à la méthode checkUniversityOrPortForDragonsInCitadel se fait systématiquement
+     */
+    @Test
+    void checkIfUpdatePlayersBonusCallsSpellcheckUniversityOrPortForDragonsInCitadelTest() {
+        gameWithFourPlayers.updatePlayersBonus();
+        verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
+    }
+
 
 }

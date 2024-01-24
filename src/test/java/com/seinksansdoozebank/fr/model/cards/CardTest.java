@@ -3,9 +3,7 @@ package com.seinksansdoozebank.fr.model.cards;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CardTest {
     private Card monasteryCard;
@@ -21,7 +19,12 @@ class CardTest {
 
     @Test
     void equalsTest() {
-        assertFalse(monasteryCard.equals(barrackCard));
-        assertTrue(monasteryCard.equals(monasteryCardBis));
+        assertNotEquals(monasteryCard, barrackCard);
+        assertEquals(monasteryCard, monasteryCardBis);
+    }
+
+    @Test
+    void equalsTestOnNull() {
+        assertNotEquals(null, monasteryCard);
     }
 }

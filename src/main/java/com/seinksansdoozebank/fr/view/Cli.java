@@ -3,8 +3,8 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
-
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 import java.util.List;
@@ -13,20 +13,15 @@ import java.util.logging.Level;
 
 public class Cli implements IView {
 
-    String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
+    static final String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
 
     @Override
-    public void displayPlayerPlaysCard(Player player, List<Card> optionalCard) {
-        if (optionalCard.isEmpty()) {
-            CustomLogger.log(Level.INFO, "{0} ne pose pas de quartier. ", player);
-        } else {
-            for (Card card : optionalCard) {
-                District builtDistrict = card.getDistrict();
-                CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
-            }
-        }
+    public void displayPlayerPlaysCard(Player player, Card card) {
+        District builtDistrict = card.getDistrict();
+        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
     }
 
+    @Override
     public void displayWinner(Player winner) {
         CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
@@ -37,7 +32,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPickCards(Player player,int numberOfCards) {
+    public void displayPlayerPickCards(Player player, int numberOfCards) {
         CustomLogger.log(Level.INFO, "{0} pioche {1} quartier(s).", new Object[]{player, numberOfCards});
     }
 
@@ -58,7 +53,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or'.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or''.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
     }
 
     @Override
@@ -72,8 +67,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseAssasinEffect(Player player, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .",new Object[]{ player, target});
+    public void displayPlayerUseAssassinEffect(Player player, Character target) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .", new Object[]{player, target});
     }
 
     private void displayPlayerHand(Player player) {
@@ -127,7 +122,7 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE+"Le {0} a été écraté pour cette manche.\u001B", character);
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écraté pour cette manche.\u001B", character);
     }
 
     @Override
@@ -149,12 +144,48 @@ public class Cli implements IView {
     public void displayPlayerStrategy(Player player, String message) {
         CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
     }
+
     @Override
-    public void displayStolenCharacter(Character character){
-        CustomLogger.log(Level.INFO,"Le {0} a été volé et perd {1} pièces d''or ", new Object[]{ character, character.getPlayer().getNbGold() });
+    public void displayStolenCharacter(Character character) {
+        CustomLogger.log(Level.INFO, "Le {0} a été volé et perd {1} pièces d''or ", new Object[]{character, character.getPlayer().getNbGold()});
     }
+
     @Override
-    public void displayActualNumberOfGold(Player player){
-        CustomLogger.log(Level.INFO,"Le {0} a maintenant {1} pièces d''or.", new Object[]{ player.getCharacter(), player.getNbGold() });
+    public void displayActualNumberOfGold(Player player) {
+        CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()});
+    }
+
+    @Override
+    public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
+        if (targetPlayer == null) {
+            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", new Object[]{player});
+            return;
+        }
+        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
+    }
+
+    @Override
+    public void displayPlayerHasGotObservatory(Player player) {
+        CustomLogger.log(Level.INFO, "Le {0} possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.", player);
+    }
+
+    @Override
+    public void displayPlayerUseThiefEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu'il volera.", player);
+    }
+
+    @Override
+    public void displayPlayerDiscardCard(Player player, Card card) {
+        CustomLogger.log(Level.INFO, "{0} défausse la carte {1}.", new Object[]{player, card});
+    }
+
+    @Override
+    public void displayPlayerUseLaboratoryEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise le laboratoire pour défausser une carte et gagner une pièce d'or.", player);
+    }
+
+    @Override
+    public void displayPlayerUseManufactureEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).", player);
     }
 }

@@ -1,7 +1,10 @@
 package com.seinksansdoozebank.fr.model.cards;
 
 public class Card {
-    private District district;
+    private final District district;
+
+    private static int counter = 1;
+    protected final int id;
 
     /**
      * Constructor
@@ -10,6 +13,8 @@ public class Card {
      */
     public Card(District district) {
         this.district = district;
+        this.id = counter;
+        counter++;
     }
 
     /**
@@ -22,7 +27,7 @@ public class Card {
     }
 
     /**
-     * @param obj
+     * @param obj an object
      * @return a boolean true if it is the same object, false in the other case
      */
     @Override
@@ -35,7 +40,7 @@ public class Card {
 
     @Override
     public int hashCode() {
-        return district.hashCode();
+        return id;
     }
 
     /**

@@ -3,16 +3,15 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
-
-import java.util.List;
 
 public interface IView {
     void displayPlayerInfo(Player player);
 
     void displayRound(int roundNumber);
 
-    void displayPlayerPlaysCard(Player player, List<Card> optionalCard);
+    void displayPlayerPlaysCard(Player player, Card card);
 
     void displayWinner(Player winner);
 
@@ -46,16 +45,28 @@ public interface IView {
      * Display the strategy of the player
      * Here we use a function which take a message because the log level is fine and this will be the only function which log the strategy
      *
-     * @param player  the player
+     * @param player   the player
      * @param strategy the message to display
      */
     void displayPlayerStrategy(Player player, String strategy);
 
-    void displayPlayerUseAssasinEffect(Player player, Character target);
+    void displayPlayerUseAssassinEffect(Player player, Character target);
 
     void displayUnusedCharacterInRound(Character character);
 
     void displayStolenCharacter(Character character);
 
     void displayActualNumberOfGold(Player player);
+
+    void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer);
+
+    void displayPlayerHasGotObservatory(Player player);
+
+    void displayPlayerUseThiefEffect(Player player);
+
+    void displayPlayerDiscardCard(Player player, Card card);
+
+    void displayPlayerUseLaboratoryEffect(Player player);
+
+    void displayPlayerUseManufactureEffect(Player player);
 }

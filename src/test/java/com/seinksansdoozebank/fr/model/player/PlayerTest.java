@@ -1,7 +1,7 @@
 package com.seinksansdoozebank.fr.model.player;
 
-import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,7 +11,16 @@ import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -19,10 +28,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 class PlayerTest {
     Player player;
@@ -134,7 +139,7 @@ class PlayerTest {
         Character condottiere = new Condottiere();
         characters.add(condottiere);
         player.chooseCharacter(characters);
-
+        player.reveal();
         Character retrievedCharacter = player.retrieveCharacter();
 
         assertEquals(condottiere, retrievedCharacter);
@@ -205,13 +210,14 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
-
-        spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        spyPlayer.play();
+        Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
+        when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        spyPlayerSmart.play();
 
         // assert between 2 and 3 districts are gained
-        assertTrue(spyPlayer.getHand().size() >= 2 && spyPlayer.getHand().size() <= 3);
+        assertTrue(spyPlayerSmart.getHand().size() >= 2 && spyPlayerSmart.getHand().size() <= 3);
     }
 
     @Test
@@ -227,8 +233,8 @@ class PlayerTest {
      * We verify if a player has already 8 districts then he can't play another card
      */
     @Test
-    void canPlayCardWhenAlreadyHaveEightDistrict(){
-        List<Card> citadelle=new ArrayList<>(List.of(new Card(District.PALACE),
+    void canPlayCardWhenAlreadyHaveEightDistrict() {
+        List<Card> citadelle = new ArrayList<>(List.of(new Card(District.PALACE),
                 new Card(District.MANOR),
                 new Card(District.BARRACK),
                 new Card(District.OBSERVATORY),
@@ -241,11 +247,80 @@ class PlayerTest {
     }
 
     @Test
-    void playCardWithAGivenCard(){
+    void playCardWithAGivenCard() {
         spyPlayer.getHand().add(new Card(District.TEMPLE));
         doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
         spyPlayer.playCard(new Card(District.TEMPLE));
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
+    }
+
+    @Test
+    void playWithObservatoryInCitadelle() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
+        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        spyPlayer.pickCardsKeepSomeAndDiscardOthers();
+        verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
+        verify(spyPlayer.deck, times(3)).pick();
+    }
+
+    @Test
+    void numberOfCardsToPickWhenTheBotHasObservatoryInHisCitadelTest() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
+        assertEquals(3, spyPlayer.numberOfCardsToPick());
+    }
+
+
+    @Test
+    void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
+        when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
+        assertEquals(2, spyPlayer.numberOfCardsToPick());
+    }
+
+
+    @Test
+    void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
+        Player player = new RandomBot(10, deck, view);
+        Player player2 = new RandomBot(10, deck, view);
+        player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    }
+
+    @Test
+    void discardFromHandWhenHandIsNotEmpty() {
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        assertTrue(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
+        verify(deck, times(1)).discard(new Card(District.TEMPLE));
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
+    @Test
+    void discardFromHandWhenHandIsEmpty() {
+        assertFalse(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
+        verify(deck, times(0)).discard(new Card(District.TEMPLE));
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+    }
+
+    @Test
+    void usePrestigesEffectWithLaboratory() {
+        // make a hand with a one cost card
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LABORATORY))));
+        spyPlayer.usePrestigesEffect();
+        verify(view, times(1)).displayPlayerUseLaboratoryEffect(spyPlayer);
+    }
+
+    @Test
+    void usePrestigesEffectWithManufacture() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        ((RandomBot) spyPlayer).setRandom(mockRandom);
+
+        // make a hand with a one card
+        spyPlayer.getHand().add(new Card(District.TEMPLE));
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MANUFACTURE))));
+        spyPlayer.usePrestigesEffect();
+        verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
     }
 }
