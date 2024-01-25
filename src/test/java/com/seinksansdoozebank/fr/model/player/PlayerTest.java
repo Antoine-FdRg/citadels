@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -322,5 +323,16 @@ class PlayerTest {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MANUFACTURE))));
         spyPlayer.usePrestigesEffect();
         verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
+    }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsGettingGoldsFromDistrictType() {
+        Player player = new RandomBot(10, deck, view);
+        player.setCitadel(new ArrayList<>(List.of(new Card(District.TAVERN))));
+        Merchant merchant = new Merchant();
+        when(player.getCharacter()).thenReturn(merchant);
+        player.useCommonCharacterEffect();
+        assertEquals(11, player.getNbGold());
+        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), any());
     }
 }

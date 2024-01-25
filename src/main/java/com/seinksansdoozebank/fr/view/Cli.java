@@ -188,4 +188,9 @@ public class Cli implements IView {
     public void displayPlayerUseManufactureEffect(Player player) {
         CustomLogger.log(Level.INFO, "{0} utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).", player);
     }
+
+    @Override
+    public void displayGoldCollectedFromDisctrictType(Player player, int nbGold) {
+        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d'or grâce à ses quartiers.", new Object[]{player, nbGold});
+    }
 }
