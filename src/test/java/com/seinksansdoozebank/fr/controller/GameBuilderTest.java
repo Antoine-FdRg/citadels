@@ -27,7 +27,7 @@ class GameBuilderTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         view = mock(IView.class);
         deck = mock(Deck.class);
         gameBuilder = spy(new GameBuilder(view,deck));

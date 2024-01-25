@@ -34,7 +34,7 @@ class ChoosingCharacterToTargetFirstPlayerTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         mockPlayer = mock(Player.class);
         choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
         characterList = new ArrayList<>();

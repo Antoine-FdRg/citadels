@@ -22,7 +22,7 @@ class PickingAlwaysDistrictTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         pickingAlwaysDistrict = new PickingAlwaysDistrict();
         customBot = spy(new CustomBotBuilder(2,mock(IView.class), new Deck())
                 .setPickingStrategy(pickingAlwaysDistrict)

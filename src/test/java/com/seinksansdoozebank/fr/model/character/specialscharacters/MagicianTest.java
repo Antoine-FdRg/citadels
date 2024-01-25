@@ -32,7 +32,7 @@ class MagicianTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         firstPickedCard = new Card(District.DONJON);

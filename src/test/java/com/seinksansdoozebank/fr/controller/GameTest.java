@@ -18,6 +18,7 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +64,7 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
@@ -431,5 +432,29 @@ class GameTest {
         verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
     }
 
+    /**
+     * private void isStuck() {
+     * boolean aPlayerCanPlay = players.stream()
+     * .anyMatch(player -> player.getHand().stream()
+     * .anyMatch(card -> card.getDistrict().getCost()<player.getNbGold()));
+     * if(deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin()<=0 && !aPlayerCanPlay && !finished){
+     * throw new IllegalStateException("The game is stuck");
+     * }
+     * }
+     */
+    @Test
+    void isStuckShouldThrowException() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickCoin(22);
 
+        assertThrows(IllegalStateException.class, stuckGame::isStuck);
+    }
 }

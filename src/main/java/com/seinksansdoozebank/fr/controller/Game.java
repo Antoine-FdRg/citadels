@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -58,10 +59,20 @@ public class Game {
         while (!finished) {
             createCharacters();
             this.playARound();
+            this.isStuck();
         }
         view.displayGameFinished();
         updatePlayersBonus();
         view.displayWinner(this.getWinner());
+    }
+
+    protected void isStuck() {
+        boolean aPlayerCanPlay = players.stream()
+                .anyMatch(player -> player.getHand().stream()
+                        .anyMatch(card -> card.getDistrict().getCost() < player.getNbGold()));
+        if (deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay && !finished) {
+            throw new IllegalStateException("The game is stuck");
+        }
     }
 
     /**

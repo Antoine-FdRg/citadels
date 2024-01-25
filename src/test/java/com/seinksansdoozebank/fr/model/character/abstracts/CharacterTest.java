@@ -25,7 +25,7 @@ class CharacterTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         //Création d'un player de type voleur
         Deck thiefDeck = new Deck();
         thiefPlayer = spy(new RandomBot(5, thiefDeck, view));

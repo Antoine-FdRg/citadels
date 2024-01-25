@@ -24,7 +24,7 @@ class ThiefTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         Deck deckThief = new Deck();
         thief = new Thief();
         Player playerThief = new RandomBot(2, deckThief, view);

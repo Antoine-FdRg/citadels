@@ -14,7 +14,7 @@ class CardTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         monasteryCard = new Card(District.MONASTERY);
         barrackCard = new Card(District.BARRACK);
         monasteryCardBis = new Card(District.MONASTERY);

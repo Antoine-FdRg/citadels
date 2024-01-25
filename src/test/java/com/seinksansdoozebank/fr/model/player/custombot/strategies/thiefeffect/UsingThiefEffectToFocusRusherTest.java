@@ -31,7 +31,7 @@ class UsingThiefEffectToFocusRusherTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(15);
+        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
         spyThief = spy(Thief.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyThief,

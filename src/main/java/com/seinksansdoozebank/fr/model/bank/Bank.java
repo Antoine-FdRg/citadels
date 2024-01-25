@@ -7,7 +7,7 @@ public class Bank {
     /**
      * The maximum number of coin in the game
      */
-    private static final int MAX_COIN = 30;
+    public static final int MAX_COIN = 30;
     /**
      * The number of coin that a player can pick in his pick phase
      */
@@ -40,6 +40,10 @@ public class Bank {
 
     private Bank() {
         this.nbOfAvailableCoin = MAX_COIN;
+    }
+
+    public int getNbOfAvailableCoin() {
+        return nbOfAvailableCoin;
     }
 
     /**
