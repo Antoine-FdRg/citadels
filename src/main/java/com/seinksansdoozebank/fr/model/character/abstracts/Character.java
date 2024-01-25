@@ -45,8 +45,6 @@ public abstract class Character {
         return this.role;
     }
 
-    public abstract void useEffect();
-
     @Override
     public String toString() {
         return this.role.getName();

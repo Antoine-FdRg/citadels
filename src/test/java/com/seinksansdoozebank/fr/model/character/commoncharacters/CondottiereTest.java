@@ -61,9 +61,41 @@ class CondottiereTest {
         Player otherPlayer = spy(new RandomBot(2, deck, view));
         Merchant merchant = new Merchant();
         otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(merchant, District.DONJON));
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.DONJON));
+    }
+
+    @Test
+    void cantDestroyCompletedCitadelOfPlayer() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.CASTLE));
+        citadel.add(new Card(District.CHURCH));
+        citadel.add(new Card(District.TAVERN));
+        citadel.add(new Card(District.FORTRESS));
+        citadel.add(new Card(District.MANOR));
+        citadel.add(new Card(District.CORNER_SHOP));
+        citadel.add(new Card(District.MANUFACTURE));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.BARRACK));
+    }
+
+    @Test
+    void cantDestroyDistrictDueToLackOfGold() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.PORT_FOR_DRAGONS));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.PORT_FOR_DRAGONS));
     }
 }

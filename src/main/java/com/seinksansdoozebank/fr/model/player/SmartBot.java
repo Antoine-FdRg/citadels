@@ -206,7 +206,7 @@ public class SmartBot extends Player {
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
-                    condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
+                    condottiere.useEffect(playerWithMostDistricts.get(), card.getDistrict());
                     return;
                 } catch (IllegalArgumentException e) {
                     view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");

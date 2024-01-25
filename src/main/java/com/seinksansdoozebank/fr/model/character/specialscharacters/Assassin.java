@@ -9,11 +9,6 @@ public class Assassin extends Character {
         super(Role.ASSASSIN);
     }
 
-    @Override
-    public void useEffect() {
-        // No action
-    }
-
     /**
      * Kill the character
      *

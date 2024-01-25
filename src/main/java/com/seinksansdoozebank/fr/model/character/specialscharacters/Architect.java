@@ -8,10 +8,4 @@ public class Architect extends Character {
     public Architect() {
         super(Role.ARCHITECT);
     }
-
-
-    @Override
-    public void useEffect() {
-        // No action
-    }
 }

@@ -13,7 +13,6 @@ public class Merchant extends CommonCharacter {
     /**
      * The merchant get 1 gold at the beginning of his turn
      */
-    @Override
     public void useEffect() {
         this.getPlayer().increaseGold(1);
     }
