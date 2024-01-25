@@ -142,7 +142,6 @@ public class Game {
      */
     protected void init() {
         dealCards();
-        createCharacters();
     }
 
     /**
