@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -327,12 +328,26 @@ class PlayerTest {
 
     @Test
     void testUseEffectOfCommonCharacterItsGettingGoldsFromDistrictType() {
-        Player player = new RandomBot(10, deck, view);
-        player.setCitadel(new ArrayList<>(List.of(new Card(District.TAVERN))));
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
         Merchant merchant = new Merchant();
-        when(player.getCharacter()).thenReturn(merchant);
-        player.useCommonCharacterEffect();
-        assertEquals(11, player.getNbGold());
-        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), any());
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(11, spyPlayer.getNbGold());
+        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt());
+    }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsNotDisplayingThatIsGettingGoldsBecauseTheDistrictIsEmpty() {
+        Merchant merchant = new Merchant();
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(10, spyPlayer.getNbGold());
+        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt());
     }
 }
