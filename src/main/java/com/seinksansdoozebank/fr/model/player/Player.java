@@ -195,7 +195,7 @@ public abstract class Player implements Opponent {
         return optChosenCard;
     }
 
-    public void playCards(int numberOfCards) {
+    public void buyXCardsAndAddThemToCitadelle(int numberOfCards) {
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
@@ -210,7 +210,7 @@ public abstract class Player implements Opponent {
     /**
      * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
      */
-    public void playCard(Card card) {
+    public void buyACardAndAddItToCitadelle(Card card) {
         if (!canPlayCard(card)) {
             return;
         }
