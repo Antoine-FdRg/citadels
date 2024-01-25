@@ -13,6 +13,9 @@ public class LaboratoryEffect implements ActiveEffect {
      */
     @Override
     public void use(Player player, IView view) {
+        if (player.getHand().isEmpty()) {
+            return;
+        }
         Card card = player.chooseCardToDiscardForLaboratoryEffect();
         if (card != null && (player.discardFromHand(card))) {
             player.increaseGold(1);
