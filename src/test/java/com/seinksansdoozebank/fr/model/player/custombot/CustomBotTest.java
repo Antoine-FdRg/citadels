@@ -3,12 +3,14 @@ package com.seinksansdoozebank.fr.model.player.custombot;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
@@ -36,6 +38,7 @@ class CustomBotTest {
     ICharacterChoosingStrategy mockCharacterChoosingStrategy;
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
     IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
+    IUsingCondottiereEffectStrategy mockUsingCondottiereEffectStrategy;
 
     @BeforeEach
     void setUp() {
@@ -43,11 +46,13 @@ class CustomBotTest {
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
+        mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
         spyCustomBot = spy(new CustomBot(2, new Deck(), mock(IView.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
-                mockUsingMurdererEffectStrategy));
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy));
     }
 
     @Test
@@ -111,13 +116,33 @@ class CustomBotTest {
     }
 
     @Test
+    void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
+        Condottiere mockCondottiere = mock(Condottiere.class);
+        Opponent mockOpponent = mock(Opponent.class);
+        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
+        spyCustomBot.useEffectCondottiere(mockCondottiere);
+        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, mockCondottiere);
+    }
+
+    @Test
+    void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
+        Condottiere mockCondottiere = mock(Condottiere.class);
+        spyCustomBot.usingCondottiereEffectStrategy = null;
+        Opponent mockOpponent = mock(Opponent.class);
+        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
+        spyCustomBot.useEffectCondottiere(mockCondottiere);
+        verify(spyCustomBot).randomUseCondottiereEffect(any());
+    }
+
+    @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
         Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
-                mockUsingMurdererEffectStrategy);
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
         Opponent opponent = mock(Opponent.class);
         when(opponent.getNbGold()).thenReturn(2);
         customBotWithARealChoosingStrat.setOpponents(List.of(opponent));

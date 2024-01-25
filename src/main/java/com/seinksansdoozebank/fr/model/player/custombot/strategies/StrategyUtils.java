@@ -20,7 +20,9 @@ public class StrategyUtils {
     }
 
     public static Opponent getLeadingOpponent(Player player) {
-        Optional<Opponent> optionalOpponent = player.getOpponents().stream().filter(o -> !o.equals(player)).max(Comparator.comparingInt(Opponent::nbDistrictsInCitadel));
+        Optional<Opponent> optionalOpponent = player.getOpponents().stream()
+                .filter(o -> !o.equals(player))
+                .max(Comparator.comparingInt(Opponent::nbDistrictsInCitadel));
         if (optionalOpponent.isPresent()) {
             return optionalOpponent.get();
         } else {
