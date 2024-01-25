@@ -53,4 +53,17 @@ class BishopTest {
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
     }
+
+    @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Set the citadel to the player
+        when(player.getCitadel()).thenReturn(citadel);
+        // Perform the action
+        bishop.goldCollectedFromDisctrictType();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals(7, player.getNbGold());
+    }
 }
