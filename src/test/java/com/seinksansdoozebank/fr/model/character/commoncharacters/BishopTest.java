@@ -48,7 +48,7 @@ class BishopTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        bishop.goldCollectedFromDisctrictType();
+        bishop.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
@@ -61,7 +61,7 @@ class BishopTest {
         // Set the citadel to the player
         when(player.getCitadel()).thenReturn(citadel);
         // Perform the action
-        bishop.goldCollectedFromDisctrictType();
+        bishop.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(7, player.getNbGold());

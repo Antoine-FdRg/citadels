@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -48,7 +49,7 @@ class KingTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        king.goldCollectedFromDisctrictType();
+        king.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(5, player.getNbGold());
@@ -59,7 +60,7 @@ class KingTest {
         // Add a district to the citadel
         citadel.add(new Card(District.SCHOOL_OF_MAGIC));
         // Perform the action
-        king.goldCollectedFromDisctrictType();
+        king.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());

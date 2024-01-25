@@ -18,7 +18,7 @@ public class LaboratoryEffect implements ActiveEffect {
         }
         Card card = player.chooseCardToDiscardForLaboratoryEffect();
         if (card != null && (player.discardFromHand(card))) {
-            player.increaseGold(1);
+            player.pickGold(1);
             view.displayPlayerUseLaboratoryEffect(player);
         }
     }

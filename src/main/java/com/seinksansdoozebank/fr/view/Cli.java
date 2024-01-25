@@ -37,8 +37,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPicksGold(Player player) {
-        CustomLogger.log(Level.INFO, "{0} pioche 2 pièces d''or.", player);
+    public void displayPlayerPicksGold(Player player, int numberOfGold) {
+        CustomLogger.log(Level.INFO, "{0} pioche {1} pièces d''or.", new Object[]{player, numberOfGold});
     }
 
     @Override

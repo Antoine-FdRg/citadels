@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.picking;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
