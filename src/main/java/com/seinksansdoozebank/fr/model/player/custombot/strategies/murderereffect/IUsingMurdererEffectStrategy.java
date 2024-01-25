@@ -2,10 +2,11 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffe
 
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.IView;
 
 /**
  * Represent a strategy to use effect of the murderer
  */
 public interface IUsingMurdererEffectStrategy {
-    void apply(Player player, Assassin murderer);
+    void apply(Player player, Assassin murderer, IView view);
 }

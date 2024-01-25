@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +26,11 @@ class UsingMurdererEffectToFocusRusherTest {
     List<Character> characters;
     IUsingMurdererEffectStrategy strategy;
     Player mockPlayer;
+    IView mockView;
 
     @BeforeEach
     void setUp() {
+        mockView = mock(IView.class);
         spyAssassin = spy(Assassin.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyAssassin,
@@ -42,7 +45,7 @@ class UsingMurdererEffectToFocusRusherTest {
         characters.add(new Merchant());
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin);
+        strategy.apply(mockPlayer, spyAssassin, mockView);
         verify(spyAssassin).useEffect(new Merchant());
     }
 
@@ -51,7 +54,7 @@ class UsingMurdererEffectToFocusRusherTest {
         characters.add(new King());
         characters.add(new Architect());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin);
+        strategy.apply(mockPlayer, spyAssassin, mockView);
         verify(spyAssassin).useEffect(new Architect());
     }
 
@@ -59,14 +62,14 @@ class UsingMurdererEffectToFocusRusherTest {
     void applyWithKingInListShouldTargetKing() {
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin);
+        strategy.apply(mockPlayer, spyAssassin, mockView);
         verify(spyAssassin).useEffect(new King());
     }
 
     @Test
     void applyWithNoImportantCharacterInListShouldTargetRandom() {
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin);
+        strategy.apply(mockPlayer, spyAssassin, mockView);
         verify(spyAssassin).useEffect(any());
     }
 }
