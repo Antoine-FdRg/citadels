@@ -68,7 +68,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseAssassinEffect(Player player, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .", new Object[]{player, target});
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
     }
 
     private void displayPlayerHand(Player player) {

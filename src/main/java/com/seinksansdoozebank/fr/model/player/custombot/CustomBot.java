@@ -2,9 +2,11 @@ package com.seinksansdoozebank.fr.model.player.custombot;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -19,17 +21,20 @@ public class CustomBot extends RandomBot {
     ICharacterChoosingStrategy characterChoosingStrategy;
     IUsingThiefEffectStrategy usingThiefEffectStrategy;
     IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
+    IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
 
     protected CustomBot(int nbGold, Deck deck, IView view,
                         IPickingStrategy pickingStrategy,
                         ICharacterChoosingStrategy characterChoosingStrategy,
                         IUsingThiefEffectStrategy usingThiefEffectStrategy,
-                        IUsingMurdererEffectStrategy usingMurdererEffectStrategy) {
+                        IUsingMurdererEffectStrategy usingMurdererEffectStrategy,
+                        IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy) {
         super(nbGold, deck, view);
         this.pickingStrategy = pickingStrategy;
         this.characterChoosingStrategy = characterChoosingStrategy;
         this.usingThiefEffectStrategy = usingThiefEffectStrategy;
         this.usingMurdererEffectStrategy = usingMurdererEffectStrategy;
+        this.usingCondottiereEffectStrategy = usingCondottiereEffectStrategy;
     }
 
     @Override
@@ -77,12 +82,25 @@ public class CustomBot extends RandomBot {
         if (usingMurdererEffectStrategy == null) {
             this.randomUseMurdererEffect(murderer);
         } else {
-            this.usingMurdererEffectStrategy.apply(this, murderer);
+            this.usingMurdererEffectStrategy.apply(this, murderer, view);
         }
     }
 
     protected void randomUseMurdererEffect(Assassin murderer) {
         super.useEffectAssassin(murderer);
+    }
+
+    @Override
+    public void useEffectCondottiere(Condottiere condottiere) {
+        if (usingCondottiereEffectStrategy == null) {
+            this.randomUseCondottiereEffect(condottiere);
+        } else {
+            this.usingCondottiereEffectStrategy.apply(this, condottiere);
+        }
+    }
+
+    protected void randomUseCondottiereEffect(Condottiere condottiere) {
+        super.useEffectCondottiere(condottiere);
     }
 
     @Override

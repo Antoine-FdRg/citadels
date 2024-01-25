@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -65,8 +66,9 @@ class GameBuilderTest {
         ICharacterChoosingStrategy characterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         IUsingThiefEffectStrategy thiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         IUsingMurdererEffectStrategy murdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
+        IUsingCondottiereEffectStrategy condottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
         int playerListSize = gameBuilder.getPlayerListSize();
-        gameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy);
+        gameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy, condottiereEffectStrategy);
         assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
     }
 
