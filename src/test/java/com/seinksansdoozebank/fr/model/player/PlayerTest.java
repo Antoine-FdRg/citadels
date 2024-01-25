@@ -336,7 +336,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
-        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt());
+        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
     }
 
     @Test
@@ -348,6 +348,6 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(10, spyPlayer.getNbGold());
-        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt());
+        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
     }
 }

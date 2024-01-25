@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -122,7 +123,7 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écarté pour cette manche.\u001B", character);
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écarté pour cette manche.\u001B[0m", character);
     }
 
     @Override
@@ -190,7 +191,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayGoldCollectedFromDisctrictType(Player player, int nbGold) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d'or grâce à ses quartiers.", new Object[]{player, nbGold});
+    public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
+        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d'or grâce à ses quartiers de type {2} et l'effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()});
     }
 }

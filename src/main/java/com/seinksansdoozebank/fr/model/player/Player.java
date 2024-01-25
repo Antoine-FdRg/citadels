@@ -229,7 +229,7 @@ public abstract class Player implements Opponent {
             int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDisctrictType();
             if (this.getNbGold() - nbGoldSave > 0)
-                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave);
+                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 

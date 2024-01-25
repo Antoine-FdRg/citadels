@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -70,5 +71,5 @@ public interface IView {
 
     void displayPlayerUseManufactureEffect(Player player);
 
-    void displayGoldCollectedFromDisctrictType(Player player, int nbGold);
+    void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType);
 }
