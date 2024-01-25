@@ -24,7 +24,7 @@ class AssassinTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         Deck deckAssassin = new Deck();
         assassin = new Assassin();
         Player playerAssassin = new RandomBot(2, deckAssassin, view);

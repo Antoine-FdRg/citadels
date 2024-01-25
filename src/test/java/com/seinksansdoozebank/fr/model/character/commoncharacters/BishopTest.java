@@ -27,7 +27,7 @@ class BishopTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);

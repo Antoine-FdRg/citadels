@@ -282,7 +282,7 @@ public abstract class Player implements Opponent {
      * Represents the player's choice to draw 2 gold coins from the bank
      */
     public final void pickGold() {
-        int nbPickedGold = Bank.getInstance().pickCoin();
+        int nbPickedGold = Bank.getInstance().pickXCoin();
         view.displayPlayerPicksGold(this, nbPickedGold);
         this.nbGold += nbPickedGold;
     }
@@ -293,7 +293,7 @@ public abstract class Player implements Opponent {
      * @param nbOfGold the number of gold coins to pick
      */
     public final void pickGold(int nbOfGold) {
-        int nbPickedGold = Bank.getInstance().pickCoin(nbOfGold);
+        int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
         view.displayPlayerPicksGold(this, nbPickedGold);
         this.nbGold += nbPickedGold;
     }

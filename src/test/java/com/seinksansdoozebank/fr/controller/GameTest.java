@@ -64,7 +64,7 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
@@ -453,7 +453,7 @@ class GameTest {
                 .addRandomBot()
                 .addRandomBot()
                 .build();
-        Bank.getInstance().pickCoin(22);
+        Bank.getInstance().pickXCoin(22);
 
         assertThrows(IllegalStateException.class, stuckGame::isStuck);
     }

@@ -54,7 +54,7 @@ class SmartBotTest {
     @BeforeEach
     void setup() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);

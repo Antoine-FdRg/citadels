@@ -11,7 +11,7 @@ public class Bank {
     /**
      * The number of coin that a player can pick in his pick phase
      */
-    private static final int NB_GOLD_TO_PICK = 2;
+    static final int NB_GOLD_TO_PICK = 2;
 
     /**
      * The number of coin that still available to pick in the bank
@@ -51,7 +51,7 @@ public class Bank {
      *
      * @return the number of coin picked (2 or less if there is not enough coin)
      */
-    public int pickCoin() {
+    public int pickXCoin() {
         if (nbOfAvailableCoin >= NB_GOLD_TO_PICK) {
             nbOfAvailableCoin -= NB_GOLD_TO_PICK;
             return NB_GOLD_TO_PICK;
@@ -68,7 +68,7 @@ public class Bank {
      * @param nbOfCoin the number of coin to pick
      * @return the number of coin picked (nbOfCoin or less if there is not enough coin)
      */
-    public int pickCoin(int nbOfCoin) {
+    public int pickXCoin(int nbOfCoin) {
         if (nbOfAvailableCoin >= nbOfCoin) {
             nbOfAvailableCoin -= nbOfCoin;
             return nbOfCoin;

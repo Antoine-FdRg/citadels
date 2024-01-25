@@ -30,7 +30,7 @@ class UsingMurdererEffectToFocusRusherTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         spyAssassin = spy(Assassin.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyAssassin,

@@ -24,7 +24,7 @@ class StrategyUtilsTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         assassin = new Assassin();
         magician = new Magician();
         thief = new Thief();

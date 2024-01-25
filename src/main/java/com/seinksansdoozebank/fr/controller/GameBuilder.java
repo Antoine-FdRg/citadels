@@ -51,7 +51,7 @@ public class GameBuilder {
      */
     public GameBuilder addSmartBot() {
         checkNbPlayers();
-        playerList.add(new SmartBot(Bank.getInstance().pickCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new SmartBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
@@ -62,7 +62,7 @@ public class GameBuilder {
      */
     public GameBuilder addRandomBot() {
         checkNbPlayers();
-        playerList.add(new RandomBot(Bank.getInstance().pickCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new RandomBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
@@ -71,7 +71,7 @@ public class GameBuilder {
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
                                     IUsingMurdererEffectStrategy murdererEffectStrategy) {
         checkNbPlayers();
-        playerList.add(new CustomBotBuilder(Bank.getInstance().pickCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck)
+        playerList.add(new CustomBotBuilder(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck)
                 .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)

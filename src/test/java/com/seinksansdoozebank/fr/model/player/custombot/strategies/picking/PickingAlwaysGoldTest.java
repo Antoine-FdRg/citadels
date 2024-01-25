@@ -22,7 +22,7 @@ class PickingAlwaysGoldTest {
     @BeforeEach
     void setUp() {
         Bank.reset();
-        Bank.getInstance().pickCoin(Bank.MAX_COIN / 2);
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         pickingAlwaysGold = new PickingAlwaysGold();
         customBot = spy(new CustomBotBuilder(2,mock(IView.class), new Deck())
                 .setPickingStrategy(pickingAlwaysGold)
