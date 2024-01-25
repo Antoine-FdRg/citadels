@@ -82,7 +82,7 @@ public class CustomBot extends RandomBot {
         if (usingMurdererEffectStrategy == null) {
             this.randomUseMurdererEffect(murderer);
         } else {
-            this.usingMurdererEffectStrategy.apply(this, murderer);
+            this.usingMurdererEffectStrategy.apply(this, murderer, view);
         }
     }
 

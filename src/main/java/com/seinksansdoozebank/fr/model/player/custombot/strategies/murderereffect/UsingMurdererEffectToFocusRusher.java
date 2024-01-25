@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
+import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
 import java.util.Random;
@@ -19,16 +20,24 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
     private static final Random random = new Random();
 
     @Override
-    public void apply(Player player, Assassin murderer) {
+    public void apply(Player player, Assassin murderer, IView view) {
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN).toList();
         if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
-            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters));
+            useAndDisplayMurderEffect(murderer, Role.MERCHANT, characters, view, player);
         } else if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
-            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, player.getAvailableCharacters()));
+            useAndDisplayMurderEffect(murderer, Role.ARCHITECT, characters, view, player);
         } else if (StrategyUtils.isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
-            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters));
+            useAndDisplayMurderEffect(murderer, Role.KING, characters, view, player);
         } else { //random
-            murderer.useEffect(characters.get(random.nextInt(characters.size())));
+            Character targetCharacter = characters.get(random.nextInt(characters.size()));
+            murderer.useEffect(targetCharacter);
+            view.displayPlayerUseAssassinEffect(player, targetCharacter);
         }
+    }
+
+    private static void useAndDisplayMurderEffect(Assassin murderer, Role role, List<Character> characters, IView view, Player player) {
+        Character targetCharacter = StrategyUtils.getCharacterFromRoleInLIst(role, characters);
+        murderer.useEffect(targetCharacter);
+        view.displayPlayerUseAssassinEffect(player, targetCharacter);
     }
 }

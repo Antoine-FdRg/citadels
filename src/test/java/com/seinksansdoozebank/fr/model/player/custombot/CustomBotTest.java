@@ -39,15 +39,17 @@ class CustomBotTest {
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
     IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
     IUsingCondottiereEffectStrategy mockUsingCondottiereEffectStrategy;
+    IView mockView;
 
     @BeforeEach
     void setUp() {
+        mockView = mock(IView.class);
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
-        spyCustomBot = spy(new CustomBot(2, new Deck(), mock(IView.class),
+        spyCustomBot = spy(new CustomBot(2, new Deck(), mockView,
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -103,7 +105,7 @@ class CustomBotTest {
         spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
         Assassin mockAssassin = mock(Assassin.class);
         spyCustomBot.useEffectAssassin(mockAssassin);
-        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockAssassin);
+        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockAssassin, mockView);
     }
 
     @Test
