@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -25,6 +26,8 @@ class BishopTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickCoin(15);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);

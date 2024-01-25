@@ -27,6 +27,8 @@ class CondottiereTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickCoin(15);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);

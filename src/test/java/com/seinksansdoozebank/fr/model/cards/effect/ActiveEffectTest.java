@@ -26,6 +26,8 @@ class ActiveEffectTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickCoin(15);
         view = mock(Cli.class);
         deck = spy(new Deck());
         spyPlayer = spy(new RandomBot(10, deck, view));

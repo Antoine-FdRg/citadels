@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -28,6 +29,8 @@ class UsingMurdererEffectToFocusRusherTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickCoin(15);
         spyAssassin = spy(Assassin.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyAssassin,

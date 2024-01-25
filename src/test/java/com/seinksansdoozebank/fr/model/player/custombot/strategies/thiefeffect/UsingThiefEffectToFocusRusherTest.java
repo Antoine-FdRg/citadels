@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -29,6 +30,8 @@ class UsingThiefEffectToFocusRusherTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickCoin(15);
         spyThief = spy(Thief.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyThief,
