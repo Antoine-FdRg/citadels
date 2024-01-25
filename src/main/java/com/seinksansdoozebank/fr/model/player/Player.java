@@ -61,8 +61,8 @@ public abstract class Player implements Opponent {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
-        this.reveal();
         view.displayPlayerStartPlaying(this);
+        this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
         this.playARound();
