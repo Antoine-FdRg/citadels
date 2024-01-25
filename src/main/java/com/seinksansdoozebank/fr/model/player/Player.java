@@ -195,37 +195,29 @@ public abstract class Player implements Opponent {
         return optChosenCard;
     }
 
-    public List<Card> playCards(int numberOfCards) {
+    public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            if (card.isPresent()) {
-                card.ifPresent(playedCards::add);
-                this.view.displayPlayerPlaysCard(this, card.get());
-            }
+            card.ifPresent(value -> this.view.displayPlayerPlaysCard(this, value));
         }
-        return playedCards;
     }
 
     /**
      * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
-     *
-     * @return the district built by the player
      */
-    public List<Card> playCard(Card card) {
+    public void buyACardAndAddItToCitadel(Card card) {
         if (!canPlayCard(card)) {
-            return List.of();
+            return;
         }
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
         this.view.displayPlayerPlaysCard(this, card);
-        return List.of(card);
     }
 
 

@@ -224,9 +224,9 @@ class PlayerTest {
     void playCardsWithUncorrectBoundaries() {
         spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
 
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(-1));
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(0));
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(-1));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(0));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(5));
     }
 
     /**
@@ -250,7 +250,7 @@ class PlayerTest {
     void playCardWithAGivenCard() {
         spyPlayer.getHand().add(new Card(District.TEMPLE));
         doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
-        spyPlayer.playCard(new Card(District.TEMPLE));
+        spyPlayer.buyACardAndAddItToCitadel(new Card(District.TEMPLE));
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }

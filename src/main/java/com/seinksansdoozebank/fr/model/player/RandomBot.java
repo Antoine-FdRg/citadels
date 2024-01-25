@@ -47,7 +47,7 @@ public class RandomBot extends Player {
     protected void pickBeforePlaying(int nbDistrictsToBuild) {
         pickSomething();
         if (nbDistrictsToBuild > 0) {
-            this.playCards(nbDistrictsToBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
     }
 
@@ -58,7 +58,7 @@ public class RandomBot extends Player {
      */
     protected void playBeforePicking(int nbDistrictsToBuild) {
         if (nbDistrictsToBuild > 0) {
-            this.playCards(nbDistrictsToBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
         pickSomething();
     }

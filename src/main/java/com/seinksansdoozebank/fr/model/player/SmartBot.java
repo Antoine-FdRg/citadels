@@ -44,7 +44,7 @@ public class SmartBot extends Player {
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
             this.pickCardsKeepSomeAndDiscardOthers(); //
-            this.playCards(this.getNbDistrictsCanBeBuild());
+            this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
 
@@ -54,19 +54,19 @@ public class SmartBot extends Player {
                 this.pickSomething();
                 useEffectOfTheArchitect();
             } else {
-                this.playCards(this.getNbDistrictsCanBeBuild()); //il joue
+                this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild()); //il joue
                 this.useCommonCharacterEffect();
                 this.pickSomething(); //il pioche quelque chose
             }
         } else {
             this.useCommonCharacterEffect();
             if (this.hasACardToPlay()) {
-                this.playCards(this.getNbDistrictsCanBeBuild());
+                this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
                 pickSomething();
             } else {
                 pickGold();
                 if (this.hasACardToPlay()) {
-                    this.playCards(this.getNbDistrictsCanBeBuild());
+                    this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
                 }
             }
         }
@@ -253,18 +253,18 @@ public class SmartBot extends Player {
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
         int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();
         if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
-            this.playCards(nbDistrictsCanBeBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
         } else {
             //on vérifie s'il y a une merveille dans sa main, si oui et qu'il peut la jouer alors il le fait
             Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
             if (prestigeCard.isPresent() && canPlayCard(prestigeCard.get())) {
-                playCard(prestigeCard.get());
+                buyACardAndAddItToCitadel(prestigeCard.get());
             } else if (!this.hasFiveDifferentDistrictTypes()) {
                 //il cherche à avoir les 5 districts de couleur dans sa citadelle sinon
                 architectTryToCompleteFiveDistrictTypes();
             } else {
                 //Il joue comme un joueur normal
-                this.playCards(nbDistrictsCanBeBuild);
+                this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
             }
         }
     }
@@ -297,7 +297,7 @@ public class SmartBot extends Player {
             if (optionalChosenCard.isPresent()) {
                 Card cardChosen = optionalChosenCard.get();
                 if (numberOfCards < 3 && (canPlayCard(cardChosen))) {
-                    playCard(cardChosen);
+                    buyACardAndAddItToCitadel(cardChosen);
                     numberOfCards++;
                     cardNeeded.remove(cardChosen);
                 }
@@ -306,7 +306,7 @@ public class SmartBot extends Player {
         }
         //S'il n'y a aucune carte disponible ou bien qu'il ne peut en poser aucune alors il joue comme un joueur normal
         if (numberOfCards == 0) {
-            this.playCards(this.getNbDistrictsCanBeBuild());
+            this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
 
