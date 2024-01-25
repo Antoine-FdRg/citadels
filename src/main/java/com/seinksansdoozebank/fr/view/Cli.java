@@ -122,7 +122,7 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écarté pour cette manche.\u001B", character);
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le personnage {0} a été écarté pour cette manche.\u001B[0m", character);
     }
 
     @Override
