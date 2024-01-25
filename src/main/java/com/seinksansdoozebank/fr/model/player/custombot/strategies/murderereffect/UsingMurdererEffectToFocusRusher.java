@@ -4,12 +4,10 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 
 import java.util.List;
 import java.util.Random;
-
-import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.getCharacterFromRoleInLIst;
-import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.isRoleInCharacterList;
 
 /**
  * Represents the strategy of the bot to use the murderer effect to focus the rusher
@@ -23,12 +21,12 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
     @Override
     public void apply(Player player, Assassin murderer) {
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN).toList();
-        if (isRoleInCharacterList(Role.MERCHANT, characters)) {
-            murderer.useEffect(getCharacterFromRoleInLIst(Role.MERCHANT, characters));
-        } else if (isRoleInCharacterList(Role.ARCHITECT, characters)) {
-            murderer.useEffect(getCharacterFromRoleInLIst(Role.ARCHITECT, player.getAvailableCharacters()));
-        } else if (isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
-            murderer.useEffect(getCharacterFromRoleInLIst(Role.KING, characters));
+        if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
+            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters));
+        } else if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
+            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, player.getAvailableCharacters()));
+        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
+            murderer.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters));
         } else { //random
             murderer.useEffect(characters.get(random.nextInt(characters.size())));
         }
