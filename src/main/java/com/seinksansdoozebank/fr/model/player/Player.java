@@ -224,9 +224,12 @@ public abstract class Player implements Opponent {
     /**
      * Collect gold with the effect of the character if it is a common character
      */
-    void useCommonCharacterEffect() {
-        if (this.character instanceof CommonCharacter commonCharacter) {
+    protected void useCommonCharacterEffect() {
+        if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
+            int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDisctrictType();
+            if (this.getNbGold() - nbGoldSave > 0)
+                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 

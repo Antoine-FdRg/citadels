@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -322,5 +324,30 @@ class PlayerTest {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MANUFACTURE))));
         spyPlayer.usePrestigesEffect();
         verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
+    }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsGettingGoldsFromDistrictType() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
+        Merchant merchant = new Merchant();
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(11, spyPlayer.getNbGold());
+        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+    }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsNotDisplayingThatIsGettingGoldsBecauseTheDistrictIsEmpty() {
+        Merchant merchant = new Merchant();
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(10, spyPlayer.getNbGold());
+        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
     }
 }
