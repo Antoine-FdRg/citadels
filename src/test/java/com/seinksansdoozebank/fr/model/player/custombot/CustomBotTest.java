@@ -174,4 +174,11 @@ class CustomBotTest {
         this.spyCustomBot.chooseCard();
         verify(mockCardChoosingStrategy, times(1)).apply(any(), any());
     }
+
+    @Test
+    void testIsNotCallingTheCardChoosingStrategyBecauseThePlayerHasNoStrategy() {
+        this.spyCustomBot.cardChoosingStrategy = null;
+        this.spyCustomBot.chooseCard();
+        verify(mockCardChoosingStrategy, times(0)).apply(any(), any());
+    }
 }
