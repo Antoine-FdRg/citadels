@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
@@ -18,7 +19,7 @@ public abstract class CommonCharacter extends Character {
     public void goldCollectedFromDisctrictType() {
         int nbGold = 0;
         for (Card card : this.getPlayer().getCitadel()) {
-            if (card.getDistrict().getDistrictType() == target) {
+            if (card.getDistrict().getDistrictType() == target || card.getDistrict().equals(District.SCHOOL_OF_MAGIC)) {
                 nbGold++;
             }
         }

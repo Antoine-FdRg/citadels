@@ -4,7 +4,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 
 public class Architect extends Character {
-
+    public static final int NUMBER_CARDS_TO_PICK=2;
     public Architect() {
         super(Role.ARCHITECT);
     }

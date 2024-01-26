@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -224,9 +226,9 @@ class PlayerTest {
     void playCardsWithUncorrectBoundaries() {
         spyPlayer.chooseCharacter(new ArrayList<>(List.of(new Architect())));
 
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(-1));
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(0));
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.playCards(5));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(-1));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(0));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.buyXCardsAndAddThemToCitadel(5));
     }
 
     /**
@@ -250,7 +252,7 @@ class PlayerTest {
     void playCardWithAGivenCard() {
         spyPlayer.getHand().add(new Card(District.TEMPLE));
         doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
-        spyPlayer.playCard(new Card(District.TEMPLE));
+        spyPlayer.buyACardAndAddItToCitadel(new Card(District.TEMPLE));
         assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
         assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
     }
@@ -322,6 +324,32 @@ class PlayerTest {
         spyPlayer.usePrestigesEffect();
         verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
     }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsGettingGoldsFromDistrictType() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
+        Merchant merchant = new Merchant();
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(11, spyPlayer.getNbGold());
+        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+    }
+
+    @Test
+    void testUseEffectOfCommonCharacterItsNotDisplayingThatIsGettingGoldsBecauseTheDistrictIsEmpty() {
+        Merchant merchant = new Merchant();
+        player.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        when(spyPlayer.getCharacter()).thenReturn(merchant);
+        merchant.setPlayer(spyPlayer);
+        assertEquals(10, spyPlayer.getNbGold());
+        spyPlayer.useCommonCharacterEffect();
+        assertEquals(10, spyPlayer.getNbGold());
+        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+    }
+
 
     /**
      * Tester si le bot qui possède la bibliothèque dans sa citadelle il repioche bien 2 cartes en plus
