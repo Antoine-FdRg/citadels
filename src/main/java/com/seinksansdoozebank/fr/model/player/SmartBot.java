@@ -43,7 +43,9 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickCardsKeepSomeAndDiscardOthers(); //
+            this.pickCardsKeepSomeAndDiscardOthers();
+            //il a choisi de piocher avant de jouer donc on regarde s'il n'a pas la libraire dans sa citadelle
+            this.checkAndUseLibraryEffectInCitadel();
             this.playCards(this.getNbDistrictsCanBeBuild());
         }
     }
@@ -52,6 +54,8 @@ public class SmartBot extends Player {
         if (this.hasACardToPlay()) { // s'il y a une carte à jouer
             if (this.character instanceof Architect) {
                 this.pickSomething();
+                //il a choisi de piocher avant de jouer donc on regarde s'il n'a pas la libraire dans sa citadelle
+                this.checkAndUseLibraryEffectInCitadel();
                 useEffectOfTheArchitect();
             } else {
                 this.playCards(this.getNbDistrictsCanBeBuild()); //il joue
@@ -181,7 +185,7 @@ public class SmartBot extends Player {
         else if (this.character instanceof Condottiere condottiere) {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
-            this.useEffectArchitectPickCards();
+            this.pickCardsAndDiscardAny(2);
         } else if (this.getCharacter() instanceof Thief thief) {
             this.useEffectThief(thief);
         } else if (this.character instanceof Magician magician) {
