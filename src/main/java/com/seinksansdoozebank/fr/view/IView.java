@@ -25,7 +25,7 @@ public interface IView {
 
     void displayPlayerRevealCharacter(Player player);
 
-    void displayPlayeruseCondottiereDistrict(Player attacker, Player defender, District district);
+    void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district);
 
     void displayPlayerScore(Player player);
 
