@@ -1,6 +1,8 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -10,24 +12,27 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +44,7 @@ class CustomBotTest {
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
     IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
     IUsingCondottiereEffectStrategy mockUsingCondottiereEffectStrategy;
+    ICardChoosingStrategy mockCardChoosingStrategy;
     IView mockView;
 
     @BeforeEach
@@ -49,12 +55,14 @@ class CustomBotTest {
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
+        mockCardChoosingStrategy = mock(ICardChoosingStrategy.class);
         spyCustomBot = spy(new CustomBot(2, new Deck(), mockView,
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy));
+                mockUsingCondottiereEffectStrategy,
+                mockCardChoosingStrategy));
     }
 
     @Test
@@ -144,7 +152,8 @@ class CustomBotTest {
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy);
+                mockUsingCondottiereEffectStrategy,
+                mockCardChoosingStrategy);
         Opponent opponent = mock(Opponent.class);
         when(opponent.getNbGold()).thenReturn(2);
         customBotWithARealChoosingStrat.setOpponents(List.of(opponent));
@@ -158,5 +167,11 @@ class CustomBotTest {
         assertTrue(characters.contains(customBotWithARealChoosingStrat.getCharacter()));
         assertEquals(customBotWithARealChoosingStrat.getCharacter(), assassin);
         assertEquals(customBotWithARealChoosingStrat, assassin.getPlayer());
+    }
+
+    @Test
+    void testCardChosingStrategyWhenChoosingACard() {
+        this.spyCustomBot.chooseCard();
+        verify(mockCardChoosingStrategy, times(1)).apply(any(), any());
     }
 }

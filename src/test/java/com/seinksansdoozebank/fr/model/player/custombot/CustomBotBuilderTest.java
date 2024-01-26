@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -19,6 +20,7 @@ class CustomBotBuilderTest {
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
     IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
     IUsingCondottiereEffectStrategy mockUsingCondottiereEffectStrategy;
+    ICardChoosingStrategy mockCardChoosingStrategy;
 
     @BeforeEach
     void setUp() {
@@ -28,6 +30,7 @@ class CustomBotBuilderTest {
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
+        mockCardChoosingStrategy = mock(ICardChoosingStrategy.class);
     }
 
     @Test
@@ -37,11 +40,13 @@ class CustomBotBuilderTest {
         customBotBuilder.setUsingThiefEffectStrategy(mockUsingThiefEffectStrategy);
         customBotBuilder.setUsingMurdererEffectStrategy(mockUsingMurdererEffectStrategy);
         customBotBuilder.setUsingCondottiereEffectStrategy(mockUsingCondottiereEffectStrategy);
+        customBotBuilder.setCardChoosingStrategy(mockCardChoosingStrategy);
 
         CustomBot customBot = customBotBuilder.build();
         assertEquals(mockPickingStrategy, customBot.pickingStrategy);
         assertEquals(mockCharacterChoosingStrategy, customBot.characterChoosingStrategy);
         assertEquals(mockUsingThiefEffectStrategy, customBot.usingThiefEffectStrategy);
         assertEquals(customBotBuilder.nbGold, customBot.getNbGold());
+        assertEquals(mockUsingMurdererEffectStrategy, customBot.usingMurdererEffectStrategy);
     }
 }
