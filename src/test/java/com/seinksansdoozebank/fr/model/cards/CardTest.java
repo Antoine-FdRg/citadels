@@ -25,6 +25,7 @@ class CardTest {
 
     @Test
     void equalsTestOnNull() {
-        assertNotEquals(null, monasteryCard);
+        District district = District.TEMPLE;
+        assertNotEquals(monasteryCard, district);
     }
 }
