@@ -56,23 +56,24 @@ public class Game {
     public void run() {
         this.init();
         this.nbCurrentRound = 1;
-        while (!finished) {
+        while (!finished && !this.isStuck()) {
             createCharacters();
             this.playARound();
-            this.isStuck();
         }
-        view.displayGameFinished();
+        if (finished) {
+            view.displayGameFinished();
+        } else {
+            view.displayGameStuck();
+        }
         updatePlayersBonus();
         view.displayWinner(this.getWinner());
     }
 
-    protected void isStuck() {
+    protected boolean isStuck() {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
                         .anyMatch(card -> card.getDistrict().getCost() < player.getNbGold()));
-        if (deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay && !finished) {
-            throw new IllegalStateException("The game is stuck");
-        }
+        return deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay;
     }
 
     /**

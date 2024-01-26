@@ -69,4 +69,6 @@ public interface IView {
     void displayPlayerUseLaboratoryEffect(Player player);
 
     void displayPlayerUseManufactureEffect(Player player);
+
+    void displayGameStuck();
 }

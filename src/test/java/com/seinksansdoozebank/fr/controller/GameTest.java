@@ -284,7 +284,22 @@ class GameTest {
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(view, times(1)).displayGameFinished();
+        verify(view, times(0)).displayGameStuck();
+        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
+        verify(view, times(1)).displayWinner(any(Player.class));
+    }
+
+    @Test
+    void runAStuckGameShouldDisplayStuckGame() {
+        Bank.reset();
+        when(gameWithFourPlayers.isStuck()).thenReturn(true);
+        gameWithFourPlayers.run();
+        verify(gameWithFourPlayers, times(1)).init();
+        verify(view, times(0)).displayGameFinished();
+        verify(view, times(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -432,18 +447,8 @@ class GameTest {
         verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
     }
 
-    /**
-     * private void isStuck() {
-     * boolean aPlayerCanPlay = players.stream()
-     * .anyMatch(player -> player.getHand().stream()
-     * .anyMatch(card -> card.getDistrict().getCost()<player.getNbGold()));
-     * if(deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin()<=0 && !aPlayerCanPlay && !finished){
-     * throw new IllegalStateException("The game is stuck");
-     * }
-     * }
-     */
     @Test
-    void isStuckShouldThrowException() {
+    void isStuckWithStuckGameShouldReturnTrue() {
         Bank.reset();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
@@ -455,6 +460,51 @@ class GameTest {
                 .build();
         Bank.getInstance().pickXCoin(22);
 
-        assertThrows(IllegalStateException.class, stuckGame::isStuck);
+        assertTrue(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithNotEmptyDeckShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickXCoin(22);
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithRemainingCoinsShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithCardsInPlayersHandShouldReturnFalse() {
+        Bank.reset();
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck())
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        stuckGame.init();
+        Bank.getInstance().pickXCoin(22);
+        assertFalse(stuckGame.isStuck());
     }
 }
