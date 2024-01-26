@@ -16,14 +16,14 @@ public abstract class CommonCharacter extends Character {
     /**
      * For each district in the citadel of the target type, the player will collect one gold
      */
-    public void goldCollectedFromDisctrictType() {
+    public void goldCollectedFromDistrictType() {
         int nbGold = 0;
         for (Card card : this.getPlayer().getCitadel()) {
             if (card.getDistrict().getDistrictType() == target || card.getDistrict().equals(District.SCHOOL_OF_MAGIC)) {
                 nbGold++;
             }
         }
-        this.getPlayer().increaseGold(nbGold);
+        this.getPlayer().pickGold(nbGold);
     }
 
     /**

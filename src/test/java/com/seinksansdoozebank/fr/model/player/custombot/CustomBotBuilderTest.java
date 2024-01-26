@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -22,6 +23,8 @@ class CustomBotBuilderTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         customBotBuilder = new CustomBotBuilder(2, null, null);
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);

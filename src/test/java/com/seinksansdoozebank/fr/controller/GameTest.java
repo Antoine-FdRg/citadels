@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -17,6 +18,7 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +63,8 @@ class GameTest {
 
     @BeforeEach
     public void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
@@ -274,13 +278,29 @@ class GameTest {
     }
 
     @Test
-    void run() {
+    void runNotStuckGame() {
+        Bank.reset();
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(view, atMost(1)).displayGameFinished();
+        verify(view, atMost(0)).displayGameStuck();
+        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
+        verify(view, times(1)).displayWinner(any(Player.class));
+    }
+
+    @Test
+    void runAStuckGameShouldDisplayStuckGame() {
+        Bank.reset();
+        when(gameWithFourPlayers.isStuck()).thenReturn(true);
+        gameWithFourPlayers.run();
+        verify(gameWithFourPlayers, times(1)).init();
+        verify(view, times(0)).displayGameFinished();
+        verify(view, times(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -436,6 +456,21 @@ class GameTest {
         gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
         assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
     }
+    @Test
+    void isStuckWithStuckGameShouldReturnTrue() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickXCoin(22);
+
+        assertTrue(stuckGame.isStuck());
+    }
 
     @Test
     void constructorGameWithTooMuchPlayers() {
@@ -450,5 +485,49 @@ class GameTest {
         players.add(new RandomBot(5, new Deck(), view));
         Deck deck = new Deck();
         assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
+    }
+    @Test
+    void isStuckWithNotEmptyDeckShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickXCoin(22);
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithRemainingCoinsShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithCardsInPlayersHandShouldReturnFalse() {
+        Bank.reset();
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck())
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        stuckGame.init();
+        Bank.getInstance().pickXCoin(22);
+        assertFalse(stuckGame.isStuck());
     }
 }

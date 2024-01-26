@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -44,6 +45,8 @@ class CustomBotTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockView = mock(IView.class);
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
