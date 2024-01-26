@@ -238,6 +238,8 @@ public abstract class Player implements Opponent {
 
     abstract void useEffectAssassin(Assassin assassin);
 
+    abstract Character chooseAssassinTarget();
+
     abstract void useEffectCondottiere(Condottiere condottiere);
 
     abstract void useEffectThief(Thief thief);

@@ -34,4 +34,17 @@ public abstract class CommonCharacter extends Character {
     public DistrictType getTarget() {
         return target;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CommonCharacter commonCharacter) {
+            return commonCharacter.getRole() == this.getRole();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getRole().hashCode();
+    }
 }

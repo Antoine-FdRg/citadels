@@ -448,6 +448,15 @@ class GameTest {
     }
 
     @Test
+    void createCharactersWithTooMuchPlayers() {
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
+    }
+    @Test
     void isStuckWithStuckGameShouldReturnTrue() {
         Bank.reset();
         Deck mockDeck = mock(Deck.class);
@@ -463,6 +472,20 @@ class GameTest {
         assertTrue(stuckGame.isStuck());
     }
 
+    @Test
+    void constructorGameWithTooMuchPlayers() {
+        List<Player> players = new ArrayList<>();
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        Deck deck = new Deck();
+        assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
+    }
     @Test
     void isStuckWithNotEmptyDeckShouldReturnFalse() {
         Bank.reset();

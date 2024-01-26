@@ -162,7 +162,7 @@ public class RandomBot extends Player {
      */
     @Override
     protected void useEffectAssassin(Assassin assassin) {
-        Character characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+        Character characterToKill = this.chooseAssassinTarget();
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
         while (!characterToKill.isDead()) {
             try {
@@ -173,6 +173,11 @@ public class RandomBot extends Player {
                 characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
             }
         }
+    }
+
+    @Override
+    protected Character chooseAssassinTarget() {
+        return this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
     }
 
     @Override
