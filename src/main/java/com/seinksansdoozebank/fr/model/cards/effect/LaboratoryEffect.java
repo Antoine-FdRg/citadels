@@ -6,6 +6,8 @@ import com.seinksansdoozebank.fr.view.IView;
 
 public class LaboratoryEffect implements ActiveEffect {
 
+    private static final int NB_GOLD_PICK_BY_LABORATORY_EFFECT = 1;
+
     /**
      * Once per turn, the player can discard a card from his hand and get one gold.
      *
@@ -17,9 +19,11 @@ public class LaboratoryEffect implements ActiveEffect {
             return;
         }
         Card card = player.chooseCardToDiscardForLaboratoryEffect();
-        if (card != null && (player.discardFromHand(card))) {
-            player.pickGold(1);
+        if (card != null) {
             view.displayPlayerUseLaboratoryEffect(player);
+            if (player.discardFromHand(card)) {
+                player.pickGold(NB_GOLD_PICK_BY_LABORATORY_EFFECT);
+            }
         }
     }
 }

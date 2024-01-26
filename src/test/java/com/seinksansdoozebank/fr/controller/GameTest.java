@@ -284,8 +284,9 @@ class GameTest {
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
         verify(view, times(1)).displayGameFinished();
         verify(view, times(0)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
@@ -308,7 +309,6 @@ class GameTest {
     void playARound() {
         gameWithFourPlayers.createCharacters();
         gameWithFourPlayers.playARound();
-        verify(view, times(1)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
         verify(gameWithFourPlayers, times(1)).playersChooseCharacters();
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforePlaying();

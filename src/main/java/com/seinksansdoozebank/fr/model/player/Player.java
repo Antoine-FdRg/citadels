@@ -62,8 +62,8 @@ public abstract class Player implements Opponent {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
-        this.reveal();
         view.displayPlayerStartPlaying(this);
+        this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
         this.playARound();
@@ -216,9 +216,12 @@ public abstract class Player implements Opponent {
     /**
      * Collect gold with the effect of the character if it is a common character
      */
-    void useCommonCharacterEffect() {
-        if (this.character instanceof CommonCharacter commonCharacter) {
+    protected void useCommonCharacterEffect() {
+        if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
+            int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDistrictType();
+            if (this.getNbGold() - nbGoldSave > 0)
+                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 
@@ -411,7 +414,7 @@ public abstract class Player implements Opponent {
 
     public boolean destroyDistrict(Player attacker, District district) {
         if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
-            this.view.displayPlayerDestroyDistrict(attacker, this, district);
+            this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
             return true;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");
