@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -158,5 +159,75 @@ class CustomBotTest {
         assertTrue(characters.contains(customBotWithARealChoosingStrat.getCharacter()));
         assertEquals(customBotWithARealChoosingStrat.getCharacter(), assassin);
         assertEquals(customBotWithARealChoosingStrat, assassin.getPlayer());
+    }
+
+    @Test
+    void testEqualsWithBotWithSameStrategies() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        assertEquals(customBot1, customBot2);
+    }
+
+    @Test
+    void testEqualsWithBotWithNoStrategies() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class));
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class));
+        assertEquals(customBot1, customBot2);
+    }
+
+    @Test
+    void testNotEqualsWithBotWithDifferentStrategies() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                null,
+                mockUsingCondottiereEffectStrategy);
+        assertNotEquals(customBot1, customBot2);
+    }
+
+    @Test
+    void testNotEqualsWithNotSameObject() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        Character assassin = new Assassin();
+        assertNotEquals(customBot1, assassin);
+    }
+
+    @Test
+    void testHashCode() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+                mockPickingStrategy,
+                mockCharacterChoosingStrategy,
+                mockUsingThiefEffectStrategy,
+                mockUsingMurdererEffectStrategy,
+                mockUsingCondottiereEffectStrategy);
+        assertNotEquals(customBot1.hashCode(), customBot2.hashCode()); // the two bots are differents
     }
 }
