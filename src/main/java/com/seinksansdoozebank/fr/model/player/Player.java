@@ -239,12 +239,16 @@ public abstract class Player implements Opponent {
     }
 
     /**
-     * Effect of architect character (pick 2 cards)
+     * this method make the bot pick x cards and no cards are discarded
+     *
+     * @param numberOfCards to pick
      */
-    protected void useEffectArchitectPickCards() {
-        this.hand.add(this.deck.pick());
-        this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this, 2);
+    protected void pickCardsAndDiscardAny(int numberOfCards) {
+        while (numberOfCards != 0) {
+            this.hand.add(this.deck.pick());
+            numberOfCards--;
+        }
+        view.displayPlayerPickCards(this, numberOfCards);
     }
 
     abstract void useEffectMagician(Magician magician);
@@ -494,6 +498,15 @@ public abstract class Player implements Opponent {
     }
 
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
+
+    public void checkAndUseLibraryEffectInCitadel() {
+        Optional<Card> libraryCard = this.getCitadel().stream().filter(card -> card.getDistrict() == District.LIBRARY).findFirst();
+        if (libraryCard.isPresent()) {
+            pickCardsAndDiscardAny(2);
+            this.view.displayPlayerPickCardsBecauseOfLibrary(this);
+        }
+    }
+
 
     @Override
     public int getHandSize() {
