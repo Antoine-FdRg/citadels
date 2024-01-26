@@ -340,7 +340,7 @@ class SmartBotTest {
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+        verify(spySmartBot, times(1)).pickCardsAndDiscardAny(2);
     }
 
     @Test
@@ -799,4 +799,22 @@ class SmartBotTest {
         when(spySmartBot.getHand()).thenReturn(hand);
         assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
     }
+
+    @Test
+    void playWhenHandIsEmptyThePlayerIsArchitectTest(){
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
+        List<Card> hand = new ArrayList<>();
+        when(spySmartBot.getHand()).thenReturn(hand);
+        spySmartBot.playARound();
+        verify(spySmartBot,times(1)).checkAndUseLibraryEffectInCitadel();
+    }
+
+    @Test
+    void playAroundWhenHandIsEmptyTest(){
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        verify(spySmartBot,atMost(1)).checkAndUseLibraryEffectInCitadel();
+    }
+
 }

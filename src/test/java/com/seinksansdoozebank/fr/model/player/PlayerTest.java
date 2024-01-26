@@ -270,7 +270,6 @@ class PlayerTest {
         assertEquals(3, spyPlayer.numberOfCardsToPick());
     }
 
-
     @Test
     void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
@@ -323,4 +322,30 @@ class PlayerTest {
         spyPlayer.usePrestigesEffect();
         verify(view, times(1)).displayPlayerUseManufactureEffect(spyPlayer);
     }
+
+    /**
+     * Tester si le bot qui possède la bibliothèque dans sa citadelle il repioche bien 2 cartes en plus
+     */
+    @Test
+    void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest(){
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        spyPlayer.getHand().add(new Card(District.PORT));
+        spyPlayer.checkAndUseLibraryEffectInCitadel();
+        verify(view,times(1)).displayPlayerPickCardsBecauseOfLibrary(spyPlayer);
+        assertEquals(3,spyPlayer.getHand().size());
+    }
+
+    /**
+     * Tester si le bot qui ne possède pas la bibliothèque dans sa citadelle ne pioche pas des cartes en plus
+     */
+    @Test
+    void checkAndUseLibraryEffectInCitadelWhenBotDoesNotHaveTest(){
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        spyPlayer.getHand().add(new Card(District.PORT));
+        spyPlayer.checkAndUseLibraryEffectInCitadel();
+        verify(view,times(0)).displayPlayerPickCardsBecauseOfLibrary(spyPlayer);
+        assertEquals(1,spyPlayer.getHand().size());
+    }
+
+
 }

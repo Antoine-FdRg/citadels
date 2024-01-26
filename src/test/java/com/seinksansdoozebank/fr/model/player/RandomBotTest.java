@@ -9,12 +9,14 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ class RandomBotTest {
     }
 
     @Test
-    void play() {
+    void  play() {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spyRandomBot).playACard();
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
@@ -305,6 +307,49 @@ class RandomBotTest {
         DistrictType districtType = spyRandomBot.getColorCourtyardOfMiracleType();
         assertEquals(DistrictType.SOLDIERLY, districtType);
 
+    }
+
+    /**
+     * Tester la méthode chooseWhenToPickACard et voir quand il choisit de piocher avant de jouer si
+     * la méthode check est appelée
+     */
+    @Test
+    void chooseWhenToPickACardWhenPickBeforePlaying(){
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        spyRandomBot.chooseWhenToPickACard(1);
+        verify(spyRandomBot,times(1)).pickBeforePlaying(1);
+        verify(spyRandomBot,times(0)).playBeforePicking(1);
+    }
+
+    /**
+     * Tester la méthode chooseWhenToPickACard et voir quand il choisit de jouer avant de piocher si
+     *   la méthode check n'est pas appelé
+     */
+    @Test
+    void chooseWhenToPickACardWhenPlayBeforePicking(){
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        spyRandomBot.chooseWhenToPickACard(1);
+        verify(spyRandomBot,times(0)).pickBeforePlaying(1);
+        verify(spyRandomBot,times(1)).playBeforePicking(1);
+    }
+
+    @Test
+    void pickBeforePlayingRandomBotUseCheckAndUseLibraryEffectInCitadelTest(){
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        spyRandomBot.pickBeforePlaying(1);
+        verify(spyRandomBot,times(1)).checkAndUseLibraryEffectInCitadel();
     }
 
 }
