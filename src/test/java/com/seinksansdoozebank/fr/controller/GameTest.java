@@ -427,5 +427,28 @@ class GameTest {
         verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
     }
 
+    @Test
+    void createCharactersWithTooMuchPlayers() {
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
+    }
 
+    @Test
+    void constructorGameWithTooMuchPlayers() {
+        List<Player> players = new ArrayList<>();
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        Deck deck = new Deck();
+        assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
+    }
 }
