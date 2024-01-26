@@ -53,4 +53,15 @@ class KingTest {
         // Check if the player's gold has been increased correctly
         assertEquals(5, player.getNbGold());
     }
+
+    @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Perform the action
+        king.goldCollectedFromDisctrictType();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals(6, player.getNbGold());
+    }
 }

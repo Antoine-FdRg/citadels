@@ -61,8 +61,8 @@ public abstract class Player implements Opponent {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
-        this.reveal();
         view.displayPlayerStartPlaying(this);
+        this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
         this.playARound();
@@ -195,46 +195,41 @@ public abstract class Player implements Opponent {
         return optChosenCard;
     }
 
-    public List<Card> playCards(int numberOfCards) {
+    public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            if (card.isPresent()) {
-                card.ifPresent(playedCards::add);
-                this.view.displayPlayerPlaysCard(this, card.get());
-            }
+            card.ifPresent(value -> this.view.displayPlayerPlaysCard(this, value));
         }
-        return playedCards;
     }
 
     /**
      * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
-     *
-     * @return the district built by the player
      */
-    public List<Card> playCard(Card card) {
+    public void buyACardAndAddItToCitadel(Card card) {
         if (!canPlayCard(card)) {
-            return List.of();
+            return;
         }
         this.hand.remove(card);
         this.citadel.add(card);
         this.decreaseGold(card.getDistrict().getCost());
         this.view.displayPlayerPlaysCard(this, card);
-        return List.of(card);
     }
 
 
     /**
      * Collect gold with the effect of the character if it is a common character
      */
-    void useCommonCharacterEffect() {
-        if (this.character instanceof CommonCharacter commonCharacter) {
+    protected void useCommonCharacterEffect() {
+        if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
+            int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDisctrictType();
+            if (this.getNbGold() - nbGoldSave > 0)
+                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 
@@ -398,7 +393,7 @@ public abstract class Player implements Opponent {
 
     public boolean destroyDistrict(Player attacker, District district) {
         if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
-            this.view.displayPlayerDestroyDistrict(attacker, this, district);
+            this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
             return true;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");

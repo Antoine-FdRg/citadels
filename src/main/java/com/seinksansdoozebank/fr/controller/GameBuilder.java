@@ -7,6 +7,7 @@ import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -68,13 +69,15 @@ public class GameBuilder {
     public GameBuilder addCustomBot(IPickingStrategy pickingStrategy,
                                     ICharacterChoosingStrategy characterChoosingStrategy,
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
-                                    IUsingMurdererEffectStrategy murdererEffectStrategy) {
+                                    IUsingMurdererEffectStrategy murdererEffectStrategy,
+                                    IUsingCondottiereEffectStrategy condottiereEffectStrategy) {
         checkNbPlayers();
         playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
                 .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
                 .setUsingMurdererEffectStrategy(murdererEffectStrategy)
+                .setUsingCondottiereEffectStrategy(condottiereEffectStrategy)
                 .build());
         return this;
     }

@@ -57,6 +57,17 @@ class CondottiereTest {
     }
 
     @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Perform the action
+        condottiere.goldCollectedFromDisctrictType();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals(7, player.getNbGold());
+    }
+
+    @Test
     void cantDestroyDonjon() {
         Player otherPlayer = spy(new RandomBot(2, deck, view));
         Merchant merchant = new Merchant();
