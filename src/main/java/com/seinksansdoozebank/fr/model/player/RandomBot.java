@@ -119,7 +119,7 @@ public class RandomBot extends Player {
         else if (this.character instanceof Condottiere condottiere) {
             this.useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
-            this.pickCardsAndDiscardAny(2);
+            this.pickCardsAndDiscardNothing(2);
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
         } else if (this.character instanceof Magician magician) {

@@ -340,7 +340,7 @@ class SmartBotTest {
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).pickCardsAndDiscardAny(2);
+        verify(spySmartBot, times(1)).pickCardsAndDiscardNothing(2);
     }
 
     @Test

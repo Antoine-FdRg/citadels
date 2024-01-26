@@ -243,7 +243,7 @@ public abstract class Player implements Opponent {
      *
      * @param numberOfCards to pick
      */
-    protected void pickCardsAndDiscardAny(int numberOfCards) {
+    protected void pickCardsAndDiscardNothing(int numberOfCards) {
         while (numberOfCards != 0) {
             this.hand.add(this.deck.pick());
             numberOfCards--;
@@ -502,7 +502,7 @@ public abstract class Player implements Opponent {
     public void checkAndUseLibraryEffectInCitadel() {
         Optional<Card> libraryCard = this.getCitadel().stream().filter(card -> card.getDistrict() == District.LIBRARY).findFirst();
         if (libraryCard.isPresent()) {
-            pickCardsAndDiscardAny(2);
+            pickCardsAndDiscardNothing(2);
             this.view.displayPlayerPickCardsBecauseOfLibrary(this);
         }
     }

@@ -185,7 +185,7 @@ public class SmartBot extends Player {
         else if (this.character instanceof Condottiere condottiere) {
             useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
-            this.pickCardsAndDiscardAny(2);
+            this.pickCardsAndDiscardNothing(2);
         } else if (this.getCharacter() instanceof Thief thief) {
             this.useEffectThief(thief);
         } else if (this.character instanceof Magician magician) {
