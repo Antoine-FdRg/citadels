@@ -129,6 +129,25 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     }
 
     @Test
+    void applyWithOpponentWithJustDonjonInLeadingOpponentCitadelShouldNotUseCondottiereEffect() {
+        Opponent mockOpponent1 = mock(Opponent.class);
+        when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
+        opponentList.add(mockOpponent1);
+        Opponent mockOpponent2 = mock(Opponent.class);
+        when(mockOpponent2.nbDistrictsInCitadel()).thenReturn(1);
+        when(mockOpponent2.getOpponentCharacter()).thenReturn(new King());
+        Card donjon = new Card(District.DONJON);
+        when(mockOpponent2.getCitadel()).thenReturn(List.of(donjon));
+        opponentList.add(mockOpponent2);
+        when(mockPlayer.getOpponents()).thenReturn(opponentList);
+
+        strategy.apply(mockPlayer, spyCondottiere);
+
+        verify(spyCondottiere, never()).useEffect(any(), any());
+    }
+
+
+    @Test
     void applyWithOpponentWithCheaperDistrictInLeadingOpponentCitadelShouldUseCondottiereEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);

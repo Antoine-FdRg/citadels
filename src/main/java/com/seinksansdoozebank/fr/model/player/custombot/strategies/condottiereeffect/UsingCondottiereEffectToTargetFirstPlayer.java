@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Opponent;
@@ -22,7 +23,7 @@ public class UsingCondottiereEffectToTargetFirstPlayer implements IUsingCondotti
             return;
         }
         Optional<Card> cheaperCardToDestroy = targetOpponent.getCitadel().stream()
-                .filter(card -> card.getDistrict().getCost() < player.getNbGold())
+                .filter(card -> card.getDistrict().getCost() < player.getNbGold() && card.getDistrict() != District.DONJON)
                 .min(Comparator.comparingInt(c -> c.getDistrict().getCost()));
         cheaperCardToDestroy.ifPresent(card -> condottiere.useEffect(targetOpponent, card.getDistrict()));
     }
