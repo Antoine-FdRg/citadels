@@ -188,4 +188,9 @@ public class Cli implements IView {
     public void displayPlayerUseManufactureEffect(Player player) {
         CustomLogger.log(Level.INFO, "{0} utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).", player);
     }
+
+    @Override
+    public void displayPlayerPickCardsBecauseOfLibrary(Player player){
+        CustomLogger.log(Level.INFO,"{0} pioche deux cartes en plus car il possède la bibliothèque.", player);
+    }
 }
