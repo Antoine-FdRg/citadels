@@ -61,8 +61,8 @@ public abstract class Player implements Opponent {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
-        this.reveal();
         view.displayPlayerStartPlaying(this);
+        this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
         this.playARound();
@@ -391,7 +391,7 @@ public abstract class Player implements Opponent {
 
     public boolean destroyDistrict(Player attacker, District district) {
         if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
-            this.view.displayPlayerDestroyDistrict(attacker, this, district);
+            this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
             return true;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");

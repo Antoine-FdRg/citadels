@@ -176,7 +176,7 @@ public class RandomBot extends Player {
     }
 
     @Override
-    void useEffectCondottiere(Condottiere condottiere) {
+    protected void useEffectCondottiere(Condottiere condottiere) {
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
         if (random.nextBoolean()) {
             // get a random player, and destroy a district of this player randomly

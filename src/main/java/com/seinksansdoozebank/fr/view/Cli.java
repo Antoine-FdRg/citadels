@@ -29,7 +29,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        CustomLogger.log(Level.INFO, "\n{0} commence à jouer.", player);
+        CustomLogger.log(Level.INFO, "\n{0} commence son tour.", player);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerDestroyDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} détruit le quartier {1} de {2} en payant {3} pièces d''or''.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+    public void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseAssassinEffect(Player player, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .", new Object[]{player, target});
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
     }
 
     private void displayPlayerHand(Player player) {
@@ -123,7 +123,7 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écarté pour cette manche.\u001B[0m", character);
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le personnage {0} a été écarté pour cette manche.\u001B[0m", character);
     }
 
     @Override
@@ -177,12 +177,12 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerDiscardCard(Player player, Card card) {
-        CustomLogger.log(Level.INFO, "{0} défausse la carte {1}.", new Object[]{player, card});
+        CustomLogger.log(Level.INFO, "{0} défausse {1}.", new Object[]{player, card});
     }
 
     @Override
     public void displayPlayerUseLaboratoryEffect(Player player) {
-        CustomLogger.log(Level.INFO, "{0} utilise le laboratoire pour défausser une carte et gagner une pièce d'or.", player);
+        CustomLogger.log(Level.INFO, "{0} utilise le laboratoire pour défausser une carte et gagner une pièce d''or (s''il en reste dans la banque).", player);
     }
 
     @Override
