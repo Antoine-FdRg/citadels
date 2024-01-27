@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view.logger;
 
 import com.seinksansdoozebank.fr.model.player.Player;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CustomLogger {
         throw new IllegalStateException("Utility class"); // sonarlint suggestion
     }
 
-    private static void setPlayerColors(Player player) {
+    protected static void setPlayerColors(Player player) {
         if (playerColors.containsKey(player)) {
             return;
         }
@@ -56,7 +57,7 @@ public class CustomLogger {
         playerColors.put(player, randomColor);
     }
 
-    private static String applyColor(Player player, String message) {
+    protected static String applyColor(Player player, String message) {
         setPlayerColors(player);
         return playerColors.getOrDefault(player, "") + message + "\u001B[0m";
     }
@@ -69,16 +70,18 @@ public class CustomLogger {
         for (Object param : params) {
             if (param instanceof Player player) {
                 message = applyColor(player, message);
+                message = MessageFormat.format(message, params);
                 break;
             }
         }
-        logger.log(level, message, params);
+        logger.log(level, message);
     }
 
     public static void log(Level level, String message, Object param) {
         if (param instanceof Player player) {
             message = applyColor(player, message);
+            message = MessageFormat.format(message, param);
         }
-        logger.log(level, message, param);
+        logger.log(level, message);
     }
 }

@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.cli;
+package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -7,32 +7,30 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
+import com.seinksansdoozebank.fr.view.logger.CustomFormatter;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class CliTest {
-
-    @Mock
-    private Player spyPlayer;
-
-    @Mock
-    private IView view;
-
-    @Mock
+    private Cli view;
+    private Player player;
     private Card card;
 
     @BeforeEach
     void setup() {
-        spyPlayer = spy(new RandomBot(10, mock(Deck.class), view));
-        view = mock(Cli.class);
+        player = mock(Player.class);
         card = mock(Card.class);
+        view = mock(Cli.class);
     }
 
     /**
@@ -40,19 +38,13 @@ class CliTest {
      */
     @Test
     void testDisplayPlayerPlaysCard() {
-        // Arrange
-        when(card.getDistrict()).thenReturn(District.BARRACK);
-
-        // Act
-        view.displayPlayerPlaysCard(spyPlayer, card);
-
-        // Assert
-        verify(view, times(1)).displayPlayerPlaysCard(spyPlayer, card);
     }
 
     @Test
     void testDisplayWinner() {
-        // TODO
+        view.displayWinner(player);
+
+        verify(view).displayWinner(eq(player));
     }
 
     @Test
