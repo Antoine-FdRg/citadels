@@ -73,5 +73,5 @@ public interface IView {
 
     void displayGoldCollectedFromDistrictType(Player player, int nbGold, DistrictType districtType);
 
-    void displayPlayerPickCardsBecauseOfLibrary(Player player);
+    void displayPlayerKeepBothCardsBecauseOfLibrary(Player player);
 }

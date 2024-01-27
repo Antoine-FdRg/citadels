@@ -196,7 +196,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPickCardsBecauseOfLibrary(Player player){
-        CustomLogger.log(Level.INFO,"{0} pioche deux cartes en plus car il possède la bibliothèque.", player);
+    public void displayPlayerKeepBothCardsBecauseOfLibrary(Player player){
+        CustomLogger.log(Level.INFO,"{0} pioche deux cartes et garde les deux car il possède la bibliothèque.", player);
     }
 }
