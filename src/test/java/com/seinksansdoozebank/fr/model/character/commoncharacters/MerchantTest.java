@@ -59,6 +59,18 @@ class MerchantTest {
     }
 
     @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Perform the action
+        merchant.goldCollectedFromDisctrictType();
+
+        // Check if the player's gold has been increased correctly
+        // 2 gold for the start + 6 for the 6 districts + 1 for the school of magic
+        assertEquals(9, player.getNbGold());
+    }
+
+    @Test
     void testUseEffect() {
         // Perform the action
         merchant.useEffect();

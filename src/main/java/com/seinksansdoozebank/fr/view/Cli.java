@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
@@ -67,7 +68,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseAssassinEffect(Player player, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1} .", new Object[]{player, target});
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
     }
 
     private void displayPlayerHand(Player player) {
@@ -121,7 +122,7 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écraté pour cette manche.\u001B", character);
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le {0} a été écarté pour cette manche.\u001B", character);
     }
 
     @Override
@@ -155,11 +156,36 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseMagicianEffect(Player player, Player targetPlayer) {
+    public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
         if (targetPlayer == null) {
             CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", new Object[]{player});
             return;
         }
         CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
+    }
+
+    @Override
+    public void displayPlayerHasGotObservatory(Player player) {
+        CustomLogger.log(Level.INFO, "Le {0} possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.", player);
+    }
+
+    @Override
+    public void displayPlayerUseThiefEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu'il volera.", player);
+    }
+
+    @Override
+    public void displayPlayerDiscardCard(Player player, Card card) {
+        CustomLogger.log(Level.INFO, "{0} défausse la carte {1}.", new Object[]{player, card});
+    }
+
+    @Override
+    public void displayPlayerUseLaboratoryEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise le laboratoire pour défausser une carte et gagner une pièce d'or.", player);
+    }
+
+    @Override
+    public void displayPlayerUseManufactureEffect(Player player) {
+        CustomLogger.log(Level.INFO, "{0} utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).", player);
     }
 }

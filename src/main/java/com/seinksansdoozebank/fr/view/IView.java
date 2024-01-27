@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.view;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public interface IView {
@@ -57,5 +58,15 @@ public interface IView {
 
     void displayActualNumberOfGold(Player player);
 
-    void displayPlayerUseMagicianEffect(Player player, Player targetPlayer);
+    void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer);
+
+    void displayPlayerHasGotObservatory(Player player);
+
+    void displayPlayerUseThiefEffect(Player player);
+
+    void displayPlayerDiscardCard(Player player, Card card);
+
+    void displayPlayerUseLaboratoryEffect(Player player);
+
+    void displayPlayerUseManufactureEffect(Player player);
 }

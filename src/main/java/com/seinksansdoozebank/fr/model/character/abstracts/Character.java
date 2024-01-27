@@ -7,10 +7,11 @@ import com.seinksansdoozebank.fr.model.player.Player;
 public abstract class Character {
     private Player player;
     private final Role role;
-    private boolean isDead = false;
+    private boolean isDead;
     private Player savedThief ;
 
     protected Character(Role role) {
+        this.isDead = false;
         this.role = role;
     }
 
@@ -44,8 +45,6 @@ public abstract class Character {
         return this.role;
     }
 
-    public abstract void useEffect();
-
     @Override
     public String toString() {
         return this.role.getName();
@@ -66,7 +65,7 @@ public abstract class Character {
     }
 
     /**
-     * @param player
+     * @param player the player to steal
      */
     public void setSavedThief(Player player) {
         savedThief=player;
