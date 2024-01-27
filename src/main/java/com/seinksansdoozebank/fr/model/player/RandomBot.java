@@ -29,6 +29,7 @@ public class RandomBot extends Player {
 
     @Override
     public void playARound() {
+        setHasPlayed(false);
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
@@ -63,6 +64,7 @@ public class RandomBot extends Player {
      * @param nbDistrictsToBuild the number of districts the bot choose to build
      */
     protected void playBeforePicking(int nbDistrictsToBuild) {
+        setHasPlayed(true);
         if (nbDistrictsToBuild > 0) {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
@@ -119,7 +121,7 @@ public class RandomBot extends Player {
         else if (this.character instanceof Condottiere condottiere) {
             this.useEffectCondottiere(condottiere);
         } else if (this.character instanceof Architect) {
-            this.pickCardsAndDiscardNothing(2);
+            this.useEffectArchitectPickCards();
         } else if (this.character instanceof Assassin assassin) {
             this.useEffectAssassin(assassin);
         } else if (this.character instanceof Magician magician) {
