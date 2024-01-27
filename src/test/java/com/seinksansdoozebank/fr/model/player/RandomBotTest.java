@@ -322,6 +322,7 @@ class RandomBotTest {
         Bishop bishop = spy(new Bishop());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
         spyRandomBot.chooseWhenToPickACard(1);
+        assertFalse(spyRandomBot.hasPlayed());
         verify(spyRandomBot,times(1)).pickBeforePlaying(1);
         verify(spyRandomBot,times(0)).playBeforePicking(1);
     }
@@ -339,6 +340,7 @@ class RandomBotTest {
         Bishop bishop = spy(new Bishop());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
         spyRandomBot.chooseWhenToPickACard(1);
+        assertTrue(spyRandomBot.hasPlayed());
         verify(spyRandomBot,times(0)).pickBeforePlaying(1);
         verify(spyRandomBot,times(1)).playBeforePicking(1);
     }

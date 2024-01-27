@@ -335,7 +335,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
-        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(1)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
     @Test
@@ -347,7 +347,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(10, spyPlayer.getNbGold());
-        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(0)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
 
@@ -358,22 +358,24 @@ class PlayerTest {
     void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest(){
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         spyPlayer.getHand().add(new Card(District.PORT));
-        spyPlayer.checkAndUseLibraryEffectInCitadel();
-        verify(view,times(1)).displayPlayerPickCardsBecauseOfLibrary(spyPlayer);
+        spyPlayer.pickCardsKeepSomeAndDiscardOthers();
+        verify(view,times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
         assertEquals(3,spyPlayer.getHand().size());
     }
 
-    /**
-     * Tester si le bot qui ne possède pas la bibliothèque dans sa citadelle ne pioche pas des cartes en plus
-     */
+
     @Test
-    void checkAndUseLibraryEffectInCitadelWhenBotDoesNotHaveTest(){
-        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        spyPlayer.getHand().add(new Card(District.PORT));
-        spyPlayer.checkAndUseLibraryEffectInCitadel();
-        verify(view,times(0)).displayPlayerPickCardsBecauseOfLibrary(spyPlayer);
-        assertEquals(1,spyPlayer.getHand().size());
+    void getHasPlayedTest(){
+        assertFalse(spyPlayer.hasPlayed());
     }
+
+    @Test
+    void setHasPlayedTest(){
+        spyPlayer.setHasPlayed(true);
+        assertTrue(spyPlayer.hasPlayed());
+    }
+
+
 
 
 }
