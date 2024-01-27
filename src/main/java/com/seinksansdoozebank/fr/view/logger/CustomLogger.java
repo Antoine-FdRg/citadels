@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.view.logger;
 
 import com.seinksansdoozebank.fr.model.player.Player;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +39,10 @@ public class CustomLogger {
 
         // Add the custom console handler to the logger
         logger.addHandler(consoleHandler);
+    }
+
+    private CustomLogger() {
+        throw new IllegalStateException("Utility class");
     }
 
     protected static void setPlayerColors(Player player) {
