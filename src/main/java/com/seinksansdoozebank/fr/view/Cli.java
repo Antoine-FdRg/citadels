@@ -20,12 +20,12 @@ public class Cli implements IView {
     @Override
     public void displayPlayerPlaysCard(Player player, Card card) {
         District builtDistrict = card.getDistrict();
-        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3} pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
     }
 
     @Override
     public void displayWinner(Player winner) {
-        CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
+        CustomLogger.log(Level.INFO, "\n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
 
     @Override

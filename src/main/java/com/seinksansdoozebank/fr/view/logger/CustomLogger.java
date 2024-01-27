@@ -18,7 +18,7 @@ public class CustomLogger {
     private static final HashMap<Player, String> playerColors = new HashMap<>();
     private static final Random random = new Random();
 
-    private static final List<String> availableColors = new ArrayList<>(List.of(
+    private static List<String> availableColors = new ArrayList<>(List.of(
             "\u001B[38;5;21m", // dark blue
             "\u001B[38;5;32m", // light blue
             "\u001B[38;5;129m", // purple
@@ -83,5 +83,18 @@ public class CustomLogger {
             message = MessageFormat.format(message, param);
         }
         logger.log(level, message);
+    }
+
+    public static void resetAvailableColors() {
+        availableColors = new ArrayList<>(List.of(
+                "\u001B[38;5;21m", // dark blue
+                "\u001B[38;5;32m", // light blue
+                "\u001B[38;5;129m", // purple
+                "\u001B[38;5;199m", // pink
+                "\u001B[38;5;28m", // dark green
+                "\u001B[38;5;40m", // light green
+                "\u001B[38;5;202m", // orange
+                "\u001B[38;5;124m" // red
+        ));
     }
 }
