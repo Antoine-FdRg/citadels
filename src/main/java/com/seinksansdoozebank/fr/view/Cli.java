@@ -65,7 +65,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
+        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
     }
 
-    private void displayPlayerHand(Player player) {
+    void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
         if (!hand.isEmpty()) {
@@ -94,7 +94,7 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, sb.toString(), player);
     }
 
-    private void displayPlayerCitadel(Player player) {
+    void displayPlayerCitadel(Player player) {
         List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
         if (!citadel.isEmpty()) {
@@ -139,7 +139,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
     }
 
     @Override
@@ -168,7 +168,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseThiefEffect(Player player) {
-        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu'il volera.", player);
+        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu''il volera.", player);
     }
 
     @Override

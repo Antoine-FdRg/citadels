@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
@@ -20,8 +21,12 @@ public class TestHandler extends Handler {
      */
     @Override
     public void publish(LogRecord record) {
-        lastLogRecord = record;
-        logRecords.add(record);
+        String formattedMessage = record.getMessage();
+        if (record.getParameters() != null) {
+            formattedMessage = MessageFormat.format(formattedMessage, record.getParameters());
+        }
+        lastLogRecord = new LogRecord(record.getLevel(), formattedMessage);
+        logRecords.add(lastLogRecord);
     }
 
     /**

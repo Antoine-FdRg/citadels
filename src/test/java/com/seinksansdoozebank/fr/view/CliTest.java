@@ -6,6 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
@@ -279,16 +280,16 @@ class CliTest {
     @Test
     void testDisplayPlayerStrategy() {
         String strategyMessage = "Building strong citadel"; // Mock strategy message
-        view.displayPlayerStrategy(player, strategyMessage);
-
         String expectedOutput = player + " : " + strategyMessage;
+
+        view.displayPlayerStrategy(player, strategyMessage);
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
 
     @Test
     void testDisplayStolenCharacter() {
-        Bishop stolenCharacter = new Bishop();
+        Bishop stolenCharacter = spy(new Bishop());
         when(stolenCharacter.getPlayer()).thenReturn(player);
         view.displayStolenCharacter(stolenCharacter);
 
@@ -319,6 +320,72 @@ class CliTest {
         assertLogged(Level.INFO, expectedOutput, false);
     }
 
+    @Test
+    void testDisplayPlayerHasGotObservatory() {
+        view.displayPlayerHasGotObservatory(player);
+
+        String expectedOutput = "Le " + player + " possède le district Observatoire il peut donc choisir parmi 3 cartes celle qui garde dans sa main.";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayPlayerUseThiefEffect() {
+        view.displayPlayerUseThiefEffect(player);
+
+        String expectedOutput = player + " vient de choisir le personnage qu'il volera.";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayPlayerDiscardCard() {
+        Card card = new Card(District.TAVERN); // Mock card
+        view.displayPlayerDiscardCard(player, card);
+
+        String expectedOutput = player + " défausse " + card + ".";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayPlayerUseLaboratoryEffect() {
+        view.displayPlayerUseLaboratoryEffect(player);
+
+        String expectedOutput = player + " utilise le laboratoire pour défausser une carte et gagner une pièce d'or (s'il en reste dans la banque).";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayPlayerUseManufactureEffect() {
+        view.displayPlayerUseManufactureEffect(player);
+
+        String expectedOutput = player + " utilise la manufacture pour piocher 3 cartes (en perdant 3 pièces).";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayGoldCollectedFromDisctrictType() {
+        int nbGold = 2; // Mock gold amount
+        Merchant merchant = spy(new Merchant());
+        when(player.getCharacter()).thenReturn(merchant);
+        view.displayGoldCollectedFromDisctrictType(player, nbGold, card.getDistrict().getDistrictType());
+
+        String expectedOutput = player + " gagne " + nbGold + " pièces d'or grâce à ses quartiers de type " +  card.getDistrict().getDistrictType() + " et l'effet du " + player.getCharacter() + ".";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayGameStuck() {
+        view.displayGameStuck();
+
+        String expectedOutput = "### La partie semble bloquée, le calcul des points et des bonus va quand même être fait ###";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
 
 
     /**
@@ -331,13 +398,10 @@ class CliTest {
     private void assertLogged(Level expectedLevel, String expectedMessageRegex, boolean regex) {
         LogRecord lastLogRecord = ((TestHandler) testHandler).getLastLogRecord();
 
-        System.out.println(lastLogRecord);
         this.assertLoggedLevel(expectedLevel);
 
         String logRecordMessage = lastLogRecord.getMessage();
-        System.out.println(logRecordMessage);
         logRecordMessage = stripAnsiCodes(logRecordMessage);
-        System.out.println(logRecordMessage);
         logRecordMessage = removeDoubleSinglesQuotes(new StringBuilder(logRecordMessage)).toString();
         expectedMessageRegex = stripAnsiCodes(expectedMessageRegex);
         expectedMessageRegex = removeDoubleSinglesQuotes(new StringBuilder(expectedMessageRegex)).toString();
