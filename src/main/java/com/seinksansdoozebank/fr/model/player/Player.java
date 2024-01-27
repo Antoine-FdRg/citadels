@@ -40,6 +40,7 @@ public abstract class Player implements Opponent {
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
+    private boolean hasPlayed;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -51,6 +52,7 @@ public abstract class Player implements Opponent {
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
+        this.hasPlayed=false;
     }
 
     /**
@@ -132,6 +134,14 @@ public abstract class Player implements Opponent {
         this.nbGold += 2;
     }
 
+    public void setHasPlayed(boolean hasPlayed){
+        this.hasPlayed=hasPlayed;
+    }
+
+    public boolean hasPlayed(){
+        return hasPlayed;
+    }
+
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -142,10 +152,15 @@ public abstract class Player implements Opponent {
         for (int i = 0; i < numberOfCardsToPick; i++) {
             pickedCards.add(this.deck.pick());
         }
-        this.view.displayPlayerPickCards(this, 1);
-        Card chosenCard = keepOneDiscardOthers(pickedCards);
-        this.hand.add(chosenCard);
-        pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        if((!this.hasPlayed) && checkAndUseLibraryEffectInCitadel()){
+            this.view.displayPlayerKeepBothCardsBecauseOfLibrary(this);
+            this.hand.addAll(pickedCards);
+        }else{
+            this.view.displayPlayerPickCards(this, 1);
+            Card chosenCard = keepOneDiscardOthers(pickedCards);
+            this.hand.add(chosenCard);
+            pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        }
     }
 
     /**
@@ -234,16 +249,12 @@ public abstract class Player implements Opponent {
     }
 
     /**
-     * this method make the bot pick x cards and no cards are discarded
-     *
-     * @param numberOfCards to pick
+     * Effect of architect character (pick 2 cards)
      */
-    protected void pickCardsAndDiscardNothing(int numberOfCards) {
-        while (numberOfCards != 0) {
-            this.hand.add(this.deck.pick());
-            numberOfCards--;
-        }
-        view.displayPlayerPickCards(this, numberOfCards);
+    protected void useEffectArchitectPickCards() {
+        this.hand.add(this.deck.pick());
+        this.hand.add(this.deck.pick());
+        view.displayPlayerPickCards(this, 2);
     }
 
     abstract void useEffectMagician(Magician magician);
@@ -494,12 +505,9 @@ public abstract class Player implements Opponent {
 
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
-    public void checkAndUseLibraryEffectInCitadel() {
+    public boolean checkAndUseLibraryEffectInCitadel() {
         Optional<Card> libraryCard = this.getCitadel().stream().filter(card -> card.getDistrict() == District.LIBRARY).findFirst();
-        if (libraryCard.isPresent()) {
-            pickCardsAndDiscardNothing(2);
-            this.view.displayPlayerPickCardsBecauseOfLibrary(this);
-        }
+        return libraryCard.isPresent();
     }
 
 
