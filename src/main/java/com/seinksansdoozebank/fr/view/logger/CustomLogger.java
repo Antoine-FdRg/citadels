@@ -42,10 +42,6 @@ public class CustomLogger {
         logger.addHandler(consoleHandler);
     }
 
-    private CustomLogger() {
-        throw new IllegalStateException("Utility class"); // sonarlint suggestion
-    }
-
     protected static void setPlayerColors(Player player) {
         if (playerColors.containsKey(player)) {
             return;

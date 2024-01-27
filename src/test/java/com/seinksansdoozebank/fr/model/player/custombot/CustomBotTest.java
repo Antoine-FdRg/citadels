@@ -233,4 +233,9 @@ class CustomBotTest {
                 mockUsingCondottiereEffectStrategy);
         assertNotEquals(customBot1.hashCode(), customBot2.hashCode()); // the two bots are differents
     }
+
+    @Test
+    void testToString() {
+        assertEquals("Le bot custom " + spyCustomBot.getId(), spyCustomBot.toString());
+    }
 }
