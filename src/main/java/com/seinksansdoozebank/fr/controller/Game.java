@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -55,20 +56,31 @@ public class Game {
     public void run() {
         this.init();
         this.nbCurrentRound = 1;
-        while (!finished) {
+        while (!finished && !this.isStuck()) {
+            view.displayRound(nbCurrentRound);
             createCharacters();
             this.playARound();
         }
-        view.displayGameFinished();
+        if (finished) {
+            view.displayGameFinished();
+        } else {
+            view.displayGameStuck();
+        }
         updatePlayersBonus();
         view.displayWinner(this.getWinner());
+    }
+
+    protected boolean isStuck() {
+        boolean aPlayerCanPlay = players.stream()
+                .anyMatch(player -> player.getHand().stream()
+                        .anyMatch(card -> card.getDistrict().getCost() < player.getNbGold()));
+        return deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay;
     }
 
     /**
      * Play a round
      */
     protected void playARound() {
-        view.displayRound(nbCurrentRound);
         orderPlayerBeforeChoosingCharacter();
         playersChooseCharacters();
         orderPlayerBeforePlaying();

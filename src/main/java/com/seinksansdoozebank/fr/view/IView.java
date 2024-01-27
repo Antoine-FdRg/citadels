@@ -2,6 +2,7 @@ package com.seinksansdoozebank.fr.view;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -19,13 +20,13 @@ public interface IView {
 
     void displayPlayerPickCards(Player player, int numberOfCards);
 
-    void displayPlayerPicksGold(Player player);
+    void displayPlayerPicksGold(Player player, int numberOfGold);
 
     void displayPlayerChooseCharacter(Player player);
 
     void displayPlayerRevealCharacter(Player player);
 
-    void displayPlayerDestroyDistrict(Player attacker, Player defender, District district);
+    void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district);
 
     void displayPlayerScore(Player player);
 
@@ -69,4 +70,8 @@ public interface IView {
     void displayPlayerUseLaboratoryEffect(Player player);
 
     void displayPlayerUseManufactureEffect(Player player);
+
+    void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType);
+
+    void displayGameStuck();
 }
