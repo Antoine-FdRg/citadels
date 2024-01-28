@@ -137,7 +137,7 @@ public class CustomBot extends RandomBot {
         if (this.cardChoosingStrategy == null) {
             return this.randomChooseCard();
         }
-        return this.cardChoosingStrategy.apply(this, this.view);
+        return this.cardChoosingStrategy.apply(this);
     }
 
     protected Optional<Card> randomChooseCard() {

@@ -14,11 +14,10 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
      * The chosen one is the card that is not the most expensive and that not the cheapest
      *
      * @param player the player who choose the card
-     * @param view   the view to display the choice
      * @return the chosen card
      */
     @Override
-    public Optional<Card> apply(Player player, IView view) {
+    public Optional<Card> apply(Player player) {
         if (player.getHand().isEmpty()) {
             return Optional.empty();
         }

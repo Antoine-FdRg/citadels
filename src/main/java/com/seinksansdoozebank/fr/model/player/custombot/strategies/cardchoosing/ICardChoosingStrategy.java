@@ -12,5 +12,5 @@ import java.util.Optional;
  */
 public interface ICardChoosingStrategy {
 
-    Optional<Card> apply(Player player, IView view);
+    Optional<Card> apply(Player player);
 }

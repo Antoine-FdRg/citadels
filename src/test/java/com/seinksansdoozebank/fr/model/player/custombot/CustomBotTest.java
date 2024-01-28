@@ -255,19 +255,14 @@ class CustomBotTest {
     @Test
     void testCardChosingStrategyWhenChoosingACard() {
         this.spyCustomBot.chooseCard();
-        verify(mockCardChoosingStrategy, times(1)).apply(any(), any());
+        verify(mockCardChoosingStrategy, times(1)).apply(any());
     }
 
     @Test
     void testIsNotCallingTheCardChoosingStrategyBecauseThePlayerHasNoStrategy() {
         this.spyCustomBot.cardChoosingStrategy = null;
         this.spyCustomBot.chooseCard();
-        verify(mockCardChoosingStrategy, times(0)).apply(any(), any());
-    }
-
-    @Test
-    void testRandomChooseCard() {
-        this.spyCustomBot.randomChooseCard();
+        verify(mockCardChoosingStrategy, times(0)).apply(any());
         verify(this.spyCustomBot, times(1)).randomChooseCard();
     }
 }

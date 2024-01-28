@@ -45,9 +45,27 @@ class CardChoosingStrategyTest {
         when(mockPlayer.getNbGold()).thenReturn(10);
         when(mockPlayer.canPlayCard(any())).thenReturn(true);
         when(mockPlayer.getHand()).thenReturn(cards);
-        Optional<Card> cardChoosen = this.cardChoosingStrategy.apply(mockPlayer, mockView);
+        Optional<Card> cardChoosen = this.cardChoosingStrategy.apply(mockPlayer);
         assertTrue(cardChoosen.isPresent());
         assertEquals(cards.get(1), cardChoosen.get());
+    }
+
+    @Test
+    void testApplyReturnCorrespondingCardWithAllSameCost() {
+        // Create a list of cards
+        List<Card> cards = new ArrayList<>(
+                List.of(
+                        new Card(District.TEMPLE), // 1
+                        new Card(District.TAVERN), // 1
+                        new Card(District.WATCH_TOWER) // 1
+                )
+        );
+        when(mockPlayer.getNbGold()).thenReturn(10);
+        when(mockPlayer.canPlayCard(any())).thenReturn(true);
+        when(mockPlayer.getHand()).thenReturn(cards);
+        Optional<Card> cardChoosen = this.cardChoosingStrategy.apply(mockPlayer);
+        assertTrue(cardChoosen.isPresent());
+        assertEquals(cards.get(0), cardChoosen.get());
     }
 
     @Test
@@ -56,7 +74,7 @@ class CardChoosingStrategyTest {
         List<Card> cards = new ArrayList<>();
         when(mockPlayer.getNbGold()).thenReturn(10);
         when(mockPlayer.getHand()).thenReturn(cards);
-        Optional<Card> cardChoosen = this.cardChoosingStrategy.apply(mockPlayer, mockView);
+        Optional<Card> cardChoosen = this.cardChoosingStrategy.apply(mockPlayer);
         assertTrue(cardChoosen.isEmpty());
     }
 }
