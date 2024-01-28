@@ -106,16 +106,20 @@ public class CustomBot extends RandomBot {
         }
     }
 
+    protected void randomUseCondottiereEffect(Condottiere condottiere) {
+        super.useEffectCondottiere(condottiere);
+    }
+
     @Override
     public Optional<Card> chooseCard() {
         if (this.cardChoosingStrategy == null) {
-            return super.chooseCard();
+            return this.randomChooseCard();
         }
         return this.cardChoosingStrategy.apply(this, this.view);
     }
 
-    protected void randomUseCondottiereEffect(Condottiere condottiere) {
-        super.useEffectCondottiere(condottiere);
+    protected Optional<Card> randomChooseCard() {
+        return super.chooseCard();
     }
 
     @Override

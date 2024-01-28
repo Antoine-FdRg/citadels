@@ -12,6 +12,7 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -180,5 +182,11 @@ class CustomBotTest {
         this.spyCustomBot.cardChoosingStrategy = null;
         this.spyCustomBot.chooseCard();
         verify(mockCardChoosingStrategy, times(0)).apply(any(), any());
+    }
+
+    @Test
+    void testRandomChooseCard() {
+        this.spyCustomBot.randomChooseCard();
+        verify(this.spyCustomBot, times(1)).randomChooseCard();
     }
 }
