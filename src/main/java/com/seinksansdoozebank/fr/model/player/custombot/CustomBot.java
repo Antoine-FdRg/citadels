@@ -44,6 +44,10 @@ public class CustomBot extends RandomBot {
         this.cardChoosingStrategy = cardChoosingStrategy;
     }
 
+    public CustomBot(int nbGold, Deck deck, IView view) {
+        super(nbGold, deck, view);
+    }
+
     @Override
     protected void pickSomething() {
         if (pickingStrategy == null) {
@@ -108,6 +112,24 @@ public class CustomBot extends RandomBot {
 
     protected void randomUseCondottiereEffect(Condottiere condottiere) {
         super.useEffectCondottiere(condottiere);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof CustomBot customBot) {
+            return this.characterChoosingStrategy == customBot.characterChoosingStrategy
+                    && this.pickingStrategy == customBot.pickingStrategy
+                    && this.usingThiefEffectStrategy == customBot.usingThiefEffectStrategy
+                    && this.usingMurdererEffectStrategy == customBot.usingMurdererEffectStrategy
+                    && this.usingCondottiereEffectStrategy == customBot.usingCondottiereEffectStrategy;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override

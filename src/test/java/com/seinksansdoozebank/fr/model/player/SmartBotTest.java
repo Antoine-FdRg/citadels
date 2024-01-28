@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -52,6 +53,8 @@ class SmartBotTest {
 
     @BeforeEach
     void setup() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);
@@ -306,7 +309,7 @@ class SmartBotTest {
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Architect()));
 
-        Character target = spySmartBot.choseAssassinTarget();
+        Character target = spySmartBot.chooseAssassinTarget();
 
         assertInstanceOf(Architect.class, target);
     }
@@ -321,7 +324,7 @@ class SmartBotTest {
 
         when(spySmartBot.getOpponents()).thenReturn(List.of(bishopPlayer, merchantPlayer));
 
-        Character target = spySmartBot.choseAssassinTarget();
+        Character target = spySmartBot.chooseAssassinTarget();
 
         assertTrue(target instanceof Bishop || target instanceof Merchant);
     }

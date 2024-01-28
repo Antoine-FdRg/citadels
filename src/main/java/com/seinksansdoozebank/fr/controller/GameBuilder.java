@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -52,7 +53,7 @@ public class GameBuilder {
      */
     public GameBuilder addSmartBot() {
         checkNbPlayers();
-        playerList.add(new SmartBot(PLAYER_NB_GOLD_INIT, this.deck, this.view));
+        playerList.add(new SmartBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
@@ -63,7 +64,7 @@ public class GameBuilder {
      */
     public GameBuilder addRandomBot() {
         checkNbPlayers();
-        playerList.add(new RandomBot(PLAYER_NB_GOLD_INIT, this.deck, this.view));
+        playerList.add(new RandomBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
@@ -74,7 +75,7 @@ public class GameBuilder {
                                     IUsingCondottiereEffectStrategy condottiereEffectStrategy,
                                     ICardChoosingStrategy cardChosingStrategy) {
         checkNbPlayers();
-        playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
+        playerList.add(new CustomBotBuilder(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck)
                 .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)

@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -123,15 +124,6 @@ public abstract class Player implements Opponent {
         }
         return listOfDistrictTypeMissing;
     }
-
-    /**
-     * Represents the player's choice to draw 2 gold coins
-     */
-    public final void pickGold() {
-        view.displayPlayerPicksGold(this);
-        this.nbGold += 2;
-    }
-
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -191,7 +183,7 @@ public abstract class Player implements Opponent {
         // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
         this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
-        this.decreaseGold(chosenCard.getDistrict().getCost());
+        this.returnGoldToBank(chosenCard.getDistrict().getCost());
         return optChosenCard;
     }
 
@@ -216,7 +208,7 @@ public abstract class Player implements Opponent {
         }
         this.hand.remove(card);
         this.citadel.add(card);
-        this.decreaseGold(card.getDistrict().getCost());
+        this.returnGoldToBank(card.getDistrict().getCost());
         this.view.displayPlayerPlaysCard(this, card);
     }
 
@@ -227,7 +219,7 @@ public abstract class Player implements Opponent {
     protected void useCommonCharacterEffect() {
         if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
             int nbGoldSave = this.getNbGold();
-            commonCharacter.goldCollectedFromDisctrictType();
+            commonCharacter.goldCollectedFromDistrictType();
             if (this.getNbGold() - nbGoldSave > 0)
                 this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
@@ -245,6 +237,8 @@ public abstract class Player implements Opponent {
     abstract void useEffectMagician(Magician magician);
 
     abstract void useEffectAssassin(Assassin assassin);
+
+    abstract Character chooseAssassinTarget();
 
     abstract void useEffectCondottiere(Condottiere condottiere);
 
@@ -278,6 +272,37 @@ public abstract class Player implements Opponent {
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
+
+    /**
+     * Return gold to the bank
+     *
+     * @param gold the number of gold coins to return
+     */
+    public void returnGoldToBank(int gold) {
+        this.nbGold -= gold;
+        Bank.getInstance().retrieveCoin(gold);
+    }
+
+    /**
+     * Represents the player's choice to draw 2 gold coins from the bank
+     */
+    public final void pickGold() {
+        int nbPickedGold = Bank.getInstance().pickXCoin();
+        view.displayPlayerPicksGold(this, nbPickedGold);
+        this.nbGold += nbPickedGold;
+    }
+
+    /**
+     * Represents the player's choice to draw x gold coins
+     *
+     * @param nbOfGold the number of gold coins to pick
+     */
+    public final void pickGold(int nbOfGold) {
+        int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
+        view.displayPlayerPicksGold(this, nbPickedGold);
+        this.nbGold += nbPickedGold;
+    }
+
 
     public List<Card> getHand() {
         return this.hand;

@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.picking;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
@@ -20,6 +21,8 @@ class PickingAlwaysDistrictTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         pickingAlwaysDistrict = new PickingAlwaysDistrict();
         customBot = spy(new CustomBotBuilder(2,mock(IView.class), new Deck())
                 .setPickingStrategy(pickingAlwaysDistrict)

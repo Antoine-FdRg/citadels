@@ -14,7 +14,8 @@ import java.util.logging.Level;
 
 public class Cli implements IView {
 
-    static final String ANSI_DEFAULT_STYLE = "\u001B[38;5;232m\u001B[48;5;255m";
+    static final String ANSI_DEFAULT_STYLE_START = "\u001B[38;5;232m\u001B[48;5;255m";
+    static final String ANSI_DEFAULT_STYLE_END = "\u001B[0m";
 
     @Override
     public void displayPlayerPlaysCard(Player player, Card card) {
@@ -38,8 +39,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerPicksGold(Player player) {
-        CustomLogger.log(Level.INFO, "{0} pioche 2 pièces d''or.", player);
+    public void displayPlayerPicksGold(Player player, int numberOfGold) {
+        CustomLogger.log(Level.INFO, "{0} pioche {1} pièces d''or.", new Object[]{player, numberOfGold});
     }
 
     @Override
@@ -123,17 +124,12 @@ public class Cli implements IView {
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE + "Le personnage {0} a été écarté pour cette manche.\u001B[0m", character);
-    }
-
-    @Override
-    public void displayGameFinished() {
-        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE + "### La partie est terminée ! ###\u001B[0m");
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE_START + "Le personnage {0} a été écarté pour cette manche." + ANSI_DEFAULT_STYLE_END, character);
     }
 
     @Override
     public void displayRound(int roundNumber) {
-        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE + "########## Début du round {0} ##########\u001B[0m", roundNumber);
+        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE_START + "########## Début du round {0} ##########" + ANSI_DEFAULT_STYLE_END, roundNumber);
     }
 
     @Override
@@ -192,6 +188,16 @@ public class Cli implements IView {
 
     @Override
     public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d'or grâce à ses quartiers de type {2} et l'effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()});
+        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()});
+    }
+
+    @Override
+    public void displayGameFinished() {
+        CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE_START + "### La partie est terminée ! ###" + ANSI_DEFAULT_STYLE_END);
+    }
+
+    @Override
+    public void displayGameStuck() {
+        CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE_START + "### La partie semble bloquée, le calcul des points et des bonus va quand même être fait ###" + ANSI_DEFAULT_STYLE_END);
     }
 }
