@@ -275,12 +275,13 @@ class CliTest {
 
     @Test
     void testDisplayPlayerStrategy() {
+        LOGGER.setLevel(Level.FINER);
         String strategyMessage = "Building strong citadel"; // Mock strategy message
         String expectedOutput = player + " : " + strategyMessage;
 
         view.displayPlayerStrategy(player, strategyMessage);
 
-        assertLogged(Level.INFO, expectedOutput, false);
+        assertLogged(Level.FINE, expectedOutput, false);
     }
 
     @Test
@@ -401,7 +402,6 @@ class CliTest {
         logRecordMessage = removeDoubleSinglesQuotes(new StringBuilder(logRecordMessage)).toString();
         expectedMessageRegex = stripAnsiCodes(expectedMessageRegex);
         expectedMessageRegex = removeDoubleSinglesQuotes(new StringBuilder(expectedMessageRegex)).toString();
-
         if (regex) {
             assertTrue(logRecordMessage.matches(expectedMessageRegex));
         } else {

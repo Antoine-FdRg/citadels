@@ -65,13 +65,8 @@ public class CustomLogger {
         logger.log(level, message);
     }
 
-    public static void log(Level level, String message, Object[] params) {
-        for (Object param : params) {
-            if (param instanceof Player player) {
-                message = applyColor(player, message);
-                break;
-            }
-        }
+    public static void log(Level level, String message, Object[] params, Player colorPlayer) {
+        message = applyColor(colorPlayer, message);
         logger.log(level, message, params);
     }
 

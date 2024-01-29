@@ -59,7 +59,7 @@ class CustomLoggerTest {
     void testLogWithMultipleParameter() {
         Card card = new Card(District.PORT);
         String expectedMessage = "Test log message with player " + player + " and card " + card;
-        CustomLogger.log(Level.INFO, "Test log message with player {0} and card {1}", new Object[]{player, card});
+        CustomLogger.log(Level.INFO, "Test log message with player {0} and card {1}", new Object[]{player, card}, player);
         assertLogged(Level.INFO, expectedMessage);
     }
 
