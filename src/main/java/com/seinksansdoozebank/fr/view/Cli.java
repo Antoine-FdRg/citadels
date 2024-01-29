@@ -144,12 +144,12 @@ public class Cli implements IView {
 
     @Override
     public void displayStolenCharacter(Character character) {
-        CustomLogger.log(Level.INFO, "Le {0} a été volé et perd {1} pièces d''or ", new Object[]{character, character.getPlayer().getNbGold()});
+        CustomLogger.log(Level.INFO, "Le {0} a été volé et perd {1} pièces d''or ", new Object[]{character, character.getPlayer().getNbGold()}, character.getPlayer());
     }
 
     @Override
     public void displayActualNumberOfGold(Player player) {
-        CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()});
+        CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()}, player);
     }
 
     @Override
