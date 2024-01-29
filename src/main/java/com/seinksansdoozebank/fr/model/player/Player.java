@@ -1,5 +1,7 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -21,25 +23,43 @@ import java.util.Random;
 
 public abstract class Player implements Opponent {
     private static int counter = 1;
+
+    @JsonProperty
     protected final int id;
+
+    @JsonIgnore
     private int nbGold;
+    @JsonIgnore
     private int bonus;
+    @JsonIgnore
     private boolean isFirstToHaveEightDistricts;
+    @JsonIgnore
     protected Deck deck;
+    @JsonIgnore
     protected final List<Card> hand;
+    @JsonIgnore
     private final List<Card> citadel;
+    @JsonIgnore
     protected final IView view;
+    @JsonIgnore
     protected Random random = new Random();
+    @JsonIgnore
     protected Character character;
 
     /**
      * List of all the players in the game
      */
+    @JsonIgnore
     private List<Opponent> opponents;
 
+    @JsonIgnore
     private List<Character> availableCharacters;
+    @JsonIgnore
     private boolean lastCardPlacedCourtyardOfMiracle = false;
+
+    @JsonIgnore
     private boolean characterIsRevealed = false;
+    @JsonIgnore
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -363,6 +383,7 @@ public abstract class Player implements Opponent {
         this.isFirstToHaveEightDistricts = true;
     }
 
+    @JsonIgnore
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
         return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
@@ -393,6 +414,7 @@ public abstract class Player implements Opponent {
         return this.character;
     }
 
+    @JsonIgnore
     public int getNbDistrictsCanBeBuild() {
         return this.character.getRole().getNbDistrictsCanBeBuild();
     }
@@ -516,6 +538,7 @@ public abstract class Player implements Opponent {
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
     @Override
+    @JsonIgnore
     public int getHandSize() {
         return this.getHand().size();
     }
