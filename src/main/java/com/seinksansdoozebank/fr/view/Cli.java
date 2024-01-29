@@ -20,17 +20,17 @@ public class Cli implements IView {
     @Override
     public void displayPlayerPlaysCard(Player player, Card card) {
         District builtDistrict = card.getDistrict();
-        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3} pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
     }
 
     @Override
     public void displayWinner(Player winner) {
-        CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
+        CustomLogger.log(Level.INFO, "\n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        CustomLogger.log(Level.INFO, "\n{0} commence son tour.", player);
+        CustomLogger.log(Level.FINE, "\n{0} commence son tour.", player);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
+        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
     }
 
-    private void displayPlayerHand(Player player) {
+    void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
         if (!hand.isEmpty()) {
@@ -94,7 +94,7 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, sb.toString(), player);
     }
 
-    private void displayPlayerCitadel(Player player) {
+    void displayPlayerCitadel(Player player) {
         List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
         if (!citadel.isEmpty()) {
@@ -139,7 +139,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
     }
 
     @Override
@@ -168,7 +168,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseThiefEffect(Player player) {
-        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu'il volera.", player);
+        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu''il volera.", player);
     }
 
     @Override

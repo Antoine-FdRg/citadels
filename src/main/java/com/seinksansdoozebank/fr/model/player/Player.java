@@ -409,11 +409,6 @@ public abstract class Player implements Opponent {
         return characterToRetrieve;
     }
 
-    @Override
-    public String toString() {
-        return "Le joueur " + this.id;
-    }
-
     public boolean destroyDistrict(Player attacker, District district) {
         if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
             this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
