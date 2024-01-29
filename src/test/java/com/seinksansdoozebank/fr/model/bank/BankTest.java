@@ -59,7 +59,9 @@ class BankTest {
     @Test
     void retrieveCoinWithTooMuchCoinShouldThrowException() {
         Bank.reset();
-        assertThrows(IllegalStateException.class, () -> Bank.getInstance().retrieveCoin(1));
+        Bank bank = Bank.getInstance();
+        assertNotNull(bank);
+        assertThrows(IllegalStateException.class, () -> bank.retrieveCoin(1));
     }
 
     @Test
