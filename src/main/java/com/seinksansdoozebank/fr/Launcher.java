@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr;
 import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
@@ -18,7 +19,8 @@ public class Launcher {
                 .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
                         new UsingThiefEffectToFocusRusher(),
                         new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer())
+                        new UsingCondottiereEffectToTargetFirstPlayer(),
+                        new CardChoosingStrategy())
                 .build();
         game.run();
     }
