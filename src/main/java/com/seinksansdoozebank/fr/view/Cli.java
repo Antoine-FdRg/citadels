@@ -30,7 +30,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        CustomLogger.log(Level.INFO, "\n{0} commence son tour.", player);
+        CustomLogger.log(Level.FINE, "\n{0} commence son tour.", player);
     }
 
     @Override

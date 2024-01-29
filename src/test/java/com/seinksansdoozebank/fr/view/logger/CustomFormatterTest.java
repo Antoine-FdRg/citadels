@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.text.MessageFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

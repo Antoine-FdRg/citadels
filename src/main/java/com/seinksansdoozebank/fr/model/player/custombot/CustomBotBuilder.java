@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -17,6 +18,7 @@ public class CustomBotBuilder {
     private IUsingThiefEffectStrategy usingThiefEffectStrategy;
     private IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
     private IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
+    private ICardChoosingStrategy cardChoosingStrategy;
 
     public CustomBotBuilder(int nbGold, IView view, Deck deck) {
         this.nbGold = nbGold;
@@ -49,12 +51,18 @@ public class CustomBotBuilder {
         return this;
     }
 
+    public CustomBotBuilder setCardChoosingStrategy(ICardChoosingStrategy cardChoosingStrategy) {
+        this.cardChoosingStrategy = cardChoosingStrategy;
+        return this;
+    }
+
     public CustomBot build() {
         return new CustomBot(nbGold, this.deck, this.view,
                 this.pickingStrategy,
                 this.characterChoosingStrategy,
                 this.usingThiefEffectStrategy,
                 this.usingMurdererEffectStrategy,
-                this.usingCondottiereEffectStrategy);
+                this.usingCondottiereEffectStrategy,
+                this.cardChoosingStrategy);
     }
 }

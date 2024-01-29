@@ -10,16 +10,10 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
-import com.seinksansdoozebank.fr.view.Cli;
-import com.seinksansdoozebank.fr.view.IView;
-import com.seinksansdoozebank.fr.view.logger.CustomFormatter;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +74,13 @@ class CliTest {
 
     @Test
     void testDisplayPlayerStartPlaying() {
+        LOGGER.setLevel(Level.FINER);
+
         view.displayPlayerStartPlaying(player);
 
         String expectedOutput = "\n" + player + " commence son tour.";
 
-        assertLogged(Level.INFO, expectedOutput, false);
+        assertLogged(Level.FINE, expectedOutput, false);
     }
 
     @Test
@@ -373,7 +369,7 @@ class CliTest {
         when(player.getCharacter()).thenReturn(merchant);
         view.displayGoldCollectedFromDisctrictType(player, nbGold, card.getDistrict().getDistrictType());
 
-        String expectedOutput = player + " gagne " + nbGold + " pièces d'or grâce à ses quartiers de type " +  card.getDistrict().getDistrictType() + " et l'effet du " + player.getCharacter() + ".";
+        String expectedOutput = player + " gagne " + nbGold + " pièces d'or grâce à ses quartiers de type " + card.getDistrict().getDistrictType() + " et l'effet du " + player.getCharacter() + ".";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
