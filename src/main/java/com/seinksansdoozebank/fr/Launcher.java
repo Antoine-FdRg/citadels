@@ -15,20 +15,22 @@ import java.util.concurrent.CountDownLatch;
 
 public class Launcher {
     public static void main(String[] args) throws InterruptedException {
+        //Setup du serveur
         final CountDownLatch latch = new CountDownLatch(1); // Crée un CountDownLatch qui attend un client
-
         Configuration config = new Configuration();
         config.setHostname("localhost");
         config.setPort(5001);
         final SocketIOServer server = new SocketIOServer(config);
-        server.addConnectListener(client -> {
-            System.out.println("Client connecté: " + client.getSessionId());
-            latch.countDown(); // Décrémente le compteur, indiquant qu'un client est connecté
-        });
+        WebSocketView view = new WebSocketView(server, latch);
         server.start();
+
+        // Attente de la connexion du client
         System.out.println("En attente de la connexion du client...");
         latch.await();
-        Game game = new GameBuilder(new WebSocketView(server), new Deck())
+
+        // Lancement du jeu
+        Thread.sleep(500);
+        Game game = new GameBuilder(view, new Deck())
                 .addRandomBot()
                 .addSmartBot()
                 .addRandomBot()

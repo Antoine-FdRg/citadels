@@ -12,23 +12,31 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class WebSocketView implements IView {
 
     private final SocketIOServer server;
-    private final List<SocketIOClient> clients = new ArrayList<>();
+    public final List<SocketIOClient> clients;
+    public final CountDownLatch latch;
 
-    public WebSocketView(SocketIOServer socket) {
+    public WebSocketView(SocketIOServer socket, CountDownLatch latch) {
         this.server = socket;
-        setUpClientConnections();
+        this.clients = new ArrayList<>();
+        this.latch = latch;
+        this.setUpClientsConnectionMangementEvents();
     }
 
-    private void setUpClientConnections() {
-        // Gestion des nouvelles connexions client
-        server.addConnectListener(client -> {
-            System.out.println("Client connecté: " + client.getSessionId());
+    public void addClient(SocketIOClient client) {
+        if (!clients.contains(client)) {
             clients.add(client);
-        });
+            latch.countDown();
+            System.out.println("Client connecté: " + client.getSessionId());
+        }
+    }
+
+    private void setUpClientsConnectionMangementEvents() {
+        server.addConnectListener(this::addClient);
 
         // Gestion des déconnexions client
         server.addDisconnectListener(client -> {
@@ -40,13 +48,15 @@ public class WebSocketView implements IView {
     }
 
     private void emitEvent(String event, Object... data) {
-        for (SocketIOClient client : clients) {
+        List<SocketIOClient> clientsCopy = new ArrayList<>(clients); // Créez une copie de la liste clients
+        for (SocketIOClient client : clientsCopy) {
             client.sendEvent(event, data);
             System.out.println("Event " + event + " sent to client " + client.getSessionId() + " with data " + Arrays.toString(data));
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
