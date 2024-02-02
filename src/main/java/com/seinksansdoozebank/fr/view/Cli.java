@@ -20,27 +20,27 @@ public class Cli implements IView {
     @Override
     public void displayPlayerPlaysCard(Player player, Card card) {
         District builtDistrict = card.getDistrict();
-        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3}  pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} pose un/e {1} qui lui coute {2}, il lui reste {3} pièces d''or.", new Object[]{player, builtDistrict.getName(), builtDistrict.getCost(), player.getNbGold()}, player);
     }
 
     @Override
     public void displayWinner(Player winner) {
-        CustomLogger.log(Level.INFO, " \n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()});
+        CustomLogger.log(Level.INFO, "\n{0} gagne avec un score de {1}.", new Object[]{winner, winner.getScore()}, winner);
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        CustomLogger.log(Level.INFO, "\n{0} commence son tour.", player);
+        CustomLogger.log(Level.FINE, "\n{0} commence son tour.", player);
     }
 
     @Override
     public void displayPlayerPickCards(Player player, int numberOfCards) {
-        CustomLogger.log(Level.INFO, "{0} pioche {1} quartier(s).", new Object[]{player, numberOfCards});
+        CustomLogger.log(Level.INFO, "{0} pioche {1} quartier(s).", new Object[]{player, numberOfCards}, player);
     }
 
     @Override
     public void displayPlayerPicksGold(Player player, int numberOfGold) {
-        CustomLogger.log(Level.INFO, "{0} pioche {1} pièces d''or.", new Object[]{player, numberOfGold});
+        CustomLogger.log(Level.INFO, "{0} pioche {1} pièces d''or.", new Object[]{player, numberOfGold}, player);
     }
 
     @Override
@@ -50,30 +50,30 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        CustomLogger.log(Level.INFO, "{0} se révèle être {1}.", new Object[]{player, player.getCharacter()});
+        CustomLogger.log(Level.INFO, "{0} se révèle être {1}.", new Object[]{player, player.getCharacter()}, player);
     }
 
     @Override
     public void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1});
+        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1}, attacker);
     }
 
     @Override
     public void displayPlayerScore(Player player) {
-        CustomLogger.log(Level.INFO, "{0} fini la partie avec un score de {1}.", new Object[]{player, player.getScore()});
+        CustomLogger.log(Level.INFO, "{0} fini la partie avec un score de {1}.", new Object[]{player, player.getScore()}, player);
     }
 
     @Override
     public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus  pour la raison {2}.", new Object[]{player, pointsBonus, bonusName});
+        CustomLogger.log(Level.INFO, "{0} gagne {1} points bonus pour la raison {2}.", new Object[]{player, pointsBonus, bonusName}, player);
     }
 
     @Override
     public void displayPlayerUseAssassinEffect(Player player, Character target) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target});
+        CustomLogger.log(Level.INFO, "{0} utilise l''assassin pour tuer le {1}.", new Object[]{player, target}, player);
     }
 
-    private void displayPlayerHand(Player player) {
+    void displayPlayerHand(Player player) {
         List<Card> hand = player.getHand();
         StringBuilder sb = new StringBuilder();
         if (!hand.isEmpty()) {
@@ -94,7 +94,7 @@ public class Cli implements IView {
         CustomLogger.log(Level.INFO, sb.toString(), player);
     }
 
-    private void displayPlayerCitadel(Player player) {
+    void displayPlayerCitadel(Player player) {
         List<Card> citadel = player.getCitadel();
         StringBuilder sb = new StringBuilder();
         if (!citadel.isEmpty()) {
@@ -117,7 +117,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerInfo(Player player) {
-        CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()});
+        CustomLogger.log(Level.INFO, "{0} possède : \n\t- {1} pièces d''or.", new Object[]{player, player.getNbGold()}, player);
         this.displayPlayerHand(player);
         this.displayPlayerCitadel(player);
     }
@@ -134,31 +134,31 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerError(Player player, String message) {
-        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.INFO, "{0} : {1}", new Object[]{player, message}, player);
     }
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message});
+        CustomLogger.log(Level.FINE, "{0} : {1}", new Object[]{player, message}, player);
     }
 
     @Override
     public void displayStolenCharacter(Character character) {
-        CustomLogger.log(Level.INFO, "Le {0} a été volé et perd {1} pièces d''or ", new Object[]{character, character.getPlayer().getNbGold()});
+        CustomLogger.log(Level.INFO, "Le {0} a été volé et perd {1} pièces d''or ", new Object[]{character, character.getPlayer().getNbGold()}, character.getPlayer());
     }
 
     @Override
     public void displayActualNumberOfGold(Player player) {
-        CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()});
+        CustomLogger.log(Level.INFO, "Le {0} a maintenant {1} pièces d''or.", new Object[]{player.getCharacter(), player.getNbGold()}, player);
     }
 
     @Override
     public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
         if (targetPlayer == null) {
-            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", new Object[]{player});
+            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", player);
             return;
         }
-        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer});
+        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer}, player);
     }
 
     @Override
@@ -168,12 +168,12 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseThiefEffect(Player player) {
-        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu'il volera.", player);
+        CustomLogger.log(Level.INFO, "{0} vient de choisir le personnage qu''il volera.", player);
     }
 
     @Override
     public void displayPlayerDiscardCard(Player player, Card card) {
-        CustomLogger.log(Level.INFO, "{0} défausse {1}.", new Object[]{player, card});
+        CustomLogger.log(Level.INFO, "{0} défausse {1}.", new Object[]{player, card}, player);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class Cli implements IView {
 
     @Override
     public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
-        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()});
+        CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()}, player);
     }
 
     @Override

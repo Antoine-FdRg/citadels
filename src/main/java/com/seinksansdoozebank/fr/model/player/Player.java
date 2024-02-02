@@ -145,6 +145,7 @@ public abstract class Player implements Opponent {
         }
         return listOfDistrictTypeMissing;
     }
+
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -282,7 +283,7 @@ public abstract class Player implements Opponent {
      * @param card the district to build
      * @return true if the player can build the district passed in parameter, false otherwise
      */
-    protected final boolean canPlayCard(Card card) {
+    public final boolean canPlayCard(Card card) {
         return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
     }
 
@@ -320,8 +321,10 @@ public abstract class Player implements Opponent {
      */
     public final void pickGold(int nbOfGold) {
         int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
-        view.displayPlayerPicksGold(this, nbPickedGold);
-        this.nbGold += nbPickedGold;
+        if (nbPickedGold > 0) {
+            view.displayPlayerPicksGold(this, nbPickedGold);
+            this.nbGold += nbPickedGold;
+        }
     }
 
 
@@ -430,11 +433,6 @@ public abstract class Player implements Opponent {
         characterToRetrieve.resurrect();
         characterToRetrieve.setPlayer(null);
         return characterToRetrieve;
-    }
-
-    @Override
-    public String toString() {
-        return "Le joueur " + this.id;
     }
 
     public boolean destroyDistrict(Player attacker, District district) {
