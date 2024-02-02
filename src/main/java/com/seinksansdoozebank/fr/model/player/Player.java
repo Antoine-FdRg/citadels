@@ -22,12 +22,13 @@ import java.util.Optional;
 import java.util.Random;
 
 public abstract class Player implements Opponent {
+    @JsonIgnore
     private static int counter = 1;
 
     @JsonProperty
     protected final int id;
 
-    @JsonIgnore
+    @JsonProperty
     private int nbGold;
     @JsonIgnore
     private int bonus;
@@ -35,15 +36,15 @@ public abstract class Player implements Opponent {
     private boolean isFirstToHaveEightDistricts;
     @JsonIgnore
     protected Deck deck;
-    @JsonIgnore
+    @JsonProperty
     protected final List<Card> hand;
-    @JsonIgnore
+    @JsonProperty
     private final List<Card> citadel;
     @JsonIgnore
     protected final IView view;
     @JsonIgnore
     protected Random random = new Random();
-    @JsonIgnore
+    @JsonProperty
     protected Character character;
 
     /**
@@ -57,9 +58,9 @@ public abstract class Player implements Opponent {
     @JsonIgnore
     private boolean lastCardPlacedCourtyardOfMiracle = false;
 
-    @JsonIgnore
+    @JsonProperty
     private boolean characterIsRevealed = false;
-    @JsonIgnore
+    @JsonProperty
     private DistrictType colorCourtyardOfMiracleType;
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -383,7 +384,7 @@ public abstract class Player implements Opponent {
         this.isFirstToHaveEightDistricts = true;
     }
 
-    @JsonIgnore
+    @JsonProperty
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
         return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
@@ -445,6 +446,7 @@ public abstract class Player implements Opponent {
         }
     }
 
+    @JsonIgnore
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
     }
@@ -500,6 +502,7 @@ public abstract class Player implements Opponent {
         this.characterIsRevealed = false;
     }
 
+    @JsonIgnore
     @Override
     public Character getOpponentCharacter() {
         if (this.isCharacterIsRevealed()) {

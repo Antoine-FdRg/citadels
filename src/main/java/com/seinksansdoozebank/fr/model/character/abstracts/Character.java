@@ -1,13 +1,19 @@
 package com.seinksansdoozebank.fr.model.character.abstracts;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Player;
 
 public abstract class Character {
+    @JsonIgnore
     private Player player;
+    @JsonProperty
     private final Role role;
+    @JsonIgnore
     private boolean isDead;
+    @JsonProperty
     private Player savedThief ;
 
     protected Character(Role role) {
@@ -57,6 +63,7 @@ public abstract class Character {
         this.isDead = true;
     }
 
+    @JsonProperty
     public boolean isDead() {
         return this.isDead;
     }

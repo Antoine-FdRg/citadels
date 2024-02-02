@@ -1,4 +1,4 @@
-package com.seinksansdoozebank.fr.view;
+package com.seinksansdoozebank.fr.view.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -8,9 +8,24 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.view.IView;
+import com.seinksansdoozebank.fr.view.socket.dto.CharacterDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.CondottiereEffectDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.DTO;
+import com.seinksansdoozebank.fr.view.socket.dto.EmptyDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.MagicianEffectDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.MurdererEffectDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerAndMessageDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerCollectGoldDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerAndCardDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerGetBonusDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerPickCardsDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.PlayerPickGoldDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.RoundNumberDTO;
+import com.seinksansdoozebank.fr.view.socket.dto.WinnerDTO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -47,13 +62,13 @@ public class WebSocketView implements IView {
         // Ajoutez ici d'autres gestionnaires d'événements selon les besoins
     }
 
-    private void emitEvent(String event, Object... data) {
+    private void emitEvent(String event, DTO data) {
         List<SocketIOClient> clientsCopy = new ArrayList<>(clients); // Créez une copie de la liste clients
         for (SocketIOClient client : clientsCopy) {
             client.sendEvent(event, data);
-            System.out.println("Event " + event + " sent to client " + client.getSessionId() + " with data " + Arrays.toString(data));
+            System.out.println("Event " + event + " sent to client " + client.getSessionId() + " with data " + data);
             try {
-                Thread.sleep(10);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -63,57 +78,62 @@ public class WebSocketView implements IView {
 
     @Override
     public void displayPlayerPlaysCard(Player player, Card card) {
-        emitEvent("playerPlaysCard", player, card);
+        emitEvent("playerPlaysCard", new PlayerAndCardDTO(player, card));
     }
 
     @Override
     public void displayWinner(Player winner) {
-        emitEvent("displayWinner", winner);
+        emitEvent("displayWinner", new WinnerDTO(winner, winner.getScore()));
     }
 
     @Override
     public void displayPlayerStartPlaying(Player player) {
-        emitEvent("displayPlayerStartPlaying", player);
+        emitEvent("displayPlayerStartPlaying", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerPickCards(Player player, int numberOfCards) {
-        emitEvent("displayPlayerPickCards", player, numberOfCards);
+        emitEvent("displayPlayerPickCards", new PlayerPickCardsDTO(player, numberOfCards));
     }
 
     @Override
     public void displayPlayerPicksGold(Player player, int numberOfGold) {
-        emitEvent("displayPlayerPicksGold", player, numberOfGold);
+        emitEvent("displayPlayerPicksGold", new PlayerPickGoldDTO(player, numberOfGold));
     }
 
     @Override
     public void displayPlayerChooseCharacter(Player player) {
-        emitEvent("displayPlayerChooseCharacter", player);
+        emitEvent("displayPlayerChooseCharacter", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerRevealCharacter(Player player) {
-        emitEvent("displayPlayerRevealCharacter", player);
+        // Ne sert à rien puisque envoie les mêmes infos que displayPlayerStartPlaying
     }
 
     @Override
     public void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district) {
-        emitEvent("displayPlayerUseCondottiereDistrict", attacker, defender, district);
+        emitEvent("displayPlayerUseCondottiereDistrict", new CondottiereEffectDTO(attacker, defender, district));
     }
 
     @Override
     public void displayPlayerScore(Player player) {
-        emitEvent("displayPlayerScore", player, player.getScore());
+        emitEvent("displayPlayerScore", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerGetBonus(Player player, int pointsBonus, String bonusName) {
-        emitEvent("displayPlayerGetBonus", player, pointsBonus, bonusName);
+        emitEvent("displayPlayerGetBonus", new PlayerGetBonusDTO(player, pointsBonus, bonusName));
+    }
+
+    @Override
+    public void displayGameFinished() {
+        emitEvent("displayGameFinished", new EmptyDTO());
     }
 
     @Override
     public void displayPlayerUseAssassinEffect(Player player, Character target) {
-        emitEvent("displayPlayerUseAssassinEffect", player, target);
+        emitEvent("displayPlayerUseAssassinEffect", new MurdererEffectDTO(player, target));
     }
 
     // Implementez les autres méthodes de l'interface IView de la même manière
@@ -122,81 +142,76 @@ public class WebSocketView implements IView {
     public void displayPlayerInfo(Player player) {
         // Affiche les informations du joueur
         // Ici, on pourrait envoyer les détails du joueur au client
-        emitEvent("displayPlayerInfo", player);
+        emitEvent("displayPlayerInfo", new PlayerDTO(player));
     }
 
     @Override
     public void displayUnusedCharacterInRound(Character character) {
-        emitEvent("displayUnusedCharacterInRound", character);
-    }
-
-    @Override
-    public void displayGameFinished() {
-        emitEvent("displayGameFinished");
+        emitEvent("displayUnusedCharacterInRound", new CharacterDTO(character));
     }
 
     @Override
     public void displayRound(int roundNumber) {
-        emitEvent("displayRound", roundNumber);
+        emitEvent("displayRound", new RoundNumberDTO(roundNumber));
     }
 
     @Override
     public void displayPlayerError(Player player, String message) {
-        emitEvent("displayPlayerError", player, message);
+        emitEvent("displayPlayerError", new PlayerAndMessageDTO(player, message));
     }
 
     @Override
     public void displayPlayerStrategy(Player player, String message) {
-        emitEvent("displayPlayerStrategy", player, message);
+        emitEvent("displayPlayerStrategy", new PlayerAndMessageDTO(player, message));
     }
 
     @Override
     public void displayStolenCharacter(Character character) {
-        emitEvent("displayStolenCharacter", character);
+        emitEvent("displayStolenCharacter", new CharacterDTO(character));
     }
 
     @Override
     public void displayActualNumberOfGold(Player player) {
-        emitEvent("displayActualNumberOfGold", player);
+        emitEvent("displayActualNumberOfGold", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
-        emitEvent("displayPlayerUseMagicianEffect", player, targetPlayer);
+        emitEvent("displayPlayerUseMagicianEffect", new MagicianEffectDTO(player, targetPlayer));
     }
 
     @Override
     public void displayPlayerHasGotObservatory(Player player) {
-        emitEvent("displayPlayerHasGotObservatory", player);
+        emitEvent("displayPlayerHasGotObservatory", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerUseThiefEffect(Player player) {
-        emitEvent("displayPlayerUseThiefEffect", player);
+        emitEvent("displayPlayerUseThiefEffect", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerDiscardCard(Player player, Card card) {
-        emitEvent("displayPlayerDiscardCard", player, card);
+        emitEvent("displayPlayerDiscardCard", new PlayerAndCardDTO(player, card));
     }
 
     @Override
     public void displayPlayerUseLaboratoryEffect(Player player) {
-        emitEvent("displayPlayerUseLaboratoryEffect", player);
+        emitEvent("displayPlayerUseLaboratoryEffect", new PlayerDTO(player));
     }
 
     @Override
     public void displayPlayerUseManufactureEffect(Player player) {
-        emitEvent("displayPlayerUseManufactureEffect", player);
+        emitEvent("displayPlayerUseManufactureEffect", new PlayerDTO(player));
     }
 
     @Override
     public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
-        emitEvent("displayGoldCollectedFromDisctrictType", player, nbGold, districtType);
+        emitEvent("displayGoldCollectedFromDisctrictType", new PlayerCollectGoldDTO(player, nbGold, districtType));
     }
 
     @Override
     public void displayGameStuck() {
-        emitEvent("displayGameStuck");
+        emitEvent("displayGameStuck", new EmptyDTO());
     }
 }

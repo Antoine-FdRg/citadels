@@ -1,9 +1,15 @@
 package com.seinksansdoozebank.fr.model.cards;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Card {
+    @JsonProperty
     private final District district;
 
+    @JsonIgnore
     private static int counter = 1;
+    @JsonIgnore
     protected final int id;
 
     /**

@@ -9,7 +9,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoo
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
-import com.seinksansdoozebank.fr.view.WebSocketView;
+import com.seinksansdoozebank.fr.view.socket.WebSocketView;
 
 import java.util.concurrent.CountDownLatch;
 
