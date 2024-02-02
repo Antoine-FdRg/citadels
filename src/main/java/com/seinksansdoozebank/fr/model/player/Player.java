@@ -124,6 +124,7 @@ public abstract class Player implements Opponent {
         }
         return listOfDistrictTypeMissing;
     }
+
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -299,8 +300,10 @@ public abstract class Player implements Opponent {
      */
     public final void pickGold(int nbOfGold) {
         int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
-        view.displayPlayerPicksGold(this, nbPickedGold);
-        this.nbGold += nbPickedGold;
+        if (nbPickedGold > 0) {
+            view.displayPlayerPicksGold(this, nbPickedGold);
+            this.nbGold += nbPickedGold;
+        }
     }
 
 

@@ -57,6 +57,24 @@ class PlayerTest {
     }
 
     @Test
+    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold3AndLogIt() {
+        IView view = mock(Cli.class);
+        Player player = new RandomBot(3, deck, view);
+        player.pickGold(3);
+        assertEquals(6, player.getNbGold());
+        verify(view, times(1)).displayPlayerPicksGold(player, 3);
+    }
+
+    @Test
+    void testPickGoldWith0GoldShouldGiveThePlayer0GoldAndLogNothing() {
+        IView view = mock(Cli.class);
+        Player player = new RandomBot(0, deck, view);
+        player.pickGold(0);
+        assertEquals(0, player.getNbGold());
+        verify(view, times(0)).displayPlayerPicksGold(player, 0);
+    }
+
+    @Test
     void testBuildADistrictWithEmptyOptChosenCardShouldReturnEmpty() {
         when(spyPlayer.chooseCard()).thenReturn(Optional.empty());
         assertTrue(spyPlayer.playACard().isEmpty());
