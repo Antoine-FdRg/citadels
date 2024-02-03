@@ -74,4 +74,6 @@ public interface IView {
     void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType);
 
     void displayGameStuck();
+
+    void displayPlayerUseCemeteryEffect(Player player, Card card);
 }

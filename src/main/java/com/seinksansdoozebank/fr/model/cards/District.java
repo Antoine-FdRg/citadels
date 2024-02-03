@@ -30,7 +30,7 @@ public enum District implements Comparable<District> {
     LABORATORY("Laboratoire", DistrictType.PRESTIGE, 5, 1, new LaboratoryEffect()),
     MANUFACTURE("Manufacture", DistrictType.PRESTIGE, 5, 1, new ManufactureEffect()),
     OBSERVATORY("Observatoire", DistrictType.PRESTIGE, 5, 1, null),
-    CEMETERY("Cimetière", DistrictType.PRESTIGE, 5, 1, null),
+    CEMETERY("Cimetière", DistrictType.PRESTIGE, 1, 1, null),
     LIBRARY("Bibliothèque", DistrictType.PRESTIGE, 6, 1, null),
     SCHOOL_OF_MAGIC("Ecole de magie", DistrictType.PRESTIGE, 6, 1, null),
     UNIVERSITY("Université", DistrictType.PRESTIGE, 6, 1, null),

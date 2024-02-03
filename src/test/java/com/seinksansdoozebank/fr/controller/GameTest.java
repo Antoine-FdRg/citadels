@@ -530,4 +530,54 @@ class GameTest {
         Bank.getInstance().pickXCoin(22);
         assertFalse(stuckGame.isStuck());
     }
+
+    @Test
+    void isThePlayerHavingCemetery() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertTrue(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void isThePlayerDonthaveCemetery() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.COURTYARD_OF_MIRACLE)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void isThePlayerDonthaveCemeteryWithZeroCardInCitadel() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of());
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void testUseCemeteryEffect() {
+        Condottiere condotierre = spy(new Condottiere());
+        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
+        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
+        verify(player, times(1)).useCemeteryEffect(any());
+    }
+
+    @Test
+    void testUseCemeteryEffectWithNoPlayerWithCemetery() {
+        Condottiere condotierre = spy(new Condottiere());
+        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
+        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
+        verify(player, times(0)).useCemeteryEffect(any());
+    }
 }

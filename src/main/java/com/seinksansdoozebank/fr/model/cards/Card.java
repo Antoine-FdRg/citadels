@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.model.cards;
 
 public class Card {
     private final District district;
-
     private static int counter = 1;
     protected final int id;
 

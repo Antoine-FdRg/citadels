@@ -75,7 +75,6 @@ public class Deck {
      * @return the list of cards
      */
     public List<Card> getDeck() {
-
         return cardsList;
     }
 

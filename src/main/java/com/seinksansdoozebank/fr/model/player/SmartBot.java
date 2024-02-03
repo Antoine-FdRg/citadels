@@ -414,6 +414,16 @@ public class SmartBot extends Player {
     }
 
     @Override
+    public void useCemeteryEffect(Card card) {
+        // if the district cost less than 3, the bot will keep it
+        if (card.getDistrict().getCost() < 3 && this.getNbGold() > 0) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
+    }
+
+    @Override
     public String toString() {
         return "Le bot malin " + this.id;
     }

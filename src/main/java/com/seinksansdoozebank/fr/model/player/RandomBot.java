@@ -232,6 +232,15 @@ public class RandomBot extends Player {
     }
 
     @Override
+    public void useCemeteryEffect(Card card) {
+        if (random.nextBoolean() && this.getNbGold() > 0) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
+    }
+
+    @Override
     public boolean wantToUseManufactureEffect() {
         return this.getNbGold() > 3 && random.nextBoolean();
     }

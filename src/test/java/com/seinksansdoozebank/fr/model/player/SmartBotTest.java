@@ -18,11 +18,14 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -801,5 +804,23 @@ class SmartBotTest {
         List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
         when(spySmartBot.getHand()).thenReturn(hand);
         assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideGoldAndCard")
+    void testUseCemeteryEffect(int gold, Card card) {
+        when(spySmartBot.getNbGold()).thenReturn(gold);
+        spySmartBot.useCemeteryEffect(card);
+        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3) ? 1 : 0;
+        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spySmartBot, card);
+    }
+
+    private static Stream<Object[]> provideGoldAndCard() {
+        return Stream.of(
+                new Object[]{1, new Card(District.TEMPLE)},
+                new Object[]{1, new Card(District.CATHEDRAL)},
+                new Object[]{0, new Card(District.TEMPLE)},
+                new Object[]{0, new Card(District.CATHEDRAL)}
+        );
     }
 }

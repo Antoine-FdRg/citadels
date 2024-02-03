@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Opponent {
 
@@ -22,6 +23,6 @@ public interface Opponent {
 
     boolean equals(Object o);
 
-    boolean destroyDistrict(Player attacker, District district);
+    Optional<Card> destroyDistrict(Player attacker, District district);
 
 }
