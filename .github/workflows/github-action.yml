@@ -9,8 +9,7 @@ on:
       - '*'
 
 jobs:
-  build:
-
+  shared_steps:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,13 +22,18 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+
+  build:
+    needs: shared_steps
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
 
   tests:
-    runs-on: ubuntu-latest
-
     needs: build
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -37,9 +41,6 @@ jobs:
           - 25  # Repeat tests 50 times
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Repeat Tests
         run: |
           for i in $(seq 1 ${{ matrix.repeat-tests }}); do
@@ -47,14 +48,10 @@ jobs:
           done
 
   create-release:
+    needs: tests
     runs-on: ubuntu-latest
 
-    needs: tests
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
