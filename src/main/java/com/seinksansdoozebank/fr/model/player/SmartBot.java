@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -363,6 +364,7 @@ public class SmartBot extends Player {
      *
      * @return true if the bot has less cards in his citadel than the average of the opponents
      */
+    @JsonIgnore
     public boolean isLate() {
         return averageOpponentCitadelSize() > this.getCitadel().size();
     }
