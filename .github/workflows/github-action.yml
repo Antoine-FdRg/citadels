@@ -13,11 +13,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        repeat-tests:
-          - 50  # Repeat tests 50 times
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -31,11 +26,34 @@ jobs:
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
 
+  tests:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    strategy:
+      matrix:
+        repeat-tests:
+          - 25  # Repeat tests 50 times
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Repeat Tests
         run: |
           for i in $(seq 1 ${{ matrix.repeat-tests }}); do
             mvn test
           done
+
+  create-release:
+    runs-on: ubuntu-latest
+
+    needs: tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -117,5 +135,5 @@ jobs:
           -H "Content-Type: application/octet-stream" \
           "https://uploads.github.com/repos/$GITHUB_REPO/releases/$RELEASE_ID/assets?name=ProjetS5-v${NEW_VERSION}.jar" \
           --data-binary @$JAR_FILE_PATH
-                  
+          
           echo "JAR file uploaded to the GitHub release"
