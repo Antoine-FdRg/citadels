@@ -34,7 +34,7 @@ jobs:
       - name: Repeat Tests
         run: |
           for i in $(seq 1 ${{ matrix.repeat-tests }}); do
-            mvn clean test
+            mvn test
           done
 
       - name: Install jq
