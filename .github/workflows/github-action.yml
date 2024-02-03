@@ -13,6 +13,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        repeat-tests:
+          - 50  # Repeat tests 50 times
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -26,8 +31,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
 
-      - name: Run Tests
-        run: mvn clean test
+      - name: Repeat Tests
+        run: |
+          for i in $(seq 1 ${{ matrix.repeat-tests }}); do
+            mvn clean test
+          done
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
