@@ -1,5 +1,7 @@
 package com.seinksansdoozebank.fr.model.character.roles;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Role {
     ASSASSIN("Assassin"),
     THIEF("Voleur"),
@@ -10,6 +12,7 @@ public enum Role {
     ARCHITECT("Architecte"),
     CONDOTTIERE("Condottiere");
 
+    @JsonValue
     private final String name;
 
     Role(String name) {

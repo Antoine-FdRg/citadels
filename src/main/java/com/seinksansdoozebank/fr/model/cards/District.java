@@ -1,11 +1,15 @@
 package com.seinksansdoozebank.fr.model.cards;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seinksansdoozebank.fr.model.cards.effect.ActiveEffect;
 import com.seinksansdoozebank.fr.model.cards.effect.LaboratoryEffect;
 import com.seinksansdoozebank.fr.model.cards.effect.ManufactureEffect;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum District implements Comparable<District> {
 
     TEMPLE("Temple", DistrictType.RELIGION, 1, 3, null),
@@ -36,10 +40,15 @@ public enum District implements Comparable<District> {
     UNIVERSITY("Université", DistrictType.PRESTIGE, 6, 1, null),
     PORT_FOR_DRAGONS("Dracoport", DistrictType.PRESTIGE, 6, 1, null);
 
+    @JsonProperty
     private final String name;
+    @JsonProperty
     private final DistrictType districtType;
+    @JsonProperty
     private final int cost;
+    @JsonIgnore
     private final int numberOfAppearance;
+    @JsonIgnore
     private final ActiveEffect activeEffect;
 
     District(String name, DistrictType districtType, int cost, int numberOfAppearance, ActiveEffect activeEffect) {

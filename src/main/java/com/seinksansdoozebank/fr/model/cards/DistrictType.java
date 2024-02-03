@@ -1,12 +1,14 @@
 package com.seinksansdoozebank.fr.model.cards;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum DistrictType {
     RELIGION("Religion"),
     NOBILITY("Noblesse"),
     TRADE_AND_CRAFTS("Commerce et artisanat"),
     SOLDIERLY("Soldatesque"),
     PRESTIGE("Prestige");
-
+    @JsonValue
     private final String name;
 
     DistrictType(String name) {
