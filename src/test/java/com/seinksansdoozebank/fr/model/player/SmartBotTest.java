@@ -487,7 +487,7 @@ class SmartBotTest {
      */
     @Test
     void useEffectOfTheMagicianWhenThePlayerHasTheMostCardsTest() {
-        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.TAVERN)), Optional.of(new Card(District.BARRACK)));
         Magician magician = new Magician();
         magician.setPlayer(spySmartBot);
         // Set the player character to magician
@@ -532,7 +532,7 @@ class SmartBotTest {
      */
     @Test
     void useEffectOfTheMagicianWhenThePlayerHasTheSameNumberOfCardsTest() {
-        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.TAVERN)), Optional.of(new Card(District.BARRACK)));
         Magician magician = new Magician();
         magician.setPlayer(spySmartBot);
         // Set the player character to magician

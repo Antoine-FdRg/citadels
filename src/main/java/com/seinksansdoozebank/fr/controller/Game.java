@@ -196,7 +196,8 @@ public class Game {
     private void dealCards() {
         for (int i = 0; i < NB_CARD_BY_PLAYER; i++) {
             for (Player player : players) {
-                player.getHand().add(deck.pick());
+                Optional<Card> cardPick = deck.pick();
+                cardPick.ifPresent(card -> player.getHand().add(card));
             }
         }
     }

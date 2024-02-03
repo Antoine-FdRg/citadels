@@ -183,6 +183,7 @@ class PlayerTest {
     @Test
     void pickACard() {
         int handSize = spyPlayer.hand.size();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
         this.spyPlayer.pickACard();
         assertEquals(handSize + 1, spyPlayer.hand.size());
     }
@@ -232,7 +233,7 @@ class PlayerTest {
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
         Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spyPlayerSmart.play();
 
@@ -278,7 +279,7 @@ class PlayerTest {
     @Test
     void playWithObservatoryInCitadelle() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
         verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
         verify(spyPlayer.deck, times(3)).pick();
