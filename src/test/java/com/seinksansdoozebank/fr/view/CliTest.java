@@ -384,6 +384,17 @@ class CliTest {
         assertLogged(Level.INFO, expectedOutput, false);
     }
 
+    @Test
+    void testDisplayPlayerUseCemeteryEffect() {
+        Card card = new Card(District.TAVERN); // Mock card
+        when(player.getNbGold()).thenReturn(10);
+        view.displayPlayerUseCemeteryEffect(player, card);
+
+        String expectedOutput = player + " utilise l'effet du cimetière pour récupérer " + card + ". Il lui reste " + player.getNbGold() + " gold(s).";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
 
     /**
      * Assert that the last log record is the expected one

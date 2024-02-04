@@ -297,6 +297,17 @@ class PlayerTest {
         assertEquals(2, spyPlayer.numberOfCardsToPick());
     }
 
+    @Test
+    void destroyDistrictReturnDistrictDestroy() {
+        Player attacker = spy(new RandomBot(10, deck, view));
+        Player victim = spy(new RandomBot(10, deck, view));
+        when(victim.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        Card card = new Card(District.TEMPLE);
+        Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
+        assertTrue(optCard.isPresent());
+        assertEquals(card, optCard.get());
+    }
+
 
     @Test
     void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {

@@ -412,14 +412,20 @@ public abstract class Player implements Opponent {
         return characterToRetrieve;
     }
 
-    public boolean destroyDistrict(Player attacker, District district) {
-        if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
+    @Override
+    public Optional<Card> destroyDistrict(Player attacker, District district) {
+        // if the district is in the citadel, we remove it and return the card removed
+        Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
+        if (card.isPresent()) {
+            this.citadel.remove(card.get());
             this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
-            return true;
+            return card;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
+
+    public abstract void useCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
@@ -429,6 +435,7 @@ public abstract class Player implements Opponent {
         this.opponents = opponents;
     }
 
+    @Override
     public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.getHand().clear();

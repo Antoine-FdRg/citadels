@@ -16,11 +16,14 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -307,4 +310,30 @@ class RandomBotTest {
 
     }
 
+    @ParameterizedTest
+    @MethodSource("provideGoldAndRandomValues")
+    void testUseCemeteryEffect(int gold, boolean random, Card thenReturnCard) {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(random);
+        when(spyRandomBot.getNbGold()).thenReturn(gold);
+        when(spyRandomBot.getCitadel()).thenReturn(List.of(thenReturnCard));
+        spyRandomBot.setRandom(mockRandom);
+        Card card = new Card(District.MANOR);
+        spyRandomBot.useCemeteryEffect(card);
+        int expectedInvocations = (gold > 0 && random && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
+        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spyRandomBot, card);
+    }
+
+    private static Stream<Object[]> provideGoldAndRandomValues() {
+        return Stream.of(
+                new Object[]{1, true, new Card(District.CEMETERY)},
+                new Object[]{0, true, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.CEMETERY)},
+                new Object[]{1, false, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.MANOR)},
+                new Object[]{1, false, new Card(District.MANOR)},
+                new Object[]{1, true, new Card(District.MANOR)},
+                new Object[]{0, true, new Card(District.MANOR)}
+        );
+    }
 }
