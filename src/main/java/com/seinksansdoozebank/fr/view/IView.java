@@ -76,4 +76,6 @@ public interface IView {
     void displayPlayerKeepBothCardsBecauseOfLibrary(Player player);
 
     void displayGameStuck();
+
+    void displayPlayerUseCemeteryEffect(Player player, Card card);
 }

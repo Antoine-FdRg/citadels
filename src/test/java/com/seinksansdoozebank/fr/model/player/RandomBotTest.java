@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -16,11 +17,14 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,6 +52,8 @@ class RandomBotTest {
 
     @BeforeEach
     void setup() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);
@@ -308,6 +314,33 @@ class RandomBotTest {
 
     }
 
+    @ParameterizedTest
+    @MethodSource("provideGoldAndRandomValues")
+    void testUseCemeteryEffect(int gold, boolean random, Card thenReturnCard) {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(random);
+        when(spyRandomBot.getNbGold()).thenReturn(gold);
+        when(spyRandomBot.getCitadel()).thenReturn(List.of(thenReturnCard));
+        spyRandomBot.setRandom(mockRandom);
+        Card card = new Card(District.MANOR);
+        spyRandomBot.useCemeteryEffect(card);
+        int expectedInvocations = (gold > 0 && random && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
+        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spyRandomBot, card);
+    }
+
+    private static Stream<Object[]> provideGoldAndRandomValues() {
+        return Stream.of(
+                new Object[]{1, true, new Card(District.CEMETERY)},
+                new Object[]{0, true, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.CEMETERY)},
+                new Object[]{1, false, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.MANOR)},
+                new Object[]{1, false, new Card(District.MANOR)},
+                new Object[]{1, true, new Card(District.MANOR)},
+                new Object[]{0, true, new Card(District.MANOR)}
+        );
+    }
+
     /**
      * Tester la méthode chooseWhenToPickACard et voir quand il choisit de piocher avant de jouer si
      * la méthode check est appelée
@@ -349,6 +382,7 @@ class RandomBotTest {
     void pickBeforePlayingRandomBotUseCheckAndUseLibraryEffectInCitadelTest() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(false);
+        spyRandomBot.setRandom(mockRandom);
         spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
         Bishop bishop = spy(new Bishop());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));

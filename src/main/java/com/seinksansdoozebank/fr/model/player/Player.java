@@ -8,7 +8,6 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
@@ -143,8 +142,9 @@ public abstract class Player implements Opponent {
         List<Card> pickedCards = new ArrayList<>();
         int numberOfCardsToPick = numberOfCardsToPick();
         for (int i = 0; i < numberOfCardsToPick; i++) {
-            pickedCards.add(this.deck.pick());
+            pickCardFromDeck(pickedCards);
         }
+        if (pickedCards.isEmpty()) return;
         if ((!this.hasPlayed) && isLibraryPresent()) {
             this.view.displayPlayerKeepBothCardsBecauseOfLibrary(this);
             this.hand.addAll(pickedCards);
@@ -154,6 +154,11 @@ public abstract class Player implements Opponent {
             this.hand.add(chosenCard);
             pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
         }
+    }
+
+    void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
     }
 
     /**
@@ -176,7 +181,7 @@ public abstract class Player implements Opponent {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-        this.getHand().add(this.deck.pick());
+        pickCardFromDeck(this.getHand());
     }
 
     public final void discardACard(Card card) {
@@ -246,9 +251,14 @@ public abstract class Player implements Opponent {
      * Effect of architect character (pick 2 cards)
      */
     protected void useEffectArchitectPickCards() {
-        this.hand.add(this.deck.pick());
-        this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this, Architect.NB_CARD_TO_PICK);
+        int i;
+        for (i = 0; i < 2; i++) {
+            Optional<Card> cardPick = this.deck.pick();
+            if (cardPick.isEmpty()) break;
+            cardPick.ifPresent(this.hand::add);
+        }
+        if (i == 0) return;
+        view.displayPlayerPickCards(this, i);
     }
 
     abstract void useEffectMagician(Magician magician);
@@ -428,14 +438,20 @@ public abstract class Player implements Opponent {
         return characterToRetrieve;
     }
 
-    public boolean destroyDistrict(Player attacker, District district) {
-        if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
+    @Override
+    public Optional<Card> destroyDistrict(Player attacker, District district) {
+        // if the district is in the citadel, we remove it and return the card removed
+        Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
+        if (card.isPresent()) {
+            this.citadel.remove(card.get());
             this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
-            return true;
+            return card;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
+
+    public abstract void useCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
@@ -445,6 +461,7 @@ public abstract class Player implements Opponent {
         this.opponents = opponents;
     }
 
+    @Override
     public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.getHand().clear();
