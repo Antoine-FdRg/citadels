@@ -381,10 +381,11 @@ public class SmartBot extends Player {
      */
     @Override
     protected void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+        Optional<Character> victim = this.getAvailableCharacters().stream().filter(
+                character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
         if (victim.isEmpty()) {
-            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();
         }
         victim.ifPresent(character -> {
