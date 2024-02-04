@@ -13,7 +13,7 @@ public class ManufactureEffect implements ActiveEffect {
     @Override
     public void use(Player player, IView view) {
         if (player.wantToUseManufactureEffect()) {
-            player.decreaseGold(3);
+            player.returnGoldToBank(3);
             for (int i = 0; i < 3; i++) {
                 player.pickACard();
             }

@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public class StrategyUtils {
 
+    private StrategyUtils() {
+    }
+
     public static boolean isRoleInCharacterList(Role role, List<Character> characters) {
         return characters.stream().anyMatch(character -> character.getRole().equals(role));
     }

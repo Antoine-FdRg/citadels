@@ -22,7 +22,7 @@ public class LaboratoryEffect implements ActiveEffect {
         if (card != null) {
             view.displayPlayerUseLaboratoryEffect(player);
             if (player.discardFromHand(card)) {
-                player.increaseGold(NB_GOLD_PICK_BY_LABORATORY_EFFECT);
+                player.pickGold(NB_GOLD_PICK_BY_LABORATORY_EFFECT);
             }
         }
     }

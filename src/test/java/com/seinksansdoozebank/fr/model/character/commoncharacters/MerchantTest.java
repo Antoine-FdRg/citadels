@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -25,6 +26,8 @@ class MerchantTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
@@ -51,7 +54,7 @@ class MerchantTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        merchant.goldCollectedFromDisctrictType();
+        merchant.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         // 2 gold for the start + 6 for the 6 districts
@@ -63,7 +66,7 @@ class MerchantTest {
         // Add a district to the citadel
         citadel.add(new Card(District.SCHOOL_OF_MAGIC));
         // Perform the action
-        merchant.goldCollectedFromDisctrictType();
+        merchant.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         // 2 gold for the start + 6 for the 6 districts + 1 for the school of magic

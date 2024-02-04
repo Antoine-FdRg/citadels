@@ -25,15 +25,6 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         this.random = new Random();
     }
 
-    /**
-     * Creates a new instance of ChoosingCharacterToTargetFirstPlayer with a given random to apply dependency injection
-     *
-     * @param random the random to use
-     */
-    public ChoosingCharacterToTargetFirstPlayer(Random random) {
-        this.random = random;
-    }
-
     @Override
     public Character apply(Player player, List<Character> characters) {
         if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {              //si le condottiere est disponible

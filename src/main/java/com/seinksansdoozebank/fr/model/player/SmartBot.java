@@ -175,9 +175,7 @@ public class SmartBot extends Player {
         if (this.character instanceof Merchant merchant) {
             merchant.useEffect();
         } else if (this.character instanceof Assassin assassin) {
-            Character target = this.choseAssassinTarget();
-            assassin.useEffect(target);
-            view.displayPlayerUseAssassinEffect(this, target);
+            useEffectAssassin(assassin);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
@@ -240,10 +238,6 @@ public class SmartBot extends Player {
         }
     }
 
-    @Override
-    protected void useEffectAssassin(Assassin assassin) {
-        // TODO
-    }
 
     /**
      * Il finit sa citadelle s'il peut en un coup, sinon il pose une merveille, sinon il complète les 5
@@ -312,13 +306,20 @@ public class SmartBot extends Player {
         }
     }
 
+    @Override
+    protected void useEffectAssassin(Assassin assassin) {
+        Character target = this.chooseAssassinTarget();
+        assassin.useEffect(target);
+        view.displayPlayerUseAssassinEffect(this, target);
+    }
 
     /**
      * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
      *
      * @return the target of the assassin
      */
-    protected Character choseAssassinTarget() {
+    @Override
+    protected Character chooseAssassinTarget() {
         List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
         Collections.shuffle(roleInterestingToKill);
         Character target = null;
