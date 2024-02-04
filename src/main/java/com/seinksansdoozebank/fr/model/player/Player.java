@@ -68,6 +68,7 @@ public abstract class Player implements Opponent {
         this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
+        this.setHasPlayed(false);
         this.playARound();
         view.displayPlayerInfo(this);
     }

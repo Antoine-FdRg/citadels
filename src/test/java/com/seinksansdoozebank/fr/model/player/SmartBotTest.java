@@ -834,7 +834,6 @@ class SmartBotTest {
         List<Card> hand = new ArrayList<>();
         when(spySmartBot.getHand()).thenReturn(hand);
         spySmartBot.playARound();
-        verify(spySmartBot, atLeastOnce()).setHasPlayed(false);
         assertTrue(spySmartBot.hasPlayed());
         verify(spySmartBot, times(1)).isLibraryPresent();
     }
