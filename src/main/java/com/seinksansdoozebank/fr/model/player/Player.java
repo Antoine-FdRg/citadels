@@ -135,6 +135,7 @@ public abstract class Player implements Opponent {
     public boolean hasPlayed() {
         return hasPlayed;
     }
+
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -548,8 +549,7 @@ public abstract class Player implements Opponent {
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
     public boolean isLibraryPresent() {
-        Optional<Card> libraryCard = this.getCitadel().stream().filter(card -> card.getDistrict() == District.LIBRARY).findFirst();
-        return libraryCard.isPresent();
+        return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.LIBRARY));
     }
 
 
