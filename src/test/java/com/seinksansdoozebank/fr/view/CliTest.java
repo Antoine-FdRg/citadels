@@ -129,7 +129,7 @@ class CliTest {
 
         view.displayPlayerUseCondottiereDistrict(player, defender, card.getDistrict());
 
-        String expectedOutput = player + " utilise l'effet du Condottiere pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() + 1) + " pièces d'or.";
+        String expectedOutput = player + " utilise l'effet du Condottiere pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() - 1) + " pièces d'or.";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
