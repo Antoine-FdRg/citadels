@@ -808,19 +808,22 @@ class SmartBotTest {
 
     @ParameterizedTest
     @MethodSource("provideGoldAndCard")
-    void testUseCemeteryEffect(int gold, Card card) {
+    void testUseCemeteryEffect(int gold, Card card, Card thenReturnCard) {
         when(spySmartBot.getNbGold()).thenReturn(gold);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(thenReturnCard));
         spySmartBot.useCemeteryEffect(card);
-        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3) ? 1 : 0;
+        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3 && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
         verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spySmartBot, card);
     }
 
     private static Stream<Object[]> provideGoldAndCard() {
         return Stream.of(
-                new Object[]{1, new Card(District.TEMPLE)},
-                new Object[]{1, new Card(District.CATHEDRAL)},
-                new Object[]{0, new Card(District.TEMPLE)},
-                new Object[]{0, new Card(District.CATHEDRAL)}
+                new Object[]{1, new Card(District.TEMPLE), new Card(District.CEMETERY)},
+                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
+                new Object[]{0, new Card(District.TEMPLE), new Card(District.CEMETERY)},
+                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
+                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.MANOR)},
+                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.MANOR)}
         );
     }
 }

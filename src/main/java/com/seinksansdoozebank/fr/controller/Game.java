@@ -16,6 +16,7 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -156,6 +157,7 @@ public class Game {
      * Initialize the game
      */
     protected void init() {
+        CustomLogger.resetAvailableColors();
         dealCards();
     }
 

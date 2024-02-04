@@ -312,23 +312,28 @@ class RandomBotTest {
 
     @ParameterizedTest
     @MethodSource("provideGoldAndRandomValues")
-    void testUseCemeteryEffect(int gold, boolean random) {
+    void testUseCemeteryEffect(int gold, boolean random, Card thenReturnCard) {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(random);
         when(spyRandomBot.getNbGold()).thenReturn(gold);
+        when(spyRandomBot.getCitadel()).thenReturn(List.of(thenReturnCard));
         spyRandomBot.setRandom(mockRandom);
         Card card = new Card(District.MANOR);
         spyRandomBot.useCemeteryEffect(card);
-        int expectedInvocations = (gold > 0 && random) ? 1 : 0;
+        int expectedInvocations = (gold > 0 && random && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
         verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spyRandomBot, card);
     }
 
     private static Stream<Object[]> provideGoldAndRandomValues() {
         return Stream.of(
-                new Object[]{1, true},
-                new Object[]{0, true},
-                new Object[]{0, false},
-                new Object[]{1, false}
+                new Object[]{1, true, new Card(District.CEMETERY)},
+                new Object[]{0, true, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.CEMETERY)},
+                new Object[]{1, false, new Card(District.CEMETERY)},
+                new Object[]{0, false, new Card(District.MANOR)},
+                new Object[]{1, false, new Card(District.MANOR)},
+                new Object[]{1, true, new Card(District.MANOR)},
+                new Object[]{0, true, new Card(District.MANOR)}
         );
     }
 }
