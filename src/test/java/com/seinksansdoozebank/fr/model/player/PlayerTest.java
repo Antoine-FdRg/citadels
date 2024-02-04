@@ -183,8 +183,32 @@ class PlayerTest {
     @Test
     void pickACard() {
         int handSize = spyPlayer.hand.size();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
         this.spyPlayer.pickACard();
         assertEquals(handSize + 1, spyPlayer.hand.size());
+    }
+
+    @Test
+    void testPickCardFromDeck() {
+        /*
+            private void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
+    }
+         */
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(1, pickedCards.size());
+        assertEquals(cardCostFive, pickedCards.get(0));
+    }
+
+    @Test
+    void testPickCardFromDeckWhenNoCardsInDeck() {
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.empty());
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(0, pickedCards.size());
     }
 
     @Test
@@ -232,7 +256,7 @@ class PlayerTest {
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
         Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spyPlayerSmart.play();
 
@@ -278,7 +302,7 @@ class PlayerTest {
     @Test
     void playWithObservatoryInCitadelle() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
         verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
         verify(spyPlayer.deck, times(3)).pick();

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -59,7 +60,7 @@ class MagicianTest {
 
     @Test
     void useEffectSwitchHandWithDeck() {
-        when(deck.pick()).thenReturn(firstPickedCard, secondPickedCard);
+        when(deck.pick()).thenReturn(Optional.of(firstPickedCard), Optional.of(secondPickedCard));
         spyPlayer.pickACard();
 
         // Set the player hand to the firstExchangeCard and secondExchangeCard
