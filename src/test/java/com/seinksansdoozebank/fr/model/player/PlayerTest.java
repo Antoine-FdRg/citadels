@@ -355,27 +355,13 @@ class PlayerTest {
      * Tester si le bot qui possède la bibliothèque dans sa citadelle il repioche bien 2 cartes en plus
      */
     @Test
-    void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest(){
+    void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest() {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         spyPlayer.getHand().add(new Card(District.PORT));
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
-        verify(view,times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
-        assertEquals(3,spyPlayer.getHand().size());
+        verify(view, times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
+        assertEquals(3, spyPlayer.getHand().size());
     }
-
-
-    @Test
-    void getHasPlayedTest(){
-        assertFalse(spyPlayer.hasPlayed());
-    }
-
-    @Test
-    void setHasPlayedTest(){
-        spyPlayer.setHasPlayed(true);
-        assertTrue(spyPlayer.hasPlayed());
-    }
-
-
 
 
 }

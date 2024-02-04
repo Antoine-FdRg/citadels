@@ -9,14 +9,12 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
@@ -57,7 +56,7 @@ class RandomBotTest {
     }
 
     @Test
-    void  play() {
+    void play() {
         Optional<Card> optDistrict = Optional.of(cardCostThree);
         doReturn(optDistrict).when(spyRandomBot).playACard();
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
@@ -314,25 +313,26 @@ class RandomBotTest {
      * la méthode check est appelée
      */
     @Test
-    void chooseWhenToPickACardWhenPickBeforePlaying(){
+    void chooseWhenToPickACardWhenPickBeforePlaying() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
         spyRandomBot.setRandom(mockRandom);
         spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
         Bishop bishop = spy(new Bishop());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
-        spyRandomBot.chooseWhenToPickACard(1);
         assertFalse(spyRandomBot.hasPlayed());
-        verify(spyRandomBot,times(1)).pickBeforePlaying(1);
-        verify(spyRandomBot,times(0)).playBeforePicking(1);
+        spyRandomBot.chooseWhenToPickACard(1);
+        assertTrue(spyRandomBot.hasPlayed());
+        verify(spyRandomBot, times(1)).pickBeforePlaying(1);
+        verify(spyRandomBot, times(0)).playBeforePicking(1);
     }
 
     /**
      * Tester la méthode chooseWhenToPickACard et voir quand il choisit de jouer avant de piocher si
-     *   la méthode check n'est pas appelé
+     * la méthode check n'est pas appelé
      */
     @Test
-    void chooseWhenToPickACardWhenPlayBeforePicking(){
+    void chooseWhenToPickACardWhenPlayBeforePicking() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(false);
         spyRandomBot.setRandom(mockRandom);
@@ -341,17 +341,19 @@ class RandomBotTest {
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
         spyRandomBot.chooseWhenToPickACard(1);
         assertTrue(spyRandomBot.hasPlayed());
-        verify(spyRandomBot,times(0)).pickBeforePlaying(1);
-        verify(spyRandomBot,times(1)).playBeforePicking(1);
+        verify(spyRandomBot, times(0)).pickBeforePlaying(1);
+        verify(spyRandomBot, times(1)).playBeforePicking(1);
     }
 
     @Test
-    void pickBeforePlayingRandomBotUseCheckAndUseLibraryEffectInCitadelTest(){
+    void pickBeforePlayingRandomBotUseCheckAndUseLibraryEffectInCitadelTest() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
         spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
         Bishop bishop = spy(new Bishop());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
         spyRandomBot.pickBeforePlaying(1);
-        verify(spyRandomBot,times(1)).checkAndUseLibraryEffectInCitadel();
+        verify(spyRandomBot, atLeastOnce()).isLibraryPresent();
     }
 
 }
