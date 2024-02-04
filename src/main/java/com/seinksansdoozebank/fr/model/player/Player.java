@@ -133,14 +133,18 @@ public abstract class Player implements Opponent {
         List<Card> pickedCards = new ArrayList<>();
         int numberOfCardsToPick = numberOfCardsToPick();
         for (int i = 0; i < numberOfCardsToPick; i++) {
-            Optional<Card> cardPick = this.deck.pick();
-            cardPick.ifPresent(pickedCards::add);
+            pickCardFromDeck(pickedCards);
         }
         if (pickedCards.isEmpty()) return;
         this.view.displayPlayerPickCards(this, 1);
         Card chosenCard = keepOneDiscardOthers(pickedCards);
         this.hand.add(chosenCard);
         pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+    }
+
+    private void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
     }
 
     /**
@@ -163,8 +167,7 @@ public abstract class Player implements Opponent {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-        Optional<Card> cardPick = this.deck.pick();
-        cardPick.ifPresent(card -> this.getHand().add(card));
+        pickCardFromDeck(this.getHand());
     }
 
     public final void discardACard(Card card) {

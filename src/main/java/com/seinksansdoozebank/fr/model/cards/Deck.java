@@ -36,7 +36,7 @@ public class Deck {
     public Optional<Card> pick() {
         //On vérifie que la liste n'est pas vide
         if (cardsList.isEmpty()) {
-            //On recrée le deck
+            //On renvoie un Optional vide
             return Optional.empty();
         }
         //On renvoie la dernière carte district du paquet et on l'enlève du paquet.
