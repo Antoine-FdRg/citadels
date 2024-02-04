@@ -26,7 +26,7 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
             useAndDisplayMurderEffect(murderer, Role.MERCHANT, characters, view, player);
         } else if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
             useAndDisplayMurderEffect(murderer, Role.ARCHITECT, characters, view, player);
-        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
+        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, characters)) {
             useAndDisplayMurderEffect(murderer, Role.KING, characters, view, player);
         } else { //random
             Character targetCharacter = characters.get(random.nextInt(characters.size()));
