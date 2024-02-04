@@ -7,6 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
@@ -52,7 +53,7 @@ public abstract class Player implements Opponent {
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
-        this.hasPlayed=false;
+        this.hasPlayed = false;
     }
 
     /**
@@ -134,11 +135,11 @@ public abstract class Player implements Opponent {
         this.nbGold += 2;
     }
 
-    public void setHasPlayed(boolean hasPlayed){
-        this.hasPlayed=hasPlayed;
+    public void setHasPlayed(boolean hasPlayed) {
+        this.hasPlayed = hasPlayed;
     }
 
-    public boolean hasPlayed(){
+    public boolean hasPlayed() {
         return hasPlayed;
     }
 
@@ -152,10 +153,10 @@ public abstract class Player implements Opponent {
         for (int i = 0; i < numberOfCardsToPick; i++) {
             pickedCards.add(this.deck.pick());
         }
-        if((!this.hasPlayed) && checkAndUseLibraryEffectInCitadel()){
+        if ((!this.hasPlayed) && isLibraryPresent()) {
             this.view.displayPlayerKeepBothCardsBecauseOfLibrary(this);
             this.hand.addAll(pickedCards);
-        }else{
+        } else {
             this.view.displayPlayerPickCards(this, 1);
             Card chosenCard = keepOneDiscardOthers(pickedCards);
             this.hand.add(chosenCard);
@@ -211,6 +212,7 @@ public abstract class Player implements Opponent {
     }
 
     public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
+        setHasPlayed(true);
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
@@ -254,7 +256,7 @@ public abstract class Player implements Opponent {
     protected void useEffectArchitectPickCards() {
         this.hand.add(this.deck.pick());
         this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this, 2);
+        view.displayPlayerPickCards(this, Architect.NB_CARD_TO_PICK);
     }
 
     abstract void useEffectMagician(Magician magician);
@@ -505,7 +507,7 @@ public abstract class Player implements Opponent {
 
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
-    public boolean checkAndUseLibraryEffectInCitadel() {
+    public boolean isLibraryPresent() {
         Optional<Card> libraryCard = this.getCitadel().stream().filter(card -> card.getDistrict() == District.LIBRARY).findFirst();
         return libraryCard.isPresent();
     }

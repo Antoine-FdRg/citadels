@@ -51,7 +51,6 @@ public class RandomBot extends Player {
      */
     protected void pickBeforePlaying(int nbDistrictsToBuild) {
         pickSomething();
-        checkAndUseLibraryEffectInCitadel();
         if (nbDistrictsToBuild > 0) {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
@@ -64,7 +63,6 @@ public class RandomBot extends Player {
      * @param nbDistrictsToBuild the number of districts the bot choose to build
      */
     protected void playBeforePicking(int nbDistrictsToBuild) {
-        setHasPlayed(true);
         if (nbDistrictsToBuild > 0) {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }

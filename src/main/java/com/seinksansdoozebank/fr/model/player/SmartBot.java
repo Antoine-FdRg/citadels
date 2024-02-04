@@ -56,13 +56,11 @@ public class SmartBot extends Player {
                 this.pickSomething();
                 useEffectOfTheArchitect();
             } else {
-                setHasPlayed(true);
                 this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild()); //il joue
                 this.useCommonCharacterEffect();
                 this.pickSomething(); //il pioche quelque chose
             }
         } else {
-            setHasPlayed(true);
             this.useCommonCharacterEffect();
             if (this.hasACardToPlay()) {
                 this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
@@ -380,6 +378,7 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
      * @param thief the thief
      */
     @Override
