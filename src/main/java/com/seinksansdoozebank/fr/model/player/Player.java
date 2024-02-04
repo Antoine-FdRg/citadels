@@ -142,7 +142,7 @@ public abstract class Player implements Opponent {
         pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
     }
 
-    private void pickCardFromDeck(List<Card> pickedCards) {
+    void pickCardFromDeck(List<Card> pickedCards) {
         Optional<Card> cardPick = this.deck.pick();
         cardPick.ifPresent(pickedCards::add);
     }

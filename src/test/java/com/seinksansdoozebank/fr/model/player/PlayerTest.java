@@ -189,6 +189,29 @@ class PlayerTest {
     }
 
     @Test
+    void testPickCardFromDeck() {
+        /*
+            private void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
+    }
+         */
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(1, pickedCards.size());
+        assertEquals(cardCostFive, pickedCards.get(0));
+    }
+
+    @Test
+    void testPickCardFromDeckWhenNoCardsInDeck() {
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.empty());
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(0, pickedCards.size());
+    }
+
+    @Test
     void switchHandBetweenTwoPlayersWithTwoFilledHand() {
         spyPlayer.hand.add(cardCostFive);
         RandomBot otherPlayer = new RandomBot(10, deck, view);
