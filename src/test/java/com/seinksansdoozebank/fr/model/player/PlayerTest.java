@@ -418,5 +418,22 @@ class PlayerTest {
         assertEquals(3, spyPlayer.getHand().size());
     }
 
+    @Test
+    void isAboutToWInTestTrue(){
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertTrue(spyPlayer.isAboutToWin());
+    }
+    @Test
+    void isAboutToWInTestFalse(){
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.PORT))));
+        assertFalse(spyPlayer.isAboutToWin());
+    }
+
 
 }

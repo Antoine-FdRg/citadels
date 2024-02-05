@@ -23,6 +23,8 @@ public interface Opponent {
 
     boolean equals(Object o);
 
+    boolean isAboutToWin();
+
     Optional<Card> destroyDistrict(Player attacker, District district);
 
 }
