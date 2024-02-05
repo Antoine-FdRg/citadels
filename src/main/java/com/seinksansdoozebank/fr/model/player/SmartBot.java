@@ -330,6 +330,9 @@ public class SmartBot extends Player {
                     break;
                 }
             }
+            if (target != null) {
+                break;
+            }
         }
         if (target == null) {
             target = charactersList.get(random.nextInt(charactersList.size()));
