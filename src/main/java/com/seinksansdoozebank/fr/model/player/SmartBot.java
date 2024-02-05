@@ -201,7 +201,7 @@ public class SmartBot extends Player {
         List<Card> cardOfPlayerSortedByCost = playerWithMostDistricts.get().getCitadel().stream()
                 .sorted(Comparator.comparing(card -> card.getDistrict().getCost()))
                 .toList();
-        // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
+        // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
