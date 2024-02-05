@@ -68,7 +68,6 @@ class SmartBotTest {
         cardPort = new Card(District.PORT);
         cardManor = new Card(District.MANOR);
         dracoport = new Card(District.PORT_FOR_DRAGONS);
-        spySmartBot = spy(new SmartBot(10, deck, view));
     }
 
     @Test
