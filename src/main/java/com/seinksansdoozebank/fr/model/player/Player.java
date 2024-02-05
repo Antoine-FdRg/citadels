@@ -12,12 +12,14 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
+import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Level;
 
 public abstract class Player implements Opponent {
     private static int counter = 1;
@@ -217,7 +219,11 @@ public abstract class Player implements Opponent {
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
+        System.out.println("Player " + this + " is going to buy " + numberOfCards + " cards");
+        // CustomStatisticsLogger.log(Level.INFO, "Player {0} is going to buy {1} cards", new Object[]{this, numberOfCards});
         for (int i = 0; i < numberOfCards; i++) {
+            System.out.println("buyXCardsAndAddThemToCitadel " + i);
+            // CustomStatisticsLogger.log(Level.INFO, "buyXCardsAndAddThemToCitadel {0}", new Object[]{i});
             Optional<Card> card = playACard();
             card.ifPresent(value -> this.view.displayPlayerPlaysCard(this, value));
         }
