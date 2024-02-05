@@ -20,7 +20,7 @@ public class RichardBot extends SmartBot {
         // Conditions spécifiques pour Voleur et Condottiere
         Character target = null;
         for (Character character : charactersList) {
-            if (character.getRole() == Role.THIEF && (shouldPreventWealth()) //|| character.getPlayer().isAboutToWin()
+            if (character.getRole() == Role.THIEF && (shouldPreventWealth() || thinkThiefWillBeChosenByTheLeadingOpponent())
                     || character.getRole() == Role.CONDOTTIERE && (this.isAboutToWin() || thinkCondottiereWillBeChosenByTheLeadingOpponent())) {
                 target = character;
             }
