@@ -376,14 +376,7 @@ public class SmartBot extends Player {
         return average.getAsDouble();
     }
 
-    /**
-     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     *
-     * @param thief the thief
-     */
-
-
-    protected Optional<Character> chooseThiefTarget() {
+    protected Optional<Character> choseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();

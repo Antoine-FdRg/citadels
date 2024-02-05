@@ -271,8 +271,7 @@ public abstract class Player implements Opponent {
 
     abstract void useEffectCondottiere(Condottiere condottiere);
 
-    abstract Optional<Character> chooseThiefTarget();
-
+    abstract Optional<Character> choseThiefTarget();
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
@@ -280,7 +279,7 @@ public abstract class Player implements Opponent {
      * @param thief the thief
      */
     protected void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.chooseThiefTarget();
+        Optional<Character> victim = this.choseThiefTarget();
         victim.ifPresent(target -> {
             thief.useEffect(target);
             view.displayPlayerUseThiefEffect(this);
