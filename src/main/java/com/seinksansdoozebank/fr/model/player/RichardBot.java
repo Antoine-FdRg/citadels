@@ -61,6 +61,43 @@ public class RichardBot extends SmartBot {
         }
         return super.chooseCharacterImpl(characters);
     }
+    /**
+     * @param characters list of available characters
+     * @return the list of available characters ordered like we want
+     */
+    protected List<Character> ordinateCharacters(List<Character> characters) {
+        List<Character> orderedCharacters = new ArrayList<>(characters);
+        int compteur = 5;
+        for (Character character : characters) {
+            switch (character.getRole()) {
+                case ASSASSIN -> orderedCharacters.add(0, character);
+                case MAGICIAN -> orderedCharacters.add(1, character);
+                case MERCHANT -> orderedCharacters.add(2, character);
+                case ARCHITECT -> orderedCharacters.add(3, character);
+                case BISHOP -> orderedCharacters.add(7, character);
+                case CONDOTTIERE -> orderedCharacters.add(5, character);
+                default -> {
+                    orderedCharacters.add(compteur, character);
+                    compteur += 1;
+                }
+            }
+        }
+        return orderedCharacters;
+    }
+
+
+    /**
+     * find the number of players with empty hands in the game
+     *
+     * @param opponents list of the opponents of the player
+     * @return the number of players with empty hands in the game
+     */
+    protected int numberOfEmptyHands(List<Opponent> opponents) {
+        return (int) opponents.stream().filter(player -> player.getHandSize() == 0).count();
+    }
+
+
+
 
 
 
