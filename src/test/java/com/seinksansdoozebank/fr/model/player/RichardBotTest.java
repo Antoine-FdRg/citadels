@@ -98,4 +98,167 @@ class RichardBotTest {
         assertFalse(richardBot.numberOfPlayerWithMoreGold(opponentsList));
     }
 
+
+    @Test
+    void shouldChooseAssassinTestTrue(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertTrue(richardBot.shouldChooseAssassin());
+    }
+
+    @Test
+    void shouldChooseAssassinTestFalseWhenNoHandsAreEmpty(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        opponentsList.remove(opponentWithEmptyHand);
+        assertFalse(richardBot.shouldChooseAssassin());
+    }
+
+    @Test
+    void shouldChooseAssassinTestFalseWhenRichardBotHandHasNotALotOfCards(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.BARRACK))));
+        opponentsList.remove(opponentWithEmptyHand);
+        assertFalse(richardBot.shouldChooseAssassin());
+    }
+
+    @Test
+    void shouldChooseMagicianTestTrue(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>());
+        assertTrue(richardBot.shouldChooseMagician());
+    }
+
+    @Test
+    void shouldChooseMagicianTestFalse(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertFalse(richardBot.shouldChooseMagician());
+    }
+
+    @Test
+    void shouldChooseMerchantTestTrue(){
+        richardBot.decreaseGold(10);
+        assertTrue(richardBot.shouldChooseMerchant());
+    }
+
+    @Test
+    void shouldChooseMerchantTestFalse(){
+        assertFalse(richardBot.shouldChooseMerchant());
+    }
+
+    @Test
+    void shouldChooseArchitectTestTrue(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        richardBot.decreaseGold(2);
+        assertTrue(richardBot.shouldChooseArchitect());
+    }
+
+    @Test
+    void shouldChooseArchitectTestFalseBecauseNoPlayersHaveMoreGoldThanRichardBot(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertFalse(richardBot.shouldChooseArchitect());
+    }
+
+    @Test
+    void shouldChooseArchitectTestFalseBecauseRichardCantAffordMoreThanOneCard(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.PORT),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        richardBot.decreaseGold(9);
+        assertFalse(richardBot.shouldChooseArchitect());
+    }
+
+    @Test
+    void shouldChooseBishopTestTrue(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertTrue(richardBot.shouldChooseBishop());
+    }
+
+    @Test
+    void shouldChooseBishopTestFalse(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        richardBot.decreaseGold(9);
+        assertFalse(richardBot.shouldChooseBishop());
+    }
+
+    @Test
+    void shouldChooseCondottiereTestTrue(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        richardBot.decreaseGold(9);
+        assertTrue(richardBot.shouldChooseCondottiere());
+    }
+
+    @Test
+    void shouldChooseCondottiereTestFalse(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertFalse(richardBot.shouldChooseCondottiere());
+    }
+
+    @Test
+    void shouldChooseBecauseLastCardToBuyTestTrue(){
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertEquals(Optional.of(new Assassin()),richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
+    }
+
+    @Test
+    void shouldChooseBecauseLastCardToBuyTestFalse(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertEquals(Optional.empty(),richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
+    }
+
+
 }
