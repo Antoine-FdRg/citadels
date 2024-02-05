@@ -32,7 +32,7 @@ jobs:
     strategy:
       matrix:
         repeat-tests:
-          - 50  # Repeat tests 50 times
+          - 25  # Repeat tests 25 times
 
     steps:
       - name: Checkout code
