@@ -187,7 +187,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
+    public void displayGoldCollectedFromDistrictType(Player player, int nbGold, DistrictType districtType) {
         CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()}, player);
     }
 
@@ -195,6 +195,12 @@ public class Cli implements IView {
     public void displayGameFinished() {
         CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE_START + "### La partie est terminée ! ###" + ANSI_DEFAULT_STYLE_END);
     }
+
+    @Override
+    public void displayPlayerKeepBothCardsBecauseOfLibrary(Player player){
+        CustomLogger.log(Level.INFO,"{0} pioche deux cartes et garde les deux car il possède la bibliothèque.", player);
+    }
+
 
     @Override
     public void displayGameStuck() {

@@ -364,11 +364,11 @@ class CliTest {
     }
 
     @Test
-    void testDisplayGoldCollectedFromDisctrictType() {
+    void testDisplayGoldCollectedFromDistrictType() {
         int nbGold = 2; // Mock gold amount
         Merchant merchant = spy(new Merchant());
         when(player.getCharacter()).thenReturn(merchant);
-        view.displayGoldCollectedFromDisctrictType(player, nbGold, card.getDistrict().getDistrictType());
+        view.displayGoldCollectedFromDistrictType(player, nbGold, card.getDistrict().getDistrictType());
 
         String expectedOutput = player + " gagne " + nbGold + " pièces d'or grâce à ses quartiers de type " + card.getDistrict().getDistrictType() + " et l'effet du " + player.getCharacter() + ".";
 

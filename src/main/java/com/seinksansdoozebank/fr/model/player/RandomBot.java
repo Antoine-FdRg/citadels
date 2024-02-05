@@ -32,6 +32,10 @@ public class RandomBot extends Player {
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
+        this.chooseWhenToPickACard(nbDistrictsToBuild);
+    }
+
+    public void chooseWhenToPickACard(int nbDistrictsToBuild) {
         if (random.nextBoolean()) {
             this.pickBeforePlaying(nbDistrictsToBuild);
         } else {
@@ -50,6 +54,7 @@ public class RandomBot extends Player {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
     }
+
 
     /**
      * Represents the player's choice to play something before picking

@@ -43,7 +43,8 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickCardsKeepSomeAndDiscardOthers(); //
+            this.pickCardsKeepSomeAndDiscardOthers();
+            //il a choisi de piocher avant de jouer donc on regarde s'il n'a pas la libraire dans sa citadelle
             this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
@@ -377,6 +378,7 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
      * @param thief the thief
      */
     @Override

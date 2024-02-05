@@ -41,6 +41,7 @@ public abstract class Player implements Opponent {
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
+    private boolean hasPlayed;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -52,6 +53,7 @@ public abstract class Player implements Opponent {
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
+        this.hasPlayed = false;
     }
 
     /**
@@ -66,6 +68,7 @@ public abstract class Player implements Opponent {
         this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
+        this.setHasPlayed(false);
         this.playARound();
         view.displayPlayerInfo(this);
     }
@@ -125,6 +128,14 @@ public abstract class Player implements Opponent {
         return listOfDistrictTypeMissing;
     }
 
+    public void setHasPlayed(boolean hasPlayed) {
+        this.hasPlayed = hasPlayed;
+    }
+
+    public boolean hasPlayed() {
+        return hasPlayed;
+    }
+
     /**
      * Represents the player's choice to draw x districts keep one and discard the other one
      * MUST CALL this.hand.add() AND this.deck.discard() AT EACH CALL
@@ -136,10 +147,15 @@ public abstract class Player implements Opponent {
             pickCardFromDeck(pickedCards);
         }
         if (pickedCards.isEmpty()) return;
-        this.view.displayPlayerPickCards(this, 1);
-        Card chosenCard = keepOneDiscardOthers(pickedCards);
-        this.hand.add(chosenCard);
-        pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        if ((!this.hasPlayed) && isLibraryPresent()) {
+            this.view.displayPlayerKeepBothCardsBecauseOfLibrary(this);
+            this.hand.addAll(pickedCards);
+        } else {
+            this.view.displayPlayerPickCards(this, 1);
+            Card chosenCard = keepOneDiscardOthers(pickedCards);
+            this.hand.add(chosenCard);
+            pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        }
     }
 
     void pickCardFromDeck(List<Card> pickedCards) {
@@ -195,6 +211,7 @@ public abstract class Player implements Opponent {
     }
 
     public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
+        setHasPlayed(true);
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
@@ -228,7 +245,7 @@ public abstract class Player implements Opponent {
             int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDistrictType();
             if (this.getNbGold() - nbGoldSave > 0)
-                this.view.displayGoldCollectedFromDisctrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
+                this.view.displayGoldCollectedFromDistrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 
@@ -530,6 +547,11 @@ public abstract class Player implements Opponent {
     }
 
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
+
+    public boolean isLibraryPresent() {
+        return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.LIBRARY));
+    }
+
 
     @Override
     public int getHandSize() {

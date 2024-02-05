@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.doReturn;
@@ -50,6 +52,8 @@ class RandomBotTest {
 
     @BeforeEach
     void setup() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);
@@ -336,4 +340,54 @@ class RandomBotTest {
                 new Object[]{0, true, new Card(District.MANOR)}
         );
     }
+
+    /**
+     * Tester la méthode chooseWhenToPickACard et voir quand il choisit de piocher avant de jouer si
+     * la méthode check est appelée
+     */
+    @Test
+    void chooseWhenToPickACardWhenPickBeforePlaying() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        assertFalse(spyRandomBot.hasPlayed());
+        spyRandomBot.chooseWhenToPickACard(1);
+        assertTrue(spyRandomBot.hasPlayed());
+        verify(spyRandomBot, times(1)).pickBeforePlaying(1);
+        verify(spyRandomBot, times(0)).playBeforePicking(1);
+    }
+
+    /**
+     * Tester la méthode chooseWhenToPickACard et voir quand il choisit de jouer avant de piocher si
+     * la méthode check n'est pas appelé
+     */
+    @Test
+    void chooseWhenToPickACardWhenPlayBeforePicking() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        spyRandomBot.chooseWhenToPickACard(1);
+        assertTrue(spyRandomBot.hasPlayed());
+        verify(spyRandomBot, times(0)).pickBeforePlaying(1);
+        verify(spyRandomBot, times(1)).playBeforePicking(1);
+    }
+
+    @Test
+    void pickBeforePlayingRandomBotUseCheckAndUseLibraryEffectInCitadelTest() {
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        spyRandomBot.setRandom(mockRandom);
+        spyRandomBot.setCitadel(List.of(new Card(District.LIBRARY)));
+        Bishop bishop = spy(new Bishop());
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        spyRandomBot.pickBeforePlaying(1);
+        verify(spyRandomBot, atLeastOnce()).isLibraryPresent();
+    }
+
 }

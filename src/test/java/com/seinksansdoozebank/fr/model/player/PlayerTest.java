@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -314,7 +315,6 @@ class PlayerTest {
         assertEquals(3, spyPlayer.numberOfCardsToPick());
     }
 
-
     @Test
     void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
@@ -389,7 +389,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
-        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(1)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
     @Test
@@ -401,6 +401,22 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(10, spyPlayer.getNbGold());
-        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(0)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
+
+
+    /**
+     * Tester si le bot qui possède la bibliothèque dans sa citadelle il repioche bien 2 cartes en plus
+     */
+    @Test
+    void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.PORT)));
+        spyPlayer.getHand().add(new Card(District.PORT));
+        spyPlayer.pickCardsKeepSomeAndDiscardOthers();
+        verify(view, times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
+        assertEquals(3, spyPlayer.getHand().size());
+    }
+
+
 }

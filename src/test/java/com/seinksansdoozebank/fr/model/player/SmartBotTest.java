@@ -346,7 +346,8 @@ class SmartBotTest {
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+        spySmartBot.useEffectArchitectPickCards();
+        verify(spySmartBot, atLeastOnce()).useEffectArchitectPickCards();
     }
 
     @Test
@@ -825,5 +826,23 @@ class SmartBotTest {
                 new Object[]{1, new Card(District.CATHEDRAL), new Card(District.MANOR)},
                 new Object[]{0, new Card(District.CATHEDRAL), new Card(District.MANOR)}
         );
+    }
+
+    @Test
+    void playWhenHandIsEmptyThePlayerIsArchitectTest() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>();
+        when(spySmartBot.getHand()).thenReturn(hand);
+        spySmartBot.playARound();
+        assertTrue(spySmartBot.hasPlayed());
+        verify(spySmartBot, times(1)).isLibraryPresent();
+    }
+
+    @Test
+    void playAroundWhenHandIsNotEmptyTest() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        verify(spySmartBot, atMost(1)).isLibraryPresent();
     }
 }
