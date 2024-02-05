@@ -376,7 +376,7 @@ public class SmartBot extends Player {
         return average.getAsDouble();
     }
 
-    protected Optional<Character> choseThiefTarget() {
+    protected Optional<Character> chooseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();

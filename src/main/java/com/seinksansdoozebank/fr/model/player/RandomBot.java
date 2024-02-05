@@ -211,7 +211,7 @@ public class RandomBot extends Player {
         }
     }
 
-    protected Optional<Character> choseThiefTarget() {
+    protected Optional<Character> chooseThiefTarget() {
         List<Character> targetableCharacters = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
                 !character.isDead()).toList();

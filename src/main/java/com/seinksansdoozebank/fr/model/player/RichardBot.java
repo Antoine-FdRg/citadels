@@ -20,7 +20,7 @@ public class RichardBot extends SmartBot {
     }
 
     @Override
-    protected Optional<Character> choseThiefTarget() {
+    protected Optional<Character> chooseThiefTarget() {
         List<Role> charactersInTheRound = this.getAvailableCharacters().stream().map(Character::getRole).toList();
         if (this.anOpponentIsAboutToWin()) {
             if (charactersInTheRound.contains(Role.BISHOP)) {
@@ -33,6 +33,6 @@ public class RichardBot extends SmartBot {
     }
 
     Optional<Character> useSuperChoseThiefEffect() {
-        return super.choseThiefTarget();
+        return super.chooseThiefTarget();
     }
 }

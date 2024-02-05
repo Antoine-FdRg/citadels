@@ -82,7 +82,7 @@ class RichardBotTest {
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(false);
 
-        richardBot.choseThiefTarget();
+        richardBot.chooseThiefTarget();
 
         verify(richardBot).useSuperChoseThiefEffect();
     }
@@ -93,7 +93,7 @@ class RichardBotTest {
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
 
-        richardBot.choseThiefTarget();
+        richardBot.chooseThiefTarget();
 
         verify(richardBot).useSuperChoseThiefEffect();
     }
@@ -104,7 +104,7 @@ class RichardBotTest {
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
 
-        Optional<Character> result = richardBot.choseThiefTarget();
+        Optional<Character> result = richardBot.chooseThiefTarget();
 
         Character expectedCharacter = new Bishop();
         assertTrue(result.isPresent());
@@ -118,7 +118,7 @@ class RichardBotTest {
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
 
-        Optional<Character> result = richardBot.choseThiefTarget();
+        Optional<Character> result = richardBot.chooseThiefTarget();
 
         Character expectedCharacter = new Condottiere();
         assertTrue(result.isPresent());
