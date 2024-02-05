@@ -55,7 +55,7 @@ public class Cli implements IView {
 
     @Override
     public void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() + 1}, attacker);
+        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() - 1}, attacker);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType) {
+    public void displayGoldCollectedFromDistrictType(Player player, int nbGold, DistrictType districtType) {
         CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()}, player);
     }
 
@@ -197,7 +197,18 @@ public class Cli implements IView {
     }
 
     @Override
+    public void displayPlayerKeepBothCardsBecauseOfLibrary(Player player){
+        CustomLogger.log(Level.INFO,"{0} pioche deux cartes et garde les deux car il possède la bibliothèque.", player);
+    }
+
+
+    @Override
     public void displayGameStuck() {
         CustomLogger.log(Level.INFO, ANSI_DEFAULT_STYLE_START + "### La partie semble bloquée, le calcul des points et des bonus va quand même être fait ###" + ANSI_DEFAULT_STYLE_END);
+    }
+
+    @Override
+    public void displayPlayerUseCemeteryEffect(Player player, Card card) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''effet du cimetière pour récupérer {1}. Il lui reste {2} gold(s).", new Object[]{player, card, player.getNbGold()}, player);
     }
 }

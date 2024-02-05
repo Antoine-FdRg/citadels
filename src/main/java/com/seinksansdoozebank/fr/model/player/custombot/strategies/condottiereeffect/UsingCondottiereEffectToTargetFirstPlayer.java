@@ -29,6 +29,11 @@ public class UsingCondottiereEffectToTargetFirstPlayer implements IUsingCondotti
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UsingCondottiereEffectToTargetFirstPlayer;
+    }
+
+        @Override
     public String toString() {
         return "UsingCondottiereEffectToTargetFirstPlayer";
     }

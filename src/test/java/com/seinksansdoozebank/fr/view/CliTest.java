@@ -129,7 +129,7 @@ class CliTest {
 
         view.displayPlayerUseCondottiereDistrict(player, defender, card.getDistrict());
 
-        String expectedOutput = player + " utilise l'effet du Condottiere pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() + 1) + " pièces d'or.";
+        String expectedOutput = player + " utilise l'effet du Condottiere pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() - 1) + " pièces d'or.";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
@@ -364,11 +364,11 @@ class CliTest {
     }
 
     @Test
-    void testDisplayGoldCollectedFromDisctrictType() {
+    void testDisplayGoldCollectedFromDistrictType() {
         int nbGold = 2; // Mock gold amount
         Merchant merchant = spy(new Merchant());
         when(player.getCharacter()).thenReturn(merchant);
-        view.displayGoldCollectedFromDisctrictType(player, nbGold, card.getDistrict().getDistrictType());
+        view.displayGoldCollectedFromDistrictType(player, nbGold, card.getDistrict().getDistrictType());
 
         String expectedOutput = player + " gagne " + nbGold + " pièces d'or grâce à ses quartiers de type " + card.getDistrict().getDistrictType() + " et l'effet du " + player.getCharacter() + ".";
 
@@ -380,6 +380,17 @@ class CliTest {
         view.displayGameStuck();
 
         String expectedOutput = "### La partie semble bloquée, le calcul des points et des bonus va quand même être fait ###";
+
+        assertLogged(Level.INFO, expectedOutput, false);
+    }
+
+    @Test
+    void testDisplayPlayerUseCemeteryEffect() {
+        Card card = new Card(District.TAVERN); // Mock card
+        when(player.getNbGold()).thenReturn(10);
+        view.displayPlayerUseCemeteryEffect(player, card);
+
+        String expectedOutput = player + " utilise l'effet du cimetière pour récupérer " + card + ". Il lui reste " + player.getNbGold() + " gold(s).";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }

@@ -17,6 +17,7 @@ import java.util.Random;
 public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy {
 
     private static final Random random = new Random();
+
     @Override
     public void apply(Player player, Thief thief) {
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
@@ -25,12 +26,17 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
         if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
             thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters));
         } else if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
-            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, player.getAvailableCharacters()));
-        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
+            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters));
+        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, characters)) {
             thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters));
         } else { //random
             thief.useEffect(characters.get(random.nextInt(characters.size())));
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UsingThiefEffectToFocusRusher;
     }
 
     @Override

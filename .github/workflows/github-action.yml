@@ -3,31 +3,33 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - '*'
+      - 'master'
+      - 'dev'
   pull_request:
     branches:
-      - '*'
+      - 'master'
+      - 'dev'
 
 jobs:
-  build:
-
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'adopt'
+          cache: 'maven'
 
       - name: Build with Maven
         run: mvn clean -B package --file pom.xml
 
-      - name: Run Tests
-        run: mvn clean test
+      - name: Run demo mode
+        run: mvn exec:java -Dexec.args="--demo"
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -109,5 +111,5 @@ jobs:
           -H "Content-Type: application/octet-stream" \
           "https://uploads.github.com/repos/$GITHUB_REPO/releases/$RELEASE_ID/assets?name=ProjetS5-v${NEW_VERSION}.jar" \
           --data-binary @$JAR_FILE_PATH
-                  
+          
           echo "JAR file uploaded to the GitHub release"

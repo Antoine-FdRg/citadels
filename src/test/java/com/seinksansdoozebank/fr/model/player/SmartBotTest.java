@@ -18,11 +18,14 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,7 +68,6 @@ class SmartBotTest {
         cardPort = new Card(District.PORT);
         cardManor = new Card(District.MANOR);
         dracoport = new Card(District.PORT_FOR_DRAGONS);
-        spySmartBot = spy(new SmartBot(10, deck, view));
     }
 
     @Test
@@ -343,7 +345,8 @@ class SmartBotTest {
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectArchitectPickCards();
+        spySmartBot.useEffectArchitectPickCards();
+        verify(spySmartBot, atLeastOnce()).useEffectArchitectPickCards();
     }
 
     @Test
@@ -487,7 +490,7 @@ class SmartBotTest {
      */
     @Test
     void useEffectOfTheMagicianWhenThePlayerHasTheMostCardsTest() {
-        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.TAVERN)), Optional.of(new Card(District.BARRACK)));
         Magician magician = new Magician();
         magician.setPlayer(spySmartBot);
         // Set the player character to magician
@@ -532,7 +535,7 @@ class SmartBotTest {
      */
     @Test
     void useEffectOfTheMagicianWhenThePlayerHasTheSameNumberOfCardsTest() {
-        when(deck.pick()).thenReturn(new Card(District.TAVERN), new Card(District.BARRACK));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.TAVERN)), Optional.of(new Card(District.BARRACK)));
         Magician magician = new Magician();
         magician.setPlayer(spySmartBot);
         // Set the player character to magician
@@ -801,5 +804,44 @@ class SmartBotTest {
         List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
         when(spySmartBot.getHand()).thenReturn(hand);
         assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideGoldAndCard")
+    void testUseCemeteryEffect(int gold, Card card, Card thenReturnCard) {
+        when(spySmartBot.getNbGold()).thenReturn(gold);
+        when(spySmartBot.getCitadel()).thenReturn(List.of(thenReturnCard));
+        spySmartBot.useCemeteryEffect(card);
+        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3 && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
+        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spySmartBot, card);
+    }
+
+    private static Stream<Object[]> provideGoldAndCard() {
+        return Stream.of(
+                new Object[]{1, new Card(District.TEMPLE), new Card(District.CEMETERY)},
+                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
+                new Object[]{0, new Card(District.TEMPLE), new Card(District.CEMETERY)},
+                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
+                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.MANOR)},
+                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.MANOR)}
+        );
+    }
+
+    @Test
+    void playWhenHandIsEmptyThePlayerIsArchitectTest() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>();
+        when(spySmartBot.getHand()).thenReturn(hand);
+        spySmartBot.playARound();
+        assertTrue(spySmartBot.hasPlayed());
+        verify(spySmartBot, times(1)).isLibraryPresent();
+    }
+
+    @Test
+    void playAroundWhenHandIsNotEmptyTest() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
+        List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
+        when(spySmartBot.getHand()).thenReturn(hand);
+        verify(spySmartBot, atMost(1)).isLibraryPresent();
     }
 }

@@ -43,7 +43,8 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickCardsKeepSomeAndDiscardOthers(); //
+            this.pickCardsKeepSomeAndDiscardOthers();
+            //il a choisi de piocher avant de jouer donc on regarde s'il n'a pas la libraire dans sa citadelle
             this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
@@ -200,7 +201,7 @@ public class SmartBot extends Player {
         List<Card> cardOfPlayerSortedByCost = playerWithMostDistricts.get().getCitadel().stream()
                 .sorted(Comparator.comparing(card -> card.getDistrict().getCost()))
                 .toList();
-        // Destroy the district with the highest cost, if not possible destroy the district with the second highest cost, etc...
+        // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
@@ -377,14 +378,16 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
      * @param thief the thief
      */
     @Override
     protected void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+        Optional<Character> victim = this.getAvailableCharacters().stream().filter(
+                character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
         if (victim.isEmpty()) {
-            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();
         }
         victim.ifPresent(character -> {
@@ -411,6 +414,16 @@ public class SmartBot extends Player {
             }
         }
         return null;
+    }
+
+    @Override
+    public void useCemeteryEffect(Card card) {
+        // if the district cost less than 3, the bot will keep it
+        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && card.getDistrict().getCost() < 3 && this.getNbGold() > 0) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
     }
 
     @Override

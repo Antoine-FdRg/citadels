@@ -32,6 +32,10 @@ public class RandomBot extends Player {
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
+        this.chooseWhenToPickACard(nbDistrictsToBuild);
+    }
+
+    public void chooseWhenToPickACard(int nbDistrictsToBuild) {
         if (random.nextBoolean()) {
             this.pickBeforePlaying(nbDistrictsToBuild);
         } else {
@@ -50,6 +54,7 @@ public class RandomBot extends Player {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
     }
+
 
     /**
      * Represents the player's choice to play something before picking
@@ -229,6 +234,15 @@ public class RandomBot extends Player {
                 .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 .findFirst()
                 .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
+    }
+
+    @Override
+    public void useCemeteryEffect(Card card) {
+        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0)) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
     }
 
     @Override

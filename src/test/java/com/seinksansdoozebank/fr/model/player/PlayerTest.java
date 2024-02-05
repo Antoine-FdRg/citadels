@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -183,8 +184,32 @@ class PlayerTest {
     @Test
     void pickACard() {
         int handSize = spyPlayer.hand.size();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
         this.spyPlayer.pickACard();
         assertEquals(handSize + 1, spyPlayer.hand.size());
+    }
+
+    @Test
+    void testPickCardFromDeck() {
+        /*
+            private void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
+    }
+         */
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.of(cardCostFive));
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(1, pickedCards.size());
+        assertEquals(cardCostFive, pickedCards.get(0));
+    }
+
+    @Test
+    void testPickCardFromDeckWhenNoCardsInDeck() {
+        List<Card> pickedCards = new ArrayList<>();
+        when(deck.pick()).thenReturn(Optional.empty());
+        spyPlayer.pickCardFromDeck(pickedCards);
+        assertEquals(0, pickedCards.size());
     }
 
     @Test
@@ -232,7 +257,7 @@ class PlayerTest {
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
         Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         spyPlayerSmart.play();
 
@@ -278,7 +303,7 @@ class PlayerTest {
     @Test
     void playWithObservatoryInCitadelle() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE), new Card(District.OBSERVATORY)));
-        when(deck.pick()).thenReturn(new Card(District.MANOR));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
         verify(view, times(1)).displayPlayerHasGotObservatory(spyPlayer);
         verify(spyPlayer.deck, times(3)).pick();
@@ -290,11 +315,21 @@ class PlayerTest {
         assertEquals(3, spyPlayer.numberOfCardsToPick());
     }
 
-
     @Test
     void numberOfCardsToPickWhenTheBotHasNotObservatoryInHisCitadelTest() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(new Card(District.TEMPLE)));
         assertEquals(2, spyPlayer.numberOfCardsToPick());
+    }
+
+    @Test
+    void destroyDistrictReturnDistrictDestroy() {
+        Player attacker = spy(new RandomBot(10, deck, view));
+        Player victim = spy(new RandomBot(10, deck, view));
+        when(victim.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        Card card = new Card(District.TEMPLE);
+        Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
+        assertTrue(optCard.isPresent());
+        assertEquals(card, optCard.get());
     }
 
 
@@ -354,7 +389,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
-        verify(view, times(1)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(1)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
     @Test
@@ -366,6 +401,22 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(10, spyPlayer.getNbGold());
-        verify(view, times(0)).displayGoldCollectedFromDisctrictType(any(), anyInt(), any());
+        verify(view, times(0)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
+
+
+    /**
+     * Tester si le bot qui possède la bibliothèque dans sa citadelle il repioche bien 2 cartes en plus
+     */
+    @Test
+    void checkAndUseLibraryEffectInCitadelWhenBotHasTheCardTest() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        when(deck.pick()).thenReturn(Optional.of(new Card(District.PORT)));
+        spyPlayer.getHand().add(new Card(District.PORT));
+        spyPlayer.pickCardsKeepSomeAndDiscardOthers();
+        verify(view, times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
+        assertEquals(3, spyPlayer.getHand().size());
+    }
+
+
 }

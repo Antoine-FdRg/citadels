@@ -71,7 +71,11 @@ public interface IView {
 
     void displayPlayerUseManufactureEffect(Player player);
 
-    void displayGoldCollectedFromDisctrictType(Player player, int nbGold, DistrictType districtType);
+    void displayGoldCollectedFromDistrictType(Player player, int nbGold, DistrictType districtType);
+
+    void displayPlayerKeepBothCardsBecauseOfLibrary(Player player);
 
     void displayGameStuck();
+
+    void displayPlayerUseCemeteryEffect(Player player, Card card);
 }
