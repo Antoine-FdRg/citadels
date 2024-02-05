@@ -381,8 +381,9 @@ public class SmartBot extends Player {
      *
      * @param thief the thief
      */
-    @Override
-    protected void useEffectThief(Thief thief) {
+
+
+    protected Optional<Character> chooseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
@@ -390,10 +391,7 @@ public class SmartBot extends Player {
             victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();
         }
-        victim.ifPresent(character -> {
-            thief.useEffect(character);
-            view.displayPlayerUseThiefEffect(this);
-        });
+        return victim;
     }
 
     public Card chooseCardToDiscardForLaboratoryEffect() {
