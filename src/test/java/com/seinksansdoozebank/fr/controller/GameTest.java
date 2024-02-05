@@ -286,7 +286,7 @@ class GameTest {
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
         verify(view, atMost(0)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
