@@ -261,4 +261,92 @@ class RichardBotTest {
     }
 
 
+    @Test
+    void chooseCharacterImplWhenShouldChooseBecauseLastCardToBuy(){
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        opponentsList.remove(opponentWithEmptyHand);
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseBecauseLastCardToBuy(any());
+        verify(richardBot,times(0)).shouldChooseAssassin();
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseAssassinTest(){
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.BARRACK))));
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseAssassin();
+        assertEquals(new Assassin(),richardBot.chooseCharacterImpl(charactersList));
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseMagicianTest(){
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE))));
+        when(richardBot.getHand()).thenReturn(new ArrayList<>());
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseMagician();
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseMerchantTest(){
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE))));
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT))));
+        richardBot.decreaseGold(9);
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseMerchant();
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseArchitectTest(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.BARRACK))));
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        richardBot.decreaseGold(2);
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseArchitect();
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseBishopTest(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseBishop();
+    }
+
+    @Test
+    void chooseCharacterBecauseShouldChooseBCondottiereTest(){
+        when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.PORT_FOR_DRAGONS))));
+        when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
+        richardBot.decreaseGold(8);
+        richardBot.chooseCharacterImpl(charactersList);
+        verify(richardBot,times(1)).shouldChooseCondottiere();
+    }
+
+
+
 }
