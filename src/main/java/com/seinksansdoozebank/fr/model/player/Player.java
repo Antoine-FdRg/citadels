@@ -569,4 +569,13 @@ public abstract class Player implements Opponent {
     public int hashCode() {
         return this.getId();
     }
+
+    /**
+     * method tells us if a player has 7 districts in his citadel
+     * @return a boolean
+     */
+    @Override
+    public boolean isAboutToWin(){
+        return this.getCitadel().size()==7;
+    }
 }
