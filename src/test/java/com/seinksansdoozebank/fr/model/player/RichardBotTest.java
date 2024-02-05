@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -64,7 +65,7 @@ class RichardBotTest {
         richardBot.chooseCharacter(new ArrayList<>(List.of(new Assassin())));
         when(richardBot.getOpponents()).thenReturn(List.of(condottierePlayer));
         when(richardBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
-        when(richardBot.thinkCondottiereWillBeChosenByTheLeadingOpponent()).thenReturn(true); // Simuler une condition pour choisir le condottiere
+        when(richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent()).thenReturn(true); // Simuler une condition pour choisir le condottiere
         // Exécution de la méthode à tester
         Character target = richardBot.chooseAssassinTarget();
 
@@ -84,7 +85,7 @@ class RichardBotTest {
         when(richardBot.getOpponents()).thenReturn(List.of(kingPlayer));
 
         when(richardBot.shouldPreventWealth()).thenReturn(false); // Simuler une condition pour choisir le voleur
-        when(richardBot.thinkCondottiereWillBeChosenByTheLeadingOpponent()).thenReturn(false); // Simuler une condition pour choisir le condottiere
+        when(richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent()).thenReturn(false); // Simuler une condition pour choisir le condottiere
         // Exécution de la méthode à tester
         Character target = richardBot.chooseAssassinTarget();
 
@@ -107,17 +108,52 @@ class RichardBotTest {
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(true);
-        boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereWillBeChosenByTheLeadingOpponent();
+        boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent();
         assertTrue(thinkCondottiereWillBeChosenByTheLeadingOpponent, "The bot should think the Condottiere will be chosen by the leading opponent if he is about to win.");
     }
 
     @Test
-    void thinkThiefWillBeChosenByTheLeadingOpponent() {
-        Player opponent = spy(new SmartBot(10, deck, view));
-        opponent.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        when(richardBot.getOpponents()).thenReturn(List.of(opponent));
-        when(opponent.isAboutToWin()).thenReturn(true);
-        boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefWillBeChosenByTheLeadingOpponent();
-        assertTrue(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief will be chosen by the leading opponent if he is about to win.");
+    void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasBeenSeen() {
+        Player opponentThief = spy(new SmartBot(10, deck, view));
+        opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        when(opponentThief.isAboutToWin()).thenReturn(true);
+        when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentCondottiere));
+        when(richardBot.getCharactersSeenInRound()).thenReturn(List.of(new Thief()));
+        when(richardBot.getCharactersNotInRound()).thenReturn(List.of());
+        boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
+        assertTrue(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief has been chosen by the leading opponent if he is about to win.");
+    }
+
+    @Test
+    void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasntBeenSeen() {
+        Player opponentThief = spy(new SmartBot(10, deck, view));
+        opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        when(opponentThief.isAboutToWin()).thenReturn(true);
+        when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentThief));
+        when(richardBot.getCharactersSeenInRound()).thenReturn(List.of(new Condottiere()));
+        when(richardBot.getCharactersNotInRound()).thenReturn(List.of());
+        boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
+        assertTrue(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief has been chosen by the leading opponent if he is about to win.");
+    }
+
+    @Test
+    void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefIsNotInRound() {
+        Player opponentThief = spy(new SmartBot(10, deck, view));
+        opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        when(opponentThief.isAboutToWin()).thenReturn(true);
+        when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentThief));
+        when(richardBot.getCharactersSeenInRound()).thenReturn(List.of());
+        when(richardBot.getCharactersNotInRound()).thenReturn(List.of(new Thief()));
+        boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
+        assertFalse(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief has not been chose because thief is not in round.");
     }
 }
