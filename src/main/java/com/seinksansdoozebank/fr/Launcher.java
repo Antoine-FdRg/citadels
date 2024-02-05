@@ -14,6 +14,7 @@ import com.seinksansdoozebank.fr.view.Cli;
 public class Launcher {
     public static void main(String[] args) {
         // Define a class to hold your command-line parameters
+        Launcher launcher = new Launcher();
         CommandLineArgs cmdArgs = new CommandLineArgs();
 
         // Parse command-line arguments
@@ -22,6 +23,13 @@ public class Launcher {
                 .build()
                 .parse(args);
 
+        if (cmdArgs.isDemo()) {
+            launcher.runDemo();
+        }
+    }
+
+
+    public void runDemo() {
         Game game = new GameBuilder(new Cli(), new Deck())
                 .addRandomBot()
                 .addSmartBot()
@@ -33,5 +41,13 @@ public class Launcher {
                         new CardChoosingStrategy())
                 .build();
         game.run();
+    }
+
+    public void twoThousand() {
+
+    }
+
+    public void csv() {
+
     }
 }
