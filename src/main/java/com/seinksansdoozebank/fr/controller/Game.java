@@ -59,8 +59,6 @@ public class Game {
         this.init();
         this.nbCurrentRound = 1;
         while (!finished && !this.isStuck()) {
-            System.out.println("Round " + nbCurrentRound + " !isFinished: " + !finished + " !isStuck: " + !this.isStuck());
-            // CustomStatisticsLogger.log(Level.INFO, "Round {0} !isFinished: {1} !isStuck: {2}", new Object[]{nbCurrentRound, !finished, !this.isStuck()});
             view.displayRound(nbCurrentRound);
             createCharacters();
             this.playARound();

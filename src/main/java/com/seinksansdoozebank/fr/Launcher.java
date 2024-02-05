@@ -58,11 +58,11 @@ public class Launcher {
     public void twoThousand() {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
-        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(50000);
-        analyzer.runAndAnalyze(2, 2, 2);
-        analyzer = new GameStatisticsAnalyzer(50000);
+        // GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(2000);
+        // analyzer.runAndAnalyze(2, 2, 2);
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000);
         analyzer.runAndAnalyze(0, 3, 3);
-        analyzer = new GameStatisticsAnalyzer(50000);
+        analyzer = new GameStatisticsAnalyzer(1000);
         analyzer.runAndAnalyze(0, 6, 0);
     }
 
