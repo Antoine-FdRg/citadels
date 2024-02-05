@@ -10,11 +10,11 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereef
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
-import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 
 public class Launcher {
     public static void main(String[] args) {
         // Define a class to hold your command-line parameters
+        Launcher launcher = new Launcher();
         CommandLineArgs cmdArgs = new CommandLineArgs();
 
         // Parse command-line arguments
@@ -24,17 +24,30 @@ public class Launcher {
                 .parse(args);
 
         if (cmdArgs.isDemo()) {
-            Game game = new GameBuilder(new Cli(), new Deck())
-                    .addRandomBot()
-                    .addSmartBot()
-                    .addRandomBot()
-                    .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                            new UsingThiefEffectToFocusRusher(),
-                            new UsingMurdererEffectToFocusRusher(),
-                            new UsingCondottiereEffectToTargetFirstPlayer(),
-                            new CardChoosingStrategy())
-                    .build();
-            game.run();
+            launcher.runDemo();
         }
+    }
+
+
+    public void runDemo() {
+        Game game = new GameBuilder(new Cli(), new Deck())
+                .addRandomBot()
+                .addSmartBot()
+                .addRandomBot()
+                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
+                        new UsingThiefEffectToFocusRusher(),
+                        new UsingMurdererEffectToFocusRusher(),
+                        new UsingCondottiereEffectToTargetFirstPlayer(),
+                        new CardChoosingStrategy())
+                .build();
+        game.run();
+    }
+
+    public void twoThousand() {
+
+    }
+
+    public void csv() {
+
     }
 }
