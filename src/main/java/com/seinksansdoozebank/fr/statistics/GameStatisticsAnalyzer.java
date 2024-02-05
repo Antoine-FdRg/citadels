@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.statistics;
 
 import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
@@ -16,6 +17,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffec
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
@@ -37,10 +39,12 @@ public class GameStatisticsAnalyzer {
         this.playerStatisticsMap = new HashMap<>();
     }
 
-    public void runAndAnalyze() {
+    public void runAndAnalyze(int numRandomBot, int numSmartBot, int numCustomBot) {
         for (int i = 0; i < numSessions; i++) {
-            Game game = createGame(2, 2, 2);
+            Bank.reset();
+            Game game = createGame(numRandomBot, numSmartBot, numCustomBot);
             game.run();
+            CustomStatisticsLogger.log(Level.INFO, "Session " + i + " completed");
             analyzeGameResults(game);
             Player.resetIdCounter();
         }
@@ -74,17 +78,14 @@ public class GameStatisticsAnalyzer {
         CustomStatisticsLogger.log(Level.INFO, "Aggregated Player Statistics:");
 
         // Header for the table
-        StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Games Last | Average Score | Winning Percentage | Detailed Placement                                             |\n");
-        header.append("|-------------------|-------------|-----------|------------|------------|---------------|---------------------|----------------------------------------------------------------|\n");
-
-        StringBuilder table = new StringBuilder(header);
+        StringBuilder table = getStringBuilder();
 
         for (Map.Entry<Player, PlayerStatistics> entry : playerStatisticsMap.entrySet()) {
             Player player = entry.getKey();
             PlayerStatistics stats = entry.getValue();
 
             // Constructing the row for each player
-            String row = String.format("| %-18s| %-12d| %-10d| %-11d| %-11d| %-14.3f| %-19.1f| %-63s|\n",
+            String row = String.format("| %-18s| %-12d| %-10d| %-11d| %-11d| %-14.3f| %-19.1f| %-63s|%n",
                     player.toString(), stats.getTotalGames(), stats.getGamesWon(),
                     stats.getGamesLost(), stats.getGamesLast(), stats.getAverageScore(),
                     stats.getWinningPercentage(), stats.getDetailedPlacement());
@@ -96,6 +97,11 @@ public class GameStatisticsAnalyzer {
         CustomStatisticsLogger.log(Level.INFO, table.toString());
     }
 
+    private static StringBuilder getStringBuilder() {
+        StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Games Last | Average Score | Winning Percentage | Detailed Placement                                             |\n");
+        header.append("|-------------------|-------------|-----------|------------|------------|---------------|---------------------|----------------------------------------------------------------|\n");
+        return new StringBuilder(header);
+    }
 
 
     private Game createGame(int numRandomBots, int numSmartBots, int numCustomBots) {

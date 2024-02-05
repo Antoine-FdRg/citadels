@@ -150,28 +150,4 @@ public class CustomBot extends RandomBot {
     public String toString() {
         return "Le bot custom " + this.id;
     }
-
-    public IPickingStrategy getPickingStrategy() {
-        return pickingStrategy;
-    }
-
-    public ICharacterChoosingStrategy getCharacterChoosingStrategy() {
-        return characterChoosingStrategy;
-    }
-
-    public IUsingThiefEffectStrategy getUsingThiefEffectStrategy() {
-        return usingThiefEffectStrategy;
-    }
-
-    public IUsingMurdererEffectStrategy getUsingMurdererEffectStrategy() {
-        return usingMurdererEffectStrategy;
-    }
-
-    public IUsingCondottiereEffectStrategy getUsingCondottiereEffectStrategy() {
-        return usingCondottiereEffectStrategy;
-    }
-
-    public ICardChoosingStrategy getCardChoosingStrategy() {
-        return cardChoosingStrategy;
-    }
 }

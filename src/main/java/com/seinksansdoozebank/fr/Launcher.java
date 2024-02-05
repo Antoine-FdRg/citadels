@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr;
 import com.beust.jcommander.JCommander;
 import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
@@ -40,6 +41,7 @@ public class Launcher {
 
     public void runDemo() {
         CustomLogger.setLevel(Level.ALL);
+        Bank.reset();
         Game game = new GameBuilder(new Cli(), new Deck())
                 .addRandomBot()
                 .addSmartBot()
@@ -56,8 +58,8 @@ public class Launcher {
     public void twoThousand() {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
-        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000);
-        analyzer.runAndAnalyze();
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(10000);
+        analyzer.runAndAnalyze(2, 2, 2);
     }
 
     public void csv() {
