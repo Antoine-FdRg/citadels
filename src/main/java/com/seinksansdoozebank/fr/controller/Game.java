@@ -206,7 +206,7 @@ public class Game {
      *
      * @return The player who win the game
      */
-    protected Player getWinner() {
+    public Player getWinner() {
         Player bestPlayer = players.get(0);
         for (Player currentPlayer : players) {
             if (currentPlayer.getScore() > bestPlayer.getScore()) {
@@ -316,5 +316,9 @@ public class Game {
             Optional<Player> playerByRole = getPlayerByRole(Role.THIEF);
             playerByRole.ifPresent(view::displayActualNumberOfGold);
         }
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 }

@@ -32,4 +32,9 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
             thief.useEffect(characters.get(random.nextInt(characters.size())));
         }
     }
+
+    @Override
+    public String toString() {
+        return "UsingThiefEffectToFocusRusher";
+    }
 }

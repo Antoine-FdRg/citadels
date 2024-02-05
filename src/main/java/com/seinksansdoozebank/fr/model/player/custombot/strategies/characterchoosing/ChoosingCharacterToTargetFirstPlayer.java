@@ -49,4 +49,9 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         }
         return characters.get(this.random.nextInt(characters.size()));
     }
+
+    @Override
+    public String toString() {
+        return "ChoosingCharacterToTargetFirstPlayer";
+    }
 }

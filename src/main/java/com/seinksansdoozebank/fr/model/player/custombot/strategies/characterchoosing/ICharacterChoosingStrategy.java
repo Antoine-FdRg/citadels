@@ -17,4 +17,7 @@ public interface ICharacterChoosingStrategy {
      * @return the chosen character
      */
     Character apply(Player player, List<Character> characters);
+
+    @Override
+    String toString();
 }

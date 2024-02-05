@@ -5,31 +5,36 @@ import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.seinksansdoozebank.fr.model.player.RandomBot;
-import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
+import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static com.seinksansdoozebank.fr.view.logger.CustomLogger.resetAvailableColors;
 
 
 public class GameStatisticsAnalyzer {
+    private final Random random = new Random();
     private final int numSessions;
     private final List<Game> games;
 
@@ -46,10 +51,11 @@ public class GameStatisticsAnalyzer {
             int numRandomBots = getRandomNumber(0, 6);
             int numSmartBots = getRandomNumber(0, 6 - numRandomBots);
             int numCustomBots = 6 - numRandomBots - numSmartBots;
-            System.out.println("Random Bots: " + numRandomBots);
-            System.out.println("Smart Bots: " + numSmartBots);
-            System.out.println("Custom Bots: " + numCustomBots);
+            //CustomStatisticsLogger.log(Level.INFO, "Random Bots: {0}", new Object[]{numRandomBots});
+            //CustomStatisticsLogger.log(Level.INFO, "Smart Bots: {0}", new Object[]{numSmartBots});
+            //CustomStatisticsLogger.log(Level.INFO, "Custom Bots: {0}", new Object[]{numCustomBots});
             Game game = createGame(numRandomBots, numSmartBots, numCustomBots);
+            CustomStatisticsLogger.log(Level.INFO, "Game {0}", new Object[]{i + 1});
             game.run();
             games.add(game);
         }
@@ -73,16 +79,13 @@ public class GameStatisticsAnalyzer {
             }
         }
 
-        // Save statistics to Excel file
-        saveToExcel(winsByPlayerType, averageScoresByPlayerType, placementsByPlayerType);
-
         // Perform statistical analysis
         performStatisticalAnalysis(winsByPlayerType, averageScoresByPlayerType, placementsByPlayerType);
     }
 
     private void performStatisticalAnalysis(Map<String, Integer> winsByPlayerType, Map<String, Double> averageScoresByPlayerType, Map<String, List<Integer>> placementsByPlayerType) {
-        System.out.println("Statistical Analysis:");
-        System.out.println("--------------------");
+        CustomStatisticsLogger.log(Level.INFO, "Statistical Analysis:");
+        CustomStatisticsLogger.log(Level.INFO, "--------------------");
 
         for (Map.Entry<String, Integer> entry : winsByPlayerType.entrySet()) {
             String playerType = entry.getKey();
@@ -92,20 +95,20 @@ public class GameStatisticsAnalyzer {
             double winRate = wins / (double) totalGames * 100;
 
             int totalGamesWithPlayerType = placementsByPlayerType.get(playerType).size();
-            System.out.println("Total Games with " + playerType + ": " + totalGamesWithPlayerType);
+            CustomStatisticsLogger.log(Level.INFO, "Total Games with {0}: {1}", new Object[]{playerType, totalGamesWithPlayerType});
 
-            System.out.println("Player Type: " + playerType);
-            System.out.println("Total Games: " + totalGamesWithPlayerType);
-            System.out.println("Wins: " + wins);
-            System.out.println("Win Rate: " + winRate + "%");
-            System.out.println("Average Score: " + averageScore);
+            CustomStatisticsLogger.log(Level.INFO, "Player Type: {0}", new Object[]{playerType});
+            CustomStatisticsLogger.log(Level.INFO, "Total Games: {0}", new Object[]{totalGamesWithPlayerType});
+            CustomStatisticsLogger.log(Level.INFO, "Wins: {0}", new Object[]{wins});
+            CustomStatisticsLogger.log(Level.INFO, "Win Rate: {0}%", new Object[]{winRate});
+            CustomStatisticsLogger.log(Level.INFO, "Average Score: {0}", new Object[]{averageScore});
 
             // Analyze placements
             List<Integer> placements = placementsByPlayerType.get(playerType);
             Map<Integer, Long> placementCounts = placements.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-            System.out.println("Placements: " + placementCounts);
+            CustomStatisticsLogger.log(Level.INFO, "Placements: {0}", new Object[]{placementCounts});
 
-            System.out.println();
+            CustomStatisticsLogger.log(Level.INFO, "");
         }
     }
 
@@ -137,7 +140,7 @@ public class GameStatisticsAnalyzer {
             type += "CondottiereEffect-";
         }
         if (customBot.getCardChoosingStrategy() != null) {
-            type += "CardChoosingStrategy";
+            type += "CardChoosingStrategy-";
         }
         return type;
     }
@@ -159,11 +162,11 @@ public class GameStatisticsAnalyzer {
     }
 
     private void generateARandomCustomBot(GameBuilder gameBuilder) {
-        ChoosingCharacterToTargetFirstPlayer choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
-        UsingThiefEffectToFocusRusher usingThiefEffectToFocusRusher = new UsingThiefEffectToFocusRusher();
-        UsingMurdererEffectToFocusRusher usingMurdererEffectToFocusRusher = new UsingMurdererEffectToFocusRusher();
-        UsingCondottiereEffectToTargetFirstPlayer usingCondottiereEffectToTargetFirstPlayer = new UsingCondottiereEffectToTargetFirstPlayer();
-        CardChoosingStrategy cardChoosingStrategy = new CardChoosingStrategy();
+        ICharacterChoosingStrategy choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
+        IUsingThiefEffectStrategy usingThiefEffectToFocusRusher = new UsingThiefEffectToFocusRusher();
+        IUsingMurdererEffectStrategy usingMurdererEffectToFocusRusher = new UsingMurdererEffectToFocusRusher();
+        IUsingCondottiereEffectStrategy usingCondottiereEffectToTargetFirstPlayer = new UsingCondottiereEffectToTargetFirstPlayer();
+        ICardChoosingStrategy cardChoosingStrategy = new CardChoosingStrategy();
         // get a random bot with some, none or all strategies
         // get 5 numbers from 0 to 1
         int[] randomStrategies = new int[5];
@@ -178,70 +181,14 @@ public class GameStatisticsAnalyzer {
                 randomStrategies[4] == 1 ? cardChoosingStrategy : null);
     }
 
-
-    private void saveToExcel(Map<String, Integer> winsByPlayerType, Map<String, Double> averageScoresByPlayerType, Map<String, List<Integer>> placementsByPlayerType) {
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Game Statistics");
-
-            // Create headers
-            Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("Player Type");
-            headerRow.createCell(1).setCellValue("Total Games");
-            headerRow.createCell(2).setCellValue("Wins");
-            headerRow.createCell(3).setCellValue("Win Rate (%)");
-            headerRow.createCell(4).setCellValue("Average Score");
-            headerRow.createCell(5).setCellValue("Average Placement");
-            headerRow.createCell(6).setCellValue("Max Placement");
-            headerRow.createCell(7).setCellValue("Min Placement");
-
-            // Populate data
-            int rowNum = 1;
-            for (Map.Entry<String, Integer> entry : winsByPlayerType.entrySet()) {
-                Row row = sheet.createRow(rowNum++);
-                String playerType = entry.getKey();
-                int wins = entry.getValue();
-                double totalGames = games.size();
-                double winRate = (wins / totalGames) * 100;
-                double averageScore = averageScoresByPlayerType.getOrDefault(playerType, 0.0);
-
-                int totalGamesWithPlayerType = placementsByPlayerType.get(playerType).size();
-
-                // Create cell for player type, wins, total games, win rate, and average score
-                row.createCell(0).setCellValue(playerType);
-                row.createCell(1).setCellValue(totalGamesWithPlayerType);
-                row.createCell(2).setCellValue(wins);
-                row.createCell(3).setCellValue(winRate);
-                row.createCell(4).setCellValue(averageScore);
-
-                // Get placements for the player type
-                List<Integer> placements = placementsByPlayerType.get(playerType);
-                // Calculate average placement
-                double averagePlacement = placements.stream().mapToInt(Integer::intValue).average().orElse(0.0);
-                // Calculate max and min placements
-                int maxPlacement = placements.stream().mapToInt(Integer::intValue).max().orElse(0);
-                int minPlacement = placements.stream().mapToInt(Integer::intValue).min().orElse(0);
-
-                // Create cell for average placement, max placement, and min placement
-                row.createCell(5).setCellValue(averagePlacement);
-                row.createCell(6).setCellValue(maxPlacement);
-                row.createCell(7).setCellValue(minPlacement);
-            }
-
-            // Write to file
-            try (FileOutputStream fileOut = new FileOutputStream("game_statistics.xlsx")) {
-                workbook.write(fileOut);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private int getRandomNumber(int min, int max) {
-        return (int) (Math.random() * (max - min + 1)) + min;
+        return random.nextInt(max - min + 1) + min;
     }
 
     public static void main(String[] args) {
         int numSessions = 100;
+        CustomStatisticsLogger.setLevel(Level.INFO);
+        CustomLogger.setLevel(Level.OFF);
         GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(numSessions);
         analyzer.runAndAnalyze();
     }

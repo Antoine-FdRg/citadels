@@ -27,4 +27,9 @@ public class UsingCondottiereEffectToTargetFirstPlayer implements IUsingCondotti
                 .min(Comparator.comparingInt(c -> c.getDistrict().getCost()));
         cheaperCardToDestroy.ifPresent(card -> condottiere.useEffect(targetOpponent, card.getDistrict()));
     }
+
+    @Override
+    public String toString() {
+        return "UsingCondottiereEffectToTargetFirstPlayer";
+    }
 }

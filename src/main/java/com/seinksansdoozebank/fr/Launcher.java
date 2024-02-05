@@ -9,9 +9,13 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereef
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
+
+import java.util.logging.Level;
 
 public class Launcher {
     public static void main(String[] args) {
+        CustomLogger.setLevel(Level.OFF);
         Game game = new GameBuilder(new Cli(), new Deck())
                 .addRandomBot()
                 .addSmartBot()

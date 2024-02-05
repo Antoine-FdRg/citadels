@@ -31,4 +31,9 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
         }
         return Optional.empty();
     }
+
+    @Override
+    public String toString() {
+        return "CardChoosingStrategy";
+    }
 }

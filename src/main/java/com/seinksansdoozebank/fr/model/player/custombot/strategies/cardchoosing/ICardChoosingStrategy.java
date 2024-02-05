@@ -13,4 +13,7 @@ import java.util.Optional;
 public interface ICardChoosingStrategy {
 
     Optional<Card> apply(Player player);
+
+    @Override
+    String toString();
 }
