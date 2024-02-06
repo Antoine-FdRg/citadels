@@ -576,12 +576,12 @@ class GameTest {
 
     @Test
     void testUseCemeteryEffectWithNoPlayerWithCemetery() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Condottiere condottiere = spy(new Condottiere());
+        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
         Player player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condotierre);
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(0)).useCemeteryEffect(any());

@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -213,6 +214,7 @@ class SmartBotTest {
         characters.add(king);
         characters.add(merchant);
         characters.add(condottiere);
+
         return characters;
     }
 
@@ -843,5 +845,21 @@ class SmartBotTest {
         List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TAVERN)));
         when(spySmartBot.getHand()).thenReturn(hand);
         verify(spySmartBot, atMost(1)).isLibraryPresent();
+    }
+
+    @Test
+    void chooseImplMagicianTest(){
+        List<Character> characters = createCharactersList();
+        Magician magicien=new Magician();
+        characters.add(magicien);
+        when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
+        assertEquals(new Magician(),spySmartBot.chooseCharacterImpl(characters));
+    }
+
+    @Test
+    void chooseImplMagicianFailedTest(){
+        List<Character> characters = createCharactersList();
+        when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
+        assertNotEquals(new Magician(),spySmartBot.chooseCharacterImpl(characters));
     }
 }
