@@ -109,6 +109,11 @@ public class RichardBot extends SmartBot {
      */
     @Override
     protected void useEffectMagician(Magician magician) {
+        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this);
+        if (leadingOpponent.isAboutToWin()) {
+            magician.useEffect(leadingOpponent, null);
+            return;
+        }
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
                 .max(Comparator.comparingInt(Opponent::getHandSize));
         playerWithMostDistricts.ifPresent(opponent -> magician.useEffect(opponent, null));
