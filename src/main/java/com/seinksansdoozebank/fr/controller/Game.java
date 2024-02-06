@@ -94,12 +94,6 @@ public class Game {
                 checkPlayerStolen(player);
                 player.play();
             }
-            int nbCardInGame = this.deck.getDeck().size();
-            for (Player p : this.players) {
-                nbCardInGame += p.getHand().size();
-                nbCardInGame += p.getCitadel().size();
-            }
-            System.out.println("Nombre de cartes dans le jeu : " + nbCardInGame);
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
         }

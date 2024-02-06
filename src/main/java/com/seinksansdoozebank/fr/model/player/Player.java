@@ -63,7 +63,7 @@ public abstract class Player implements Opponent {
 
     /**
      * Represents the player's turn
-     * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
+     *
      */
     public void play() {
         if (this.getCharacter().isDead()) {
@@ -468,7 +468,6 @@ public abstract class Player implements Opponent {
             this.citadel.remove(card.get());
             boolean someoneUseCemeteryToKeepDistrict = false;
             for (Opponent opponent : this.opponents) {
-                System.out.println(opponent.getOpponentCharacter());
                 if (opponent.useCemeteryEffect(card.get())) {
                     someoneUseCemeteryToKeepDistrict = true;
                     break;
