@@ -848,18 +848,18 @@ class SmartBotTest {
     }
 
     @Test
-    void chooseImplMagicianTest(){
+    void chooseImplMagicianTest() {
         List<Character> characters = createCharactersList();
-        Magician magicien=new Magician();
+        Magician magicien = new Magician();
         characters.add(magicien);
         when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
-        assertEquals(new Magician(),spySmartBot.chooseCharacterImpl(characters));
+        assertEquals(new Magician(), spySmartBot.chooseCharacterImpl(characters));
     }
 
     @Test
-    void chooseImplMagicianFailedTest(){
+    void chooseImplMagicianFailedTest() {
         List<Character> characters = createCharactersList();
         when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
-        assertNotEquals(new Magician(),spySmartBot.chooseCharacterImpl(characters));
+        assertNotEquals(new Magician(), spySmartBot.chooseCharacterImpl(characters));
     }
 }

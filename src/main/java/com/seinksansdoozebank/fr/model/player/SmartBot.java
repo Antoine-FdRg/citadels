@@ -137,9 +137,9 @@ public class SmartBot extends Player {
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
-        if(this.getHand().size()<=1){
-            Optional<Character> optionalCharacter=characters.stream().filter(c-> c.getRole()==Role.MAGICIAN).findFirst();
-            if(optionalCharacter.isPresent()){
+        if (this.getHand().size() <= 1) {
+            Optional<Character> optionalCharacter = characters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst();
+            if (optionalCharacter.isPresent()) {
                 return optionalCharacter.get();
             }
         }
