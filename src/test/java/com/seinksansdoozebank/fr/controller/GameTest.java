@@ -558,8 +558,8 @@ class GameTest {
 
     @Test
     void testUseCemeteryEffect() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Condottiere condottiere = spy(new Condottiere());
+        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
         RandomBot player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
@@ -567,7 +567,7 @@ class GameTest {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
         player.setRandom(mockRandom);
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condotierre);
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(1)).useCemeteryEffect(any());
