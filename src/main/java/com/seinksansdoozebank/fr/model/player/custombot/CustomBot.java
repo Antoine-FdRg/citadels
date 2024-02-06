@@ -121,7 +121,7 @@ public class CustomBot extends RandomBot {
 
         CustomBot customBot = (CustomBot) o;
 
-        return customBot.getId() != this.getId() &&
+        return customBot.getId() == this.getId() &&
                 Objects.equals(characterChoosingStrategy, customBot.characterChoosingStrategy) &&
                 Objects.equals(pickingStrategy, customBot.pickingStrategy) &&
                 Objects.equals(usingThiefEffectStrategy, customBot.usingThiefEffectStrategy) &&
