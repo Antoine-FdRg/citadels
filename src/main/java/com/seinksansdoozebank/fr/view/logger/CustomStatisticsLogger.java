@@ -1,7 +1,5 @@
 package com.seinksansdoozebank.fr.view.logger;
 
-import com.seinksansdoozebank.fr.model.player.Player;
-
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -35,5 +34,10 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof CardChoosingStrategy;
+    }
+
+    @Override
+    public int hashCode() {
+        return CardChoosingStrategy.class.getName().hashCode();
     }
 }
