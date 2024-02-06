@@ -77,7 +77,7 @@ class RichardBotTest {
         assertEquals(new Magician(),orderedCharacters.get(1));
         assertEquals(new Merchant(),orderedCharacters.get(2));
         assertEquals(new Architect(),orderedCharacters.get(3));
-        //assertEquals(new Bishop(),orderedCharacters.get(4));
+        assertEquals(new Bishop(), orderedCharacters.get(4));
         assertEquals(new Condottiere(),orderedCharacters.get(5));
     }
 
