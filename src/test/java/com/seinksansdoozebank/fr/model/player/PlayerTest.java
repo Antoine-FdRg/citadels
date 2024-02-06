@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -24,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -42,6 +42,8 @@ class PlayerTest {
 
     @BeforeEach
     void setup() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         cardCostThree = new Card(District.BARRACK);
@@ -419,7 +421,7 @@ class PlayerTest {
     }
 
     @Test
-    void isAboutToWInTestTrue(){
+    void isAboutToWInTestTrue() {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -429,8 +431,9 @@ class PlayerTest {
                 new Card(District.BARRACK))));
         assertTrue(spyPlayer.isAboutToWin());
     }
+
     @Test
-    void isAboutToWInTestFalse(){
+    void isAboutToWInTestFalse() {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.PORT))));
         assertFalse(spyPlayer.isAboutToWin());
     }
