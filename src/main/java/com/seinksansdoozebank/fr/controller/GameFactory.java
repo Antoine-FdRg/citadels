@@ -75,6 +75,17 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
+    public static Game createGameOfBuilderBot(IView view, int nbPlayers) {
+        if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
+        }
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        for (int i = 0; i < nbPlayers; i++) {
+            gameBuilder.addBuilderBot();
+        }
+        return gameBuilder.build();
+    }
+
     public static Game createGameOfAllTypeOfBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
@@ -91,6 +102,7 @@ public class GameFactory {
                 new CardChoosingStrategy()
         );
         gameBuilder.addRichardBot();
+        gameBuilder.addBuilderBot();
         return gameBuilder.build();
     }
 }

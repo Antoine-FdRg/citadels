@@ -12,8 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class BotBuilder extends SmartBot {
-    public BotBuilder(int nbGold, Deck deck, IView view) {
+public class BuilderBot extends SmartBot {
+    public BuilderBot(int nbGold, Deck deck, IView view) {
         super(nbGold, deck, view);
     }
 
@@ -93,6 +93,12 @@ public class BotBuilder extends SmartBot {
     }
 
 
+    /**
+     * Choose a card to play, if the bot has a character that targets a specific district, it will play the most expensive card of that type
+     * If none of the above, it will play the most expensive card
+     *
+     * @return the chosen card
+     */
     @Override
     protected Optional<Card> chooseCard() {
         //Gathering districts which are not already built in player's citadel
@@ -114,11 +120,20 @@ public class BotBuilder extends SmartBot {
     }
 
 
+    /**
+     * Get the most expensive card from the list of cards
+     *
+     * @param notAlreadyPlayedCardList the list of cards
+     * @return the most expensive card
+     */
     protected Optional<Card> getMostExpansiveCard(List<Card> notAlreadyPlayedCardList) {
         return notAlreadyPlayedCardList.stream().max(Comparator.comparing(card -> card.getDistrict().getCost()));
     }
 
 
+    /**
+     * Use the effect of the architect
+     */
     @Override
     protected void useEffectOfTheArchitect() {
         int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
@@ -136,5 +151,10 @@ public class BotBuilder extends SmartBot {
                 this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Le bot builder " + this.id;
     }
 }
