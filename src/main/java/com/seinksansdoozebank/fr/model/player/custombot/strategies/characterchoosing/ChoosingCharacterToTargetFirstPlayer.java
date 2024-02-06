@@ -56,4 +56,9 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
     public boolean equals(Object obj) {
         return obj instanceof ChoosingCharacterToTargetFirstPlayer;
     }
+
+    @Override
+    public int hashCode() {
+        return ChoosingCharacterToTargetFirstPlayer.class.getName().hashCode();
+    }
 }

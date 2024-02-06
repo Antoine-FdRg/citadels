@@ -35,4 +35,9 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
     public boolean equals(Object obj) {
         return obj instanceof CardChoosingStrategy;
     }
+
+    @Override
+    public int hashCode() {
+        return CardChoosingStrategy.class.getName().hashCode();
+    }
 }

@@ -15,4 +15,9 @@ public class PickingAlwaysDistrict implements IPickingStrategy {
     public boolean equals(Object obj) {
         return obj instanceof PickingAlwaysDistrict;
     }
+
+    @Override
+    public int hashCode() {
+        return PickingAlwaysDistrict.class.getName().hashCode();
+    }
 }

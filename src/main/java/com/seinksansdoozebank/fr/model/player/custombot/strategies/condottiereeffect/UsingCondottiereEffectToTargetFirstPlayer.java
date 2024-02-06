@@ -32,4 +32,9 @@ public class UsingCondottiereEffectToTargetFirstPlayer implements IUsingCondotti
     public boolean equals(Object obj) {
         return obj instanceof UsingCondottiereEffectToTargetFirstPlayer;
     }
+
+    @Override
+    public int hashCode() {
+        return UsingCondottiereEffectToTargetFirstPlayer.class.getName().hashCode();
+    }
 }
