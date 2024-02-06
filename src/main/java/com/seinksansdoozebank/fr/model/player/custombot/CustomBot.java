@@ -16,6 +16,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPick
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CustomBot extends RandomBot {
@@ -25,7 +26,6 @@ public class CustomBot extends RandomBot {
     IUsingThiefEffectStrategy usingThiefEffectStrategy;
     IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
     IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
-
     ICardChoosingStrategy cardChoosingStrategy;
 
     protected CustomBot(int nbGold, Deck deck, IView view,
@@ -116,16 +116,19 @@ public class CustomBot extends RandomBot {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof CustomBot customBot) {
-            return this.characterChoosingStrategy == customBot.characterChoosingStrategy
-                    && this.pickingStrategy == customBot.pickingStrategy
-                    && this.usingThiefEffectStrategy == customBot.usingThiefEffectStrategy
-                    && this.usingMurdererEffectStrategy == customBot.usingMurdererEffectStrategy
-                    && this.usingCondottiereEffectStrategy == customBot.usingCondottiereEffectStrategy;
-        } else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CustomBot customBot = (CustomBot) o;
+
+        return customBot.getId() == this.getId() &&
+                Objects.equals(characterChoosingStrategy, customBot.characterChoosingStrategy) &&
+                Objects.equals(pickingStrategy, customBot.pickingStrategy) &&
+                Objects.equals(usingThiefEffectStrategy, customBot.usingThiefEffectStrategy) &&
+                Objects.equals(usingMurdererEffectStrategy, customBot.usingMurdererEffectStrategy) &&
+                Objects.equals(usingCondottiereEffectStrategy, customBot.usingCondottiereEffectStrategy);
     }
+
 
     @Override
     public int hashCode() {

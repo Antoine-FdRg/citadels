@@ -31,4 +31,9 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
         }
         return Optional.empty();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CardChoosingStrategy;
+    }
 }
