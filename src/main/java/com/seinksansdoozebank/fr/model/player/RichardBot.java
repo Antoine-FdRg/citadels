@@ -9,8 +9,10 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 public class RichardBot extends SmartBot {
 
@@ -100,6 +102,195 @@ public class RichardBot extends SmartBot {
      */
     List<Opponent> getOpponentsWhichHasChosenCharacterAfter() {
         return this.getOpponents().stream().filter(opponent -> !this.getOpponentsWhichHasChosenCharacterBefore().contains(opponent)).toList();
+    }
+
+
+    @Override
+    public Character chooseCharacterImpl(List<Character> characters) {
+        List<Character> orderedCharacters = ordinateCharacters(characters);
+        Optional<Character> optionalCharacter = shouldChooseBecauseLastCardToBuy(characters);
+        if (optionalCharacter.isPresent()) {
+            return optionalCharacter.get();
+        }
+        for (Character character : orderedCharacters) {
+            switch (character.getRole()) {
+                case ASSASSIN -> {
+                    if (shouldChooseAssassin()) {
+                        return character;
+                    }
+                }
+                case MAGICIAN -> {
+                    if (shouldChooseMagician()) {
+                        return character;
+                    }
+                }
+                case MERCHANT -> {
+                    if (shouldChooseMerchant()) {
+                        return character;
+                    }
+                }
+                case ARCHITECT -> {
+                    if (shouldChooseArchitect()) {
+                        return character;
+                    }
+                }
+                case BISHOP -> {
+                    if (shouldChooseBishop()) {
+                        return character;
+                    }
+                }
+                case CONDOTTIERE -> {
+                    if (shouldChooseCondottiere()) {
+                        return character;
+                    }
+                }
+                default -> {
+                    break;
+                }
+            }
+        }
+        return super.chooseCharacterImpl(characters);
+    }
+
+    /**
+     * @param characters list of available characters
+     * @return the list of available characters ordered like we want
+     */
+    List<Character> ordinateCharacters(List<Character> characters) {
+        List<Character> copyCharacters = new ArrayList<>(characters);
+        List<Character> orderedCharacters = new ArrayList<>();
+
+        Optional<Character> optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.ASSASSIN).findFirst();
+        optionalCharacter.ifPresent(assassin -> {
+            orderedCharacters.add(assassin);
+            copyCharacters.remove(assassin);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst();
+        optionalCharacter.ifPresent(magician -> {
+            orderedCharacters.add(magician);
+            copyCharacters.remove(magician);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.MERCHANT).findFirst();
+        optionalCharacter.ifPresent(merchant -> {
+            orderedCharacters.add(merchant);
+            copyCharacters.remove(merchant);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.ARCHITECT).findFirst();
+        optionalCharacter.ifPresent(architect -> {
+            orderedCharacters.add(architect);
+            copyCharacters.remove(architect);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.BISHOP).findFirst();
+        optionalCharacter.ifPresent(bishop -> {
+            orderedCharacters.add(bishop);
+            copyCharacters.remove(bishop);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.CONDOTTIERE).findFirst();
+        optionalCharacter.ifPresent(condottiere -> {
+            orderedCharacters.add(condottiere);
+            copyCharacters.remove(condottiere);
+        });
+        List<Character> charactersRemaining = new ArrayList<>(copyCharacters);
+
+        orderedCharacters.addAll(charactersRemaining);
+
+        return orderedCharacters;
+    }
+
+
+    /**
+     * find the number of players with empty hands in the game
+     *
+     * @param opponents list of the opponents of the player
+     * @return the number of players with empty hands in the game
+     */
+    int numberOfEmptyHands(List<Opponent> opponents) {
+        return (int) opponents.stream().filter(player -> player.getHandSize() == 0).count();
+    }
+
+    /**
+     * tells us if players with more gold than the bot exist
+     *
+     * @param opponents list of the opponents of the player
+     * @return a boolean
+     */
+    boolean numberOfPlayerWithMoreGold(List<Opponent> opponents) {
+        return opponents.stream().anyMatch(opponent -> this.getNbGold() < opponent.getNbGold());
+    }
+
+    /**
+     * La méthode check si le joueur a plus de 7 cartes dans la main et si les autres joueurs ont des mains vides et renvoie un booléen.
+     * Dans ce cas, il choisit l'assassin.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseAssassin() {
+        return getHand().size() >= 7 && numberOfEmptyHands(this.getOpponents()) >= 1;
+    }
+
+    /**
+     * La méthode check si le joueur a une main vide
+     * Dans ce cas, il choisit le magicien.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseMagician() {
+        return this.getHand().isEmpty();
+    }
+
+    /**
+     * La méthode check si le nombre d'or du joueur est inférieur ou égal à 1.
+     * Dans ce cas, il choisit le marchand.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseMerchant() {
+        return this.getNbGold() <= 1;
+    }
+
+    /**
+     * La méthode check si le joueur peut poser deux districts en plus dans sa citadelle et si ses opposants ont plus d'or que lui.
+     * Dans ce cas, il choisit l'architecte.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseArchitect() {
+        return getPriceOfNumbersOfCheaperCards(2) <= this.getNbGold() && numberOfPlayerWithMoreGold(this.getOpponents());
+    }
+
+
+    /**
+     * La méthode check si le joueur peut poser au moins un district
+     * Dans ce cas, il choisit l'évêque.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseBishop() {
+        return getPriceOfNumbersOfCheaperCards(1) <= this.getNbGold();
+    }
+
+    /**
+     * La méthode check si le joueur ne peut pas construire de district.
+     * Dans ce cas, il choisit le condottière.
+     *
+     * @return a boolean
+     */
+    boolean shouldChooseCondottiere() {
+        return getPriceOfNumbersOfCheaperCards(1) > this.getNbGold();
+    }
+
+    /**
+     * Cette méthode permet au joueur s'il est en position de poser son dernier district
+     * dans sa cité de choisir soit l'assassin, soit l'évêque, soit le condottière.
+     *
+     * @param characters list of characters available
+     * @return an optional of character
+     */
+    Optional<Character> shouldChooseBecauseLastCardToBuy(List<Character> characters) {
+        if (isAboutToWin()) {
+            return characters.stream().filter(c -> c.getRole() == Role.ASSASSIN || c.getRole() == Role.BISHOP || c.getRole() == Role.CONDOTTIERE).findFirst();
+        }
+        return Optional.empty();
     }
 
     /**
