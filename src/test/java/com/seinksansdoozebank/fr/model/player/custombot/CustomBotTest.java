@@ -171,7 +171,7 @@ class CustomBotTest {
     }
 
     @Test
-    void testEqualsWithBotWithSameStrategies() {
+    void testNotEqualsWithBotWithSameStrategies() {
         CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
@@ -190,7 +190,7 @@ class CustomBotTest {
     }
 
     @Test
-    void testEqualsWithBotWithNoStrategies() {
+    void testNotEqualsWithBotWithNoStrategies() {
         CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class));
         CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class));
         assertNotEquals(customBot1, customBot2);

@@ -17,6 +17,9 @@ import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.logging.Level;
 
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_BOTS_AGAINST;
+
 public class Launcher {
     public static void main(String[] args) {
         // Define a class to hold your command-line parameters
@@ -58,15 +61,18 @@ public class Launcher {
     public void twoThousand() {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
-        //GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(50000);
-        //analyzer.runAndAnalyze(2, 2, 2);
-        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000);
-        analyzer.runAndAnalyze(4, 1, 1);
-        analyzer = new GameStatisticsAnalyzer(1000);
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000, false);
+        analyzer.runAndAnalyze(0, 3, 3);
+        analyzer = new GameStatisticsAnalyzer(1000, false);
         analyzer.runAndAnalyze(0, 6, 0);
     }
 
     public void csv() {
-
+        CustomStatisticsLogger.setLevel(Level.ALL);
+        CustomLogger.setLevel(Level.OFF);
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000, true, BEST_AGAINST_SECOND);
+        analyzer.runAndAnalyze(0, 2, 2);
+        analyzer = new GameStatisticsAnalyzer(1000, true, BEST_BOTS_AGAINST);
+        analyzer.runAndAnalyze(0, 4, 0);
     }
 }
