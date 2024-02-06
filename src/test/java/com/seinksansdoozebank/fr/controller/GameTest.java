@@ -606,7 +606,7 @@ class GameTest {
     }
 
     @Test
-    void testReorderPlayersByPointsWithNoTieWIthoutSameOrder() {
+    void testReorderPlayersByPointsWithNoTieWithoutSameOrder() {
         Player player1 = spy(new RandomBot(5, new Deck(), view));
         when(player1.getScore()).thenReturn(10);
         Player player2 = spy(new RandomBot(5, new Deck(), view));
