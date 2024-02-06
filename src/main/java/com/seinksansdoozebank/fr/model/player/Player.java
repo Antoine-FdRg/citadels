@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -40,6 +41,7 @@ public abstract class Player implements Opponent {
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
+    private boolean hasPlayed;
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -51,6 +53,7 @@ public abstract class Player implements Opponent {
         this.view = view;
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
+        this.hasPlayed = false;
     }
 
     /**
@@ -61,10 +64,11 @@ public abstract class Player implements Opponent {
         if (this.getCharacter().isDead()) {
             throw new IllegalStateException("The player is dead, he can't play.");
         }
-        this.reveal();
         view.displayPlayerStartPlaying(this);
+        this.reveal();
         view.displayPlayerInfo(this);
         this.usePrestigesEffect();
+        this.setHasPlayed(false);
         this.playARound();
         view.displayPlayerInfo(this);
     }
@@ -124,12 +128,12 @@ public abstract class Player implements Opponent {
         return listOfDistrictTypeMissing;
     }
 
-    /**
-     * Represents the player's choice to draw 2 gold coins
-     */
-    public final void pickGold() {
-        view.displayPlayerPicksGold(this);
-        this.nbGold += 2;
+    public void setHasPlayed(boolean hasPlayed) {
+        this.hasPlayed = hasPlayed;
+    }
+
+    public boolean hasPlayed() {
+        return hasPlayed;
     }
 
     /**
@@ -140,12 +144,23 @@ public abstract class Player implements Opponent {
         List<Card> pickedCards = new ArrayList<>();
         int numberOfCardsToPick = numberOfCardsToPick();
         for (int i = 0; i < numberOfCardsToPick; i++) {
-            pickedCards.add(this.deck.pick());
+            pickCardFromDeck(pickedCards);
         }
-        this.view.displayPlayerPickCards(this, 1);
-        Card chosenCard = keepOneDiscardOthers(pickedCards);
-        this.hand.add(chosenCard);
-        pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        if (pickedCards.isEmpty()) return;
+        if ((!this.hasPlayed) && isLibraryPresent()) {
+            this.view.displayPlayerKeepBothCardsBecauseOfLibrary(this);
+            this.hand.addAll(pickedCards);
+        } else {
+            this.view.displayPlayerPickCards(this, 1);
+            Card chosenCard = keepOneDiscardOthers(pickedCards);
+            this.hand.add(chosenCard);
+            pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+        }
+    }
+
+    void pickCardFromDeck(List<Card> pickedCards) {
+        Optional<Card> cardPick = this.deck.pick();
+        cardPick.ifPresent(pickedCards::add);
     }
 
     /**
@@ -168,7 +183,7 @@ public abstract class Player implements Opponent {
      * Allow the player to pick a card from the deck (usefull when it needs to switch its hand with the deck)
      */
     public final void pickACard() {
-        this.getHand().add(this.deck.pick());
+        pickCardFromDeck(this.getHand());
     }
 
     public final void discardACard(Card card) {
@@ -191,50 +206,46 @@ public abstract class Player implements Opponent {
         // if the chose card is CourtyardOfMiracle, we set the attribute lastCardPlacedCourtyardOfMiracle to true
         this.lastCardPlacedCourtyardOfMiracle = chosenCard.getDistrict().equals(District.COURTYARD_OF_MIRACLE);
         this.citadel.add(chosenCard);
-        this.decreaseGold(chosenCard.getDistrict().getCost());
+        this.returnGoldToBank(chosenCard.getDistrict().getCost());
         return optChosenCard;
     }
 
-    public List<Card> playCards(int numberOfCards) {
+    public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
+        setHasPlayed(true);
         if (numberOfCards <= 0) {
             throw new IllegalArgumentException("Number of cards to play must be positive");
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        List<Card> playedCards = new ArrayList<>();
         for (int i = 0; i < numberOfCards; i++) {
             Optional<Card> card = playACard();
-            if (card.isPresent()) {
-                card.ifPresent(playedCards::add);
-                this.view.displayPlayerPlaysCard(this, card.get());
-            }
+            card.ifPresent(value -> this.view.displayPlayerPlaysCard(this, value));
         }
-        return playedCards;
     }
 
     /**
      * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
-     *
-     * @return the district built by the player
      */
-    public List<Card> playCard(Card card) {
+    public void buyACardAndAddItToCitadel(Card card) {
         if (!canPlayCard(card)) {
-            return List.of();
+            return;
         }
         this.hand.remove(card);
         this.citadel.add(card);
-        this.decreaseGold(card.getDistrict().getCost());
+        this.returnGoldToBank(card.getDistrict().getCost());
         this.view.displayPlayerPlaysCard(this, card);
-        return List.of(card);
     }
 
 
     /**
      * Collect gold with the effect of the character if it is a common character
      */
-    void useCommonCharacterEffect() {
-        if (this.character instanceof CommonCharacter commonCharacter) {
-            commonCharacter.goldCollectedFromDisctrictType();
+    protected void useCommonCharacterEffect() {
+        if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
+            int nbGoldSave = this.getNbGold();
+            commonCharacter.goldCollectedFromDistrictType();
+            if (this.getNbGold() - nbGoldSave > 0)
+                this.view.displayGoldCollectedFromDistrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
     }
 
@@ -242,14 +253,21 @@ public abstract class Player implements Opponent {
      * Effect of architect character (pick 2 cards)
      */
     protected void useEffectArchitectPickCards() {
-        this.hand.add(this.deck.pick());
-        this.hand.add(this.deck.pick());
-        view.displayPlayerPickCards(this, 2);
+        int i;
+        for (i = 0; i < 2; i++) {
+            Optional<Card> cardPick = this.deck.pick();
+            if (cardPick.isEmpty()) break;
+            cardPick.ifPresent(this.hand::add);
+        }
+        if (i == 0) return;
+        view.displayPlayerPickCards(this, i);
     }
 
     abstract void useEffectMagician(Magician magician);
 
     abstract void useEffectAssassin(Assassin assassin);
+
+    abstract Character chooseAssassinTarget();
 
     abstract void useEffectCondottiere(Condottiere condottiere);
 
@@ -272,7 +290,7 @@ public abstract class Player implements Opponent {
      * @param card the district to build
      * @return true if the player can build the district passed in parameter, false otherwise
      */
-    protected final boolean canPlayCard(Card card) {
+    public final boolean canPlayCard(Card card) {
         return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
     }
 
@@ -283,6 +301,39 @@ public abstract class Player implements Opponent {
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
+
+    /**
+     * Return gold to the bank
+     *
+     * @param gold the number of gold coins to return
+     */
+    public void returnGoldToBank(int gold) {
+        this.nbGold -= gold;
+        Bank.getInstance().retrieveCoin(gold);
+    }
+
+    /**
+     * Represents the player's choice to draw 2 gold coins from the bank
+     */
+    public final void pickGold() {
+        int nbPickedGold = Bank.getInstance().pickXCoin();
+        view.displayPlayerPicksGold(this, nbPickedGold);
+        this.nbGold += nbPickedGold;
+    }
+
+    /**
+     * Represents the player's choice to draw x gold coins
+     *
+     * @param nbOfGold the number of gold coins to pick
+     */
+    public final void pickGold(int nbOfGold) {
+        int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
+        if (nbPickedGold > 0) {
+            view.displayPlayerPicksGold(this, nbPickedGold);
+            this.nbGold += nbPickedGold;
+        }
+    }
+
 
     public List<Card> getHand() {
         return this.hand;
@@ -390,18 +441,19 @@ public abstract class Player implements Opponent {
     }
 
     @Override
-    public String toString() {
-        return "Le joueur " + this.id;
-    }
-
-    public boolean destroyDistrict(Player attacker, District district) {
-        if (this.citadel.removeIf(card -> card.getDistrict().equals(district))) {
-            this.view.displayPlayerDestroyDistrict(attacker, this, district);
-            return true;
+    public Optional<Card> destroyDistrict(Player attacker, District district) {
+        // if the district is in the citadel, we remove it and return the card removed
+        Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
+        if (card.isPresent()) {
+            this.citadel.remove(card.get());
+            this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
+            return card;
         } else {
             throw new IllegalArgumentException("The player doesn't have the district to destroy");
         }
     }
+
+    public abstract void useCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
@@ -411,6 +463,7 @@ public abstract class Player implements Opponent {
         this.opponents = opponents;
     }
 
+    @Override
     public void switchHandWith(Player magician) {
         List<Card> handToSwitch = new ArrayList<>(this.getHand());
         this.getHand().clear();
@@ -494,6 +547,11 @@ public abstract class Player implements Opponent {
     }
 
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
+
+    public boolean isLibraryPresent() {
+        return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.LIBRARY));
+    }
+
 
     @Override
     public int getHandSize() {

@@ -1,7 +1,14 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +28,8 @@ class GameBuilderTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(IView.class);
         deck = mock(Deck.class);
         gameBuilder = spy(new GameBuilder(view,deck));
@@ -49,6 +58,19 @@ class GameBuilderTest {
     void addRandomBotMakesPlayerListSizeIncrementByOne() {
         int playerListSize = gameBuilder.getPlayerListSize();
         gameBuilder.addRandomBot();
+        assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
+    }
+
+    @Test
+    void addCustomBotMakesPlayerListSizeIncrementByOne() {
+        IPickingStrategy pickingStrategy = mock(IPickingStrategy.class);
+        ICharacterChoosingStrategy characterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
+        IUsingThiefEffectStrategy thiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
+        IUsingMurdererEffectStrategy murdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
+        IUsingCondottiereEffectStrategy condottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
+        ICardChoosingStrategy cardChosingStrategy = mock(ICardChoosingStrategy.class);
+        int playerListSize = gameBuilder.getPlayerListSize();
+        gameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy, condottiereEffectStrategy, cardChosingStrategy);
         assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
     }
 

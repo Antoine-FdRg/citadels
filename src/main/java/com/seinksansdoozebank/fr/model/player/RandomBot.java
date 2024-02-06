@@ -32,6 +32,10 @@ public class RandomBot extends Player {
         this.useCommonCharacterEffect();
         this.useEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
+        this.chooseWhenToPickACard(nbDistrictsToBuild);
+    }
+
+    public void chooseWhenToPickACard(int nbDistrictsToBuild) {
         if (random.nextBoolean()) {
             this.pickBeforePlaying(nbDistrictsToBuild);
         } else {
@@ -47,9 +51,10 @@ public class RandomBot extends Player {
     protected void pickBeforePlaying(int nbDistrictsToBuild) {
         pickSomething();
         if (nbDistrictsToBuild > 0) {
-            this.playCards(nbDistrictsToBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
     }
+
 
     /**
      * Represents the player's choice to play something before picking
@@ -58,7 +63,7 @@ public class RandomBot extends Player {
      */
     protected void playBeforePicking(int nbDistrictsToBuild) {
         if (nbDistrictsToBuild > 0) {
-            this.playCards(nbDistrictsToBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsToBuild);
         }
         pickSomething();
     }
@@ -162,7 +167,7 @@ public class RandomBot extends Player {
      */
     @Override
     protected void useEffectAssassin(Assassin assassin) {
-        Character characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+        Character characterToKill = this.chooseAssassinTarget();
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
         while (!characterToKill.isDead()) {
             try {
@@ -176,15 +181,18 @@ public class RandomBot extends Player {
     }
 
     @Override
-    void useEffectCondottiere(Condottiere condottiere) {
+    protected Character chooseAssassinTarget() {
+        return this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+    }
+
+    @Override
+    protected void useEffectCondottiere(Condottiere condottiere) {
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
         if (random.nextBoolean()) {
             // get a random player, and destroy a district of this player randomly
             Opponent opponentToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
             // if the player has no district, the bot will not use the condottiere effect
-            // Or check if the player choose is not the bishop
-            Character opponentCharacter = opponentToDestroyDistrict.getOpponentCharacter();
-            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0 || opponentCharacter == null) {
+            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0) {
                 return;
             }
             // get the random district
@@ -195,7 +203,7 @@ public class RandomBot extends Player {
             if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
                 try {
-                    condottiere.useEffect(opponentCharacter, districtToDestroy);
+                    condottiere.useEffect(opponentToDestroyDistrict, districtToDestroy);
                 } catch (IllegalArgumentException e) {
                     view.displayPlayerError(this, e.getMessage());
                 }
@@ -226,6 +234,15 @@ public class RandomBot extends Player {
                 .filter(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 .findFirst()
                 .ifPresent(card -> this.setColorCourtyardOfMiracleType(DistrictType.values()[random.nextInt(DistrictType.values().length)]));
+    }
+
+    @Override
+    public void useCemeteryEffect(Card card) {
+        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0)) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
     }
 
     @Override

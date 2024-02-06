@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.specialscharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -30,6 +32,8 @@ class MagicianTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         firstPickedCard = new Card(District.DONJON);
@@ -56,7 +60,7 @@ class MagicianTest {
 
     @Test
     void useEffectSwitchHandWithDeck() {
-        when(deck.pick()).thenReturn(firstPickedCard, secondPickedCard);
+        when(deck.pick()).thenReturn(Optional.of(firstPickedCard), Optional.of(secondPickedCard));
         spyPlayer.pickACard();
 
         // Set the player hand to the firstExchangeCard and secondExchangeCard

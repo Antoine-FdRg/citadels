@@ -43,8 +43,9 @@ public class SmartBot extends Player {
         if (!this.getHand().isEmpty()) { // s'il a des cartes en main
             this.playWhenHandIsNotEmpty();
         } else { //s'il n'a pas de cartes en main
-            this.pickCardsKeepSomeAndDiscardOthers(); //
-            this.playCards(this.getNbDistrictsCanBeBuild());
+            this.pickCardsKeepSomeAndDiscardOthers();
+            //il a choisi de piocher avant de jouer donc on regarde s'il n'a pas la libraire dans sa citadelle
+            this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
 
@@ -54,19 +55,19 @@ public class SmartBot extends Player {
                 this.pickSomething();
                 useEffectOfTheArchitect();
             } else {
-                this.playCards(this.getNbDistrictsCanBeBuild()); //il joue
+                this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild()); //il joue
                 this.useCommonCharacterEffect();
                 this.pickSomething(); //il pioche quelque chose
             }
         } else {
             this.useCommonCharacterEffect();
             if (this.hasACardToPlay()) {
-                this.playCards(this.getNbDistrictsCanBeBuild());
+                this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
                 pickSomething();
             } else {
                 pickGold();
                 if (this.hasACardToPlay()) {
-                    this.playCards(this.getNbDistrictsCanBeBuild());
+                    this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
                 }
             }
         }
@@ -173,9 +174,7 @@ public class SmartBot extends Player {
         if (this.character instanceof Merchant merchant) {
             merchant.useEffect();
         } else if (this.character instanceof Assassin assassin) {
-            Character target = this.choseAssassinTarget();
-            assassin.useEffect(target);
-            view.displayPlayerUseAssassinEffect(this, target);
+            useEffectAssassin(assassin);
         }
         // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
         else if (this.character instanceof Condottiere condottiere) {
@@ -206,7 +205,7 @@ public class SmartBot extends Player {
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
                 try {
-                    condottiere.useEffect(playerWithMostDistricts.get().getOpponentCharacter(), card.getDistrict());
+                    condottiere.useEffect(playerWithMostDistricts.get(), card.getDistrict());
                     return;
                 } catch (IllegalArgumentException e) {
                     view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");
@@ -238,10 +237,6 @@ public class SmartBot extends Player {
         }
     }
 
-    @Override
-    protected void useEffectAssassin(Assassin assassin) {
-        // TODO
-    }
 
     /**
      * Il finit sa citadelle s'il peut en un coup, sinon il pose une merveille, sinon il complète les 5
@@ -253,18 +248,18 @@ public class SmartBot extends Player {
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
         int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();
         if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
-            this.playCards(nbDistrictsCanBeBuild);
+            this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
         } else {
             //on vérifie s'il y a une merveille dans sa main, si oui et qu'il peut la jouer alors il le fait
             Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
             if (prestigeCard.isPresent() && canPlayCard(prestigeCard.get())) {
-                playCard(prestigeCard.get());
+                buyACardAndAddItToCitadel(prestigeCard.get());
             } else if (!this.hasFiveDifferentDistrictTypes()) {
                 //il cherche à avoir les 5 districts de couleur dans sa citadelle sinon
                 architectTryToCompleteFiveDistrictTypes();
             } else {
                 //Il joue comme un joueur normal
-                this.playCards(nbDistrictsCanBeBuild);
+                this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
             }
         }
     }
@@ -297,7 +292,7 @@ public class SmartBot extends Player {
             if (optionalChosenCard.isPresent()) {
                 Card cardChosen = optionalChosenCard.get();
                 if (numberOfCards < 3 && (canPlayCard(cardChosen))) {
-                    playCard(cardChosen);
+                    buyACardAndAddItToCitadel(cardChosen);
                     numberOfCards++;
                     cardNeeded.remove(cardChosen);
                 }
@@ -306,17 +301,24 @@ public class SmartBot extends Player {
         }
         //S'il n'y a aucune carte disponible ou bien qu'il ne peut en poser aucune alors il joue comme un joueur normal
         if (numberOfCards == 0) {
-            this.playCards(this.getNbDistrictsCanBeBuild());
+            this.buyXCardsAndAddThemToCitadel(this.getNbDistrictsCanBeBuild());
         }
     }
 
+    @Override
+    protected void useEffectAssassin(Assassin assassin) {
+        Character target = this.chooseAssassinTarget();
+        assassin.useEffect(target);
+        view.displayPlayerUseAssassinEffect(this, target);
+    }
 
     /**
      * Returns the target of the assassin chosen by using the strength of characters or randomly if no "interesting" character has been found
      *
      * @return the target of the assassin
      */
-    protected Character choseAssassinTarget() {
+    @Override
+    protected Character chooseAssassinTarget() {
         List<Role> roleInterestingToKill = new ArrayList<>(List.of(Role.ARCHITECT, Role.MERCHANT, Role.KING));
         Collections.shuffle(roleInterestingToKill);
         Character target = null;
@@ -376,14 +378,16 @@ public class SmartBot extends Player {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
      * @param thief the thief
      */
     @Override
     protected void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+        Optional<Character> victim = this.getAvailableCharacters().stream().filter(
+                character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
         if (victim.isEmpty()) {
-            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+            victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();
         }
         victim.ifPresent(character -> {
@@ -410,6 +414,16 @@ public class SmartBot extends Player {
             }
         }
         return null;
+    }
+
+    @Override
+    public void useCemeteryEffect(Card card) {
+        // if the district cost less than 3, the bot will keep it
+        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && card.getDistrict().getCost() < 3 && this.getNbGold() > 0) {
+            this.hand.add(card);
+            this.decreaseGold(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
     }
 
     @Override

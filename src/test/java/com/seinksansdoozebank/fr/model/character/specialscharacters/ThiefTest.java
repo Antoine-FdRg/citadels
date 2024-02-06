@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.specialscharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -22,6 +23,8 @@ class ThiefTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         Deck deckThief = new Deck();
         thief = new Thief();
         Player playerThief = new RandomBot(2, deckThief, view);

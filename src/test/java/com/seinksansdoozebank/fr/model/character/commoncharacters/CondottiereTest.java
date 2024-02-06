@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -26,6 +27,8 @@ class CondottiereTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
@@ -50,10 +53,21 @@ class CondottiereTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        condottiere.goldCollectedFromDisctrictType();
+        condottiere.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
+    }
+
+    @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Perform the action
+        condottiere.goldCollectedFromDistrictType();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals(7, player.getNbGold());
     }
 
     @Test
@@ -61,9 +75,41 @@ class CondottiereTest {
         Player otherPlayer = spy(new RandomBot(2, deck, view));
         Merchant merchant = new Merchant();
         otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(merchant, District.DONJON));
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.DONJON));
+    }
+
+    @Test
+    void cantDestroyCompletedCitadelOfPlayer() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.BARRACK));
+        citadel.add(new Card(District.CASTLE));
+        citadel.add(new Card(District.CHURCH));
+        citadel.add(new Card(District.TAVERN));
+        citadel.add(new Card(District.FORTRESS));
+        citadel.add(new Card(District.MANOR));
+        citadel.add(new Card(District.CORNER_SHOP));
+        citadel.add(new Card(District.MANUFACTURE));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.BARRACK));
+    }
+
+    @Test
+    void cantDestroyDistrictDueToLackOfGold() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.PORT_FOR_DRAGONS));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.PORT_FOR_DRAGONS));
     }
 }

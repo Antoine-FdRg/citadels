@@ -4,12 +4,10 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 
 import java.util.List;
 import java.util.Random;
-
-import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.getCharacterFromRoleInLIst;
-import static com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils.isRoleInCharacterList;
 
 /**
  * Represents the strategy of the bot to use the thief effect to focus the rusher
@@ -24,12 +22,12 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
                 !character.isDead()).toList();
-        if (isRoleInCharacterList(Role.ARCHITECT, characters)) {
-            thief.useEffect(getCharacterFromRoleInLIst(Role.ARCHITECT, characters));
-        } else if (isRoleInCharacterList(Role.MERCHANT, characters)) {
-            thief.useEffect(getCharacterFromRoleInLIst(Role.MERCHANT, player.getAvailableCharacters()));
-        } else if (isRoleInCharacterList(Role.KING, player.getAvailableCharacters())) {
-            thief.useEffect(getCharacterFromRoleInLIst(Role.KING, characters));
+        if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
+            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters));
+        } else if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
+            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters));
+        } else if (StrategyUtils.isRoleInCharacterList(Role.KING, characters)) {
+            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters));
         } else { //random
             thief.useEffect(characters.get(random.nextInt(characters.size())));
         }

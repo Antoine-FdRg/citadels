@@ -1,9 +1,11 @@
 package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Opponent {
 
@@ -20,5 +22,7 @@ public interface Opponent {
     int getHandSize();
 
     boolean equals(Object o);
+
+    Optional<Card> destroyDistrict(Player attacker, District district);
 
 }

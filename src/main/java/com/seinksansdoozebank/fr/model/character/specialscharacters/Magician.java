@@ -29,9 +29,4 @@ public class Magician extends Character {
             }
         }
     }
-
-    @Override
-    public void useEffect() {
-        // No action
-    }
 }

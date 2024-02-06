@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -25,6 +26,8 @@ class BishopTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
@@ -48,9 +51,22 @@ class BishopTest {
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        bishop.goldCollectedFromDisctrictType();
+        bishop.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
+    }
+
+    @Test
+    void testGoldCollectedFromDistrictTypeAndSchoolOfMagic() {
+        // Add a district to the citadel
+        citadel.add(new Card(District.SCHOOL_OF_MAGIC));
+        // Set the citadel to the player
+        when(player.getCitadel()).thenReturn(citadel);
+        // Perform the action
+        bishop.goldCollectedFromDistrictType();
+
+        // Check if the player's gold has been increased correctly
+        assertEquals(7, player.getNbGold());
     }
 }

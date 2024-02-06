@@ -9,10 +9,4 @@ public class King extends CommonCharacter {
     public King() {
         super(Role.KING, DistrictType.NOBILITY);
     }
-
-    @Override
-    public void useEffect() {
-        // No action
-    }
-
 }

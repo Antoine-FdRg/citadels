@@ -68,11 +68,20 @@ class DeckTest {
      */
     @Test
     void pickDistrictTest() {
+        for (int i = 0; i < 63; i++) {
+            districtList.pick();
+        }
+        districtList.pick();
+        assertEquals(1, districtList.getDeck().size());
+    }
+
+    @Test
+    void pickDistrictTestAndNoMoreCards() {
         for (int i = 0; i < 65; i++) {
             districtList.pick();
         }
         districtList.pick();
-        assertEquals(64, districtList.getDeck().size());
+        assertEquals(0, districtList.getDeck().size());
     }
 
     @Test

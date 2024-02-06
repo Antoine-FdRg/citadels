@@ -1,9 +1,6 @@
 package com.seinksansdoozebank.fr.model.cards;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Deck {
     private final List<Card> cardsList;
@@ -36,14 +33,14 @@ public class Deck {
     /**
      * @return the last element of cardsList and we remove it
      */
-    public Card pick() {
+    public Optional<Card> pick() {
         //On vérifie que la liste n'est pas vide
         if (cardsList.isEmpty()) {
-            //On recrée le deck
-            fillDeck();
+            //On renvoie un Optional vide
+            return Optional.empty();
         }
         //On renvoie la dernière carte district du paquet et on l'enlève du paquet.
-        return cardsList.remove(cardsList.size() - 1);
+        return Optional.of(cardsList.remove(cardsList.size() - 1));
     }
 
     /**
@@ -75,7 +72,6 @@ public class Deck {
      * @return the list of cards
      */
     public List<Card> getDeck() {
-
         return cardsList;
     }
 

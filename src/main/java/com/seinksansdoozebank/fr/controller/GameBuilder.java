@@ -1,12 +1,15 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -45,39 +48,47 @@ public class GameBuilder {
 
     /**
      * Add a smart bot to the game
+     *
      * @return the builder
      */
     public GameBuilder addSmartBot() {
         checkNbPlayers();
-        playerList.add(new SmartBot(PLAYER_NB_GOLD_INIT, this.deck, this.view));
+        playerList.add(new SmartBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
     /**
      * Add a random bot to the game
+     *
      * @return the builder
      */
     public GameBuilder addRandomBot() {
         checkNbPlayers();
-        playerList.add(new RandomBot(PLAYER_NB_GOLD_INIT, this.deck, this.view));
+        playerList.add(new RandomBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 
     public GameBuilder addCustomBot(IPickingStrategy pickingStrategy,
                                     ICharacterChoosingStrategy characterChoosingStrategy,
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
-                                    IUsingMurdererEffectStrategy murdererEffectStrategy) {
+                                    IUsingMurdererEffectStrategy murdererEffectStrategy,
+                                    IUsingCondottiereEffectStrategy condottiereEffectStrategy,
+                                    ICardChoosingStrategy cardChosingStrategy) {
         checkNbPlayers();
-        playerList.add(new CustomBotBuilder(PLAYER_NB_GOLD_INIT, this.view, this.deck)
+        playerList.add(new CustomBotBuilder(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck)
+                .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
                 .setUsingMurdererEffectStrategy(murdererEffectStrategy)
+                .setUsingCondottiereEffectStrategy(condottiereEffectStrategy)
+                .setCardChoosingStrategy(cardChosingStrategy)
                 .build());
         return this;
     }
 
     /**
      * Build the game from the arguments given to the builder
+     *
      * @return the game built
      */
     public Game build() {

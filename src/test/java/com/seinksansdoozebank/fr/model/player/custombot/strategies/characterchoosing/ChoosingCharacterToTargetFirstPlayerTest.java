@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,33 +32,13 @@ class ChoosingCharacterToTargetFirstPlayerTest {
 
     @BeforeEach
     void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockPlayer = mock(Player.class);
         choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
         characterList = new ArrayList<>();
         leadingOpponent = mock(Opponent.class);
 
-    }
-
-    @Test
-    void getLeadingWithOpponentListShouldReturnOpponentO2() {
-        Opponent o1 = mock(Opponent.class);
-        when(o1.nbDistrictsInCitadel()).thenReturn(1);
-        Opponent o2 = mock(Opponent.class);
-        when(o2.nbDistrictsInCitadel()).thenReturn(3);
-        Opponent o3 = mock(Opponent.class);
-        when(o3.nbDistrictsInCitadel()).thenReturn(2);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(o1, o2, o3));
-
-        Opponent leadingOpponent = choosingCharacterToTargetFirstPlayer.getLeadingOpponent(mockPlayer);
-
-        assertEquals(o2, leadingOpponent);
-    }
-
-    @Test
-    void getLeadingOpponentWithEmptyOpponentListShouldThrowException() {
-        when(mockPlayer.getOpponents()).thenReturn(List.of());
-
-        assertThrows(IllegalStateException.class, () -> choosingCharacterToTargetFirstPlayer.getLeadingOpponent(mockPlayer));
     }
 
     @Test

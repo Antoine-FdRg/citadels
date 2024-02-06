@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -17,6 +18,7 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +63,8 @@ class GameTest {
 
     @BeforeEach
     public void setUp() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
@@ -274,12 +278,29 @@ class GameTest {
     }
 
     @Test
-    void run() {
+    void runNotStuckGame() {
+        Bank.reset();
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound();
+        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
-        verify(gameWithFourPlayers, times(nbRoundPlayed - 1)).playARound();
+        verify(view, times(nbRoundPlayed)).displayRound(anyInt());
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(view, atMost(1)).displayGameFinished();
+        verify(view, atMost(0)).displayGameStuck();
+        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
+        verify(view, times(1)).displayWinner(any(Player.class));
+    }
+
+    @Test
+    void runAStuckGameShouldDisplayStuckGame() {
+        Bank.reset();
+        when(gameWithFourPlayers.isStuck()).thenReturn(true);
+        gameWithFourPlayers.run();
+        verify(gameWithFourPlayers, times(1)).init();
+        verify(view, times(0)).displayGameFinished();
+        verify(view, times(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -288,7 +309,6 @@ class GameTest {
     void playARound() {
         gameWithFourPlayers.createCharacters();
         gameWithFourPlayers.playARound();
-        verify(view, times(1)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
         verify(gameWithFourPlayers, times(1)).playersChooseCharacters();
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforePlaying();
@@ -427,5 +447,137 @@ class GameTest {
         verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
     }
 
+    @Test
+    void createCharactersWithTooMuchPlayers() {
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
+    }
+    @Test
+    void isStuckWithStuckGameShouldReturnTrue() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickXCoin(22);
 
+        assertTrue(stuckGame.isStuck());
+    }
+
+    @Test
+    void constructorGameWithTooMuchPlayers() {
+        List<Player> players = new ArrayList<>();
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        players.add(new RandomBot(5, new Deck(), view));
+        Deck deck = new Deck();
+        assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
+    }
+    @Test
+    void isStuckWithNotEmptyDeckShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        Bank.getInstance().pickXCoin(22);
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithRemainingCoinsShouldReturnFalse() {
+        Bank.reset();
+        Deck mockDeck = mock(Deck.class);
+        when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isStuckWithCardsInPlayersHandShouldReturnFalse() {
+        Bank.reset();
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck())
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        stuckGame.init();
+        Bank.getInstance().pickXCoin(22);
+        assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void isThePlayerHavingCemetery() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertTrue(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void isThePlayerDonthaveCemetery() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.COURTYARD_OF_MIRACLE)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void isThePlayerDonthaveCemeteryWithZeroCardInCitadel() {
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of());
+        gameWithFourPlayers.setPlayers(List.of(player));
+        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    }
+
+    @Test
+    void testUseCemeteryEffect() {
+        Condottiere condotierre = spy(new Condottiere());
+        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
+        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
+        verify(player, times(1)).useCemeteryEffect(any());
+    }
+
+    @Test
+    void testUseCemeteryEffectWithNoPlayerWithCemetery() {
+        Condottiere condotierre = spy(new Condottiere());
+        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Player player = spy(new RandomBot(5, new Deck(), view));
+        when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
+        gameWithFourPlayers.setPlayers(List.of(player));
+        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
+        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
+        verify(player, times(0)).useCemeteryEffect(any());
+    }
 }
