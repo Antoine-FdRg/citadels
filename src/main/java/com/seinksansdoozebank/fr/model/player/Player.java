@@ -59,7 +59,7 @@ public abstract class Player implements Opponent {
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
         this.hasPlayed = false;
-        this.rankToPickCharacter=0;
+        this.rankToPickCharacter=100;
     }
 
     public int getRankToPickCharacter(){
