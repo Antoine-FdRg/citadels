@@ -95,7 +95,7 @@ class RichardBotTest {
 
     @Test
     void shouldPreventWealth() {
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(0, deck, view));
         opponent.increaseGold(8);
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         boolean shouldPreventWealth = richardBot.shouldPreventWealth();
@@ -103,13 +103,31 @@ class RichardBotTest {
     }
 
     @Test
-    void thinkCondottiereWillBeChosenByTheLeadingOpponent() {
+    void shouldNotPreventWealth() {
+        Player opponent = spy(new SmartBot(6, deck, view));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponent));
+        boolean shouldPreventWealth = richardBot.shouldPreventWealth();
+        assertFalse(shouldPreventWealth, "The bot should not prevent wealth if no opponent has 7 or more gold.");
+    }
+
+    @Test
+    void thinkCondottiereHasBeenChosenByTheLeadingOpponent() {
         Player opponent = spy(new SmartBot(10, deck, view));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(true);
         boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent();
         assertTrue(thinkCondottiereWillBeChosenByTheLeadingOpponent, "The bot should think the Condottiere will be chosen by the leading opponent if he is about to win.");
+    }
+
+    @Test
+    void thinkCondottiereHasNotBeenChosenByTheLeadingOpponent() {
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponent));
+        when(opponent.isAboutToWin()).thenReturn(false);
+        boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent();
+        assertFalse(thinkCondottiereWillBeChosenByTheLeadingOpponent, "The bot should think the Condottiere will not be chosen by the leading opponent if he is not about to win.");
     }
 
     @Test
