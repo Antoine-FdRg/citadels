@@ -33,7 +33,7 @@ public class Launcher {
         Game game = new GameBuilder(new Cli(), new Deck())
                 .addRandomBot()
                 .addSmartBot()
-                .addRandomBot()
+                .addRichardBot()
                 .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
                         new UsingThiefEffectToFocusRusher(),
                         new UsingMurdererEffectToFocusRusher(),
