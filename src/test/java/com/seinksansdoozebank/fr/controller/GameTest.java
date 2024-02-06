@@ -586,4 +586,19 @@ class GameTest {
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(0)).useCemeteryEffect(any());
     }
+
+    @Test
+    void setRankToPickCharacterTest(){
+        List<Player> players=new ArrayList<>(List.of(playerWithNoBonus,playerWithEightDistricts,playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
+        gameWithFourPlayers.setRankToPickCharacter(players);
+        for(Player player: players){
+            assertEquals(100,player.getRankToPickCharacter());
+        }
+    }
+
+    @Test
+    void verifyCallOfMethodSetRankToPickCharacterInOrderPlayerBeforeChoosingCharacter(){
+        gameWithFourPlayers.orderPlayerBeforeChoosingCharacter();
+        verify(gameWithFourPlayers,times(1)).setRankToPickCharacter(any());
+    }
 }

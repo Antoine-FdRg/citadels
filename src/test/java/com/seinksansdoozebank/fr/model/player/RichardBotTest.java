@@ -45,10 +45,10 @@ class RichardBotTest {
     List<Character> charactersList;
     List<Opponent> opponentsList;
 
-    Opponent opponentWithEmptyHand;
-    Opponent opponentWithMoreGoldThanRichard;
+    Player opponentWithEmptyHand;
+    Player opponentWithMoreGoldThanRichard;
 
-    Opponent opponentWithSevenDistrictsInCitadel;
+    Player opponentWithSevenDistrictsInCitadel;
 
     @BeforeEach
     void setUp() {
@@ -70,6 +70,7 @@ class RichardBotTest {
         opponentWithEmptyHand = spy(new RandomBot(10, deck, view));
         opponentWithMoreGoldThanRichard = spy(new RandomBot(10, deck, view));
         opponentWithSevenDistrictsInCitadel=spy(new RandomBot(10,deck, view));
+        opponentWithSevenDistrictsInCitadel.setRankToPickCharacter(2);
         when(opponentWithSevenDistrictsInCitadel.getHandSize()).thenReturn(7);
         opponentsList = new ArrayList<>();
         opponentsList.add(opponentWithEmptyHand);
@@ -602,28 +603,61 @@ class RichardBotTest {
     @Test
     void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingIsNotAvailableButBishopCondottiereAssassinAvailables(){
         charactersList.remove(new King());
+        richardBot.setRankToPickCharacter(4);
         assertEquals(Optional.of(new Condottiere()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(0);
+        assertEquals(Optional.of(new Condottiere()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(1);
+        assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
     }
 
     @Test
     void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingBishopAreNotAvailable(){
         charactersList.remove(new King());
         charactersList.remove(new Bishop());
+        richardBot.setRankToPickCharacter(4);
         assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(0);
+        assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(1);
+        assertEquals(Optional.of(new Condottiere()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+
     }
 
     @Test
     void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingCondottiereAreNotAvailable(){
         charactersList.remove(new King());
         charactersList.remove(new Condottiere());
+        richardBot.setRankToPickCharacter(4);
         assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(0);
+        assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(1);
+        assertEquals(Optional.of(new Magician()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
     }
 
     @Test
     void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingAssassinAreNotAvailable(){
         charactersList.remove(new King());
         charactersList.remove(new Assassin());
+        richardBot.setRankToPickCharacter(4);
         assertEquals(Optional.of(new Condottiere()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(0);
+        assertEquals(Optional.of(new Condottiere()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+        richardBot.setRankToPickCharacter(1);
+        assertEquals(Optional.of(new Bishop()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+    }
+
+    @Test
+    void chooseCharacterWHenOpponentHasOneDistrictLeftAndOpponentSecondToPickCharacter(){
+        opponentWithSevenDistrictsInCitadel.setRankToPickCharacter(1);
+        assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
+    }
+
+    @Test
+    void chooseCharacterWHenOpponentHasOneDistrictLeftAndOpponentFourthToPickCharacter(){
+        opponentWithSevenDistrictsInCitadel.setRankToPickCharacter(3);
+        assertEquals(Optional.of(new Assassin()),richardBot.chooseCharacterWHenOpponentHasOneDistrictLeft(charactersList,opponentWithSevenDistrictsInCitadel));
     }
 
 
