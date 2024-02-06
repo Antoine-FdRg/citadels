@@ -223,13 +223,13 @@ public class Game {
     protected void orderPlayersByPoints() {
         this.getPlayers().sort((player1, player2) -> {
             // Compare by total points
-            int pointsComparison = Integer.compare(player2.getScore(), player1.getScore());
+            int scoreComparaison = Integer.compare(player2.getScore(), player1.getScore());
 
-            if (pointsComparison == 0) {
+            if (scoreComparaison == 0) {
                 // If points are tied, compare by the number of districts in the citadel
-                int districtsComparison = Integer.compare(player2.getCitadel().size(), player1.getCitadel().size());
+                int citadelComparaison = Integer.compare(player2.getCitadel().size(), player1.getCitadel().size());
 
-                if (districtsComparison == 0) {
+                if (citadelComparaison == 0) {
                     // If districts are tied, compare by the total points of all districts
                     return Integer.compare(
                             player2.getCitadel().stream().mapToInt(
@@ -240,9 +240,9 @@ public class Game {
                             ).sum()
                     );
                 }
-                return districtsComparison;
+                return citadelComparaison;
             }
-            return pointsComparison;
+            return scoreComparaison;
         });
     }
 
