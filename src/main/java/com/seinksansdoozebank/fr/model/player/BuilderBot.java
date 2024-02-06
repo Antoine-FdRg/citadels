@@ -96,8 +96,8 @@ public class BuilderBot extends SmartBot {
         if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
             this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
         } else {
-            Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType() == DistrictType.PRESTIGE).findFirst();
-            if (prestigeCard.isPresent() && canPlayCard(prestigeCard.get())) {
+            Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType().equals(DistrictType.PRESTIGE) && canPlayCard(card)).findFirst();
+            if (prestigeCard.isPresent()) {
                 buyACardAndAddItToCitadel(prestigeCard.get());
             } else {
                 this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
