@@ -465,6 +465,7 @@ public abstract class Player implements Opponent {
         Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
         if (card.isPresent()) {
             this.citadel.remove(card.get());
+            this.deck.discard(card.get());
             this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
             return card;
         } else {
