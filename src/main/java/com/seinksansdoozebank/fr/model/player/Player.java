@@ -466,7 +466,15 @@ public abstract class Player implements Opponent {
         }
     }
 
-    public abstract void useCemeteryEffect(Card card);
+    public void useCemeteryEffect(Card card) {
+        if (this.wantToUseCemeteryEffect(card)) {
+            this.hand.add(card);
+            this.returnGoldToBank(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
+    }
+
+    protected abstract boolean wantToUseCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
