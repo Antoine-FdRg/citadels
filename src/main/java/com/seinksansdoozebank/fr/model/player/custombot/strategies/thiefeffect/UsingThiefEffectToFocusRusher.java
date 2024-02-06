@@ -38,4 +38,9 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
     public boolean equals(Object obj) {
         return obj instanceof UsingThiefEffectToFocusRusher;
     }
+
+    @Override
+    public int hashCode() {
+        return UsingThiefEffectToFocusRusher.class.getName().hashCode();
+    }
 }

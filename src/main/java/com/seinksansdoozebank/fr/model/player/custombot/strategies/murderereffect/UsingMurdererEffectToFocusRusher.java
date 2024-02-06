@@ -45,4 +45,9 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
     public boolean equals(Object obj) {
         return obj instanceof UsingMurdererEffectToFocusRusher;
     }
+
+    @Override
+    public int hashCode() {
+        return UsingMurdererEffectToFocusRusher.class.getName().hashCode();
+    }
 }

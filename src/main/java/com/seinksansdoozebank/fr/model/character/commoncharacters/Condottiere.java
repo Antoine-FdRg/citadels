@@ -52,4 +52,14 @@ public class Condottiere extends CommonCharacter {
     public Optional<Card> getDistrictDestroyed() {
         return this.districtDestroyed;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Condottiere;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
