@@ -2,7 +2,11 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 import com.seinksansdoozebank.fr.view.IView;
@@ -102,11 +106,41 @@ public class RichardBot extends SmartBot {
         return this.getOpponents().stream().filter(opponent -> !this.getOpponentsWhichHasChosenCharacterBefore().contains(opponent)).toList();
     }
 
+    /**
+     * Cette méthode nous permet de choisir notre personnage en prenant en compte les cas où un opposant est sur le point
+     * de poser son dernier district est de gagner
+     * @param characters list of available characters
+     * @param opponent the opponent who gets 7 districts in it citadel
+     * @return an optional of the character that will be assigned to the current player
+     */
+    Optional<Character> chooseCharacterWHenOpponentHasOneDistrictLeft(List<Character> characters,Opponent opponent){
+        if(characters.contains(new King())){
+            return Optional.of(new King());
+        }
+        if(characters.contains(new Assassin()) && characters.contains(new Bishop()) && characters.contains(new Condottiere())){
+            return Optional.of(new Condottiere());
+        }
+        if(!characters.contains(new Condottiere()) || !characters.contains(new Bishop())){
+            return Optional.of(new Assassin());
+        }
+        else{
+            return Optional.of(new Condottiere());
+        }
+    }
+
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
+        Optional<Character> optionalCharacter ;
+        Optional<Opponent> optionalOpponent=getOpponents().stream().filter(opponent -> opponent.getHandSize()==7).findFirst();
+        if(optionalOpponent.isPresent()){
+           optionalCharacter=chooseCharacterWHenOpponentHasOneDistrictLeft(characters,optionalOpponent.get());
+           if(optionalCharacter.isPresent()){
+               return optionalCharacter.get();
+           }
+        }
         List<Character> orderedCharacters = ordinateCharacters(characters);
-        Optional<Character> optionalCharacter = shouldChooseBecauseLastCardToBuy(characters);
+        optionalCharacter = shouldChooseBecauseLastCardToBuy(characters);
         if (optionalCharacter.isPresent()) {
             return optionalCharacter.get();
         }
