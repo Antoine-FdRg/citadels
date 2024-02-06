@@ -419,7 +419,7 @@ public class SmartBot extends Player {
     @Override
     protected boolean wantToUseCemeteryEffect(Card card) {
         // if the district cost less than 3, the bot will keep it
-        return this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && card.getDistrict().getCost() < 3 && this.getNbGold() > 0;
+        return card.getDistrict().getCost() < 3 && this.getNbGold() > 0;
     }
 
     @Override

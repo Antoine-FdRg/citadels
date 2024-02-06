@@ -326,19 +326,4 @@ public class Game {
             playerByRole.ifPresent(view::displayActualNumberOfGold);
         }
     }
-
-
-    /**
-     * This method is used to get the player who has the cemetery in his citadel
-     *
-     * @return an optional of Player with the cemetery
-     */
-    public Optional<Player> getPlayerWithCemetery() {
-        for (Player player : players) {
-            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict() == District.CEMETERY)) {
-                return Optional.of(player);
-            }
-        }
-        return Optional.empty();
-    }
 }

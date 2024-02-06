@@ -18,14 +18,11 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -808,27 +805,6 @@ class SmartBotTest {
         assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
     }
 
-    @ParameterizedTest
-    @MethodSource("provideGoldAndCard")
-    void testUseCemeteryEffect(int gold, Card card, Card thenReturnCard) {
-        when(spySmartBot.getNbGold()).thenReturn(gold);
-        when(spySmartBot.getCitadel()).thenReturn(List.of(thenReturnCard));
-        spySmartBot.useCemeteryEffect(card);
-        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3 && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
-        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spySmartBot, card);
-    }
-
-    private static Stream<Object[]> provideGoldAndCard() {
-        return Stream.of(
-                new Object[]{1, new Card(District.TEMPLE), new Card(District.CEMETERY)},
-                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
-                new Object[]{0, new Card(District.TEMPLE), new Card(District.CEMETERY)},
-                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
-                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.MANOR)},
-                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.MANOR)}
-        );
-    }
-
     @Test
     void playWhenHandIsEmptyThePlayerIsArchitectTest() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
@@ -861,5 +837,26 @@ class SmartBotTest {
         List<Character> characters = createCharactersList();
         when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
         assertNotEquals(new Magician(),spySmartBot.chooseCharacterImpl(characters));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldButTooExpensiveCardShouldReturnFalse() {
+        Card tooExpensiveCard = new Card(District.CATHEDRAL);
+        when(spySmartBot.getNbGold()).thenReturn(5);
+        assertFalse(spySmartBot.wantToUseCemeteryEffect(tooExpensiveCard));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithAffordableCardButNotEnoughGoldButShouldReturnFalse() {
+        Card affordableCard = new Card(District.TEMPLE);
+        when(spySmartBot.getNbGold()).thenReturn(0);
+        assertFalse(spySmartBot.wantToUseCemeteryEffect(affordableCard));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldAndNotTooExpensiveCardShouldReturnTrue() {
+        Card affordableCard = new Card(District.TEMPLE);
+        when(spySmartBot.getNbGold()).thenReturn(5);
+        assertTrue(spySmartBot.wantToUseCemeteryEffect(affordableCard));
     }
 }

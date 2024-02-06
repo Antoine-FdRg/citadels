@@ -233,7 +233,7 @@ public class RandomBot extends Player {
 
     @Override
     protected boolean wantToUseCemeteryEffect(Card card) {
-        return this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0);
+        return random.nextBoolean() && this.getNbGold() > 0;
 
     }
 
