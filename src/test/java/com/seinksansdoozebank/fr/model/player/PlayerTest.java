@@ -331,6 +331,7 @@ class PlayerTest {
         Card card = new Card(District.TEMPLE);
         Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
         assertTrue(optCard.isPresent());
+        verify(deck, times(1)).discard(optCard.get());
         assertEquals(card, optCard.get());
     }
 
