@@ -72,7 +72,7 @@ public class RichardBot extends SmartBot {
      * @param characters list of available characters
      * @return the list of available characters ordered like we want
      */
-    protected List<Character> ordinateCharacters(List<Character> characters) {
+    List<Character> ordinateCharacters(List<Character> characters) {
         List<Character> copyCharacters = new ArrayList<>(characters);
         List<Character> orderedCharacters = new ArrayList<>();
         Assassin assassin = (Assassin) copyCharacters.stream().filter(c -> c.getRole() == Role.ASSASSIN).findFirst().orElseThrow();
@@ -107,7 +107,7 @@ public class RichardBot extends SmartBot {
      * @param opponents list of the opponents of the player
      * @return the number of players with empty hands in the game
      */
-    protected int numberOfEmptyHands(List<Opponent> opponents) {
+    int numberOfEmptyHands(List<Opponent> opponents) {
         return (int) opponents.stream().filter(player -> player.getHandSize() == 0).count();
     }
 
@@ -117,7 +117,7 @@ public class RichardBot extends SmartBot {
      * @param opponents list of the opponents of the player
      * @return a boolean
      */
-    protected boolean numberOfPlayerWithMoreGold(List<Opponent> opponents) {
+    boolean numberOfPlayerWithMoreGold(List<Opponent> opponents) {
         return opponents.stream().anyMatch(opponent -> this.getNbGold() < opponent.getNbGold());
     }
 
@@ -127,7 +127,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseAssassin() {
+    boolean shouldChooseAssassin() {
         return getHand().size() >= 7 && numberOfEmptyHands(this.getOpponents()) >= 1;
     }
 
@@ -137,7 +137,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseMagician() {
+    boolean shouldChooseMagician() {
         return this.getHand().isEmpty();
     }
 
@@ -147,7 +147,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseMerchant() {
+    boolean shouldChooseMerchant() {
         return this.getNbGold() <= 1;
     }
 
@@ -157,7 +157,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseArchitect() {
+    boolean shouldChooseArchitect() {
         return getPriceOfNumbersOfCheaperCards(2) <= this.getNbGold() && numberOfPlayerWithMoreGold(this.getOpponents());
     }
 
@@ -168,7 +168,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseBishop() {
+    boolean shouldChooseBishop() {
         return getPriceOfNumbersOfCheaperCards(1) <= this.getNbGold();
     }
 
@@ -178,7 +178,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    protected boolean shouldChooseCondottiere() {
+    boolean shouldChooseCondottiere() {
         return getPriceOfNumbersOfCheaperCards(1) > this.getNbGold();
     }
 
@@ -189,7 +189,7 @@ public class RichardBot extends SmartBot {
      * @param characters list of characters available
      * @return an optional of character
      */
-    protected Optional<Character> shouldChooseBecauseLastCardToBuy(List<Character> characters) {
+    Optional<Character> shouldChooseBecauseLastCardToBuy(List<Character> characters) {
         if (isAboutToWin()) {
             return characters.stream().filter(c -> c.getRole() == Role.ASSASSIN || c.getRole() == Role.BISHOP || c.getRole() == Role.CONDOTTIERE).findFirst();
         }
