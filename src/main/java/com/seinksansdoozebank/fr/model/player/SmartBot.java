@@ -137,6 +137,12 @@ public class SmartBot extends Player {
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
+        if(this.getHand().size()<=1){
+            Optional<Character> optionalCharacter=characters.stream().filter(c-> c.getRole()==Role.MAGICIAN).findFirst();
+            if(optionalCharacter.isPresent()){
+                return optionalCharacter.get();
+            }
+        }
         // Choose the character by getting the frequency of each districtType in the citadel
         // and choosing the districtType with the highest frequency for the character
         List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());
@@ -330,6 +336,9 @@ public class SmartBot extends Player {
                     break;
                 }
             }
+            if (target != null) {
+                break;
+            }
         }
         if (target == null) {
             target = charactersList.get(random.nextInt(charactersList.size()));
@@ -376,13 +385,7 @@ public class SmartBot extends Player {
         return average.getAsDouble();
     }
 
-    /**
-     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     *
-     * @param thief the thief
-     */
-    @Override
-    protected void useEffectThief(Thief thief) {
+    protected Optional<Character> chooseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                 !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
@@ -390,10 +393,7 @@ public class SmartBot extends Player {
             victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();
         }
-        victim.ifPresent(character -> {
-            thief.useEffect(character);
-            view.displayPlayerUseThiefEffect(this);
-        });
+        return victim;
     }
 
     public Card chooseCardToDiscardForLaboratoryEffect() {
@@ -417,13 +417,9 @@ public class SmartBot extends Player {
     }
 
     @Override
-    public void useCemeteryEffect(Card card) {
+    protected boolean wantToUseCemeteryEffect(Card card) {
         // if the district cost less than 3, the bot will keep it
-        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && card.getDistrict().getCost() < 3 && this.getNbGold() > 0) {
-            this.hand.add(card);
-            this.decreaseGold(1);
-            this.view.displayPlayerUseCemeteryEffect(this, card);
-        }
+        return this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && card.getDistrict().getCost() < 3 && this.getNbGold() > 0;
     }
 
     @Override

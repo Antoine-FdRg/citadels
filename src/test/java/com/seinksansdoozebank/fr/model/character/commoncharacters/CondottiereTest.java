@@ -80,6 +80,7 @@ class CondottiereTest {
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
         assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.DONJON));
+        verify(deck, times(0)).discard(any());
     }
 
     @Test
@@ -99,6 +100,7 @@ class CondottiereTest {
         citadel.add(new Card(District.MANUFACTURE));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
         assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.BARRACK));
+        verify(deck, times(0)).discard(any());
     }
 
     @Test
@@ -111,5 +113,32 @@ class CondottiereTest {
         citadel.add(new Card(District.PORT_FOR_DRAGONS));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
         assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.PORT_FOR_DRAGONS));
+        verify(deck, times(0)).discard(any());
+    }
+
+    @Test
+    void cantDestroyDistrictOfBishop() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Bishop bishop = new Bishop();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.TAVERN));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.TAVERN));
+        verify(deck, times(0)).discard(any());
+    }
+
+    @Test
+    void useEffectWhenCanDestroyShouldDestroy() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.TAVERN));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        condottiere.useEffect(otherPlayer, District.TAVERN);
+        verify(deck, times(1)).discard(any());
     }
 }

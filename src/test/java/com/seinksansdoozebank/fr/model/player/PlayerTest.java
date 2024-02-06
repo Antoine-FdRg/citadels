@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -24,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -42,6 +42,8 @@ class PlayerTest {
 
     @BeforeEach
     void setup() {
+        Bank.reset();
+        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         cardCostThree = new Card(District.BARRACK);
@@ -329,6 +331,7 @@ class PlayerTest {
         Card card = new Card(District.TEMPLE);
         Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
         assertTrue(optCard.isPresent());
+        verify(deck, times(1)).discard(optCard.get());
         assertEquals(card, optCard.get());
     }
 
@@ -416,6 +419,24 @@ class PlayerTest {
         spyPlayer.pickCardsKeepSomeAndDiscardOthers();
         verify(view, times(1)).displayPlayerKeepBothCardsBecauseOfLibrary(spyPlayer);
         assertEquals(3, spyPlayer.getHand().size());
+    }
+
+    @Test
+    void isAboutToWInTestTrue() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertTrue(spyPlayer.isAboutToWin());
+    }
+
+    @Test
+    void isAboutToWInTestFalse() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.PORT))));
+        assertFalse(spyPlayer.isAboutToWin());
     }
 
 

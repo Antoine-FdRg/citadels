@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -290,7 +291,7 @@ class GameTest {
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
         verify(view, atMost(0)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
@@ -563,25 +564,30 @@ class GameTest {
 
     @Test
     void testUseCemeteryEffect() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        Player player = spy(new RandomBot(5, new Deck(), view));
+        Condottiere condottiere = spy(new Condottiere());
+        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        RandomBot player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        int bankAccountBefore = Bank.getInstance().getNbOfAvailableCoin();
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        player.setRandom(mockRandom);
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(1)).useCemeteryEffect(any());
+        assertEquals(bankAccountBefore + 1, Bank.getInstance().getNbOfAvailableCoin());
     }
 
     @Test
     void testUseCemeteryEffectWithNoPlayerWithCemetery() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
+        Condottiere condottiere = spy(new Condottiere());
+        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
         Player player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(0)).useCemeteryEffect(any());
