@@ -11,6 +11,8 @@ public interface Opponent {
 
     int getNbGold();
 
+    int getRankToPickCharacter();
+
     int nbDistrictsInCitadel();
 
     List<Card> getCitadel();
