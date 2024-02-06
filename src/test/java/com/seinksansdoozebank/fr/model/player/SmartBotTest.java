@@ -346,16 +346,15 @@ class SmartBotTest {
     @Test
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        spySmartBot.useEffect();
-        spySmartBot.useEffectArchitectPickCards();
-        verify(spySmartBot, atLeastOnce()).useEffectArchitectPickCards();
+        spySmartBot.getCharacter().applyEffect();
+        verify(spySmartBot, times(1)).useEffectArchitect();
     }
 
     @Test
     void useEffectTestCondottiere() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectCondottiere(any());
+        spySmartBot.getCharacter().applyEffect();
+        verify(spySmartBot, times(1)).chooseCondottiereTarget();
     }
 
     @Test
@@ -369,7 +368,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         opponentCharacters = new ArrayList<>(List.of(new Merchant()));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponentCharacters);
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(assassin, times(1)).useEffect(any());
     }
 
@@ -476,10 +475,10 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
 
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician have the old hand of the other player
         assertEquals(otherPlayerHandCopy, spySmartBot.getHand());
         // Check that the other player have the old hand of the magician
@@ -522,10 +521,10 @@ class SmartBotTest {
         // Set the opponents of the player
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
         assertFalse(spySmartBot.getHand().contains(monasteryCard));
         assertFalse(spySmartBot.getHand().contains(cathedralCard));
@@ -567,10 +566,10 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
 
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
         assertFalse(spySmartBot.getHand().contains(monasteryCard));
         assertFalse(spySmartBot.getHand().contains(cathedralCard));
@@ -669,7 +668,7 @@ class SmartBotTest {
         List<Character> opponents = new ArrayList<>(List.of(bishop));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(view, times(1)).displayPlayerUseThiefEffect(spySmartBot);
         assertEquals(spySmartBot, bishop.getSavedThief());
     }
@@ -689,7 +688,7 @@ class SmartBotTest {
         List<Character> opponents = new ArrayList<>(List.of(assassin));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(view, times(0)).displayPlayerUseThiefEffect(spySmartBot);
         assertNull(assassin.getSavedThief());
     }
@@ -714,7 +713,7 @@ class SmartBotTest {
         opponents.add(architect);
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(spySmartBot, architect.getSavedThief());
         assertNull(bishop.getSavedThief());
         assertEquals(spySmartBot, architect.getSavedThief());
@@ -734,7 +733,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(0, opponent.getCitadel().size());
         assertEquals(lastGold - District.MARKET_PLACE.getCost() + 1, spySmartBot.getNbGold());
     }
@@ -752,7 +751,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold - District.OBSERVATORY.getCost() + 1, spySmartBot.getNbGold());
     }
@@ -771,7 +770,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.chooseCondottiereTarget();
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }

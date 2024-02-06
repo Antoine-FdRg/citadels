@@ -96,8 +96,8 @@ class CustomBotTest {
     void useThiefEffectWithAUsingThiefEffectStrategyShouldUseTheUsingThiefEffectStrategyMethod() {
         spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
         Thief mockThief = mock(Thief.class);
-        spyCustomBot.useEffectThief(mockThief);
-        verify(mockUsingThiefEffectStrategy).apply(spyCustomBot, mockThief);
+        spyCustomBot.useEffectThief();
+        verify(mockUsingThiefEffectStrategy).apply(spyCustomBot);
     }
 
     @Test
@@ -105,16 +105,16 @@ class CustomBotTest {
         Thief mockThief = mock(Thief.class);
         spyCustomBot.usingThiefEffectStrategy = null;
         spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
-        spyCustomBot.useEffectThief(mockThief);
-        verify(spyCustomBot).randomUseThiefEffect(any());
+        spyCustomBot.useEffectThief();
+        verify(spyCustomBot).randomUseThiefEffect();
     }
 
     @Test
     void useAssassinEffectWithAUsingMurdererEffectStrategyShouldUseTheUsingMurdererEffectStrategyMethod() {
         spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
         Assassin mockAssassin = mock(Assassin.class);
-        spyCustomBot.useEffectAssassin(mockAssassin);
-        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockAssassin, mockView);
+        spyCustomBot.useEffectAssassin();
+        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockView);
     }
 
     @Test
@@ -122,27 +122,25 @@ class CustomBotTest {
         Assassin mockAssassin = mock(Assassin.class);
         spyCustomBot.usingMurdererEffectStrategy = null;
         spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
-        spyCustomBot.useEffectAssassin(mockAssassin);
-        verify(spyCustomBot).randomUseMurdererEffect(any());
+        spyCustomBot.useEffectAssassin();
+        verify(spyCustomBot).randomUseMurdererEffect();
     }
 
     @Test
     void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
-        Condottiere mockCondottiere = mock(Condottiere.class);
         Opponent mockOpponent = mock(Opponent.class);
         when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.useEffectCondottiere(mockCondottiere);
-        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, mockCondottiere);
+        spyCustomBot.chooseCondottiereTarget();
+        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot);
     }
 
     @Test
     void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
-        Condottiere mockCondottiere = mock(Condottiere.class);
         spyCustomBot.usingCondottiereEffectStrategy = null;
         Opponent mockOpponent = mock(Opponent.class);
         when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.useEffectCondottiere(mockCondottiere);
-        verify(spyCustomBot).randomUseCondottiereEffect(any());
+        spyCustomBot.chooseCondottiereTarget();
+        verify(spyCustomBot).randomUseCondottiereEffect();
     }
 
     @Test
