@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.picking;
 
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 
 /**
  * Implementation of the picking strategy where the player always pick district
