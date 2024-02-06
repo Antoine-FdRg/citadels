@@ -277,7 +277,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseAssassinTest(){
+    void chooseCharacterAndShouldChooseAssassinTest(){
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.BARRACK))));
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
@@ -293,7 +293,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseMagicianTest(){
+    void chooseCharacterAndShouldChooseMagicianTest(){
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -304,7 +304,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseMerchantTest(){
+    void chooseCharacterAndShouldChooseMerchantTest(){
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -316,7 +316,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseArchitectTest(){
+    void chooseCharacterAndShouldChooseArchitectTest(){
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -330,7 +330,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseBishopTest(){
+    void chooseCharacterAndShouldChooseBishopTest(){
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         richardBot.chooseCharacterImpl(charactersList);
@@ -338,7 +338,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterBecauseShouldChooseBCondottiereTest(){
+    void chooseCharacterAndShouldChooseBCondottiereTest(){
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS))));
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
