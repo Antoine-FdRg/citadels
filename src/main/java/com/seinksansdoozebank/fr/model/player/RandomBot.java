@@ -211,20 +211,15 @@ public class RandomBot extends Player {
         }
     }
 
-    /**
-     * Effect of thief character (chose victim)
-     *
-     * @param thief the thief character
-     */
-    @Override
-    public void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+    protected Optional<Character> chooseThiefTarget() {
+        List<Character> targetableCharacters = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
-                !character.isDead()).findFirst();
-        victim.ifPresent(characterVictim -> {
-            thief.useEffect(characterVictim);
-            view.displayPlayerUseThiefEffect(this);
-        });
+                !character.isDead()).toList();
+        if (targetableCharacters.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(targetableCharacters.get(random.nextInt(targetableCharacters.size())));
+        }
     }
 
 
@@ -237,12 +232,9 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void useCemeteryEffect(Card card) {
-        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0)) {
-            this.hand.add(card);
-            this.decreaseGold(1);
-            this.view.displayPlayerUseCemeteryEffect(this, card);
-        }
+    protected boolean wantToUseCemeteryEffect(Card card) {
+        return this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0);
+
     }
 
     @Override

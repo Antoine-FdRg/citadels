@@ -3,35 +3,38 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
-import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 class RichardBotTest {
     RichardBot richardBot;
@@ -60,9 +63,9 @@ class RichardBotTest {
                 new Architect(),
                 new Condottiere()
         );
-        opponentWithEmptyHand=spy(new RandomBot(10,deck,view));
-        opponentWithMoreGoldThanRichard=spy(new RandomBot(10,deck,view));
-        opponentsList=new ArrayList<>();
+        opponentWithEmptyHand = spy(new RandomBot(10, deck, view));
+        opponentWithMoreGoldThanRichard = spy(new RandomBot(10, deck, view));
+        opponentsList = new ArrayList<>();
         opponentsList.add(opponentWithEmptyHand);
         opponentsList.add(opponentWithMoreGoldThanRichard);
         when(opponentWithEmptyHand.getHandSize()).thenReturn(0);
@@ -71,36 +74,36 @@ class RichardBotTest {
     }
 
     @Test
-    void ordinateCharactersMethodTest(){
-        List<Character> orderedCharacters=richardBot.ordinateCharacters(charactersList);
-        assertEquals(new Assassin(),orderedCharacters.get(0));
-        assertEquals(new Magician(),orderedCharacters.get(1));
-        assertEquals(new Merchant(),orderedCharacters.get(2));
-        assertEquals(new Architect(),orderedCharacters.get(3));
+    void ordinateCharactersMethodTest() {
+        List<Character> orderedCharacters = richardBot.ordinateCharacters(charactersList);
+        assertEquals(new Assassin(), orderedCharacters.get(0));
+        assertEquals(new Magician(), orderedCharacters.get(1));
+        assertEquals(new Merchant(), orderedCharacters.get(2));
+        assertEquals(new Architect(), orderedCharacters.get(3));
         assertEquals(new Bishop(), orderedCharacters.get(4));
-        assertEquals(new Condottiere(),orderedCharacters.get(5));
+        assertEquals(new Condottiere(), orderedCharacters.get(5));
     }
 
     @Test
-    void numberOfEmptyHandsTest(){
-        assertEquals(1,richardBot.numberOfEmptyHands(opponentsList));
+    void numberOfEmptyHandsTest() {
+        assertEquals(1, richardBot.numberOfEmptyHands(opponentsList));
     }
 
     @Test
-    void numberOfPlayerWithMoreGoldTestTrue(){
+    void numberOfPlayerWithMoreGoldTestTrue() {
         richardBot.decreaseGold(5);
         assertTrue(richardBot.numberOfPlayerWithMoreGold(opponentsList));
     }
 
     @Test
-    void numberOfPlayerWithMoreGoldTestFalse(){
+    void numberOfPlayerWithMoreGoldTestFalse() {
         richardBot.increaseGold(3);
         assertFalse(richardBot.numberOfPlayerWithMoreGold(opponentsList));
     }
 
 
     @Test
-    void shouldChooseAssassinTestTrue(){
+    void shouldChooseAssassinTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -112,7 +115,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseAssassinTestFalseWhenNoHandsAreEmpty(){
+    void shouldChooseAssassinTestFalseWhenNoHandsAreEmpty() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -125,7 +128,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseAssassinTestFalseWhenRichardBotHandHasNotALotOfCards(){
+    void shouldChooseAssassinTestFalseWhenRichardBotHandHasNotALotOfCards() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.BARRACK))));
@@ -134,13 +137,13 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseMagicianTestTrue(){
+    void shouldChooseMagicianTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>());
         assertTrue(richardBot.shouldChooseMagician());
     }
 
     @Test
-    void shouldChooseMagicianTestFalse(){
+    void shouldChooseMagicianTestFalse() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -152,18 +155,18 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseMerchantTestTrue(){
+    void shouldChooseMerchantTestTrue() {
         richardBot.decreaseGold(10);
         assertTrue(richardBot.shouldChooseMerchant());
     }
 
     @Test
-    void shouldChooseMerchantTestFalse(){
+    void shouldChooseMerchantTestFalse() {
         assertFalse(richardBot.shouldChooseMerchant());
     }
 
     @Test
-    void shouldChooseArchitectTestTrue(){
+    void shouldChooseArchitectTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -176,7 +179,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseArchitectTestFalseBecauseNoPlayersHaveMoreGoldThanRichardBot(){
+    void shouldChooseArchitectTestFalseBecauseNoPlayersHaveMoreGoldThanRichardBot() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -188,7 +191,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseArchitectTestFalseBecauseRichardCantAffordMoreThanOneCard(){
+    void shouldChooseArchitectTestFalseBecauseRichardCantAffordMoreThanOneCard() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT),
                 new Card(District.PORT_FOR_DRAGONS),
@@ -198,7 +201,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseBishopTestTrue(){
+    void shouldChooseBishopTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -210,7 +213,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseBishopTestFalse(){
+    void shouldChooseBishopTestFalse() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
@@ -219,7 +222,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseCondottiereTestTrue(){
+    void shouldChooseCondottiereTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
@@ -228,7 +231,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseCondottiereTestFalse(){
+    void shouldChooseCondottiereTestFalse() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -240,7 +243,7 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseBecauseLastCardToBuyTestTrue(){
+    void shouldChooseBecauseLastCardToBuyTestTrue() {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -248,21 +251,21 @@ class RichardBotTest {
                 new Card(District.FORTRESS),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
-        assertEquals(Optional.of(new Assassin()),richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
+        assertEquals(Optional.of(new Assassin()), richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
     }
 
     @Test
-    void shouldChooseBecauseLastCardToBuyTestFalse(){
+    void shouldChooseBecauseLastCardToBuyTestFalse() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
-        assertEquals(Optional.empty(),richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
+        assertEquals(Optional.empty(), richardBot.shouldChooseBecauseLastCardToBuy(charactersList));
     }
 
 
     @Test
-    void chooseCharacterImplWhenShouldChooseBecauseLastCardToBuy(){
+    void chooseCharacterImplWhenShouldChooseBecauseLastCardToBuy() {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -272,12 +275,12 @@ class RichardBotTest {
                 new Card(District.BARRACK))));
         opponentsList.remove(opponentWithEmptyHand);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseBecauseLastCardToBuy(any());
-        verify(richardBot,times(0)).shouldChooseAssassin();
+        verify(richardBot, times(1)).shouldChooseBecauseLastCardToBuy(any());
+        verify(richardBot, times(0)).shouldChooseAssassin();
     }
 
     @Test
-    void chooseCharacterAndShouldChooseAssassinTest(){
+    void chooseCharacterAndShouldChooseAssassinTest() {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.BARRACK))));
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
@@ -288,23 +291,23 @@ class RichardBotTest {
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseAssassin();
-        assertEquals(new Assassin(),richardBot.chooseCharacterImpl(charactersList));
+        verify(richardBot, times(1)).shouldChooseAssassin();
+        assertEquals(new Assassin(), richardBot.chooseCharacterImpl(charactersList));
     }
 
     @Test
-    void chooseCharacterAndShouldChooseMagicianTest(){
+    void chooseCharacterAndShouldChooseMagicianTest() {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
                 new Card(District.CASTLE))));
         when(richardBot.getHand()).thenReturn(new ArrayList<>());
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseMagician();
+        verify(richardBot, times(1)).shouldChooseMagician();
     }
 
     @Test
-    void chooseCharacterAndShouldChooseMerchantTest(){
+    void chooseCharacterAndShouldChooseMerchantTest() {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -312,11 +315,11 @@ class RichardBotTest {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT))));
         richardBot.decreaseGold(9);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseMerchant();
+        verify(richardBot, times(1)).shouldChooseMerchant();
     }
 
     @Test
-    void chooseCharacterAndShouldChooseArchitectTest(){
+    void chooseCharacterAndShouldChooseArchitectTest() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -326,27 +329,111 @@ class RichardBotTest {
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         richardBot.decreaseGold(2);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseArchitect();
+        verify(richardBot, times(1)).shouldChooseArchitect();
     }
 
     @Test
-    void chooseCharacterAndShouldChooseBishopTest(){
+    void chooseCharacterAndShouldChooseBishopTest() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseBishop();
+        verify(richardBot, times(1)).shouldChooseBishop();
     }
 
     @Test
-    void chooseCharacterAndShouldChooseBCondottiereTest(){
+    void chooseCharacterAndShouldChooseBCondottiereTest() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS))));
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         richardBot.decreaseGold(8);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).shouldChooseCondottiere();
+        verify(richardBot, times(1)).shouldChooseCondottiere();
     }
 
 
+    @Test
+    void getOpponentsAboutToWinWithNoOpponentAboutToWinShouldReturnEmptyList() {
+        Opponent opponent1 = mock(Opponent.class);
+        when(opponent1.isAboutToWin()).thenReturn(false);
+        Opponent opponent2 = mock(Opponent.class);
+        when(opponent2.isAboutToWin()).thenReturn(false);
+        List<Opponent> opponents = List.of(opponent1, opponent2);
+        when(richardBot.getOpponents()).thenReturn(opponents);
 
+        assertFalse(richardBot.anOpponentIsAboutToWin());
+    }
+
+    @Test
+    void getOpponentsAboutToWinWithNoOpponentAboutToWinShouldReturnFalse() {
+        Opponent opponent1 = mock(Opponent.class);
+        when(opponent1.isAboutToWin()).thenReturn(false);
+        Opponent opponent2 = mock(Opponent.class);
+        when(opponent2.isAboutToWin()).thenReturn(true);
+        List<Opponent> opponents = List.of(opponent1, opponent2);
+        when(richardBot.getOpponents()).thenReturn(opponents);
+
+        assertTrue(richardBot.anOpponentIsAboutToWin());
+    }
+
+    @Test
+    void getOpponentsAboutToWinWithAnOpponentAboutToWinShouldReturnTrue() {
+        Opponent opponent1 = mock(Opponent.class);
+        when(opponent1.isAboutToWin()).thenReturn(true);
+        Opponent opponent2 = mock(Opponent.class);
+        when(opponent2.isAboutToWin()).thenReturn(false);
+        List<Opponent> opponents = List.of(opponent1, opponent2);
+        when(richardBot.getOpponents()).thenReturn(opponents);
+
+        assertTrue(richardBot.anOpponentIsAboutToWin());
+    }
+
+    @Test
+    void choseThiefTargetWhenNoOpponentIsAboutToWinShouldCallSuperMethod() {
+        List<Character> availableCharacters = List.of(new Thief(), new Bishop(), new King(), new Condottiere());
+        when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
+        when(richardBot.anOpponentIsAboutToWin()).thenReturn(false);
+
+        richardBot.chooseThiefTarget();
+
+        verify(richardBot).useSuperChoseThiefEffect();
+    }
+
+    @Test
+    void choseThiefTargetWhenOpponentIsAboutToWinAndNoBishopOrCondottiereShouldCallSuperMethod() {
+        List<Character> availableCharacters = List.of(new Architect(), new King(), new Thief(), new Merchant());
+        when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
+        when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
+
+        richardBot.chooseThiefTarget();
+
+        verify(richardBot).useSuperChoseThiefEffect();
+    }
+
+    @Test
+    void choseThiefTargetWhenOpponentIsAboutToWinAndBishopAvailableShouldReturnBishop() {
+        List<Character> availableCharacters = List.of(new Condottiere(), new King(), new Bishop(), new Merchant());
+        when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
+        when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
+
+        Optional<Character> result = richardBot.chooseThiefTarget();
+
+        Character expectedCharacter = new Bishop();
+        assertTrue(result.isPresent());
+        verify(richardBot, never()).useSuperChoseThiefEffect();
+        assertEquals(expectedCharacter, result.get());
+    }
+
+    @Test
+    void choseThiefTargetWhenOpponentIsAboutToWinAndCondottiereAvailableShouldReturnCondottiere() {
+        List<Character> availableCharacters = List.of(new Architect(), new King(), new Condottiere(), new Merchant());
+        when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
+        when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
+
+        Optional<Character> result = richardBot.chooseThiefTarget();
+
+        Character expectedCharacter = new Condottiere();
+        assertTrue(result.isPresent());
+        verify(richardBot, never()).useSuperChoseThiefEffect();
+        assertEquals(expectedCharacter, result.get());
+    }
 }
