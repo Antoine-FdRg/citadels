@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -559,10 +560,13 @@ class GameTest {
     void testUseCemeteryEffect() {
         Condottiere condotierre = spy(new Condottiere());
         when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        Player player = spy(new RandomBot(5, new Deck(), view));
+        RandomBot player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
         int bankAccountBefore = Bank.getInstance().getNbOfAvailableCoin();
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        player.setRandom(mockRandom);
         gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condotierre);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
