@@ -275,7 +275,20 @@ public abstract class Player implements Opponent {
 
     abstract void useEffectCondottiere(Condottiere condottiere);
 
-    abstract void useEffectThief(Thief thief);
+    abstract Optional<Character> chooseThiefTarget();
+
+    /**
+     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     *
+     * @param thief the thief
+     */
+    protected void useEffectThief(Thief thief) {
+        Optional<Character> victim = this.chooseThiefTarget();
+        victim.ifPresent(target -> {
+            thief.useEffect(target);
+            view.displayPlayerUseThiefEffect(this);
+        });
+    }
 
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);
@@ -459,7 +472,15 @@ public abstract class Player implements Opponent {
         }
     }
 
-    public abstract void useCemeteryEffect(Card card);
+    public void useCemeteryEffect(Card card) {
+        if (this.wantToUseCemeteryEffect(card)) {
+            this.hand.add(card);
+            this.returnGoldToBank(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
+    }
+
+    protected abstract boolean wantToUseCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);

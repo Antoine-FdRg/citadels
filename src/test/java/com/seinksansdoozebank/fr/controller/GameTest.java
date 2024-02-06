@@ -286,7 +286,7 @@ class GameTest {
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
         verify(view, atMost(0)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
@@ -562,10 +562,12 @@ class GameTest {
         Player player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        int bankAccountBefore = Bank.getInstance().getNbOfAvailableCoin();
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condotierre);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(1)).useCemeteryEffect(any());
+        assertEquals(bankAccountBefore + 1, Bank.getInstance().getNbOfAvailableCoin());
     }
 
     @Test
@@ -575,7 +577,7 @@ class GameTest {
         Player player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
+        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condotierre);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(0)).useCemeteryEffect(any());

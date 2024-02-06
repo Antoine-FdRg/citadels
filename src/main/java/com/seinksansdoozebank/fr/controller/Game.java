@@ -95,7 +95,7 @@ public class Game {
                 player.play();
                 // Check if the player has the Condottiere role
                 if (player.getCharacter() instanceof Condottiere condottiere) {
-                    this.useCemeteryEffect(condottiere);
+                    this.triggerCemeteryEffectCanBeUsed(condottiere);
                 }
             }
             //We set the attribute to true if player is the first who has eight districts
@@ -336,7 +336,7 @@ public class Game {
      *
      * @param condottiere the condottiere who destroyed a district
      */
-    public void useCemeteryEffect(Condottiere condottiere) {
+    public void triggerCemeteryEffectCanBeUsed(Condottiere condottiere) {
         // Get the district destroyed by the condottiere
         Optional<Card> districtDestroyed = condottiere.getDistrictDestroyed();
         // if there is a district destroyed
