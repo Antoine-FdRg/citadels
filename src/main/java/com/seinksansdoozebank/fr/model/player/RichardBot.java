@@ -2,13 +2,7 @@ package com.seinksansdoozebank.fr.model.player;
 
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 import com.seinksansdoozebank.fr.view.IView;
@@ -163,26 +157,39 @@ public class RichardBot extends SmartBot {
     List<Character> ordinateCharacters(List<Character> characters) {
         List<Character> copyCharacters = new ArrayList<>(characters);
         List<Character> orderedCharacters = new ArrayList<>();
-        Assassin assassin = (Assassin) copyCharacters.stream().filter(c -> c.getRole() == Role.ASSASSIN).findFirst().orElseThrow();
-        copyCharacters.remove(assassin);
-        Magician magician = (Magician) copyCharacters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst().orElseThrow();
-        copyCharacters.remove(magician);
-        Merchant merchant = (Merchant) copyCharacters.stream().filter(c -> c.getRole() == Role.MERCHANT).findFirst().orElseThrow();
-        copyCharacters.remove(merchant);
-        Architect architect = (Architect) copyCharacters.stream().filter(c -> c.getRole() == Role.ARCHITECT).findFirst().orElseThrow();
-        copyCharacters.remove(architect);
-        Condottiere condottiere = (Condottiere) copyCharacters.stream().filter(c -> c.getRole() == Role.CONDOTTIERE).findFirst().orElseThrow();
-        copyCharacters.remove(condottiere);
-        Bishop bishop = (Bishop) copyCharacters.stream().filter(c -> c.getRole() == Role.BISHOP).findFirst().orElseThrow();
-        copyCharacters.remove(bishop);
+
+        Optional<Character> optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.ASSASSIN).findFirst();
+        optionalCharacter.ifPresent(assassin -> {
+            orderedCharacters.add(assassin);
+            copyCharacters.remove(assassin);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst();
+        optionalCharacter.ifPresent(magician -> {
+            orderedCharacters.add(magician);
+            copyCharacters.remove(magician);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.MERCHANT).findFirst();
+        optionalCharacter.ifPresent(merchant -> {
+            orderedCharacters.add(merchant);
+            copyCharacters.remove(merchant);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.ARCHITECT).findFirst();
+        optionalCharacter.ifPresent(architect -> {
+            orderedCharacters.add(architect);
+            copyCharacters.remove(architect);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.BISHOP).findFirst();
+        optionalCharacter.ifPresent(bishop -> {
+            orderedCharacters.add(bishop);
+            copyCharacters.remove(bishop);
+        });
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.CONDOTTIERE).findFirst();
+        optionalCharacter.ifPresent(condottiere -> {
+            orderedCharacters.add(condottiere);
+            copyCharacters.remove(condottiere);
+        });
         List<Character> charactersRemaining = new ArrayList<>(copyCharacters);
 
-        orderedCharacters.add(assassin);
-        orderedCharacters.add(magician);
-        orderedCharacters.add(merchant);
-        orderedCharacters.add(architect);
-        orderedCharacters.add(bishop);
-        orderedCharacters.add(condottiere);
         orderedCharacters.addAll(charactersRemaining);
 
         return orderedCharacters;
