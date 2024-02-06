@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
 
 import java.util.List;
 import java.util.Random;
@@ -50,5 +51,10 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
             return StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters);             // pouvoir choisir en premier au prochain tour
         }
         return characters.get(this.random.nextInt(characters.size()));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChoosingCharacterToTargetFirstPlayer;
     }
 }
