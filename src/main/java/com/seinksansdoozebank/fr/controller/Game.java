@@ -14,6 +14,7 @@ import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
@@ -34,6 +35,7 @@ public class Game {
     Player crownedPlayer;
     private List<Character> availableCharacters;
     private List<Character> charactersInTheRound;
+    private List<Character> unusedCharacters;
     private final IView view;
     private int nbCurrentRound;
     private boolean finished;
@@ -87,12 +89,13 @@ public class Game {
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
                 player.setAvailableCharacters(charactersInTheRound);
+                player.setCharactersNotInRound(unusedCharacters);
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
                 // Check if the player has the Condottiere role
                 if (player.getCharacter() instanceof Condottiere condottiere) {
-                    this.useCemeteryEffect(condottiere);
+                    this.triggerCemeteryEffectCanBeUsed(condottiere);
                 }
             }
             //We set the attribute to true if player is the first who has eight districts
@@ -148,8 +151,11 @@ public class Game {
      * Ask the player to choose their characters
      */
     protected void playersChooseCharacters() {
+        List<Opponent> opponentsWhichHasChosenCharacter = new ArrayList<>();
         for (Player player : players) {
+            player.setOpponentsWhichHasChosenCharacterBefore(opponentsWhichHasChosenCharacter);
             availableCharacters.remove(player.chooseCharacter(availableCharacters));
+            opponentsWhichHasChosenCharacter.add(player);
         }
     }
 
@@ -190,6 +196,7 @@ public class Game {
         //remove the characters that are available from the list of not mandatory characters
         notMandatoryCharacters.removeAll(availableCharacters);
         //display the characters that are not in availableCharacters
+        this.unusedCharacters = notMandatoryCharacters;
         for (Character unusedCharacter : notMandatoryCharacters) {
             view.displayUnusedCharacterInRound(unusedCharacter);
         }
@@ -329,7 +336,7 @@ public class Game {
      *
      * @param condottiere the condottiere who destroyed a district
      */
-    public void useCemeteryEffect(Condottiere condottiere) {
+    public void triggerCemeteryEffectCanBeUsed(Condottiere condottiere) {
         // Get the district destroyed by the condottiere
         Optional<Card> districtDestroyed = condottiere.getDistrictDestroyed();
         // if there is a district destroyed

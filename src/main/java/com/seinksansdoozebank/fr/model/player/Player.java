@@ -37,11 +37,15 @@ public abstract class Player implements Opponent {
      */
     private List<Opponent> opponents;
 
+    private List<Opponent> opponentsWhichHasChosenCharacterBefore;
     private List<Character> availableCharacters;
     private boolean lastCardPlacedCourtyardOfMiracle = false;
     private boolean characterIsRevealed = false;
     private DistrictType colorCourtyardOfMiracleType;
     private boolean hasPlayed;
+    private List<Character> charactersNotInRound;
+    private List<Character> charactersSeenInRound;
+
 
     protected Player(int nbGold, Deck deck, IView view) {
         this.id = counter++;
@@ -421,6 +425,8 @@ public abstract class Player implements Opponent {
     public Character chooseCharacter(List<Character> characters) {
         this.character = this.chooseCharacterImpl(characters);
         this.character.setPlayer(this);
+        this.charactersSeenInRound = new ArrayList<>(characters);
+        this.charactersSeenInRound.remove(this.character);
         this.view.displayPlayerChooseCharacter(this);
         return this.character;
     }
@@ -466,7 +472,15 @@ public abstract class Player implements Opponent {
         }
     }
 
-    public abstract void useCemeteryEffect(Card card);
+    public void useCemeteryEffect(Card card) {
+        if (this.wantToUseCemeteryEffect(card)) {
+            this.hand.add(card);
+            this.returnGoldToBank(1);
+            this.view.displayPlayerUseCemeteryEffect(this, card);
+        }
+    }
+
+    protected abstract boolean wantToUseCemeteryEffect(Card card);
 
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
@@ -474,6 +488,15 @@ public abstract class Player implements Opponent {
 
     public void setOpponents(List<Opponent> opponents) {
         this.opponents = opponents;
+    }
+
+
+    public List<Opponent> getOpponentsWhichHasChosenCharacterBefore() {
+        return opponentsWhichHasChosenCharacterBefore;
+    }
+
+    public void setOpponentsWhichHasChosenCharacterBefore(List<Opponent> opponentsWhichHasChosenCharacterBefore) {
+        this.opponentsWhichHasChosenCharacterBefore = opponentsWhichHasChosenCharacterBefore;
     }
 
     @Override
@@ -546,6 +569,18 @@ public abstract class Player implements Opponent {
         this.availableCharacters = availableCharacters;
     }
 
+    public void setCharactersNotInRound(List<Character> charactersNotInRound) {
+        this.charactersNotInRound = charactersNotInRound;
+    }
+
+    public List<Character> getCharactersNotInRound() {
+        return this.charactersNotInRound;
+    }
+
+    public List<Character> getCharactersSeenInRound() {
+        return this.charactersSeenInRound;
+    }
+
     /**
      * Discard a card from the hand of the player (for laboratory effect)
      */
@@ -585,10 +620,11 @@ public abstract class Player implements Opponent {
 
     /**
      * method tells us if a player has 7 districts in his citadel
+     *
      * @return a boolean
      */
     @Override
-    public boolean isAboutToWin(){
-        return this.getCitadel().size()==7;
+    public boolean isAboutToWin() {
+        return this.getCitadel().size() == 7;
     }
 }
