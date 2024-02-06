@@ -3,7 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 import com.seinksansdoozebank.fr.view.IView;
@@ -295,19 +295,16 @@ public class RichardBot extends SmartBot {
 
     /**
      * Use the magician effect to switch hand with the opponent which has the most districts
-     *
-     * @param magician the magician character
      */
     @Override
-    protected void useEffectMagician(Magician magician) {
+    public MagicianTarget useEffectMagician() {
         Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this);
         if (leadingOpponent.isAboutToWin()) {
-            magician.useEffect(leadingOpponent, null);
-            return;
+            return new MagicianTarget(leadingOpponent, null);
         }
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
                 .max(Comparator.comparingInt(Opponent::getHandSize));
-        playerWithMostDistricts.ifPresent(opponent -> magician.useEffect(opponent, null));
+        return new MagicianTarget(playerWithMostDistricts.orElse(null), null);
     }
 
 
