@@ -10,4 +10,14 @@ public class PickingAlwaysDistrict implements IPickingStrategy {
     public void apply(Player player) {
         player.pickCardsKeepSomeAndDiscardOthers();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PickingAlwaysDistrict;
+    }
+
+    @Override
+    public int hashCode() {
+        return PickingAlwaysDistrict.class.getName().hashCode();
+    }
 }

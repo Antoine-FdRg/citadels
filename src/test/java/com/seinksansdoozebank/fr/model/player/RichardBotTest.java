@@ -3,6 +3,7 @@ package com.seinksansdoozebank.fr.model.player;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
+import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,9 +12,8 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
-import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
@@ -575,5 +575,72 @@ class RichardBotTest {
         when(richardBot.getCharactersNotInRound()).thenReturn(List.of(new Thief()));
         boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
         assertFalse(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief has not been chose because thief is not in round.");
+    }
+
+    @Test
+    void useEffectMagicianWhenLeadingOpponentIsAboutToWin() {
+        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponent, opponent2));
+        Magician magician = new Magician();
+        richardBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        Card monasteryCard = new Card(District.MONASTERY);
+        Card cathedralCard = new Card(District.CATHEDRAL);
+        List<Card> richardBotHand = new ArrayList<>(List.of(monasteryCard, cathedralCard));
+        when(richardBot.getHand()).thenReturn(richardBotHand);
+        Card templeCard = new Card(District.TEMPLE);
+        Card churchCard = new Card(District.CHURCH);
+        Card portCard = new Card(District.PORT);
+        when(opponent.getHand()).thenReturn(new ArrayList<>(List.of(templeCard)));
+        when(opponent2.getHand()).thenReturn(new ArrayList<>(List.of(templeCard, churchCard)));
+
+        when(opponent.getCitadel()).thenReturn(new ArrayList<>(
+                List.of(templeCard,
+                        churchCard,
+                        portCard,
+                        new Card(District.CASTLE),
+                        new Card(District.CASTLE),
+                        new Card(District.CASTLE),
+                        new Card(District.CASTLE)
+                )));
+        richardBot.useEffectMagician(magician);
+        verify(opponent).switchHandWith(richardBot);
+        assertTrue(richardBot.getHand().contains(templeCard));
+        assertFalse(richardBot.getHand().contains(churchCard)); // check that we didn't switch with opponent2
+        assertTrue(opponent.getHand().contains(monasteryCard));
+        assertTrue(opponent.getHand().contains(cathedralCard));
+    }
+
+    @Test
+    void useEffectMagicianWhenLeadingOpponentIsNotAboutToWin() {
+        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent2 = spy(new SmartBot(10, deck, view));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponent, opponent2));
+        Magician magician = new Magician();
+        richardBot.chooseCharacter(new ArrayList<>(List.of(magician)));
+        Card monasteryCard = new Card(District.MONASTERY);
+        Card cathedralCard = new Card(District.CATHEDRAL);
+        List<Card> richardBotHand = new ArrayList<>(List.of(monasteryCard, cathedralCard));
+        when(richardBot.getHand()).thenReturn(richardBotHand);
+        Card templeCard = new Card(District.TEMPLE);
+        Card churchCard = new Card(District.CHURCH);
+        Card portCard = new Card(District.PORT);
+        when(opponent.getHand()).thenReturn(new ArrayList<>(List.of(templeCard)));
+        when(opponent2.getHand()).thenReturn(new ArrayList<>(List.of(templeCard, churchCard)));
+
+        when(opponent.getCitadel()).thenReturn(new ArrayList<>(
+                List.of(templeCard,
+                        churchCard,
+                        portCard,
+                        new Card(District.CASTLE),
+                        new Card(District.CASTLE),
+                        new Card(District.CASTLE)
+                )));
+        richardBot.useEffectMagician(magician);
+        verify(opponent2).switchHandWith(richardBot);
+        assertTrue(richardBot.getHand().contains(templeCard));
+        assertTrue(richardBot.getHand().contains(churchCard));
+        assertTrue(opponent2.getHand().contains(monasteryCard));
+        assertTrue(opponent2.getHand().contains(cathedralCard));
     }
 }

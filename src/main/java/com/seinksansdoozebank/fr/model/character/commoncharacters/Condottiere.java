@@ -39,4 +39,14 @@ public class Condottiere extends CommonCharacter {
         opponent.havingADistrictDestroyed(this.getPlayer(), district);
         this.getPlayer().returnGoldToBank(district.getCost() - 1);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Condottiere;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

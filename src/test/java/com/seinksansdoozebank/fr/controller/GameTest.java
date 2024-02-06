@@ -9,9 +9,9 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -158,7 +158,11 @@ class GameTest {
         when(p3.getScore()).thenReturn(7);
         Player p4 = mock(Player.class);
         when(p4.getScore()).thenReturn(6);
-        gameWithFivePlayers.setPlayers(List.of(p1, p2, p3, p4));
+        gameWithFivePlayers.setPlayers(
+                new ArrayList<>(
+                        List.of(p1, p2, p3, p4)
+                )
+        );
         assertEquals(p3, gameWithFivePlayers.getWinner());
     }
 
@@ -474,6 +478,7 @@ class GameTest {
         gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
         assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
     }
+
     @Test
     void isStuckWithStuckGameShouldReturnTrue() {
         Bank.reset();
@@ -504,6 +509,7 @@ class GameTest {
         Deck deck = new Deck();
         assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
     }
+
     @Test
     void isStuckWithNotEmptyDeckShouldReturnFalse() {
         Bank.reset();
@@ -547,5 +553,93 @@ class GameTest {
         stuckGame.init();
         Bank.getInstance().pickXCoin(22);
         assertFalse(stuckGame.isStuck());
+    }
+
+    @Test
+    void testReorderPlayersByPointsWithNoTieWithSameOrder() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view));
+        when(player1.getScore()).thenReturn(10);
+        Player player2 = spy(new RandomBot(5, new Deck(), view));
+        when(player2.getScore()).thenReturn(8);
+        Player player3 = spy(new RandomBot(5, new Deck(), view));
+        when(player3.getScore()).thenReturn(6);
+        Player player4 = spy(new RandomBot(5, new Deck(), view));
+        when(player4.getScore()).thenReturn(5);
+        List<Player> players = List.of(player1, player2, player3, player4);
+        when(gameWithFourPlayers.getPlayers()).thenReturn(
+                new ArrayList<>(players)
+        );
+        gameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, gameWithFourPlayers.getPlayers());
+    }
+
+    @Test
+    void testReorderPlayersByPointsWithNoTieWithoutSameOrder() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view));
+        when(player1.getScore()).thenReturn(10);
+        Player player2 = spy(new RandomBot(5, new Deck(), view));
+        when(player2.getScore()).thenReturn(8);
+        Player player3 = spy(new RandomBot(5, new Deck(), view));
+        when(player3.getScore()).thenReturn(6);
+        Player player4 = spy(new RandomBot(5, new Deck(), view));
+        when(player4.getScore()).thenReturn(5);
+        List<Player> players = List.of(player1, player2, player3, player4);
+        when(gameWithFourPlayers.getPlayers()).thenReturn(
+                new ArrayList<>(List.of(player4, player3, player2, player1))
+        );
+        gameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, gameWithFourPlayers.getPlayers());
+    }
+
+    @Test
+    void testReorderPlayersByPointsWithTieInPoints() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view));
+        when(player1.getScore()).thenReturn(10);
+        when(player1.getCitadel()).thenReturn(List.of(new Card(District.MANOR), new Card(District.CEMETERY)));
+
+        Player player2 = spy(new RandomBot(5, new Deck(), view));
+        when(player2.getScore()).thenReturn(10);
+        when(player2.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
+
+        Player player3 = spy(new RandomBot(5, new Deck(), view));
+        when(player3.getScore()).thenReturn(6);
+        when(player3.getCitadel()).thenReturn(List.of(new Card(District.CASTLE), new Card(District.CEMETERY), new Card(District.MANOR)));
+
+        Player player4 = spy(new RandomBot(5, new Deck(), view));
+        when(player4.getScore()).thenReturn(5);
+        when(player4.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE), new Card(District.CEMETERY), new Card(District.MANOR), new Card(District.TAVERN)));
+
+        List<Player> expectedOrder = List.of(player1, player2, player3, player4);
+
+        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        gameWithFourPlayers.orderPlayersByPoints();
+
+        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
+    }
+
+    @Test
+    void testReorderPlayersByPointsWithTieInPointsAndCitadelSize() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view));
+        when(player1.getScore()).thenReturn(10);
+        when(player1.getCitadel()).thenReturn(List.of(new Card(District.MANOR), new Card(District.CEMETERY))); // MANO Cost 3 // CEME Cost 5
+
+        Player player2 = spy(new RandomBot(5, new Deck(), view));
+        when(player2.getScore()).thenReturn(10);
+        when(player2.getCitadel()).thenReturn(List.of(new Card(District.TAVERN), new Card(District.CEMETERY))); // TAVER Cost 1 // CEME Cost 5
+
+        Player player3 = spy(new RandomBot(5, new Deck(), view));
+        when(player3.getScore()).thenReturn(6);
+        when(player3.getCitadel()).thenReturn(List.of(new Card(District.CASTLE), new Card(District.CEMETERY), new Card(District.MANOR)));
+
+        Player player4 = spy(new RandomBot(5, new Deck(), view));
+        when(player4.getScore()).thenReturn(6);
+        when(player4.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE), new Card(District.CEMETERY), new Card(District.MANOR), new Card(District.TAVERN)));
+
+        List<Player> expectedOrder = List.of(player1, player2, player4, player3);
+
+        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        gameWithFourPlayers.orderPlayersByPoints();
+
+        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
 }
