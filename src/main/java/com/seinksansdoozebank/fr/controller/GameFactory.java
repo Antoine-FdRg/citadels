@@ -12,6 +12,8 @@ import com.seinksansdoozebank.fr.view.IView;
  * Factory for the game exposing static methods to preset create games
  */
 public class GameFactory {
+    private static final String NUMBER_OF_PLAYER_BETWEEN = "The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX;
+
     private GameFactory() {
     }
 
@@ -24,7 +26,7 @@ public class GameFactory {
      */
     public static Game createGameOfRandomBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         for (int i = 0; i < nbPlayers; i++) {
@@ -35,7 +37,7 @@ public class GameFactory {
 
     public static Game createGameOfSmartBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         for (int i = 0; i < nbPlayers; i++) {
@@ -46,7 +48,7 @@ public class GameFactory {
 
     public static Game createGameOfCustomBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         for (int i = 0; i < nbPlayers; i++) {
@@ -64,7 +66,7 @@ public class GameFactory {
 
     public static Game createGameOfRichardBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         for (int i = 0; i < nbPlayers; i++) {
@@ -75,7 +77,7 @@ public class GameFactory {
 
     public static Game createGameOfAllTypeOfBot(IView view, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         gameBuilder.addRandomBot();
