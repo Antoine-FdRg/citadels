@@ -11,6 +11,7 @@ public class PlayerStatistics {
     private double averageScore;
     private double winningPercentage;
     private final Map<Integer, Integer> placementCounts;
+    private boolean needsRecalculation = true;
 
     public PlayerStatistics() {
         this.totalGames = 0;
@@ -36,10 +37,6 @@ public class PlayerStatistics {
         return gamesLost;
     }
 
-    public double getAverageScore() {
-        return totalGames > 0 ? (double) totalScore / totalGames : 0;
-    }
-
     public double getWinningPercentage() {
         return totalGames > 0 ? (double) gamesWon / totalGames * 100 : 0;
     }
@@ -56,9 +53,20 @@ public class PlayerStatistics {
         this.gamesLost += gamesLost;
     }
 
-    public void setAverageScore(double averageScore) {
-        this.averageScore = (this.getAverageScore() + averageScore) / 2;
+    public double getAverageScore() {
+        if (needsRecalculation) {
+            averageScore = totalGames > 0 ? (double) totalScore / totalGames : 0;
+            needsRecalculation = false;
+        }
+        return averageScore;
     }
+
+    public void setAverageScore(double oldAverageScore, int totalGames) {
+        // Calculate the new average score based on the old average and total games
+        this.averageScore = (this.averageScore * (this.totalGames - totalGames) + oldAverageScore * totalGames) / this.totalGames;
+        needsRecalculation = false;
+    }
+
 
     public void setWinningPercentage(double winningPercentage) {
         this.winningPercentage = winningPercentage;

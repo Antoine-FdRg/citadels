@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.statistics;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
 import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
 import com.seinksansdoozebank.fr.model.bank.Bank;
@@ -27,18 +26,22 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
-import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.DEMO_GAME;
 
 
 public class GameStatisticsAnalyzer {
 
     public enum CsvCategory {
-        BEST_AGAINST_SECOND("BestAgainstSecondAndOthers.csv"), BEST_BOTS_AGAINST("BestBotsAgainstBestBot.csv");
+        BEST_AGAINST_SECOND("BestAgainstSecondAndOthers.csv"), BEST_BOTS_AGAINST("BestBotsAgainstBestBot.csv"),
+        DEMO_GAME("gamestats.csv");
 
         private final String fileName;
 
@@ -50,23 +53,47 @@ public class GameStatisticsAnalyzer {
             return fileName;
         }
     }
+
     private final int numSessions;
     private final Map<Player, PlayerStatistics> playerStatisticsMap;
     private final boolean saveStatsToCsv;
     private static final String FOLDER_DEFAULT_PATH = "src/main/resources/stats/";
-    private CsvCategory csvCategory;
-
-    public GameStatisticsAnalyzer(int numSessions, boolean saveStatsToCsv) {
-        this.numSessions = numSessions;
-        this.playerStatisticsMap = new HashMap<>();
-        this.saveStatsToCsv = saveStatsToCsv;
-    }
+    private final CsvCategory csvCategory;
 
     public GameStatisticsAnalyzer(int numSessions, boolean saveStatsToCsv, CsvCategory csvCategory) {
         this.numSessions = numSessions;
         this.playerStatisticsMap = new HashMap<>();
         this.saveStatsToCsv = saveStatsToCsv;
         this.csvCategory = csvCategory;
+    }
+
+    public GameStatisticsAnalyzer(boolean saveStatsToCsv) {
+        this(0, saveStatsToCsv, DEMO_GAME);
+    }
+
+    public void runDemo() {
+        CustomLogger.setLevel(saveStatsToCsv ? Level.OFF : Level.INFO);
+        Bank.reset();
+        Player.resetIdCounter();
+        Game game = new GameBuilder(new Cli(), new Deck())
+                .addRandomBot()
+                .addRandomBot()
+                .addSmartBot()
+                .addSmartBot()
+                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
+                        new UsingThiefEffectToFocusRusher(),
+                        new UsingMurdererEffectToFocusRusher(),
+                        new UsingCondottiereEffectToTargetFirstPlayer(),
+                        new CardChoosingStrategy())
+                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
+                        new UsingThiefEffectToFocusRusher(),
+                        new UsingMurdererEffectToFocusRusher(),
+                        new UsingCondottiereEffectToTargetFirstPlayer(),
+                        new CardChoosingStrategy())
+                .build();
+        game.run();
+        analyzeGameResults(game);
+        logAggregatedStatistics();
     }
 
     /**
@@ -76,10 +103,12 @@ public class GameStatisticsAnalyzer {
      * analyzes the results of each game, logs aggregated statistics, and optionally saves statistics to a CSV file.
      *
      * @param numRandomBot The number of random bots to be included in each game session.
-     * @param numSmartBot The number of smart bots to be included in each game session.
+     * @param numSmartBot  The number of smart bots to be included in each game session.
      * @param numCustomBot The number of custom bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBot, int numSmartBot, int numCustomBot) {
+        CustomStatisticsLogger.setLevel(Level.INFO);
+        CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < numSessions; i++) {
             Player.resetIdCounter();
             Bank.reset();
@@ -102,7 +131,7 @@ public class GameStatisticsAnalyzer {
      *
      * @param game The game instance to analyze the results of.
      */
-    void analyzeGameResults(Game game) {
+    public void analyzeGameResults(Game game) {
         List<Player> sortedPlayers = new ArrayList<>(game.getPlayers());
         sortedPlayers.sort(Comparator.comparingInt(Player::getScore).reversed());
 
@@ -134,35 +163,50 @@ public class GameStatisticsAnalyzer {
         CustomStatisticsLogger.log(Level.INFO, "Aggregated Player Statistics:");
         // Header for the table
         StringBuilder table = getStringBuilder();
+        // Iterate through players and construct the row for each player
+        if (saveStatsToCsv) {
+            loadStatsFromCsv();
+        }
         for (Map.Entry<Player, PlayerStatistics> entry : playerStatisticsMap.entrySet()) {
             Player player = entry.getKey();
             PlayerStatistics stats = entry.getValue();
-            // Constructing the row for each player
+
+            // Constructing the row for each player with dynamic Pos columns
             List<String> placementDetails = new ArrayList<>();
             Map<Integer, Integer> detailedPlacement = stats.getDetailedPlacement();
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= this.playerStatisticsMap.size(); i++) {
                 placementDetails.add(String.valueOf(detailedPlacement.getOrDefault(i, 0)));
             }
-            String row = String.format("| %-18s| %-12d| %-10d| %-11d| %-14.3f| %-19.1f| %-6s| %-6s| %-6s| %-6s| %-6s| %-6s|%n",
+            StringBuilder row = new StringBuilder(String.format("| %-18s| %-12d| %-10d| %-11d| %-14.3f| %-19.1f|",
                     player.toString(), stats.getTotalGames(), stats.getGamesWon(),
                     stats.getGamesLost(), stats.getAverageScore(),
-                    stats.getWinningPercentage(),
-                    placementDetails.get(0), placementDetails.get(1), placementDetails.get(2),
-                    placementDetails.get(3), placementDetails.get(4), placementDetails.get(5));
+                    stats.getWinningPercentage()));
+
+            for (String posDetail : placementDetails) {
+                row.append(String.format(" %-6s|", posDetail));
+            }
+
+            row.append("\n");
             table.append(row);
         }
         if (saveStatsToCsv) {
-            loadStatsFromCsv();
             saveStatsIntoCsv();
         }
         // Output the formatted table
         CustomStatisticsLogger.log(Level.INFO, table.toString());
     }
 
-    private static StringBuilder getStringBuilder() {
-        StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Average Score | Winning Percentage | Pos 1 | Pos 2 | Pos 3 | Pos 4 | Pos 5 | Pos 6 |\n");
-        header.append("|-------------------|-------------|-----------|------------|---------------|--------------------|-------|-------|-------|-------|-------|-------|\n");
-        return new StringBuilder(header);
+    private StringBuilder getStringBuilder() {
+        // Construct header with dynamic Pos columns
+        StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Average Score | Winning Percentage |");
+        for (int i = 1; i <= this.playerStatisticsMap.size(); i++) {
+            header.append(String.format(" Pos %d |", i));
+        }
+        header.append("\n");
+        header.append("|-------------------|-------------|-----------|------------|---------------|--------------------|");
+        header.append("-------|".repeat(this.playerStatisticsMap.size()));
+        header.append("\n");
+        return header;
     }
 
     /**
@@ -221,7 +265,15 @@ public class GameStatisticsAnalyzer {
         createCsvFile();
         try (CSVWriter writer = new CSVWriter(new FileWriter(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName(), false))) {
             // Write the header only if the file is empty
-            writer.writeNext(new String[]{"Player", "Total Games", "Games Won", "Games Lost", "Average Score", "Winning Percentage", "Pos 1", "Pos 2", "Pos 3", "Pos 4", "Pos 5", "Pos 6"});
+            String[] header = new String[]{"Player", "Total Games", "Games Won", "Games Lost", "Average Score", "Winning Percentage"};
+            // Add the positions in function of the number of players
+            for (int i = 1; i <= 6; i++) {
+                header = Arrays.copyOf(header, header.length + 1);
+                header[header.length - 1] = "Pos " + i;
+            }
+            writer.writeNext(header);
+
+            // Check there is the same bot in the csv file
 
             // Write data for each player
             for (Map.Entry<Player, PlayerStatistics> entry : playerStatisticsMap.entrySet()) {
@@ -246,6 +298,28 @@ public class GameStatisticsAnalyzer {
         } catch (IOException e) {
             CustomStatisticsLogger.log(Level.SEVERE, "Error occurred while writing to CSV file: {0}", new Object[]{e.getMessage()});
         }
+    }
+
+    private boolean isTheSameBotInCsvFile() {
+        try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName()))) {
+            // Skip header
+            reader.skip(1);
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                // Extract data from CSV
+                String playerName = nextLine[0];
+                if (
+                    // if one key (player.toString) of the map is not in the csv file
+                        !playerStatisticsMap.keySet().stream().map(Player::toString).toList().contains(playerName)
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            CustomStatisticsLogger.log(Level.SEVERE, "Error occurred while reading from CSV file: {0}", new Object[]{e.getMessage()});
+        }
+        return false;
     }
 
     /**
@@ -275,7 +349,7 @@ public class GameStatisticsAnalyzer {
 
     private void loadStatsFromCsv() {
         try {
-            if (fileExists()) {
+            if (fileExists() && isTheSameBotInCsvFile()) {
                 try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName()))) {
                     // Skip header
                     reader.skip(1);
@@ -300,7 +374,7 @@ public class GameStatisticsAnalyzer {
                                 stats.setTotalGames(totalGames);
                                 stats.setGamesWon(gamesWon);
                                 stats.setGamesLost(gamesLost);
-                                stats.setAverageScore(averageScore);
+                                stats.setAverageScore(averageScore, totalGames);
                                 stats.setWinningPercentage(stats.getWinningPercentage());
                                 stats.setDetailedPlacement(detailedPlacement);
                             }
