@@ -27,4 +27,6 @@ public interface Opponent {
 
     Optional<Card> destroyDistrict(Player attacker, District district);
 
+    boolean useCemeteryEffect(Card card);
+
 }

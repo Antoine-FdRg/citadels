@@ -8,6 +8,7 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
@@ -465,7 +466,17 @@ public abstract class Player implements Opponent {
         Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
         if (card.isPresent()) {
             this.citadel.remove(card.get());
-            this.deck.discard(card.get());
+            boolean someoneUseCemeteryToKeepDistrict = false;
+            for (Opponent opponent : this.opponents) {
+                System.out.println(opponent.getOpponentCharacter());
+                if (opponent.useCemeteryEffect(card.get())) {
+                    someoneUseCemeteryToKeepDistrict = true;
+                    break;
+                }
+            }
+            if (!someoneUseCemeteryToKeepDistrict) {
+                this.deck.discard(card.get());
+            }
             this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
             return card;
         } else {
@@ -473,12 +484,14 @@ public abstract class Player implements Opponent {
         }
     }
 
-    public void useCemeteryEffect(Card card) {
-        if (this.wantToUseCemeteryEffect(card)) {
+    public boolean useCemeteryEffect(Card card) {
+        if (!this.character.getRole().equals(Role.CONDOTTIERE) && this.wantToUseCemeteryEffect(card)) {
             this.hand.add(card);
             this.returnGoldToBank(1);
             this.view.displayPlayerUseCemeteryEffect(this, card);
+            return true;
         }
+        return false;
     }
 
     protected abstract boolean wantToUseCemeteryEffect(Card card);

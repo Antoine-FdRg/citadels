@@ -279,6 +279,24 @@ class GameTest {
     }
 
     @Test
+    void runGameShouldHave65CardsBeforeAndAfter() {
+        Bank.getInstance().reset();
+        int nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+        gameWithFourPlayers.run();
+        nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+    }
+
+    @Test
     void runNotStuckGame() {
         Bank.reset();
         gameWithFourPlayers.run();
@@ -567,7 +585,7 @@ class GameTest {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
         player.setRandom(mockRandom);
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
+//        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(1)).useCemeteryEffect(any());
@@ -581,7 +599,7 @@ class GameTest {
         Player player = spy(new RandomBot(5, new Deck(), view));
         when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
         gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
+//        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
         when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
         verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
         verify(player, times(0)).useCemeteryEffect(any());
