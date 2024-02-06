@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr;
 import com.beust.jcommander.JCommander;
 import com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer;
 
-
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_BOTS_AGAINST;
 
