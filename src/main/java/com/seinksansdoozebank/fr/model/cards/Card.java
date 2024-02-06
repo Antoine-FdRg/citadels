@@ -16,6 +16,10 @@ public class Card {
         counter++;
     }
 
+    public static void resetCounterId() {
+        counter = 1;
+    }
+
     /**
      * getter
      *
