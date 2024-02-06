@@ -12,14 +12,12 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
-import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.logging.Level;
 
 public abstract class Player implements Opponent {
     private static int counter = 1;

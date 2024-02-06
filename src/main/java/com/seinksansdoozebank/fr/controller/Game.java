@@ -38,7 +38,7 @@ public class Game {
     private int nbCurrentRound;
     private boolean finished;
 
-    Game(IView view, Deck deck, List<Player> playerList) {
+    protected Game(IView view, Deck deck, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }

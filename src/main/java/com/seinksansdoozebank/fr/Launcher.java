@@ -17,6 +17,9 @@ import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.logging.Level;
 
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_BOTS_AGAINST;
+
 public class Launcher {
     public static void main(String[] args) {
         // Define a class to hold your command-line parameters
@@ -29,44 +32,29 @@ public class Launcher {
                 .build()
                 .parse(args);
 
-        if (cmdArgs.isDemo()) {
-            launcher.runDemo();
-        } else if (cmdArgs.is2Thousands()) {
-            launcher.twoThousand();
+        if (cmdArgs.isDemo() && !cmdArgs.isCsv()) {
+            launcher.runDemo(false);
+        } else if (cmdArgs.isDemo() && cmdArgs.isCsv()) {
+            launcher.runDemo(true);
+        } else if (cmdArgs.is2Thousands() && !cmdArgs.isCsv()) {
+            launcher.twoThousand(false);
+        } else if (cmdArgs.is2Thousands() && cmdArgs.isCsv()) {
+            launcher.twoThousand(true);
         } else if (cmdArgs.isCsv()) {
-            launcher.csv();
+            launcher.runDemo(true);
         }
     }
 
 
-    public void runDemo() {
-        CustomLogger.setLevel(Level.ALL);
-        Bank.reset();
-        Game game = new GameBuilder(new Cli(), new Deck())
-                .addRandomBot()
-                .addSmartBot()
-                .addRandomBot()
-                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                        new UsingThiefEffectToFocusRusher(),
-                        new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
-                        new CardChoosingStrategy())
-                .build();
-        game.run();
+    public void runDemo(boolean saveInCsv) {
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
+        analyzer.runDemo();
     }
 
-    public void twoThousand() {
-        CustomStatisticsLogger.setLevel(Level.INFO);
-        CustomLogger.setLevel(Level.OFF);
-        //GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(50000);
-        //analyzer.runAndAnalyze(2, 2, 2);
-        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000);
-        analyzer.runAndAnalyze(4, 1, 1);
-        analyzer = new GameStatisticsAnalyzer(1000);
+    public void twoThousand(boolean saveInCsv) {
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(5, saveInCsv, BEST_AGAINST_SECOND);
+        analyzer.runAndAnalyze(0, 3, 3);
+        analyzer = new GameStatisticsAnalyzer(5, saveInCsv, BEST_BOTS_AGAINST);
         analyzer.runAndAnalyze(0, 6, 0);
-    }
-
-    public void csv() {
-
     }
 }
