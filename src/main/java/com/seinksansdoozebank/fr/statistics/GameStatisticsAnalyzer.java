@@ -42,8 +42,6 @@ public class GameStatisticsAnalyzer {
             Bank.reset();
             Game game = createGame(numRandomBot, numSmartBot, numCustomBot);
             game.run();
-            System.out.println("Session " + i + " completed");
-            // CustomStatisticsLogger.log(Level.INFO, "Session " + i + " completed");
             analyzeGameResults(game);
             Player.resetIdCounter();
         }
@@ -94,12 +92,6 @@ public class GameStatisticsAnalyzer {
 
         // Output the formatted table
         CustomStatisticsLogger.log(Level.INFO, table.toString());
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            CustomLogger.log(Level.SEVERE, "Thread sleep interrupted");
-        }
     }
 
     private static StringBuilder getStringBuilder() {

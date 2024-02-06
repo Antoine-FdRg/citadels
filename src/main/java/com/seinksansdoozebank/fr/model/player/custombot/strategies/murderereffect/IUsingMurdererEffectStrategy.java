@@ -9,7 +9,4 @@ import com.seinksansdoozebank.fr.view.IView;
  */
 public interface IUsingMurdererEffectStrategy {
     void apply(Player player, Assassin murderer, IView view);
-
-    @Override
-    String toString();
 }

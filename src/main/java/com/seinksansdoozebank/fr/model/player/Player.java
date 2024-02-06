@@ -219,11 +219,7 @@ public abstract class Player implements Opponent {
         } else if (numberOfCards > this.getNbDistrictsCanBeBuild()) {
             throw new IllegalArgumentException("Number of cards to play must be less than the number of districts the player can build");
         }
-        System.out.println("Player " + this + " is going to buy " + numberOfCards + " cards");
-        // CustomStatisticsLogger.log(Level.INFO, "Player {0} is going to buy {1} cards", new Object[]{this, numberOfCards});
         for (int i = 0; i < numberOfCards; i++) {
-            System.out.println("buyXCardsAndAddThemToCitadel " + i);
-            // CustomStatisticsLogger.log(Level.INFO, "buyXCardsAndAddThemToCitadel {0}", new Object[]{i});
             Optional<Card> card = playACard();
             card.ifPresent(value -> this.view.displayPlayerPlaysCard(this, value));
         }

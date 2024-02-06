@@ -38,9 +38,4 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
     public boolean equals(Object obj) {
         return obj instanceof UsingThiefEffectToFocusRusher;
     }
-
-    @Override
-    public String toString() {
-        return "UsingThiefEffectToFocusRusher";
-    }
 }

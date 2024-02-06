@@ -8,7 +8,4 @@ import com.seinksansdoozebank.fr.model.player.Player;
  */
 public interface IUsingThiefEffectStrategy {
     void apply(Player player, Thief thief);
-
-    @Override
-    String toString();
 }

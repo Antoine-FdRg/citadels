@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Optional;
 
@@ -13,7 +12,4 @@ import java.util.Optional;
 public interface ICardChoosingStrategy {
 
     Optional<Card> apply(Player player);
-
-    @Override
-    String toString();
 }

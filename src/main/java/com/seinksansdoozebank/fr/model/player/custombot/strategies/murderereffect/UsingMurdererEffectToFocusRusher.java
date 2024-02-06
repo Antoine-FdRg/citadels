@@ -45,9 +45,4 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
     public boolean equals(Object obj) {
         return obj instanceof UsingMurdererEffectToFocusRusher;
     }
-
-    @Override
-    public String toString() {
-        return "UsingMurdererEffectToFocusRusher";
-    }
 }

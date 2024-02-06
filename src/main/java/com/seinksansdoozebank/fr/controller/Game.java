@@ -17,14 +17,12 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
-import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
 public class Game {
     protected static final int NB_PLAYER_MAX = 6;
@@ -59,8 +57,6 @@ public class Game {
         this.init();
         this.nbCurrentRound = 1;
         while (!finished && !this.isStuck()) {
-            System.out.println("Round " + nbCurrentRound + " !isFinished: " + !finished + " !isStuck: " + !this.isStuck());
-            // CustomStatisticsLogger.log(Level.INFO, "Round {0} !isFinished: {1} !isStuck: {2}", new Object[]{nbCurrentRound, !finished, !this.isStuck()});
             view.displayRound(nbCurrentRound);
             createCharacters();
             this.playARound();
