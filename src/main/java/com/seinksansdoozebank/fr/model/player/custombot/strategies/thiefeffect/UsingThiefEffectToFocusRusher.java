@@ -17,6 +17,7 @@ import java.util.Random;
 public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy {
 
     private static final Random random = new Random();
+
     @Override
     public void apply(Player player, Thief thief) {
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
@@ -31,5 +32,15 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
         } else { //random
             thief.useEffect(characters.get(random.nextInt(characters.size())));
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UsingThiefEffectToFocusRusher;
+    }
+
+    @Override
+    public int hashCode() {
+        return UsingThiefEffectToFocusRusher.class.getName().hashCode();
     }
 }

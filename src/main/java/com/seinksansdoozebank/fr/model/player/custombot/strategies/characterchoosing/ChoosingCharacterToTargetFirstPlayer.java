@@ -51,4 +51,14 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         }
         return characters.get(this.random.nextInt(characters.size()));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ChoosingCharacterToTargetFirstPlayer;
+    }
+
+    @Override
+    public int hashCode() {
+        return ChoosingCharacterToTargetFirstPlayer.class.getName().hashCode();
+    }
 }

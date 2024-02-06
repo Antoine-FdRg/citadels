@@ -10,4 +10,14 @@ public class PickingAlwaysGold implements IPickingStrategy {
     public void apply(Player player) {
         player.pickGold();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PickingAlwaysGold;
+    }
+
+    @Override
+    public int hashCode() {
+        return PickingAlwaysGold.class.getName().hashCode();
+    }
 }

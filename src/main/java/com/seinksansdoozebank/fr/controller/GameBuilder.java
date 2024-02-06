@@ -5,6 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
+import com.seinksansdoozebank.fr.model.player.RichardBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
@@ -83,6 +84,12 @@ public class GameBuilder {
                 .setUsingCondottiereEffectStrategy(condottiereEffectStrategy)
                 .setCardChoosingStrategy(cardChosingStrategy)
                 .build());
+        return this;
+    }
+
+    public GameBuilder addRichardBot() {
+        checkNbPlayers();
+        playerList.add(new RichardBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
         return this;
     }
 

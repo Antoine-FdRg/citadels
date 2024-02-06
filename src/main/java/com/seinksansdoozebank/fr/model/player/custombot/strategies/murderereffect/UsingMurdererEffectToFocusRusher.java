@@ -40,4 +40,14 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
         murderer.useEffect(targetCharacter);
         view.displayPlayerUseAssassinEffect(player, targetCharacter);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof UsingMurdererEffectToFocusRusher;
+    }
+
+    @Override
+    public int hashCode() {
+        return UsingMurdererEffectToFocusRusher.class.getName().hashCode();
+    }
 }
