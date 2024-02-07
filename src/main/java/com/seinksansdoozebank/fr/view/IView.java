@@ -6,9 +6,6 @@ import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.view.logger.CustomLogger;
-
-import java.util.logging.Level;
 
 public interface IView {
     void displayPlayerInfo(Player player);
