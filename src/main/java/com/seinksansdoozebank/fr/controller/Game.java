@@ -143,17 +143,20 @@ public class Game {
         }
     }
 
+
     /**
      * Ask the player to choose their characters
      */
     protected void playersChooseCharacters() {
         List<Opponent> opponentsWhichHasChosenCharacter = new ArrayList<>();
         for (Player player : players) {
+            player.setPositionInDrawToPickACharacter(players.indexOf(player));
             player.setOpponentsWhichHasChosenCharacterBefore(opponentsWhichHasChosenCharacter);
             availableCharacters.remove(player.chooseCharacter(availableCharacters));
             opponentsWhichHasChosenCharacter.add(player);
         }
     }
+
 
     /**
      * Initialize the game

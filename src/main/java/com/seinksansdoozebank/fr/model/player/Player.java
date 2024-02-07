@@ -30,6 +30,7 @@ public abstract class Player implements Opponent {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
+    private int positionInDrawToPickACharacter;
 
     /**
      * List of all the players in the game
@@ -57,6 +58,14 @@ public abstract class Player implements Opponent {
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
         this.hasPlayed = false;
+    }
+
+    public int getPositionInDrawToPickACharacter(){
+        return this.positionInDrawToPickACharacter;
+    }
+
+    public void setPositionInDrawToPickACharacter(int rank){
+        this.positionInDrawToPickACharacter =rank;
     }
 
     /**
