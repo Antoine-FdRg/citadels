@@ -30,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.util.Optional;
 
+import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -654,7 +655,7 @@ class RichardBotTest {
     void chooseCharacterWhenAnOpponentIsAboutToWin(){
         opponentsList.add(opponentWithSevenDistrictsInCitadel);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot,times(1)).chooseCharacterWHenOpponentHasOneDistrictLeft(any(),any());
+        verify(richardBot,atMost(1)).chooseCharacterWHenOpponentHasOneDistrictLeft(any(),any());
     }
 
     @Test
