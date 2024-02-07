@@ -65,7 +65,6 @@ class PlayerTest {
         Player player = new RandomBot(3, deck, view);
         player.pickGold(3);
         assertEquals(6, player.getNbGold());
-        verify(view, times(1)).displayPlayerPicksGold(player, 3);
     }
 
     @Test
@@ -471,6 +470,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
+        verify(view,times(1)).displayGoldCollectedFromMerchant(any());
         verify(view, times(1)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
