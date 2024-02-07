@@ -228,11 +228,7 @@ public class RandomBot extends Player {
     public String toString() {
         return "Le bot aléatoire " + this.id;
     }
-
-    public void setRandom(Random mockRandom) {
-        this.random = mockRandom;
-    }
-
+    
     public Card chooseCardToDiscardForLaboratoryEffect() {
         return this.hand.get(random.nextInt(this.hand.size()));
     }

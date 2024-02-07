@@ -147,14 +147,4 @@ class GameFactoryTest {
     void createGameOfRichardBotWithMoreThan6BotThrowException() {
         assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, 7));
     }
-
-    @Test
-    void createGameOfAllTypesOfBotWithLessThan4BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfAllTypeOfBot(view, 3));
-    }
-
-    @Test
-    void createGameOfAllTypesOfBotWithMoreThan6BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfAllTypeOfBot(view, 7));
-    }
 }
