@@ -10,7 +10,7 @@ public interface Opponent {
 
     int getNbGold();
 
-    int getRankToPickCharacter();
+    int getPositionInDrawToPickACharacter();
 
     int nbDistrictsInCitadel();
 

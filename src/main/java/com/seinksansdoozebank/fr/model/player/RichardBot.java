@@ -119,11 +119,11 @@ public class RichardBot extends SmartBot {
      */
     Optional<Character> chooseCharacterWHenOpponentHasOneDistrictLeft(List<Character> characters,Opponent opponent){
         //Si l'opposant est deuxième à choisir son role alors, on doit choisir l'assassin
-        if( opponent.getRankToPickCharacter()==1){
+        if( opponent.getPositionInDrawToPickACharacter()==1){
             return Optional.of(new Assassin());
         }
         //Cas où l'opposant est 3ème à choisir
-        if(opponent.getRankToPickCharacter()==2) {
+        if(opponent.getPositionInDrawToPickACharacter()==2) {
             if (characters.contains(new King())) {
                 return Optional.of(new King());
             }
@@ -148,9 +148,9 @@ public class RichardBot extends SmartBot {
      * @return an optional of the character
      */
     Optional<Character> whenCharacterContainsBishopCondottiereAssassin(){
-        if(this.getRankToPickCharacter()==0){
+        if(this.getPositionInDrawToPickACharacter()==0){
             return Optional.of(new Condottiere());
-        } else if (this.getRankToPickCharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter()==1){
             return Optional.of(new Assassin());
         }
         return Optional.of(new Condottiere());
@@ -161,9 +161,9 @@ public class RichardBot extends SmartBot {
      * @return an optional of the character
      */
     Optional<Character> whenCharacterDoesNotContainCondottiere(){
-        if(this.getRankToPickCharacter()==0){
+        if(this.getPositionInDrawToPickACharacter()==0){
             return Optional.of(new Assassin());
-        } else if (this.getRankToPickCharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter()==1){
             return Optional.of(new Magician());
         }
         return Optional.of(new Assassin());
@@ -174,9 +174,9 @@ public class RichardBot extends SmartBot {
      * @return an optional of the character
      */
     Optional<Character> whenCharacterDoesNotContainBishop(){
-        if(this.getRankToPickCharacter()==0){
+        if(this.getPositionInDrawToPickACharacter()==0){
             return Optional.of(new Assassin());
-        } else if (this.getRankToPickCharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter()==1){
             return Optional.of(new Condottiere());
         }
         return Optional.of(new Assassin());
@@ -187,9 +187,9 @@ public class RichardBot extends SmartBot {
      * @return an optional of the character
      */
     Optional<Character> whenCharacterDoesNotContainAssassin(){
-        if(this.getRankToPickCharacter()==0){
+        if(this.getPositionInDrawToPickACharacter()==0){
             return Optional.of(new Condottiere());
-        } else if (this.getRankToPickCharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter()==1){
             return Optional.of(new Bishop());
         }
         return Optional.of(new Condottiere());

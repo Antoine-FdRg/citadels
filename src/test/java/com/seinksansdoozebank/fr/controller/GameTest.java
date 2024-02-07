@@ -643,18 +643,4 @@ class GameTest {
         assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
 
-    @Test
-    void setRankToPickCharacterTest(){
-        List<Player> players=new ArrayList<>(List.of(playerWithNoBonus,playerWithEightDistricts,playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
-        gameWithFourPlayers.setRankToPickCharacter(players);
-        for(Player player: players){
-            assertEquals(100,player.getRankToPickCharacter());
-        }
-    }
-
-    @Test
-    void verifyCallOfMethodSetRankToPickCharacterInOrderPlayerBeforeChoosingCharacter(){
-        gameWithFourPlayers.orderPlayerBeforeChoosingCharacter();
-        verify(gameWithFourPlayers,times(1)).setRankToPickCharacter(any());
-    }
 }

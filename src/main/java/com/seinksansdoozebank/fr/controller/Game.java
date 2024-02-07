@@ -128,7 +128,6 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     void orderPlayerBeforeChoosingCharacter() {
-        setRankToPickCharacter(players);
         players.sort(Comparator.comparing(Player::getId));
         if (crownedPlayer != null) {
             List<Player> orderedPlayers = new ArrayList<>();
@@ -144,15 +143,6 @@ public class Game {
         }
     }
 
-    /**
-     * Cette méthode permet de réinitialiser l'attribut rankToPickCharacter
-     * @param players list of players of the game
-     */
-    public void setRankToPickCharacter(List<Player> players){
-        for(Player player : players){
-            player.setRankToPickCharacter(100);
-        }
-    }
 
     /**
      * Ask the player to choose their characters
@@ -160,7 +150,7 @@ public class Game {
     protected void playersChooseCharacters() {
         List<Opponent> opponentsWhichHasChosenCharacter = new ArrayList<>();
         for (Player player : players) {
-            player.setRankToPickCharacter(players.indexOf(player));
+            player.setPositionInDrawToPickACharacter(players.indexOf(player));
             player.setOpponentsWhichHasChosenCharacterBefore(opponentsWhichHasChosenCharacter);
             availableCharacters.remove(player.chooseCharacter(availableCharacters));
             opponentsWhichHasChosenCharacter.add(player);
