@@ -17,6 +17,16 @@ public class OpportunistBot extends SmartBot {
         super(nbGold, deck, view);
     }
 
+    /**
+     * Chooses a character based on the player's current state and strategy.
+     * Prioritizes the Bishop if the player has at least one religious district.
+     * If the player has more than 1 gold, selects the Condottiere.
+     * If any opponent has 4 or more gold, opts for the Thief.
+     * Otherwise, makes a random choice from the available characters.
+     *
+     * @param characters A list of characters that can be chosen from.
+     * @return The chosen character.
+     */
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
         int quartierReligieux = (int) this.getCitadel().stream().filter(d -> d.getDistrict().getDistrictType().equals(DistrictType.RELIGION)).count();
@@ -29,7 +39,8 @@ public class OpportunistBot extends SmartBot {
             // Search for the Condottiere character
             choice = characters.stream().filter(c -> c.getRole().equals(Role.CONDOTTIERE)).findFirst().orElse(null);
         }
-        if (this.getNbGold() > 4) {
+        // if there is a player with equal or more than 4 gold, search for the Thief character
+        if (this.getOpponents().stream().anyMatch(o -> o.getNbGold() >= 4)) {
             // Search for the Thief character
             choice = characters.stream().filter(c -> c.getRole().equals(Role.THIEF)).findFirst().orElse(null);
         }
@@ -39,6 +50,13 @@ public class OpportunistBot extends SmartBot {
         return choice;
     }
 
+    /**
+     * Chooses a religious district if available; otherwise, selects the least expensive district.
+     *
+     * @param joueur    The player making the choice.
+     * @param quartiers The list of available districts.
+     * @return The chosen district card.
+     */
     @Override
     protected Optional<Card> chooseCard() {
         List<Card> cards = new ArrayList<>(this.getHand());

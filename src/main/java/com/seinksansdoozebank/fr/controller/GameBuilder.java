@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.BuilderBot;
 import com.seinksansdoozebank.fr.model.player.Opponent;
+import com.seinksansdoozebank.fr.model.player.OpportunistBot;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.RichardBot;
@@ -100,6 +101,12 @@ public class GameBuilder {
         return this;
     }
 
+    public GameBuilder addOpportunistBot() {
+        checkNbPlayers();
+        playerList.add(new OpportunistBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        return this;
+    }
+
     /**
      * Build the game from the arguments given to the builder
      *
@@ -116,5 +123,4 @@ public class GameBuilder {
         }
         return new Game(this.view, this.deck, this.playerList);
     }
-
 }
