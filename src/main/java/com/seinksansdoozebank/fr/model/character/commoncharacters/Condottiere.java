@@ -35,8 +35,8 @@ public class Condottiere extends CommonCharacter {
     public static List<Opponent> getOpponentsFocusableForCondottiere(List<Opponent> playerOpponents) {
         return playerOpponents.stream()
                 .filter(opponent ->
-                        !(opponent.getOpponentCharacter().getRole().equals(Role.BISHOP))
-                                && opponent.getCitadel().size() < 8).toList();
+                        opponent.getCitadel().size() < 8
+                                && (opponent.getOpponentCharacter() == null || !opponent.getOpponentCharacter().getRole().equals(Role.BISHOP))).toList();
     }
 
     /**
@@ -59,7 +59,7 @@ public class Condottiere extends CommonCharacter {
         if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
-        if (opponent.getOpponentCharacter().getRole().equals(Role.BISHOP)) {
+        if (opponent.getOpponentCharacter() != null && opponent.getOpponentCharacter().getRole().equals(Role.BISHOP)) {
             throw new IllegalArgumentException("The player can't destroy the district of the bishop");
         }
         if (district.equals(District.DONJON)) {

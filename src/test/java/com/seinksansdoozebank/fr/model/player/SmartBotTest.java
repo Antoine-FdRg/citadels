@@ -360,6 +360,7 @@ class SmartBotTest {
         Player opponent = spy(new SmartBot(10, deck, view));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
         when(opponent.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE)));
+        opponent.reveal();
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         spySmartBot.getCharacter().applyEffect();
         verify(spySmartBot, times(1)).chooseCondottiereTarget(any());
