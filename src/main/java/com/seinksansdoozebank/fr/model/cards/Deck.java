@@ -19,6 +19,7 @@ public class Deck {
      * We created the deck of 65 cards and then we shuffle it
      */
     private void fillDeck() {
+        Card.resetCounterId();
         for (District district : District.values()) {
             //We take the ordinal which corresponds to a district and take the number of appearances
             int numberOfAppearance = district.getNumberOfAppearance();

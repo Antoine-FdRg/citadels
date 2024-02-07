@@ -106,7 +106,7 @@ public class SmartBot extends Player {
     @Override
     protected Optional<Card> chooseCard() {
         //Gathering districts which are not already built in player's citadel
-        List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(d -> !this.getCitadel().contains(d)).toList();
+        List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(cardHand -> this.getCitadel().stream().noneMatch(cardCitadel -> cardHand.getDistrict().equals(cardCitadel.getDistrict()))).toList();
         Optional<Card> cardToPlay;
         if (this.character instanceof CommonCharacter commonCharacter) {
             DistrictType target = commonCharacter.getTarget();
@@ -210,6 +210,7 @@ public class SmartBot extends Player {
 
         // Case 1: Player has no cards in hand or fewer cards than the player with the most districts
         if (playerWithMostDistricts.isPresent() && numberOfCardsToExchange < playerWithMostDistricts.get().getHandSize()) {
+            this.view.displayPlayerUseMagicianEffect(this, playerWithMostDistricts.get());
             return new MagicianTarget(playerWithMostDistricts.get(), null);
         }
 
@@ -219,6 +220,7 @@ public class SmartBot extends Player {
                 .toList();
 
         if (!cardsToExchange.isEmpty()) {
+            this.view.displayPlayerUseMagicianEffect(this, null);
             return new MagicianTarget(null, cardsToExchange);
         }
 

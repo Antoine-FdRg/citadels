@@ -155,10 +155,10 @@ public class Cli implements IView {
     @Override
     public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
         if (targetPlayer == null) {
-            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", player);
+            CustomLogger.log(Level.INFO, "{0} utilise le magicien pour échanger sa main avec le deck.", player);
             return;
         }
-        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer}, player);
+        CustomLogger.log(Level.INFO, "{0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer}, player);
     }
 
     @Override

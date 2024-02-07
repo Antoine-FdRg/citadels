@@ -460,8 +460,10 @@ class SmartBotTest {
         when(spySmartBot.getHand()).thenReturn(new ArrayList<>());
         // Set the hand of the other player to 2 cards
         Player otherPlayer = spy(new SmartBot(10, deck, view));
-        List<Card> otherPlayerHand = new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.CASTLE)));
-        List<Card> otherPlayerHandCopy = new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.CASTLE)));
+        Card cemeteryCard = new Card(District.CEMETERY);
+        Card castleCard = new Card(District.CASTLE);
+        List<Card> otherPlayerHand = new ArrayList<>(List.of(cemeteryCard, castleCard));
+        List<Card> otherPlayerHandCopy = new ArrayList<>(List.of(cemeteryCard, castleCard));
         otherPlayer.getHand().addAll(otherPlayerHand);
         when(otherPlayer.getHand()).thenReturn(otherPlayerHand);
         // Set the hand of another player to 1 card
@@ -647,7 +649,7 @@ class SmartBotTest {
     void keepOneDiscardOthersTest() {
         mock(Random.class);
         List<Card> cardPicked = new ArrayList<>(List.of(new Card(District.MANOR), new Card(District.TAVERN), new Card(District.PORT)));
-        assertEquals(new Card(District.TAVERN), spySmartBot.keepOneDiscardOthers(cardPicked));
+        assertEquals(District.TAVERN, spySmartBot.keepOneDiscardOthers(cardPicked).getDistrict());
     }
 
     /**
@@ -785,7 +787,7 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
         List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TEMPLE)));
         when(spySmartBot.getHand()).thenReturn(hand);
-        assertEquals(new Card(District.TEMPLE), spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+        assertEquals(District.TEMPLE, spySmartBot.chooseCardToDiscardForLaboratoryEffect().getDistrict());
     }
 
     @Test
@@ -793,7 +795,7 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
         List<Card> hand = new ArrayList<>(List.of(new Card(District.MARKET_PLACE), new Card(District.TEMPLE), new Card(District.TAVERN)));
         when(spySmartBot.getHand()).thenReturn(hand);
-        assertEquals(new Card(District.TEMPLE), spySmartBot.chooseCardToDiscardForLaboratoryEffect());
+        assertEquals(District.TEMPLE, spySmartBot.chooseCardToDiscardForLaboratoryEffect().getDistrict());
     }
 
     @Test

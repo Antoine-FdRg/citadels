@@ -21,9 +21,18 @@ class CardTest {
     }
 
     @Test
-    void equalsTest() {
+    void equalsWithSameCard() {
+        assertEquals(monasteryCard, monasteryCard);
+    }
+
+    @Test
+    void equalsWithSameDistrictButDifferentCard() {
+        assertNotEquals(monasteryCard, monasteryCardBis);
+    }
+
+    @Test
+    void equalsWithDifferentCard() {
         assertNotEquals(monasteryCard, barrackCard);
-        assertEquals(monasteryCard, monasteryCardBis);
     }
 
     @Test

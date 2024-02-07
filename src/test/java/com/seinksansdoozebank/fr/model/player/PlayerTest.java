@@ -60,7 +60,7 @@ class PlayerTest {
     }
 
     @Test
-    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold3AndLogIt() {
+    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold3() {
         IView view = mock(Cli.class);
         Player player = new RandomBot(3, deck, view);
         player.pickGold(3);
@@ -113,7 +113,7 @@ class PlayerTest {
     }
 
     @Test
-    void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
+    void testCanPlayCardWithAlreadyPlayedDistrictShouldReturnFalse() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
         assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
@@ -294,11 +294,12 @@ class PlayerTest {
 
     @Test
     void playCardWithAGivenCard() {
-        spyPlayer.getHand().add(new Card(District.TEMPLE));
-        doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
-        spyPlayer.buyACardAndAddItToCitadel(new Card(District.TEMPLE));
-        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
-        assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.getHand().add(temple);
+        doReturn(true).when(spyPlayer).canPlayCard(temple);
+        spyPlayer.buyACardAndAddItToCitadel(temple);
+        assertFalse(spyPlayer.getHand().contains(temple));
+        assertTrue(spyPlayer.getCitadel().contains(temple));
     }
 
     @Test
@@ -424,18 +425,20 @@ class PlayerTest {
 
     @Test
     void discardFromHandWhenHandIsNotEmpty() {
-        spyPlayer.getHand().add(new Card(District.TEMPLE));
-        assertTrue(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
-        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
-        verify(deck, times(1)).discard(new Card(District.TEMPLE));
-        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.getHand().add(temple);
+        assertTrue(spyPlayer.discardFromHand(temple));
+        assertFalse(spyPlayer.getHand().contains(temple));
+        verify(deck, times(1)).discard(temple);
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, temple);
     }
 
     @Test
     void discardFromHandWhenHandIsEmpty() {
-        assertFalse(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
-        verify(deck, times(0)).discard(new Card(District.TEMPLE));
-        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+        Card temple = new Card(District.TEMPLE);
+        assertFalse(spyPlayer.discardFromHand(temple));
+        verify(deck, times(0)).discard(temple);
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, temple);
     }
 
     @Test
@@ -451,7 +454,7 @@ class PlayerTest {
     void usePrestigesEffectWithManufacture() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
-        ((RandomBot) spyPlayer).setRandom(mockRandom);
+        spyPlayer.setRandom(mockRandom);
 
         // make a hand with a one card
         spyPlayer.getHand().add(new Card(District.TEMPLE));

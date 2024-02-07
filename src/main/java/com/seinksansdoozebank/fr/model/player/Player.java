@@ -30,6 +30,7 @@ public abstract class Player implements Opponent {
     protected final IView view;
     protected Random random = new Random();
     protected Character character;
+    private int positionInDrawToPickACharacter;
 
     /**
      * List of all the players in the game
@@ -57,6 +58,14 @@ public abstract class Player implements Opponent {
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
         this.hasPlayed = false;
+    }
+
+    public int getPositionInDrawToPickACharacter(){
+        return this.positionInDrawToPickACharacter;
+    }
+
+    public void setPositionInDrawToPickACharacter(int rank){
+        this.positionInDrawToPickACharacter =rank;
     }
 
     /**
@@ -309,7 +318,8 @@ public abstract class Player implements Opponent {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     public final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.nbGold && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
+        return card.getDistrict().getCost() <= this.getNbGold()
+                && this.getCitadel().stream().noneMatch(c -> c.getDistrict().equals(card.getDistrict()));
     }
 
     public void decreaseGold(int gold) {
@@ -444,7 +454,7 @@ public abstract class Player implements Opponent {
     }
 
     public int getNbDistrictsCanBeBuild() {
-        return this.character.getRole().getNbDistrictsCanBeBuild();
+        return this.getCharacter().getRole().getNbDistrictsCanBeBuild();
     }
 
     public Character retrieveCharacter() {
@@ -645,5 +655,9 @@ public abstract class Player implements Opponent {
     @Override
     public boolean isAboutToWin() {
         return this.getCitadel().size() == 7;
+    }
+
+    public void setRandom(Random mockRandom) {
+        this.random = mockRandom;
     }
 }
