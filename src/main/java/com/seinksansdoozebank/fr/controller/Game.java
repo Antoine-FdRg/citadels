@@ -18,12 +18,14 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
+import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class Game {
     protected static final int NB_PLAYER_MAX = 6;
@@ -32,6 +34,7 @@ public class Game {
     private boolean findFirstPlayerWithEightDistricts = false;
     final Deck deck;
     final Bank bank;
+    protected List<Player> playersInInitialOrder;
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
@@ -47,7 +50,8 @@ public class Game {
         }
         this.view = view;
         this.deck = deck;
-        this.players = playerList;
+        this.playersInInitialOrder = playerList;
+        this.players = new ArrayList<>(playerList);
         this.availableCharacters = new ArrayList<>();
         this.crownedPlayer = null;
         this.finished = false;
@@ -71,6 +75,7 @@ public class Game {
             view.displayGameStuck();
         }
         updatePlayersBonus();
+        CustomStatisticsLogger.log(Level.WARNING, "Le gagnant est " + this.getWinner());
         view.displayWinner(this.getWinner());
     }
 
@@ -130,7 +135,7 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     void orderPlayerBeforeChoosingCharacter() {
-        players.sort(Comparator.comparing(Player::getId));
+        players = new ArrayList<>(playersInInitialOrder);
         if (crownedPlayer != null) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
