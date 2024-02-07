@@ -31,7 +31,12 @@ public class RichardBot extends SmartBot {
 
     @Override
     protected Optional<Character> chooseThiefTarget() {
-        List<Role> charactersInTheRound = this.getAvailableCharacters().stream().map(Character::getRole).toList();
+        // get from getAvailableCharacters the characters that are not dead
+        List<Role> charactersInTheRound = this.getAvailableCharacters()
+                .stream()
+                .filter(character -> !character.isDead())
+                .map(Character::getRole)
+                .toList();
         if (this.anOpponentIsAboutToWin()) {
             if (charactersInTheRound.contains(Role.BISHOP)) {
                 return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInLIst(Role.BISHOP, this.getAvailableCharacters()));
