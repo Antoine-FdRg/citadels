@@ -28,12 +28,14 @@ public class GameBuilder {
     private static final int PLAYER_NB_GOLD_INIT = 2;
     private final IView view;
     private final Deck deck;
+    private final Bank bank;
     private final List<Player> playerList;
 
-    public GameBuilder(IView view, Deck deck) {
+    public GameBuilder(IView view, Deck deck, Bank bank) {
         playerList = new ArrayList<>();
         this.view = view;
         this.deck = deck;
+        this.bank = bank;
     }
 
     int getPlayerListSize() {
@@ -56,7 +58,7 @@ public class GameBuilder {
      */
     public GameBuilder addSmartBot() {
         checkNbPlayers();
-        playerList.add(new SmartBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new SmartBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
@@ -67,7 +69,7 @@ public class GameBuilder {
      */
     public GameBuilder addRandomBot() {
         checkNbPlayers();
-        playerList.add(new RandomBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new RandomBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
@@ -78,7 +80,7 @@ public class GameBuilder {
                                     IUsingCondottiereEffectStrategy condottiereEffectStrategy,
                                     ICardChoosingStrategy cardChosingStrategy) {
         checkNbPlayers();
-        playerList.add(new CustomBotBuilder(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck)
+        playerList.add(new CustomBotBuilder(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck, this.bank)
                 .setPickingStrategy(pickingStrategy)
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
@@ -91,13 +93,13 @@ public class GameBuilder {
 
     public GameBuilder addRichardBot() {
         checkNbPlayers();
-        playerList.add(new RichardBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new RichardBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
     public GameBuilder addBuilderBot() {
         checkNbPlayers();
-        playerList.add(new BuilderBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new BuilderBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
@@ -121,6 +123,6 @@ public class GameBuilder {
             opponents.remove(player);
             player.setOpponents(opponents);
         }
-        return new Game(this.view, this.deck, this.playerList);
+        return new Game(this.view, this.deck, this.bank, this.playerList);
     }
 }

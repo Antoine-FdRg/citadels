@@ -44,6 +44,7 @@ class SmartBotTest {
     SmartBot spySmartBot;
     IView view;
     Deck deck;
+    Bank bank;
     Card cardCostThree;
     Card cardCostFive;
     Card templeCard;
@@ -54,13 +55,12 @@ class SmartBotTest {
 
     @BeforeEach
     void setup() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
+        bank = mock(Bank.class);
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
-        spySmartBot = spy(new SmartBot(10, deck, view));
+        spySmartBot = spy(new SmartBot(10, deck, view, bank));
         templeCard = new Card(District.TEMPLE);
         barrackCard = new Card(District.BARRACK);
         cardPort = new Card(District.PORT);
@@ -304,9 +304,9 @@ class SmartBotTest {
 
     @Test
     void choseAssassinTargetWithTargetInList() {
-        Player architectPlayer = spy(new SmartBot(10, deck, view));
+        Player architectPlayer = spy(new SmartBot(10, deck, view, bank));
         when(architectPlayer.getCharacter()).thenReturn(new Architect());
-        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        Player merchantPlayer = spy(new SmartBot(10, deck, view, bank));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Architect()));
 
@@ -317,9 +317,9 @@ class SmartBotTest {
 
     @Test
     void choseAssassinTargetWithTargetNotInList() {
-        Player bishopPlayer = spy(new SmartBot(10, deck, view));
+        Player bishopPlayer = spy(new SmartBot(10, deck, view, bank));
         when(bishopPlayer.getCharacter()).thenReturn(new Bishop());
-        Player merchantPlayer = spy(new SmartBot(10, deck, view));
+        Player merchantPlayer = spy(new SmartBot(10, deck, view, bank));
         when(merchantPlayer.getCharacter()).thenReturn(new Merchant());
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Bishop(), new Merchant()));
 
@@ -371,7 +371,7 @@ class SmartBotTest {
         Assassin assassin = spy(new Assassin());
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
         // give assassin a target
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         List<Character> opponentCharacters = new ArrayList<>(List.of(new Merchant()));
         opponent.chooseCharacter(opponentCharacters);
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
@@ -471,7 +471,7 @@ class SmartBotTest {
         spySmartBot.getHand().clear();
         when(spySmartBot.getHand()).thenReturn(new ArrayList<>());
         // Set the hand of the other player to 2 cards
-        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        Player otherPlayer = spy(new SmartBot(10, deck, view, bank));
         Card cemeteryCard = new Card(District.CEMETERY);
         Card castleCard = new Card(District.CASTLE);
         List<Card> otherPlayerHand = new ArrayList<>(List.of(cemeteryCard, castleCard));
@@ -479,7 +479,7 @@ class SmartBotTest {
         otherPlayer.getHand().addAll(otherPlayerHand);
         when(otherPlayer.getHand()).thenReturn(otherPlayerHand);
         // Set the hand of another player to 1 card
-        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view, bank));
         anotherPlayer.getHand().add(new Card(District.CEMETERY));
         when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
         // Set the opponents of the player
@@ -522,10 +522,10 @@ class SmartBotTest {
         spySmartBot.getHand().addAll(playerList);
         when(spySmartBot.getHand()).thenReturn(playerList);
         // Set the hand of the other player and another player to 1 cards
-        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        Player otherPlayer = spy(new SmartBot(10, deck, view, bank));
         otherPlayer.getHand().add(new Card(District.CEMETERY));
         when(otherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
-        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view, bank));
         anotherPlayer.getHand().add(new Card(District.CEMETERY));
         when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY)));
 
@@ -566,10 +566,10 @@ class SmartBotTest {
         spySmartBot.getHand().addAll(playerList);
         when(spySmartBot.getHand()).thenReturn(playerList);
         // Set the hand of the other player and another player to 3 cards
-        Player otherPlayer = spy(new SmartBot(10, deck, view));
+        Player otherPlayer = spy(new SmartBot(10, deck, view, bank));
         otherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
         when(otherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
-        Player anotherPlayer = spy(new SmartBot(10, deck, view));
+        Player anotherPlayer = spy(new SmartBot(10, deck, view, bank));
         anotherPlayer.getHand().addAll(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
         when(anotherPlayer.getHand()).thenReturn(List.of(new Card(District.CEMETERY), new Card(District.CEMETERY), new Card(District.CEMETERY)));
 
@@ -590,8 +590,8 @@ class SmartBotTest {
     void testIsLateByHavingLessCardInHisCitadel() {
         // test when player has less card in his citadel than the average opponents districts in their citadel
         List<Opponent> opponents = new ArrayList<>();
-        Player opponent1 = spy(new SmartBot(10, deck, view));
-        Player opponent2 = spy(new SmartBot(10, deck, view));
+        Player opponent1 = spy(new SmartBot(10, deck, view, bank));
+        Player opponent2 = spy(new SmartBot(10, deck, view, bank));
         opponents.add(opponent1);
         opponents.add(opponent2);
         when(spySmartBot.getOpponents()).thenReturn(opponents);
@@ -606,8 +606,8 @@ class SmartBotTest {
     void testIsNotLateByHavingMoreOrEqualsCardInHisCitadel() {
         // test when player has more card in his citadel than the average opponents districts in their citadel
         List<Opponent> opponents = new ArrayList<>();
-        Player opponent1 = spy(new SmartBot(10, deck, view));
-        Player opponent2 = spy(new SmartBot(10, deck, view));
+        Player opponent1 = spy(new SmartBot(10, deck, view, bank));
+        Player opponent2 = spy(new SmartBot(10, deck, view, bank));
         opponents.add(opponent1);
         opponents.add(opponent2);
         when(spySmartBot.getOpponents()).thenReturn(opponents);
@@ -669,7 +669,7 @@ class SmartBotTest {
      */
     @Test
     void smartBotUseEffectOfTheThiefWhenNoArchitectAndMerchantAvailablesTest() {
-        Player player = spy(new SmartBot(2, deck, view));
+        Player player = spy(new SmartBot(2, deck, view, bank));
         Bishop bishop = spy(new Bishop());
         player.chooseCharacter(new ArrayList<>(List.of(bishop)));
 
@@ -689,7 +689,7 @@ class SmartBotTest {
      */
     @Test
     void smartBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
-        Player player = spy(new SmartBot(2, deck, view));
+        Player player = spy(new SmartBot(2, deck, view, bank));
         Assassin assassin = spy(new Assassin());
         player.chooseCharacter(new ArrayList<>(List.of(assassin)));
 
@@ -709,11 +709,11 @@ class SmartBotTest {
      */
     @Test
     void useEffectThiefWhenArchitectAvailableTest() {
-        Player bishopPlayer = spy(new SmartBot(2, deck, view));
+        Player bishopPlayer = spy(new SmartBot(2, deck, view, bank));
         Bishop bishop = spy(new Bishop());
         bishopPlayer.chooseCharacter(new ArrayList<>(List.of(bishop)));
 
-        Player architectplayer = spy(new SmartBot(2, deck, view));
+        Player architectplayer = spy(new SmartBot(2, deck, view, bank));
         Architect architect = spy(new Architect());
         architectplayer.chooseCharacter(new ArrayList<>(List.of(architect)));
 
@@ -736,7 +736,7 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.setCitadel(opponentCitadel);
         Merchant merchant = new Merchant();
         opponent.chooseCharacter(new ArrayList<>(List.of(merchant)));
@@ -754,7 +754,7 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.DONJON), new Card(District.OBSERVATORY)));
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.setCitadel(opponentCitadel);
         Merchant merchant = new Merchant();
         opponent.chooseCharacter(new ArrayList<>(List.of(merchant)));
@@ -773,7 +773,7 @@ class SmartBotTest {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.setCitadel(opponentCitadel);
         Bishop bishop = new Bishop();
         opponent.chooseCharacter(new ArrayList<>(List.of(bishop)));

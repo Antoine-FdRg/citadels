@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -26,18 +27,16 @@ class CharacterTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         //Création d'un player de type voleur
         Deck thiefDeck = new Deck();
-        thiefPlayer = spy(new RandomBot(5, thiefDeck, view));
+        thiefPlayer = spy(new RandomBot(5, thiefDeck, view, mock(Bank.class)));
         Thief thief = new Thief();
         when(thiefPlayer.getCharacter()).thenReturn(thief);
         thief.setPlayer(thiefPlayer);
 
         //Création d'un player de type marchand
         Deck merchantDeck = new Deck();
-        merchantPlayer = spy(new RandomBot(3, merchantDeck, view));
+        merchantPlayer = spy(new RandomBot(3, merchantDeck, view, mock(Bank.class)));
         merchant =spy( new Merchant());
         when(merchantPlayer.getCharacter()).thenReturn(merchant);
         merchant.setPlayer(merchantPlayer);

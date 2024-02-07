@@ -43,6 +43,7 @@ class RichardBotTest {
     RichardBot richardBot;
     IView view;
     Deck deck;
+    Bank bank;
     List<Character> charactersList;
     List<Opponent> opponentsList;
 
@@ -53,11 +54,10 @@ class RichardBotTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
-        richardBot = spy(new RichardBot(10, deck, view));
+        bank = mock(Bank.class);
+        richardBot = spy(new RichardBot(10, deck, view, bank));
         charactersList = new ArrayList<>(List.of(
                 new Thief(),
                 new Assassin(),
@@ -68,9 +68,9 @@ class RichardBotTest {
                 new Architect(),
                 new Condottiere()
         ));
-        opponentWithEmptyHand = spy(new RandomBot(10, deck, view));
-        opponentWithMoreGoldThanRichard = spy(new RandomBot(10, deck, view));
-        opponentWithSevenDistrictsInCitadel = spy(new RandomBot(10, deck, view));
+        opponentWithEmptyHand = spy(new RandomBot(10, deck, view, bank));
+        opponentWithMoreGoldThanRichard = spy(new RandomBot(10, deck, view, bank));
+        opponentWithSevenDistrictsInCitadel = spy(new RandomBot(10, deck, view, bank));
         opponentWithSevenDistrictsInCitadel.setPositionInDrawToPickACharacter(2);
         when(opponentWithSevenDistrictsInCitadel.getHandSize()).thenReturn(7);
         opponentsList = new ArrayList<>();
@@ -448,7 +448,7 @@ class RichardBotTest {
     @Test
     void chooseAssassinTargetIfThiefIsPresentAndShouldPreventWealth() {
         // Configuration des joueurs et de leurs rôles
-        Player thiefPlayer = spy(new SmartBot(10, deck, view));
+        Player thiefPlayer = spy(new SmartBot(10, deck, view, bank));
         thiefPlayer.chooseCharacter(new ArrayList<>(List.of(new Thief())));
 
         // Configuration des conditions spécifiques du test
@@ -465,7 +465,7 @@ class RichardBotTest {
     @Test
     void chooseAssassinTargetIfCondottiereIsPresentAndThinkCondottiereWillBeChosenByTheLeadingOpponent() {
         // Configuration des joueurs et de leurs rôles
-        Player condottierePlayer = spy(new SmartBot(10, deck, view));
+        Player condottierePlayer = spy(new SmartBot(10, deck, view, bank));
         condottierePlayer.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
 
 
@@ -483,7 +483,7 @@ class RichardBotTest {
 
     @Test
     void chooseAssassinTargetIfNoSpecificConditions() {
-        Player kingPlayer = spy(new SmartBot(10, deck, view));
+        Player kingPlayer = spy(new SmartBot(10, deck, view, bank));
         kingPlayer.chooseCharacter(new ArrayList<>(List.of(new King())));
 
         // Configuration des conditions spécifiques du test
@@ -503,7 +503,7 @@ class RichardBotTest {
 
     @Test
     void shouldPreventWealth() {
-        Player opponent = spy(new SmartBot(0, deck, view));
+        Player opponent = spy(new SmartBot(0, deck, view, bank));
         opponent.increaseGold(8);
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         boolean shouldPreventWealth = richardBot.shouldPreventWealth();
@@ -512,7 +512,7 @@ class RichardBotTest {
 
     @Test
     void shouldNotPreventWealth() {
-        Player opponent = spy(new SmartBot(6, deck, view));
+        Player opponent = spy(new SmartBot(6, deck, view, bank));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         boolean shouldPreventWealth = richardBot.shouldPreventWealth();
         assertFalse(shouldPreventWealth, "The bot should not prevent wealth if no opponent has 7 or more gold.");
@@ -520,7 +520,7 @@ class RichardBotTest {
 
     @Test
     void thinkCondottiereHasBeenChosenByTheLeadingOpponent() {
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(true);
@@ -530,7 +530,7 @@ class RichardBotTest {
 
     @Test
     void thinkCondottiereHasNotBeenChosenByTheLeadingOpponent() {
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(false);
@@ -540,9 +540,9 @@ class RichardBotTest {
 
     @Test
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasBeenSeen() {
-        Player opponentThief = spy(new SmartBot(10, deck, view));
+        Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
         opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
         when(opponentThief.isAboutToWin()).thenReturn(true);
@@ -555,9 +555,9 @@ class RichardBotTest {
 
     @Test
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasntBeenSeen() {
-        Player opponentThief = spy(new SmartBot(10, deck, view));
+        Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
         opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
         when(opponentThief.isAboutToWin()).thenReturn(true);
@@ -570,9 +570,9 @@ class RichardBotTest {
 
     @Test
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefIsNotInRound() {
-        Player opponentThief = spy(new SmartBot(10, deck, view));
+        Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view));
+        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
         opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
         when(opponentThief.isAboutToWin()).thenReturn(true);
@@ -585,8 +585,8 @@ class RichardBotTest {
 
     @Test
     void useEffectMagicianWhenLeadingOpponentIsAboutToWin() {
-        Player opponent = spy(new SmartBot(10, deck, view));
-        Player opponent2 = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
+        Player opponent2 = spy(new SmartBot(10, deck, view, bank));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent, opponent2));
         Magician magician = new Magician();
         richardBot.chooseCharacter(new ArrayList<>(List.of(magician)));
@@ -619,8 +619,8 @@ class RichardBotTest {
 
     @Test
     void useEffectMagicianWhenLeadingOpponentIsNotAboutToWin() {
-        Player opponent = spy(new SmartBot(10, deck, view));
-        Player opponent2 = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
+        Player opponent2 = spy(new SmartBot(10, deck, view, bank));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent, opponent2));
         Magician magician = new Magician();
         richardBot.chooseCharacter(new ArrayList<>(List.of(magician)));

@@ -16,34 +16,14 @@ public class Bank {
     /**
      * The number of coin that still available to pick in the bank
      */
-    private int nbOfAvailableCoin;
-    /**
-     * The instance of the bank
-     */
-    private static Bank instance = null;
+    private int nbOfAvailableCoins;
 
-    /**
-     * Get the instance of the bank (singleton)
-     *
-     * @return the instance of the bank
-     */
-    public static Bank getInstance() {
-        if (instance == null) {
-            instance = new Bank();
-        }
-        return instance;
+    public Bank() {
+        this.nbOfAvailableCoins = MAX_COIN;
     }
 
-    public static void reset() {
-        instance = null;
-    }
-
-    private Bank() {
-        this.nbOfAvailableCoin = MAX_COIN;
-    }
-
-    public int getNbOfAvailableCoin() {
-        return nbOfAvailableCoin;
+    public int getNbOfAvailableCoins() {
+        return nbOfAvailableCoins;
     }
 
     /**
@@ -52,12 +32,12 @@ public class Bank {
      * @return the number of coin picked (2 or less if there is not enough coin)
      */
     public int pickXCoin() {
-        if (nbOfAvailableCoin >= NB_GOLD_TO_PICK) {
-            nbOfAvailableCoin -= NB_GOLD_TO_PICK;
+        if (nbOfAvailableCoins >= NB_GOLD_TO_PICK) {
+            nbOfAvailableCoins -= NB_GOLD_TO_PICK;
             return NB_GOLD_TO_PICK;
         } else {
-            int tmp = nbOfAvailableCoin;
-            nbOfAvailableCoin = 0;
+            int tmp = nbOfAvailableCoins;
+            nbOfAvailableCoins = 0;
             return tmp;
         }
     }
@@ -69,12 +49,12 @@ public class Bank {
      * @return the number of coin picked (nbOfCoin or less if there is not enough coin)
      */
     public int pickXCoin(int nbOfCoin) {
-        if (nbOfAvailableCoin >= nbOfCoin) {
-            nbOfAvailableCoin -= nbOfCoin;
+        if (nbOfAvailableCoins >= nbOfCoin) {
+            nbOfAvailableCoins -= nbOfCoin;
             return nbOfCoin;
         } else {
-            int tmp = nbOfAvailableCoin;
-            nbOfAvailableCoin = 0;
+            int tmp = nbOfAvailableCoins;
+            nbOfAvailableCoins = 0;
             return tmp;
         }
     }
@@ -85,8 +65,8 @@ public class Bank {
      * @param nbOfCoin the number of coin to retrieve
      */
     public void retrieveCoin(int nbOfCoin) {
-        nbOfAvailableCoin += nbOfCoin;
-        if (nbOfAvailableCoin > MAX_COIN) {
+        nbOfAvailableCoins += nbOfCoin;
+        if (nbOfAvailableCoins > MAX_COIN) {
             throw new IllegalStateException("The bank has more than 30 coins");
         }
     }

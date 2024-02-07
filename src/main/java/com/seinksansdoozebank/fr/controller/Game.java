@@ -31,6 +31,7 @@ public class Game {
     private static final int NB_CARD_BY_PLAYER = 4;
     private boolean findFirstPlayerWithEightDistricts = false;
     final Deck deck;
+    final Bank bank;
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
@@ -40,8 +41,7 @@ public class Game {
     private int nbCurrentRound;
     private boolean finished;
 
-
-    protected Game(IView view, Deck deck, List<Player> playerList) {
+    protected Game(IView view, Deck deck, Bank bank, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
@@ -51,6 +51,7 @@ public class Game {
         this.availableCharacters = new ArrayList<>();
         this.crownedPlayer = null;
         this.finished = false;
+        this.bank = bank;
     }
 
     /**
@@ -77,7 +78,7 @@ public class Game {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
                         .anyMatch(player::canPlayCard));
-        return deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay;
+        return deck.getDeck().isEmpty() && this.bank.getNbOfAvailableCoins() <= 0 && !aPlayerCanPlay;
     }
 
     /**

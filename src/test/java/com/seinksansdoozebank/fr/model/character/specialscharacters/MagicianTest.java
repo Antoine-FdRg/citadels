@@ -32,16 +32,14 @@ class MagicianTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         firstPickedCard = new Card(District.DONJON);
         secondPickedCard = new Card(District.FORTRESS);
         firstExchangeCard = new Card(District.CEMETERY);
         secondExchangeCard = new Card(District.CASTLE);
-        spyPlayer = spy(new RandomBot(2, deck, view));
-        otherSpyPlayer = spy(new RandomBot(2, deck, view));
+        spyPlayer = spy(new RandomBot(2, deck, view, mock(Bank.class)));
+        otherSpyPlayer = spy(new RandomBot(2, deck, view, mock(Bank.class)));
         magician = new Magician();
         magician.setPlayer(spyPlayer);
         spyPlayer.chooseCharacter(new ArrayList<>(List.of(magician)));
