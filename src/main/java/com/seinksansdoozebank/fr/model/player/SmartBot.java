@@ -133,27 +133,43 @@ public class SmartBot extends Player {
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
-        if (this.getHand().size() <= 1) {
+        Character characterChoosen = null;
+        Role roleToAvoid = null;
+        if (this.getNbCharacterChosenInARow() >= Player.NB_MAX_CHARACTER_CHOSEN_IN_A_ROW) {
+            roleToAvoid = this.getLastCharacterChosen().getRole();
+        }
+        if (this.getHand().size() <= 1 && Role.MAGICIAN != roleToAvoid) {
             Optional<Character> optionalCharacter = characters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst();
             if (optionalCharacter.isPresent()) {
-                return optionalCharacter.get();
+                characterChoosen = optionalCharacter.get();
             }
         }
         // Choose the character by getting the frequency of each districtType in the citadel
         // and choosing the districtType with the highest frequency for the character
         List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());
-        if (!districtTypeFrequencyList.isEmpty()) {
+        if (!districtTypeFrequencyList.isEmpty() && characterChoosen == null) {
             // Choose the character with the mostOwnedDistrictType
             for (DistrictType districtType : districtTypeFrequencyList) {
                 for (Character character : characters) {
+                    if (character.getRole() == roleToAvoid) {
+                        continue;
+                    }
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
-                        return character;
+                        characterChoosen = character;
                     }
                 }
             }
         }
         // If no character has the mostOwnedDistrictType, choose a random character
-        return characters.get(random.nextInt(characters.size()));
+        if (characterChoosen == null) {
+            characterChoosen = characters.get(random.nextInt(characters.size()));
+        }
+        if (characterChoosen.equals(this.getLastCharacterChosen())) {
+            this.setNbCharacterChosenInARow(this.getNbCharacterChosenInARow() + 1);
+        } else {
+            this.setNbCharacterChosenInARow(1);
+        }
+        return characterChoosen;
     }
 
     /**

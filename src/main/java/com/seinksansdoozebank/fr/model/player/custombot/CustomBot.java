@@ -27,6 +27,7 @@ public class CustomBot extends RandomBot {
     IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
     ICardChoosingStrategy cardChoosingStrategy;
 
+
     protected CustomBot(int nbGold, Deck deck, IView view,
                         IPickingStrategy pickingStrategy,
                         ICharacterChoosingStrategy characterChoosingStrategy,
@@ -62,11 +63,15 @@ public class CustomBot extends RandomBot {
 
     @Override
     protected Character chooseCharacterImpl(List<Character> characters) {
+        Character character;
         if (characterChoosingStrategy == null) {
-            return this.randomChooseCharacterImpl(characters);
+            character = this.randomChooseCharacterImpl(characters);
         } else {
-            return characterChoosingStrategy.apply(this, characters);
+            character = characterChoosingStrategy.apply(this, characters);
         }
+        this.setLastCharacterChosen(character);
+        return character;
+
     }
 
     protected Character randomChooseCharacterImpl(List<Character> characters) {

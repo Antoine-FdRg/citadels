@@ -9,7 +9,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
-import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -139,7 +138,7 @@ class CustomBotTest {
     @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
-        Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
+        CustomBot customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,

@@ -45,6 +45,9 @@ public abstract class Player implements Opponent {
     private boolean hasPlayed;
     private List<Character> charactersNotInRound;
     private List<Character> charactersSeenInRound;
+    private int nbCharacterChosenInARow;
+    public static final int NB_MAX_CHARACTER_CHOSEN_IN_A_ROW = 3;
+    private Character lastCharacterChosen;
 
 
     protected Player(int nbGold, Deck deck, IView view) {
@@ -286,7 +289,6 @@ public abstract class Player implements Opponent {
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
-     *
      */
     public Character useEffectThief() {
         Optional<Character> victim = this.chooseThiefTarget();
@@ -657,5 +659,21 @@ public abstract class Player implements Opponent {
 
     public void setRandom(Random mockRandom) {
         this.random = mockRandom;
+    }
+
+    protected void setLastCharacterChosen(Character lastCharacterChosen) {
+        this.lastCharacterChosen = lastCharacterChosen;
+    }
+
+    public Character getLastCharacterChosen() {
+        return this.lastCharacterChosen;
+    }
+
+    public int getNbCharacterChosenInARow() {
+        return this.nbCharacterChosenInARow;
+    }
+
+    public void setNbCharacterChosenInARow(int nbCharacterChosenInARow) {
+        this.nbCharacterChosenInARow = nbCharacterChosenInARow;
     }
 }
