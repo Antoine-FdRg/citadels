@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;g
+import java.util.stream.Stream;
 
 /**
  * Represents a smart bot which will try to build the cheaper district
