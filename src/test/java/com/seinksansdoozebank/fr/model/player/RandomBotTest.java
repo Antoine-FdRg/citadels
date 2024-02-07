@@ -17,14 +17,11 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -208,9 +205,8 @@ class RandomBotTest {
         opponent.reveal();
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
-        spyRandomBot.useEffect();
-        verify(spyRandomBot, times(1)).useEffect();
-        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+        spyRandomBot.getCharacter().applyEffect();
+        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
     }
 
     @Test
@@ -230,9 +226,8 @@ class RandomBotTest {
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         int nbGold = spyRandomBot.getNbGold();
-        spyRandomBot.useEffect();
-        verify(spyRandomBot, times(1)).useEffect();
-        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+        spyRandomBot.getCharacter().applyEffect();
+        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
         assertEquals(nbGold, spyRandomBot.getNbGold());
     }
 
@@ -274,7 +269,7 @@ class RandomBotTest {
         player.chooseCharacter(new ArrayList<>(List.of(bishop)));
         when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(bishop));
 
-        spyRandomBot.useEffect();
+        spyRandomBot.getCharacter().applyEffect();
 
         verify(view, times(1)).displayPlayerUseThiefEffect(spyRandomBot);
         assertEquals(spyRandomBot, bishop.getSavedThief());
@@ -295,7 +290,7 @@ class RandomBotTest {
         when(spyRandomBot.getCharacter()).thenReturn(thief);
         when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(assassin));
 
-        spyRandomBot.useEffect();
+        spyRandomBot.getCharacter().applyEffect();
 
         verify(view, times(0)).displayPlayerUseThiefEffect(spyRandomBot);
         assertNull(assassin.getSavedThief());
@@ -312,33 +307,6 @@ class RandomBotTest {
         DistrictType districtType = spyRandomBot.getColorCourtyardOfMiracleType();
         assertEquals(DistrictType.SOLDIERLY, districtType);
 
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideGoldAndRandomValues")
-    void testUseCemeteryEffect(int gold, boolean random, Card thenReturnCard) {
-        Random mockRandom = mock(Random.class);
-        when(mockRandom.nextBoolean()).thenReturn(random);
-        when(spyRandomBot.getNbGold()).thenReturn(gold);
-        when(spyRandomBot.getCitadel()).thenReturn(List.of(thenReturnCard));
-        spyRandomBot.setRandom(mockRandom);
-        Card card = new Card(District.MANOR);
-        spyRandomBot.useCemeteryEffect(card);
-        int expectedInvocations = (gold > 0 && random && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
-        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spyRandomBot, card);
-    }
-
-    private static Stream<Object[]> provideGoldAndRandomValues() {
-        return Stream.of(
-                new Object[]{1, true, new Card(District.CEMETERY)},
-                new Object[]{0, true, new Card(District.CEMETERY)},
-                new Object[]{0, false, new Card(District.CEMETERY)},
-                new Object[]{1, false, new Card(District.CEMETERY)},
-                new Object[]{0, false, new Card(District.MANOR)},
-                new Object[]{1, false, new Card(District.MANOR)},
-                new Object[]{1, true, new Card(District.MANOR)},
-                new Object[]{0, true, new Card(District.MANOR)}
-        );
     }
 
     /**
@@ -390,4 +358,33 @@ class RandomBotTest {
         verify(spyRandomBot, atLeastOnce()).isLibraryPresent();
     }
 
+    @Test
+    void wantToUseCemeteryEffectWithRandomTrueButNotEnoughGoldShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        spyRandomBot.setRandom(mockRandom);
+        when(spyRandomBot.getNbGold()).thenReturn(0);
+        assertFalse(spyRandomBot.wantToUseCemeteryEffect(temple));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldButRandomFalseShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(false);
+        spyRandomBot.setRandom(mockRandom);
+        when(spyRandomBot.getNbGold()).thenReturn(1);
+        assertFalse(spyRandomBot.wantToUseCemeteryEffect(temple));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldAndRandomTrueShouldReturnTrue() {
+        Card temple = new Card(District.TEMPLE);
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextBoolean()).thenReturn(true);
+        spyRandomBot.setRandom(mockRandom);
+        when(spyRandomBot.getNbGold()).thenReturn(1);
+        assertTrue(spyRandomBot.wantToUseCemeteryEffect(temple));
+    }
 }

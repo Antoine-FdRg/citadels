@@ -6,12 +6,14 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 import com.seinksansdoozebank.fr.view.IView;
 
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -315,7 +317,7 @@ public class RichardBot extends SmartBot {
     }
 
     /**
-     * La méthode check si le joueur a plus de 7 cartes dans la main et si les autres joueurs ont des mains vides et renvoie un booléen.;
+     * La méthode check si le joueur a plus de 7 cartes dans la main et si les autres joueurs ont des mains vides et renvoie un booléen.
      * Dans ce cas, il choisit l'assassin.
      *
      * @return a boolean
@@ -335,7 +337,7 @@ public class RichardBot extends SmartBot {
     }
 
     /**
-     * La méthode check si le nombre d'or du joueur est inferieur ou égele à 1.
+     * La méthode check si le nombre d'or du joueur est inférieur ou égal à 1.
      * Dans ce cas, il choisit le marchand.
      *
      * @return a boolean
@@ -388,5 +390,20 @@ public class RichardBot extends SmartBot {
         }
         return Optional.empty();
     }
+
+    /**
+     * Use the magician effect to switch hand with the opponent which has the most districts
+     */
+    @Override
+    public MagicianTarget useEffectMagician() {
+        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this);
+        if (leadingOpponent.isAboutToWin()) {
+            return new MagicianTarget(leadingOpponent, null);
+        }
+        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
+                .max(Comparator.comparingInt(Opponent::getHandSize));
+        return new MagicianTarget(playerWithMostDistricts.orElse(null), null);
+    }
+
 
 }

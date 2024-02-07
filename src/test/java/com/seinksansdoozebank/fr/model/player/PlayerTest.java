@@ -324,24 +324,103 @@ class PlayerTest {
     }
 
     @Test
-    void destroyDistrictReturnDistrictDestroy() {
-        Player attacker = spy(new RandomBot(10, deck, view));
-        Player victim = spy(new RandomBot(10, deck, view));
-        when(victim.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        Card card = new Card(District.TEMPLE);
-        Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
-        assertTrue(optCard.isPresent());
-        verify(deck, times(1)).discard(optCard.get());
-        assertEquals(card, optCard.get());
+    void havingADistrictDestroyedWithNoDistrictInCitadelShouldThrowException() {
+        Player attacker = mock(Player.class);
+        when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>());
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
     }
 
+    @Test
+    void havingADistrictDestroyedWithNoTargetedDistrictInCitadelShouldThrowException() {
+        Player attacker = mock(Player.class);
+        when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TAVERN), new Card(District.PORT))));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
+    }
 
     @Test
-    void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
-        Player player = new RandomBot(10, deck, view);
-        Player player2 = new RandomBot(10, deck, view);
-        player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    void havingADistrictDestroyedWithTargetInCitadelShouldRemoveItFromCitadelAndAskOpponentForCemeteryEffectFalseSoDiscardTheCard() {
+        Player attacker = mock(Player.class);
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
+        doReturn(false).when(spyPlayer).askOpponentForCemeteryEffect(temple);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
+        assertFalse(spyPlayer.getCitadel().contains(temple));
+        verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
+        verify(deck, times(1)).discard(temple);
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, temple);
+        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+    }
+
+    @Test
+    void havingADistrictDestroyedWithTargetInCitadelShouldRemoveItFromCitadelAndAskOpponentForCemeteryEffectTrueSoNoDiscard() {
+        Player attacker = mock(Player.class);
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
+        doReturn(true).when(spyPlayer).askOpponentForCemeteryEffect(temple);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
+        assertFalse(spyPlayer.getCitadel().contains(temple));
+        verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
+        verify(deck, times(0)).discard(temple);
+        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, temple);
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithNoOpponentWithCemeteryShouldReturnFalse() {
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.TAVERN))));
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.BARRACK))));
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertFalse(spyPlayer.askOpponentForCemeteryEffect(new Card(District.TEMPLE)));
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithOpponentWithCemeteryButDontWantShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.CEMETERY))));
+        when(opponent1.isUsingCemeteryEffect(temple)).thenReturn(false);
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.TAVERN))));
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertFalse(spyPlayer.askOpponentForCemeteryEffect(temple));
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithOpponentWithCemeteryAndWantShouldReturnTrue() {
+        Card temple = new Card(District.TEMPLE);
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.DONJON))));
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.TAVERN))));
+        when(opponent2.isUsingCemeteryEffect(temple)).thenReturn(true);
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertTrue(spyPlayer.askOpponentForCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectAndWantToUseButAsCondottiereShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Condottiere());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
+        assertFalse(spyPlayer.isUsingCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectNotAsCondottiereButDontWantToUseShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(false);
+        assertFalse(spyPlayer.isUsingCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectNotAsCondottiereAndWantToUseShouldReturnTrue() {
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
+        assertTrue(spyPlayer.isUsingCemeteryEffect(temple));
     }
 
     @Test
@@ -438,6 +517,4 @@ class PlayerTest {
         spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.PORT))));
         assertFalse(spyPlayer.isAboutToWin());
     }
-
-
 }

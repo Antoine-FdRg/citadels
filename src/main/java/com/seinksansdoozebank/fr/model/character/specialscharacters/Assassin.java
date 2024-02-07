@@ -27,4 +27,9 @@ public class Assassin extends Character {
         character.kill();
     }
 
+    @Override
+    public void applyEffect() {
+        this.useEffect(this.getPlayer().useEffectAssassin());
+    }
+
 }

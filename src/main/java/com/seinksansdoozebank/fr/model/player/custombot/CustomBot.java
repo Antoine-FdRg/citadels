@@ -3,9 +3,7 @@ package com.seinksansdoozebank.fr.model.player.custombot;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
@@ -16,6 +14,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPick
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CustomBot extends RandomBot {
@@ -25,7 +24,6 @@ public class CustomBot extends RandomBot {
     IUsingThiefEffectStrategy usingThiefEffectStrategy;
     IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
     IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
-
     ICardChoosingStrategy cardChoosingStrategy;
 
     protected CustomBot(int nbGold, Deck deck, IView view,
@@ -75,57 +73,60 @@ public class CustomBot extends RandomBot {
     }
 
     @Override
-    public void useEffectThief(Thief thief) {
+    public Character useEffectThief() {
         if (usingThiefEffectStrategy == null) {
-            this.randomUseThiefEffect(thief);
+            return this.randomUseThiefEffect();
         } else {
-            usingThiefEffectStrategy.apply(this, thief);
             view.displayPlayerUseThiefEffect(this);
+            return this.usingThiefEffectStrategy.apply(this);
         }
     }
 
-    protected void randomUseThiefEffect(Thief thief) {
-        super.useEffectThief(thief);
+    protected Character randomUseThiefEffect() {
+        return super.useEffectThief();
     }
 
     @Override
-    public void useEffectAssassin(Assassin murderer) {
+    public Character useEffectAssassin() {
         if (usingMurdererEffectStrategy == null) {
-            this.randomUseMurdererEffect(murderer);
+            return this.randomUseMurdererEffect();
         } else {
-            this.usingMurdererEffectStrategy.apply(this, murderer, view);
+            return this.usingMurdererEffectStrategy.apply(this, view);
         }
     }
 
-    protected void randomUseMurdererEffect(Assassin murderer) {
-        super.useEffectAssassin(murderer);
+    protected Character randomUseMurdererEffect() {
+        return super.useEffectAssassin();
     }
 
     @Override
-    public void useEffectCondottiere(Condottiere condottiere) {
+    public CondottiereTarget chooseCondottiereTarget() {
         if (usingCondottiereEffectStrategy == null) {
-            this.randomUseCondottiereEffect(condottiere);
+            return this.randomUseCondottiereEffect();
         } else {
-            this.usingCondottiereEffectStrategy.apply(this, condottiere);
+            return this.usingCondottiereEffectStrategy.apply(this);
         }
     }
 
-    protected void randomUseCondottiereEffect(Condottiere condottiere) {
-        super.useEffectCondottiere(condottiere);
+    protected CondottiereTarget randomUseCondottiereEffect() {
+        return super.chooseCondottiereTarget();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof CustomBot customBot) {
-            return this.characterChoosingStrategy == customBot.characterChoosingStrategy
-                    && this.pickingStrategy == customBot.pickingStrategy
-                    && this.usingThiefEffectStrategy == customBot.usingThiefEffectStrategy
-                    && this.usingMurdererEffectStrategy == customBot.usingMurdererEffectStrategy
-                    && this.usingCondottiereEffectStrategy == customBot.usingCondottiereEffectStrategy;
-        } else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CustomBot customBot = (CustomBot) o;
+
+        return customBot.getId() == this.getId() &&
+                Objects.equals(characterChoosingStrategy, customBot.characterChoosingStrategy) &&
+                Objects.equals(pickingStrategy, customBot.pickingStrategy) &&
+                Objects.equals(usingThiefEffectStrategy, customBot.usingThiefEffectStrategy) &&
+                Objects.equals(usingMurdererEffectStrategy, customBot.usingMurdererEffectStrategy) &&
+                Objects.equals(usingCondottiereEffectStrategy, customBot.usingCondottiereEffectStrategy);
     }
+
 
     @Override
     public int hashCode() {
