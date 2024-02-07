@@ -134,7 +134,7 @@ public class GameStatisticsAnalyzer {
         sortedPlayers.sort(Comparator.comparingInt(Player::getScore).reversed());
 
         for (Player player : game.getPlayers()) {
-            PlayerStatistics playerStats = playerStatisticsMap.computeIfAbsent(player, k -> new PlayerStatistics());
+            PlayerStatistics playerStats = getPlayerStatisticsMap().computeIfAbsent(player, k -> new PlayerStatistics());
             playerStats.incrementTotalGames();
 
             if (sortedPlayers.indexOf(player) == 0) {
@@ -146,6 +146,8 @@ public class GameStatisticsAnalyzer {
             playerStats.addScore(player.getScore());
             playerStats.recordPlacement(sortedPlayers.indexOf(player) + 1);
         }
+        // Calculate average score based on the current game results
+        calculateAverageScore();
     }
 
     /**
@@ -162,14 +164,14 @@ public class GameStatisticsAnalyzer {
         if (saveStatsToCsv) {
             loadStatsFromCsv();
         }
-        for (Map.Entry<Player, PlayerStatistics> entry : playerStatisticsMap.entrySet()) {
+        for (Map.Entry<Player, PlayerStatistics> entry : getPlayerStatisticsMap().entrySet()) {
             Player player = entry.getKey();
             PlayerStatistics stats = entry.getValue();
 
             // Constructing the row for each player with dynamic Pos columns
             List<String> placementDetails = new ArrayList<>();
             Map<Integer, Integer> detailedPlacement = stats.getDetailedPlacement();
-            for (int i = 1; i <= this.playerStatisticsMap.size(); i++) {
+            for (int i = 1; i <= this.getPlayerStatisticsMap().size(); i++) {
                 placementDetails.add(String.valueOf(detailedPlacement.getOrDefault(i, 0)));
             }
             StringBuilder row = new StringBuilder(String.format("| %-18s| %-12d| %-10d| %-11d| %-14.3f| %-19.1f|",
@@ -194,12 +196,12 @@ public class GameStatisticsAnalyzer {
     private StringBuilder getStringBuilder() {
         // Construct header with dynamic Pos columns
         StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Average Score | Winning Percentage |");
-        for (int i = 1; i <= this.playerStatisticsMap.size(); i++) {
+        for (int i = 1; i <= this.getPlayerStatisticsMap().size(); i++) {
             header.append(String.format(" Pos %d |", i));
         }
         header.append("\n");
         header.append("|-------------------|-------------|-----------|------------|---------------|--------------------|");
-        header.append("-------|".repeat(this.playerStatisticsMap.size()));
+        header.append("-------|".repeat(this.getPlayerStatisticsMap().size()));
         header.append("\n");
         return header;
     }
@@ -277,7 +279,7 @@ public class GameStatisticsAnalyzer {
             // Check there is the same bot in the csv file
 
             // Write data for each player
-            for (Map.Entry<Player, PlayerStatistics> entry : playerStatisticsMap.entrySet()) {
+            for (Map.Entry<Player, PlayerStatistics> entry : getPlayerStatisticsMap().entrySet()) {
                 Player player = entry.getKey();
                 PlayerStatistics stats = entry.getValue();
                 List<String> row = new ArrayList<>(Arrays.asList(
@@ -311,7 +313,7 @@ public class GameStatisticsAnalyzer {
                 String playerName = nextLine[0];
                 if (
                     // if one key (player.toString) of the map is not in the csv file
-                        !playerStatisticsMap.keySet().stream().map(Player::toString).toList().contains(playerName)
+                        !getPlayerStatisticsMap().keySet().stream().map(Player::toString).toList().contains(playerName)
                 ) {
                     return false;
                 }
@@ -370,12 +372,12 @@ public class GameStatisticsAnalyzer {
                         // Update existing statistics or add new ones
                         Player player = getPlayerByName(playerName);
                         if (player != null) {
-                            PlayerStatistics stats = playerStatisticsMap.get(player);
+                            PlayerStatistics stats = getPlayerStatisticsMap().get(player);
                             if (stats != null) {
                                 stats.setTotalGames(totalGames);
                                 stats.setGamesWon(gamesWon);
                                 stats.setGamesLost(gamesLost);
-                                stats.setAverageScore(averageScore, totalGames);
+                                this.aggregateAverageScore(averageScore);
                                 stats.setWinningPercentage(stats.getWinningPercentage());
                                 stats.setDetailedPlacement(detailedPlacement);
                             }
@@ -393,7 +395,7 @@ public class GameStatisticsAnalyzer {
         // You may need to iterate over game players or use a player repository
         // For demonstration purpose, let's assume you have a list of players in the game
         // You may need to modify this logic based on how players are managed in your system
-        for (Player player : playerStatisticsMap.keySet()) {
+        for (Player player : getPlayerStatisticsMap().keySet()) {
             if (player.toString().equals(playerName)) {
                 return player;
             }
@@ -410,5 +412,41 @@ public class GameStatisticsAnalyzer {
 
         File file = new File(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName());
         return file.exists();
+    }
+
+    /**
+     * Aggregates the loaded average score from the CSV file with the new average score
+     * from the current game results.
+     *
+     * @param loadedAverageScore The average score loaded from the CSV file.
+     */
+    void aggregateAverageScore(double loadedAverageScore) {
+        for (PlayerStatistics stats : getPlayerStatisticsMap().values()) {
+            // Calculate the total number of games played including the ones loaded from CSV
+            int totalGames = stats.getTotalGames() + numSessions;
+            // Calculate the total score including the ones loaded from CSV
+            double totalScore = stats.getTotalGames() * stats.getAverageScore() + numSessions * loadedAverageScore;
+            // Calculate the aggregated average score
+            double aggregatedAverageScore = totalScore / totalGames;
+            // Update the average score
+            stats.setAverageScore(aggregatedAverageScore);
+        }
+    }
+
+    /**
+     * Calculates the average score based on the current game results.
+     * This method should be called after analyzing game results.
+     */
+    void calculateAverageScore() {
+        for (PlayerStatistics stats : getPlayerStatisticsMap().values()) {
+            // Calculate the average score based on the current game results
+            double averageScore = stats.getTotalGames() == 0 ? 0 : (double) stats.getTotalScore() / stats.getTotalGames();
+            // Update the average score
+            stats.setAverageScore(averageScore);
+        }
+    }
+
+    public Map<Player, PlayerStatistics> getPlayerStatisticsMap() {
+        return playerStatisticsMap;
     }
 }

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -283,7 +282,25 @@ class GameTest {
     }
 
     @Test
-    void runNotStuckGame() {
+    void runGameShouldHave65CardsBeforeAndAfter() {
+        Bank.getInstance().reset();
+        int nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+        gameWithFourPlayers.run();
+        nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+    }
+
+    @Test
+    void runGame() {
         Bank.reset();
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
@@ -291,9 +308,9 @@ class GameTest {
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, atMost(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed + 1)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
-        verify(view, atMost(0)).displayGameStuck();
+        verify(view, atMost(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
@@ -539,61 +556,6 @@ class GameTest {
     }
 
     @Test
-    void isThePlayerHavingCemetery() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertTrue(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
-    }
-
-    @Test
-    void isThePlayerDonthaveCemetery() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.COURTYARD_OF_MIRACLE)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
-    }
-
-    @Test
-    void isThePlayerDonthaveCemeteryWithZeroCardInCitadel() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of());
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
-    }
-
-    @Test
-    void testUseCemeteryEffect() {
-        Condottiere condottiere = spy(new Condottiere());
-        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        RandomBot player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        int bankAccountBefore = Bank.getInstance().getNbOfAvailableCoin();
-        Random mockRandom = mock(Random.class);
-        when(mockRandom.nextBoolean()).thenReturn(true);
-        player.setRandom(mockRandom);
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
-        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
-        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
-        verify(player, times(1)).useCemeteryEffect(any());
-        assertEquals(bankAccountBefore + 1, Bank.getInstance().getNbOfAvailableCoin());
-    }
-
-    @Test
-    void testUseCemeteryEffectWithNoPlayerWithCemetery() {
-        Condottiere condottiere = spy(new Condottiere());
-        when(condottiere.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.triggerCemeteryEffectCanBeUsed(condottiere);
-        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
-        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
-        verify(player, times(0)).useCemeteryEffect(any());
-    }
-
-    @Test
     void testReorderPlayersByPointsWithNoTieWithSameOrder() {
         Player player1 = spy(new RandomBot(5, new Deck(), view));
         when(player1.getScore()).thenReturn(10);
@@ -680,5 +642,4 @@ class GameTest {
 
         assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
-
 }

@@ -18,14 +18,11 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -346,16 +343,15 @@ class SmartBotTest {
     @Test
     void useEffectTestArchitect() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
-        spySmartBot.useEffect();
-        spySmartBot.useEffectArchitectPickCards();
-        verify(spySmartBot, atLeastOnce()).useEffectArchitectPickCards();
+        spySmartBot.getCharacter().applyEffect();
+        verify(spySmartBot, times(1)).useEffectArchitect();
     }
 
     @Test
     void useEffectTestCondottiere() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        spySmartBot.useEffect();
-        verify(spySmartBot, times(1)).useEffectCondottiere(any());
+        spySmartBot.getCharacter().applyEffect();
+        verify(spySmartBot, times(1)).chooseCondottiereTarget();
     }
 
     @Test
@@ -369,7 +365,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         opponentCharacters = new ArrayList<>(List.of(new Merchant()));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponentCharacters);
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(assassin, times(1)).useEffect(any());
     }
 
@@ -476,10 +472,10 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
 
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician have the old hand of the other player
         assertEquals(otherPlayerHandCopy, spySmartBot.getHand());
         // Check that the other player have the old hand of the magician
@@ -522,10 +518,10 @@ class SmartBotTest {
         // Set the opponents of the player
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
         assertFalse(spySmartBot.getHand().contains(monasteryCard));
         assertFalse(spySmartBot.getHand().contains(cathedralCard));
@@ -567,10 +563,10 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(otherPlayer, anotherPlayer));
 
         // Set the player to switch hand with the other player
-        spySmartBot.useEffectMagician(magician);
+        spySmartBot.getCharacter().applyEffect();
 
         // Check that the magician effect is used
-        verify(spySmartBot, times(1)).useEffectMagician(magician);
+        verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician don't have anymore the instance of the monasteryCard and the cathedralCard
         assertFalse(spySmartBot.getHand().contains(monasteryCard));
         assertFalse(spySmartBot.getHand().contains(cathedralCard));
@@ -669,7 +665,7 @@ class SmartBotTest {
         List<Character> opponents = new ArrayList<>(List.of(bishop));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(view, times(1)).displayPlayerUseThiefEffect(spySmartBot);
         assertEquals(spySmartBot, bishop.getSavedThief());
     }
@@ -689,7 +685,7 @@ class SmartBotTest {
         List<Character> opponents = new ArrayList<>(List.of(assassin));
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         verify(view, times(0)).displayPlayerUseThiefEffect(spySmartBot);
         assertNull(assassin.getSavedThief());
     }
@@ -714,7 +710,7 @@ class SmartBotTest {
         opponents.add(architect);
         when(spySmartBot.getAvailableCharacters()).thenReturn(opponents);
 
-        spySmartBot.useEffect();
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(spySmartBot, architect.getSavedThief());
         assertNull(bishop.getSavedThief());
         assertEquals(spySmartBot, architect.getSavedThief());
@@ -734,7 +730,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(0, opponent.getCitadel().size());
         assertEquals(lastGold - District.MARKET_PLACE.getCost() + 1, spySmartBot.getNbGold());
     }
@@ -752,7 +748,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         when(spySmartBot.getAvailableCharacters()).thenReturn(List.of(new Merchant()));
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.getCharacter().applyEffect();
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold - District.OBSERVATORY.getCost() + 1, spySmartBot.getNbGold());
     }
@@ -771,7 +767,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.useEffectCondottiere((Condottiere) spySmartBot.getCharacter());
+        spySmartBot.chooseCondottiereTarget();
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }
@@ -808,27 +804,6 @@ class SmartBotTest {
         assertNull(spySmartBot.chooseCardToDiscardForLaboratoryEffect());
     }
 
-    @ParameterizedTest
-    @MethodSource("provideGoldAndCard")
-    void testUseCemeteryEffect(int gold, Card card, Card thenReturnCard) {
-        when(spySmartBot.getNbGold()).thenReturn(gold);
-        when(spySmartBot.getCitadel()).thenReturn(List.of(thenReturnCard));
-        spySmartBot.useCemeteryEffect(card);
-        int expectedInvocations = (gold > 0 && card.getDistrict().getCost() < 3 && thenReturnCard.getDistrict().equals(District.CEMETERY)) ? 1 : 0;
-        verify(view, times(expectedInvocations)).displayPlayerUseCemeteryEffect(spySmartBot, card);
-    }
-
-    private static Stream<Object[]> provideGoldAndCard() {
-        return Stream.of(
-                new Object[]{1, new Card(District.TEMPLE), new Card(District.CEMETERY)},
-                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
-                new Object[]{0, new Card(District.TEMPLE), new Card(District.CEMETERY)},
-                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.CEMETERY)},
-                new Object[]{1, new Card(District.CATHEDRAL), new Card(District.MANOR)},
-                new Object[]{0, new Card(District.CATHEDRAL), new Card(District.MANOR)}
-        );
-    }
-
     @Test
     void playWhenHandIsEmptyThePlayerIsArchitectTest() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Architect())));
@@ -861,5 +836,26 @@ class SmartBotTest {
         List<Character> characters = createCharactersList();
         when(spySmartBot.getHand()).thenReturn(List.of(new Card(District.PORT)));
         assertNotEquals(new Magician(), spySmartBot.chooseCharacterImpl(characters));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldButTooExpensiveCardShouldReturnFalse() {
+        Card tooExpensiveCard = new Card(District.CATHEDRAL);
+        when(spySmartBot.getNbGold()).thenReturn(5);
+        assertFalse(spySmartBot.wantToUseCemeteryEffect(tooExpensiveCard));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithAffordableCardButNotEnoughGoldButShouldReturnFalse() {
+        Card affordableCard = new Card(District.TEMPLE);
+        when(spySmartBot.getNbGold()).thenReturn(0);
+        assertFalse(spySmartBot.wantToUseCemeteryEffect(affordableCard));
+    }
+
+    @Test
+    void wantToUseCemeteryEffectWithEnoughGoldAndNotTooExpensiveCardShouldReturnTrue() {
+        Card affordableCard = new Card(District.TEMPLE);
+        when(spySmartBot.getNbGold()).thenReturn(5);
+        assertTrue(spySmartBot.wantToUseCemeteryEffect(affordableCard));
     }
 }

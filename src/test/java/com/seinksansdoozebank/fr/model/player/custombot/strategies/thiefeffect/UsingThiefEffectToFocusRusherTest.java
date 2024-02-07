@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UsingThiefEffectToFocusRusherTest {
@@ -46,8 +46,7 @@ class UsingThiefEffectToFocusRusherTest {
         characters.add(new King());
         characters.add(new Architect());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyThief);
-        verify(spyThief).useEffect(new Architect());
+        assertEquals(strategy.apply(mockPlayer), new Architect());
     }
 
     @Test
@@ -55,22 +54,19 @@ class UsingThiefEffectToFocusRusherTest {
         characters.add(new Merchant());
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyThief);
-        verify(spyThief).useEffect(new Merchant());
+        assertEquals(strategy.apply(mockPlayer), new Merchant());
     }
 
     @Test
     void applyWithKingInListShouldTargetKing() {
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyThief);
-        verify(spyThief).useEffect(new King());
+        assertEquals(strategy.apply(mockPlayer), new King());
     }
 
     @Test
     void applyWithNoImportantCharacterInListShouldTargetRandom() {
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyThief);
-        verify(spyThief).useEffect(any());
+        assertNotNull(strategy.apply(mockPlayer));
     }
 }

@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -39,8 +40,8 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     @Test
     void applyWithNotOpponentShouldThrowExceptionAndNotUseCondottiereEffect() {
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
-        assertThrows(IllegalStateException.class, () -> strategy.apply(mockPlayer, spyCondottiere));
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertThrows(IllegalStateException.class, () -> strategy.apply(mockPlayer));
+        verify(spyCondottiere, never()).useEffect(any());
     }
 
     @Test
@@ -54,9 +55,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertNull(strategy.apply(mockPlayer));
     }
 
     //with a dead bishop
@@ -73,9 +72,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere).useEffect(any(), any());
+        assertNotNull(strategy.apply(mockPlayer));
     }
 
     @Test
@@ -89,9 +86,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertNull(strategy.apply(mockPlayer));
     }
 
     @Test
@@ -105,9 +100,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertNull(strategy.apply(mockPlayer));
     }
 
     @Test
@@ -123,9 +116,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertNull(strategy.apply(mockPlayer));
     }
 
     @Test
@@ -141,9 +132,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere, never()).useEffect(any(), any());
+        assertNull(strategy.apply(mockPlayer));
     }
 
 
@@ -160,8 +149,6 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         opponentList.add(mockOpponent2);
         when(mockPlayer.getOpponents()).thenReturn(opponentList);
 
-        strategy.apply(mockPlayer, spyCondottiere);
-
-        verify(spyCondottiere).useEffect(mockOpponent2, destroyableCard.getDistrict());
+        assertEquals(strategy.apply(mockPlayer), new CondottiereTarget(mockOpponent2, destroyableCard.getDistrict()));
     }
 }
