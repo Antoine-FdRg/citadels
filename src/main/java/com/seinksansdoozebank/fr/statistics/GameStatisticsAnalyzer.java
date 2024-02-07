@@ -78,13 +78,9 @@ public class GameStatisticsAnalyzer {
         Game game = new GameBuilder(new Cli(), new Deck())
                 .addRandomBot()
                 .addRandomBot()
+                .addBuilderBot()
+                .addRichardBot()
                 .addSmartBot()
-                .addSmartBot()
-                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                        new UsingThiefEffectToFocusRusher(),
-                        new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
-                        new CardChoosingStrategy())
                 .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
                         new UsingThiefEffectToFocusRusher(),
                         new UsingMurdererEffectToFocusRusher(),
@@ -102,17 +98,19 @@ public class GameStatisticsAnalyzer {
      * creates a new game instance, runs the game, logs the completion of each game session,
      * analyzes the results of each game, logs aggregated statistics, and optionally saves statistics to a CSV file.
      *
-     * @param numRandomBot The number of random bots to be included in each game session.
-     * @param numSmartBot  The number of smart bots to be included in each game session.
-     * @param numCustomBot The number of custom bots to be included in each game session.
+     * @param numRandomBots The number of random bots to be included in each game session.
+     * @param numSmartBots  The number of smart bots to be included in each game session.
+     * @param numCustomBots The number of custom bots to be included in each game session.
+     * @param numRichardBots The number of richard bots to be included in each game session.
+     * @param numBuilderBots The number of builder bots to be included in each game session.
      */
-    public void runAndAnalyze(int numRandomBot, int numSmartBot, int numCustomBot) {
+    public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < numSessions; i++) {
             Player.resetIdCounter();
             Bank.reset();
-            Game game = createGame(numRandomBot, numSmartBot, numCustomBot);
+            Game game = createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots);
             game.run();
             CustomStatisticsLogger.log(Level.INFO, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
@@ -218,7 +216,7 @@ public class GameStatisticsAnalyzer {
      * @param numCustomBots The number of custom bots to be added to the game.
      * @return The newly created game instance.
      */
-    Game createGame(int numRandomBots, int numSmartBots, int numCustomBots) {
+    Game createGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
         GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck());
         for (int i = 0; i < numRandomBots; i++) {
             gameBuilder.addRandomBot();
@@ -228,6 +226,12 @@ public class GameStatisticsAnalyzer {
         }
         for (int i = 0; i < numCustomBots; i++) {
             generateARandomCustomBot(gameBuilder);
+        }
+        for (int i = 0; i < numRichardBots; i++) {
+            gameBuilder.addRichardBot();
+        }
+        for (int i = 0; i < numBuilderBots; i++) {
+            gameBuilder.addBuilderBot();
         }
         return gameBuilder.build();
     }

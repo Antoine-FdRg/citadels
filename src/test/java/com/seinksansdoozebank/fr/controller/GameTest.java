@@ -24,8 +24,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -283,7 +285,7 @@ class GameTest {
 
     @Test
     void runGameShouldHave65CardsBeforeAndAfter() {
-        Bank.getInstance().reset();
+        Bank.reset();
         int nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
         for (Player player : gameWithFourPlayers.players) {
             nbCardInGame += player.getHand().size();
@@ -297,6 +299,18 @@ class GameTest {
             nbCardInGame += player.getCitadel().size();
         }
         assertEquals(65, nbCardInGame);
+    }
+
+    @Test
+    void runGameAndCheckThatNoCardAreDuplicated() {
+        Bank.reset();
+        gameWithFourPlayers.run();
+        Set<Card> allCards = new HashSet<>(gameWithFourPlayers.deck.getDeck());
+        for (Player player : gameWithFourPlayers.players) {
+            allCards.addAll(player.getHand());
+            allCards.addAll(player.getCitadel());
+        }
+        assertEquals(65, allCards.size());
     }
 
     @Test

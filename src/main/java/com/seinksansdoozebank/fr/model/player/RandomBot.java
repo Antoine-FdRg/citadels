@@ -13,7 +13,6 @@ import com.seinksansdoozebank.fr.view.IView;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static java.util.Collections.shuffle;
 
@@ -219,10 +218,6 @@ public class RandomBot extends Player {
     @Override
     public String toString() {
         return "Le bot aléatoire " + this.id;
-    }
-
-    public void setRandom(Random mockRandom) {
-        this.random = mockRandom;
     }
 
     public Card chooseCardToDiscardForLaboratoryEffect() {
