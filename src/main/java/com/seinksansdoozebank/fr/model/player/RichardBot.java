@@ -198,7 +198,7 @@ public class RichardBot extends SmartBot {
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
         Optional<Character> optionalCharacter ;
-        Optional<Opponent> optionalOpponent=getOpponents().stream().filter(opponent -> opponent.getHandSize()==7).findFirst();
+        Optional<Opponent> optionalOpponent=getOpponents().stream().filter(opponent -> opponent.getCitadel().size()==7).findFirst();
         if(optionalOpponent.isPresent()){
            optionalCharacter=chooseCharacterWHenOpponentHasOneDistrictLeft(characters,optionalOpponent.get());
            if(optionalCharacter.isPresent() && characters.contains(optionalCharacter.get())){

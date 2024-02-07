@@ -76,20 +76,26 @@ public class GameStatisticsAnalyzer {
         Bank.reset();
         Player.resetIdCounter();
         Game game = new GameBuilder(new Cli(), new Deck())
-                .addRandomBot()
-                .addRandomBot()
-                .addSmartBot()
-                .addSmartBot()
-                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                        new UsingThiefEffectToFocusRusher(),
-                        new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
-                        new CardChoosingStrategy())
-                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                        new UsingThiefEffectToFocusRusher(),
-                        new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
-                        new CardChoosingStrategy())
+//                .addRandomBot()
+//                .addRandomBot()
+//                .addSmartBot()
+//                .addSmartBot()
+//                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
+//                        new UsingThiefEffectToFocusRusher(),
+//                        new UsingMurdererEffectToFocusRusher(),
+//                        new UsingCondottiereEffectToTargetFirstPlayer(),
+//                        new CardChoosingStrategy())
+//                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
+//                        new UsingThiefEffectToFocusRusher(),
+//                        new UsingMurdererEffectToFocusRusher(),
+//                        new UsingCondottiereEffectToTargetFirstPlayer(),
+//                        new CardChoosingStrategy())
+                .addRichardBot()
+                .addRichardBot()
+                .addRichardBot()
+                .addRichardBot()
+                .addRichardBot()
+                .addRichardBot()
                 .build();
         game.run();
         analyzeGameResults(game);
