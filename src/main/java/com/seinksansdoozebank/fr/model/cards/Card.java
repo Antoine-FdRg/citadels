@@ -36,7 +36,7 @@ public class Card {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Card card) {
-            return district.equals(card.district);
+            return this.id == card.id;
         }
         return false;
     }
