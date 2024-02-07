@@ -30,7 +30,7 @@ public class Game {
     protected static final int NB_PLAYER_MIN = 4;
     private static final int NB_CARD_BY_PLAYER = 4;
     private boolean findFirstPlayerWithEightDistricts = false;
-    private final Deck deck;
+    final Deck deck;
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
@@ -93,10 +93,6 @@ public class Game {
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
-                // Check if the player has the Condottiere role
-                if (player.getCharacter() instanceof Condottiere condottiere) {
-                    this.triggerCemeteryEffectCanBeUsed(condottiere);
-                }
             }
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
@@ -353,40 +349,6 @@ public class Game {
             Optional<Player> playerByRole = getPlayerByRole(Role.THIEF);
             playerByRole.ifPresent(view::displayActualNumberOfGold);
         }
-    }
-
-    /**
-     * This method is used to use the effect of the cemetery
-     *
-     * @param condottiere the condottiere who destroyed a district
-     */
-    public void triggerCemeteryEffectCanBeUsed(Condottiere condottiere) {
-        // Get the district destroyed by the condottiere
-        Optional<Card> districtDestroyed = condottiere.getDistrictDestroyed();
-        // if there is a district destroyed
-        if (districtDestroyed.isPresent()) {
-            // Get the player who has the cemetery and ask him if he wants to use the effect
-            Optional<Player> playerWithCemetery = getPlayerWithCemetery();
-            if (playerWithCemetery.isPresent()) {
-                playerWithCemetery.get().useCemeteryEffect(districtDestroyed.get());
-                this.view.displayPlayerInfo(playerWithCemetery.get());
-            }
-        }
-    }
-
-
-    /**
-     * This method is used to get the player who has the cemetery in his citadel
-     *
-     * @return an optional of Player with the cemetery
-     */
-    public Optional<Player> getPlayerWithCemetery() {
-        for (Player player : players) {
-            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict() == District.CEMETERY)) {
-                return Optional.of(player);
-            }
-        }
-        return Optional.empty();
     }
 
     public List<Player> getPlayers() {

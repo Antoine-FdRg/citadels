@@ -421,12 +421,10 @@ public class GameStatisticsAnalyzer {
             // Calculate the total number of games played including the ones loaded from CSV
             int totalGames = stats.getTotalGames() + numSessions;
             // Calculate the total score including the ones loaded from CSV
-            System.out.println(stats.getTotalGames() + " " + stats.getAverageScore() + " " + numSessions + " " + loadedAverageScore + " " + totalGames);
             double totalScore = stats.getTotalGames() * stats.getAverageScore() + numSessions * loadedAverageScore;
             // Calculate the aggregated average score
             double aggregatedAverageScore = totalScore / totalGames;
             // Update the average score
-            System.out.println(aggregatedAverageScore);
             stats.setAverageScore(aggregatedAverageScore);
         }
     }

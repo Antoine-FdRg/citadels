@@ -1,17 +1,12 @@
 package com.seinksansdoozebank.fr.model.character.commoncharacters;
 
-import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 
-import java.util.Optional;
-
 public class Condottiere extends CommonCharacter {
-
-    private Optional<Card> districtDestroyed = Optional.empty();
 
     public Condottiere() {
         super(Role.CONDOTTIERE, DistrictType.SOLDIERLY);
@@ -42,7 +37,6 @@ public class Condottiere extends CommonCharacter {
         }
         Opponent opponent = condottiereTarget.opponent();
         District district = condottiereTarget.district();
-        this.districtDestroyed = Optional.empty();
         if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
@@ -55,15 +49,8 @@ public class Condottiere extends CommonCharacter {
         if (opponent.getCitadel().size() >= 8) {
             throw new IllegalArgumentException("The player can't destroy a district if the player has a complete citadel");
         }
-        Optional<Card> card = opponent.destroyDistrict(this.getPlayer(), district);
-        if (card.isPresent()) {
-            this.getPlayer().returnGoldToBank(district.getCost() - 1);
-            this.districtDestroyed = card;
-        }
-    }
-
-    public Optional<Card> getDistrictDestroyed() {
-        return this.districtDestroyed;
+        opponent.destroyDistrict(this.getPlayer(), district);
+        this.getPlayer().returnGoldToBank(district.getCost() - 1);
     }
 
     @Override

@@ -11,7 +11,6 @@ public class PlayerStatistics {
     private double averageScore;
     private double winningPercentage;
     private final Map<Integer, Integer> placementCounts;
-    private boolean needsRecalculation = true;
 
     public PlayerStatistics() {
         this.totalGames = 0;

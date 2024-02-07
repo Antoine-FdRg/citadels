@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
+import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -60,7 +61,6 @@ public abstract class Player implements Opponent {
 
     /**
      * Represents the player's turn
-     * MUST CALL view.displayPlayerPlaysDistrict() at the end of the turn with the district built by the player
      */
     public void play() {
         if (this.getCharacter().isDead()) {
@@ -458,25 +458,43 @@ public abstract class Player implements Opponent {
     }
 
     @Override
-    public Optional<Card> destroyDistrict(Player attacker, District district) {
-        // if the district is in the citadel, we remove it and return the card removed
-        Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(district)).findFirst();
+    public final void destroyDistrict(Player attacker, District targetedDistrict) {
+        // if the targetedDistrict is in the citadel, we remove it and return the card removed
+        Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(targetedDistrict)).findFirst();
         if (card.isPresent()) {
-            this.citadel.remove(card.get());
-            this.deck.discard(card.get());
-            this.view.displayPlayerUseCondottiereDistrict(attacker, this, district);
-            return card;
+            Card cardDestroyed = card.get();
+            this.citadel.remove(cardDestroyed);
+            boolean someoneUseCemeteryToKeepDistrict = askOpponentForCemeteryEffect(cardDestroyed);
+            if (!someoneUseCemeteryToKeepDistrict) {
+                this.deck.discard(cardDestroyed);
+                this.view.displayPlayerDiscardCard(this, cardDestroyed);
+            }
+            this.view.displayPlayerUseCondottiereDistrict(attacker, this, targetedDistrict);
         } else {
-            throw new IllegalArgumentException("The player doesn't have the district to destroy");
+            throw new IllegalArgumentException("The player doesn't have the targetedDistrict to destroy");
         }
     }
 
-    public void useCemeteryEffect(Card card) {
-        if (this.wantToUseCemeteryEffect(card)) {
+    boolean askOpponentForCemeteryEffect(Card cardToRetrieve) {
+        boolean someoneUseCemeteryToKeepDistrict = false;
+        for (Opponent opponent : this.getOpponents()) {
+            if (opponent.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.CEMETERY))
+                    && opponent.isUsingCemeteryEffect(cardToRetrieve)) {
+                someoneUseCemeteryToKeepDistrict = true;
+                break;
+            }
+        }
+        return someoneUseCemeteryToKeepDistrict;
+    }
+
+    public final boolean isUsingCemeteryEffect(Card card) {
+        if (!this.getCharacter().getRole().equals(Role.CONDOTTIERE) && this.wantToUseCemeteryEffect(card)) {
             this.hand.add(card);
             this.returnGoldToBank(1);
             this.view.displayPlayerUseCemeteryEffect(this, card);
+            return true;
         }
+        return false;
     }
 
     protected abstract boolean wantToUseCemeteryEffect(Card card);

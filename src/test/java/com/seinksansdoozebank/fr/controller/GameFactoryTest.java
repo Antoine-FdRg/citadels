@@ -1,7 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.bank.Bank;
-import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.RichardBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBot;

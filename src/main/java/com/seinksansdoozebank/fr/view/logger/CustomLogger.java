@@ -93,8 +93,4 @@ public class CustomLogger {
     public static void setLevel(Level level) {
         logger.setLevel(level);
     }
-
-    public static Level getLevel() {
-        return logger.getLevel();
-    }
 }
