@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing;
 
-import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -32,8 +31,6 @@ class ChoosingCharacterToTargetFirstPlayerTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockCustomBot = mock(CustomBot.class);
         choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
         characterList = new ArrayList<>();

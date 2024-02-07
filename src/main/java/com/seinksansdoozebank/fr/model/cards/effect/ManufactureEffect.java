@@ -5,6 +5,8 @@ import com.seinksansdoozebank.fr.view.IView;
 
 public class ManufactureEffect implements ActiveEffect {
 
+    public static final int NB_GOLD_TO_PAY_TO_USE_EFFECT = 3;
+
     /**
      * Once per turn, the player can pay three gold coins to draw three cards.
      *
@@ -13,8 +15,8 @@ public class ManufactureEffect implements ActiveEffect {
     @Override
     public void use(Player player, IView view) {
         if (player.wantToUseManufactureEffect()) {
-            player.returnGoldToBank(3);
-            for (int i = 0; i < 3; i++) {
+            player.returnGoldToBank(NB_GOLD_TO_PAY_TO_USE_EFFECT);
+            for (int i = 0; i < NB_GOLD_TO_PAY_TO_USE_EFFECT; i++) {
                 player.pickACard();
             }
             view.displayPlayerUseManufactureEffect(player);

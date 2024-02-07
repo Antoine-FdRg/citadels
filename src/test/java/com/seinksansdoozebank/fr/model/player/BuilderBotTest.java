@@ -15,7 +15,6 @@ import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +40,11 @@ class BuilderBotTest {
 
     @BeforeEach
     void setup() {
-        Bank.reset();
         view = mock(Cli.class);
         deck = spy(new Deck());
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
-        spyBuilderBot = spy(new BuilderBot(10, deck, view));
+        spyBuilderBot = spy(new BuilderBot(10, deck, view, mock(Bank.class)));
         templeCard = new Card(District.TEMPLE);
         barrackCard = new Card(District.BARRACK);
         cardPort = new Card(District.PORT);
@@ -141,7 +139,7 @@ class BuilderBotTest {
 
     @Test
     void chooseCardWithCommonCharacter() {
-        BuilderBot spyBuilderBot = spy(new BuilderBot(10, deck, view));
+        BuilderBot spyBuilderBot = spy(new BuilderBot(10, deck, view, mock(Bank.class)));
         CommonCharacter commonCharacter = mock(CommonCharacter.class);
         when(commonCharacter.getTarget()).thenReturn(DistrictType.TRADE_AND_CRAFTS);
         when(spyBuilderBot.getCharacter()).thenReturn(commonCharacter);
@@ -158,7 +156,7 @@ class BuilderBotTest {
 
     @Test
     void chooseCardWithoutCommonCharacter() {
-        BuilderBot spyBuilderBot = spy(new BuilderBot(10, deck, view));
+        BuilderBot spyBuilderBot = spy(new BuilderBot(10, deck, view, mock(Bank.class)));
         // spyBuilderBot.setCharacter(mock(Character.class));
         when(spyBuilderBot.getCharacter()).thenReturn(mock(Character.class));
 

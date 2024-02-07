@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.model.cards;
 
-import com.seinksansdoozebank.fr.model.bank.Bank;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +12,6 @@ class CardTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         monasteryCard = new Card(District.MONASTERY);
         barrackCard = new Card(District.BARRACK);
         monasteryCardBis = new Card(District.MONASTERY);

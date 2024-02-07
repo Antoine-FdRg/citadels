@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.statistics;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import com.seinksansdoozebank.fr.controller.Game;
@@ -37,7 +38,7 @@ class GameStatisticsAnalyzerTest {
 
     @BeforeEach
     void setUp() {
-        player = spy(new RandomBot(2, new Deck(), new Cli()));
+        player = spy(new RandomBot(2, new Deck(), new Cli(), new Bank()));
         // Initialize the GameStatisticsAnalyzer instance
         analyzer = spy(new GameStatisticsAnalyzer(false)); // Assuming saveStatsToCsv is set to false for testing
     }
@@ -95,7 +96,7 @@ class GameStatisticsAnalyzerTest {
         // Mock necessary dependencies
         Player.resetIdCounter(); // Ensure Player ID counter is reset
 
-        Game game = new GameBuilder(new Cli(), new Deck())
+        Game game = new GameBuilder(new Cli(), new Deck(), new Bank())
                 .addRandomBot()
                 .addRandomBot()
                 .addBuilderBot()
