@@ -24,7 +24,7 @@ class GameStatisticsAnalyzerTest {
     }
 
     @Test
-    void testAggregateAverageScore() {
+    void testAggregateAverageScoreWith1Game() {
         // Mock player statistics
         PlayerStatistics playerStats = Mockito.mock(PlayerStatistics.class);
         Mockito.when(playerStats.getTotalGames()).thenReturn(1); // Total games played before
@@ -47,7 +47,7 @@ class GameStatisticsAnalyzerTest {
     }
 
     @Test
-    void testCalculateAverageScore() {
+    void testCalculateAverageScoreWith5Games() {
         // Mock player statistics
         PlayerStatistics playerStats = Mockito.mock(PlayerStatistics.class);
         Mockito.when(playerStats.getTotalGames()).thenReturn(5); // Total games played
