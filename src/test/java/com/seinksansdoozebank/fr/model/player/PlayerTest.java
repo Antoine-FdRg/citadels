@@ -114,7 +114,7 @@ class PlayerTest {
     }
 
     @Test
-    void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
+    void testCanPlayCardWithAlreadyPlayedDistrictShouldReturnFalse() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
         assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
@@ -455,7 +455,7 @@ class PlayerTest {
     void usePrestigesEffectWithManufacture() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
-        ((RandomBot) spyPlayer).setRandom(mockRandom);
+        spyPlayer.setRandom(mockRandom);
 
         // make a hand with a one card
         spyPlayer.getHand().add(new Card(District.TEMPLE));
