@@ -57,7 +57,7 @@ public class GameStatisticsAnalyzer {
     private final int numSessions;
     private final Map<Player, PlayerStatistics> playerStatisticsMap;
     private final boolean saveStatsToCsv;
-    private static final String FOLDER_DEFAULT_PATH = "src/main/resources/stats/";
+    static final String FOLDER_DEFAULT_PATH = "src/main/resources/stats/";
     private final CsvCategory csvCategory;
 
     public GameStatisticsAnalyzer(int numSessions, boolean saveStatsToCsv, CsvCategory csvCategory) {
@@ -72,7 +72,7 @@ public class GameStatisticsAnalyzer {
     }
 
     public void runDemo() {
-        CustomLogger.setLevel(saveStatsToCsv ? Level.OFF : Level.INFO);
+        CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Bank.reset();
         Player.resetIdCounter();
         Game game = new GameBuilder(new Cli(), new Deck())
@@ -105,9 +105,9 @@ public class GameStatisticsAnalyzer {
      * @param numBuilderBots The number of builder bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        CustomStatisticsLogger.setLevel(Level.INFO);
+        CustomStatisticsLogger.setLevel(Level.OFF);
         CustomLogger.setLevel(Level.OFF);
-        for (int i = 0; i < numSessions; i++) {
+        for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
             Bank.reset();
             Game game = createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots);
@@ -161,7 +161,7 @@ public class GameStatisticsAnalyzer {
         // Header for the table
         StringBuilder table = getStringBuilder();
         // Iterate through players and construct the row for each player
-        if (saveStatsToCsv) {
+        if (isSaveStatsToCsv()) {
             loadStatsFromCsv();
         }
         for (Map.Entry<Player, PlayerStatistics> entry : getPlayerStatisticsMap().entrySet()) {
@@ -186,7 +186,7 @@ public class GameStatisticsAnalyzer {
             row.append("\n");
             table.append(row);
         }
-        if (saveStatsToCsv) {
+        if (isSaveStatsToCsv()) {
             saveStatsIntoCsv();
         }
         // Output the formatted table
@@ -266,7 +266,7 @@ public class GameStatisticsAnalyzer {
      */
     private void saveStatsIntoCsv() {
         createCsvFile();
-        try (CSVWriter writer = new CSVWriter(new FileWriter(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName(), false))) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName(), false))) {
             // Write the header only if the file is empty
             String[] header = new String[]{"Player", "Total Games", "Games Won", "Games Lost", "Average Score", "Winning Percentage"};
             // Add the positions in function of the number of players
@@ -303,14 +303,15 @@ public class GameStatisticsAnalyzer {
         }
     }
 
-    private boolean isTheSameBotInCsvFile() {
-        try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName()))) {
+    boolean isTheSameBotInCsvFile() {
+        try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName()))) {
             // Skip header
             reader.skip(1);
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
                 // Extract data from CSV
                 String playerName = nextLine[0];
+                System.out.println(playerName);
                 if (
                     // if one key (player.toString) of the map is not in the csv file
                         !getPlayerStatisticsMap().keySet().stream().map(Player::toString).toList().contains(playerName)
@@ -341,7 +342,7 @@ public class GameStatisticsAnalyzer {
             }
 
             // Create the file if it doesn't exist
-            File file = new File(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName());
+            File file = new File(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName());
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -353,7 +354,7 @@ public class GameStatisticsAnalyzer {
     private void loadStatsFromCsv() {
         try {
             if (fileExists() && isTheSameBotInCsvFile()) {
-                try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName()))) {
+                try (CSVReader reader = new CSVReader(new FileReader(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName()))) {
                     // Skip header
                     reader.skip(1);
                     String[] nextLine;
@@ -378,7 +379,6 @@ public class GameStatisticsAnalyzer {
                                 stats.setGamesWon(gamesWon);
                                 stats.setGamesLost(gamesLost);
                                 this.aggregateAverageScore(averageScore);
-                                stats.setWinningPercentage(stats.getWinningPercentage());
                                 stats.setDetailedPlacement(detailedPlacement);
                             }
                         }
@@ -390,11 +390,7 @@ public class GameStatisticsAnalyzer {
         }
     }
 
-    private Player getPlayerByName(String playerName) {
-        // Implement logic to retrieve player instance by name
-        // You may need to iterate over game players or use a player repository
-        // For demonstration purpose, let's assume you have a list of players in the game
-        // You may need to modify this logic based on how players are managed in your system
+    Player getPlayerByName(String playerName) {
         for (Player player : getPlayerStatisticsMap().keySet()) {
             if (player.toString().equals(playerName)) {
                 return player;
@@ -404,13 +400,13 @@ public class GameStatisticsAnalyzer {
     }
 
 
-    private boolean fileExists() {
+    boolean fileExists() {
         File folder = new File(FOLDER_DEFAULT_PATH);
         if (!folder.exists()) {
             return false;
         }
 
-        File file = new File(FOLDER_DEFAULT_PATH + this.csvCategory.getFileName());
+        File file = new File(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName());
         return file.exists();
     }
 
@@ -423,9 +419,9 @@ public class GameStatisticsAnalyzer {
     void aggregateAverageScore(double loadedAverageScore) {
         for (PlayerStatistics stats : getPlayerStatisticsMap().values()) {
             // Calculate the total number of games played including the ones loaded from CSV
-            int totalGames = stats.getTotalGames() + numSessions;
+            int totalGames = stats.getTotalGames() + this.getNumSessions();
             // Calculate the total score including the ones loaded from CSV
-            double totalScore = stats.getTotalGames() * stats.getAverageScore() + numSessions * loadedAverageScore;
+            double totalScore = stats.getTotalGames() * stats.getAverageScore() + this.getNumSessions() * loadedAverageScore;
             // Calculate the aggregated average score
             double aggregatedAverageScore = totalScore / totalGames;
             // Update the average score
@@ -448,5 +444,17 @@ public class GameStatisticsAnalyzer {
 
     public Map<Player, PlayerStatistics> getPlayerStatisticsMap() {
         return playerStatisticsMap;
+    }
+
+    public boolean isSaveStatsToCsv() {
+        return saveStatsToCsv;
+    }
+
+    public int getNumSessions() {
+        return numSessions;
+    }
+
+    public CsvCategory getCsvCategory() {
+        return csvCategory;
     }
 }

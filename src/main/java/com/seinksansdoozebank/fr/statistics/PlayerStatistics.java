@@ -61,11 +61,6 @@ public class PlayerStatistics {
     }
 
 
-    public void setWinningPercentage(double winningPercentage) {
-        this.winningPercentage = winningPercentage;
-    }
-
-
     public void setDetailedPlacement(Map<Integer, Integer> placementCounts) {
         // update placement counts
         for (Map.Entry<Integer, Integer> entry : placementCounts.entrySet()) {
@@ -103,6 +98,13 @@ public class PlayerStatistics {
 
     @Override
     public String toString() {
-        return "PlayerStatistics{" + "totalGames=" + totalGames + ", gamesWon=" + gamesWon + ", gamesLost=" + gamesLost + ", totalScore=" + totalScore + ", averageScore=" + averageScore + ", winningPercentage=" + winningPercentage + ", placementCounts=" + placementCounts + '}';
+        return "PlayerStatistics{"
+                + "totalGames=" + this.getTotalGames()
+                + ", gamesWon=" + this.getGamesWon()
+                + ", gamesLost=" + this.getGamesLost()
+                + ", totalScore=" + this.getTotalScore()
+                + ", averageScore=" + this.getAverageScore()
+                + ", winningPercentage=" + this.getWinningPercentage()
+                + ", placementCounts=" + getDetailedPlacement() + '}';
     }
 }
