@@ -105,7 +105,7 @@ public class GameStatisticsAnalyzer {
      * @param numBuilderBots The number of builder bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        CustomStatisticsLogger.setLevel(Level.OFF);
+        CustomStatisticsLogger.setLevel(Level.ALL);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();

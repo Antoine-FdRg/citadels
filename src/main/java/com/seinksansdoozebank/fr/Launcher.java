@@ -38,9 +38,9 @@ public class Launcher {
     }
 
     public void twoThousand(boolean saveInCsv) {
-        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(1000, saveInCsv, BEST_AGAINST_SECOND);
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(500000, saveInCsv, BEST_AGAINST_SECOND);
         analyzer.runAndAnalyze(0, 3, 3, 0, 0);
-        analyzer = new GameStatisticsAnalyzer(1000, saveInCsv, BEST_BOTS_AGAINST);
+        analyzer = new GameStatisticsAnalyzer(500000, saveInCsv, BEST_BOTS_AGAINST);
         analyzer.runAndAnalyze(0, 6, 0, 0, 0);
     }
 }
