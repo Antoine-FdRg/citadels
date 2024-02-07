@@ -311,7 +311,6 @@ public class GameStatisticsAnalyzer {
             while ((nextLine = reader.readNext()) != null) {
                 // Extract data from CSV
                 String playerName = nextLine[0];
-                System.out.println(playerName);
                 if (
                     // if one key (player.toString) of the map is not in the csv file
                         !getPlayerStatisticsMap().keySet().stream().map(Player::toString).toList().contains(playerName)
