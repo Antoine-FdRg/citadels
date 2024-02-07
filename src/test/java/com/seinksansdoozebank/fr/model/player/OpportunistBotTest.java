@@ -17,9 +17,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -126,18 +129,19 @@ class OpportunistBotTest {
 
     @Test
     void testChooseCardWithReligiousDistrict() {
-        List<Card> cards = new ArrayList<>(List.of(
-                templeCard,
-                barrackCard,
-                cardManor,
-                cardPort,
-                dracoport
-        ));
         when(spyOpportunistBot.getHand()).thenReturn(new ArrayList<>(List.of(templeCard, barrackCard, cardManor, cardPort, dracoport)));
 
-        Card chosenCard = spyOpportunistBot.chooseCard().get();
+        Optional<Card> chosenCard = spyOpportunistBot.chooseCard();
+        assertTrue(chosenCard.isPresent());
 
-        assertEquals(templeCard, chosenCard);
+        assertEquals(templeCard, chosenCard.get());
+    }
+
+    @Test
+    void testChooseCardWithEmptyHand() {
+        when(spyOpportunistBot.getHand()).thenReturn(new ArrayList<>());
+
+        assertFalse(spyOpportunistBot.chooseCard().isPresent());
     }
 
     @Test

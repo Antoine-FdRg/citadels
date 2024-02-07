@@ -58,6 +58,9 @@ public class OpportunistBot extends SmartBot {
     @Override
     protected Optional<Card> chooseCard() {
         List<Card> cards = new ArrayList<>(this.getHand());
+        if (cards.isEmpty()) {
+            return Optional.empty();
+        }
         // sort the cards by cost
         cards.sort(Comparator.comparingInt(c -> c.getDistrict().getCost()));
         for (Card card : cards) {
