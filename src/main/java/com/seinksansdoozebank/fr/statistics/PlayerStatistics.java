@@ -9,7 +9,6 @@ public class PlayerStatistics {
     private int gamesLost;
     private int totalScore;
     private double averageScore;
-    private double winningPercentage;
     private final Map<Integer, Integer> placementCounts;
 
     public PlayerStatistics() {
@@ -41,14 +40,17 @@ public class PlayerStatistics {
     }
 
     public void setTotalGames(int totalGames) {
+        if (totalGames < 0) return;
         this.totalGames += totalGames;
     }
 
     public void setGamesWon(int gamesWon) {
+        if (gamesWon < 0) return;
         this.gamesWon += gamesWon;
     }
 
     public void setGamesLost(int gamesLost) {
+        if (gamesLost < 0) return;
         this.gamesLost += gamesLost;
     }
 
@@ -57,12 +59,8 @@ public class PlayerStatistics {
     }
 
     public void setAverageScore(double averageScore) {
+        if (averageScore < 0) return;
         this.averageScore = averageScore;
-    }
-
-
-    public void setWinningPercentage(double winningPercentage) {
-        this.winningPercentage = winningPercentage;
     }
 
 
@@ -86,6 +84,7 @@ public class PlayerStatistics {
     }
 
     public void addScore(int score) {
+        if (score < 0) return;
         totalScore += score;
     }
 
@@ -94,6 +93,7 @@ public class PlayerStatistics {
     }
 
     public void recordPlacement(int placement) {
+        if (placement < 1 || placement > 6) return;
         placementCounts.put(placement, placementCounts.getOrDefault(placement, 0) + 1);
     }
 
@@ -103,6 +103,13 @@ public class PlayerStatistics {
 
     @Override
     public String toString() {
-        return "PlayerStatistics{" + "totalGames=" + totalGames + ", gamesWon=" + gamesWon + ", gamesLost=" + gamesLost + ", totalScore=" + totalScore + ", averageScore=" + averageScore + ", winningPercentage=" + winningPercentage + ", placementCounts=" + placementCounts + '}';
+        return "PlayerStatistics{"
+                + "totalGames=" + this.getTotalGames()
+                + ", gamesWon=" + this.getGamesWon()
+                + ", gamesLost=" + this.getGamesLost()
+                + ", totalScore=" + this.getTotalScore()
+                + ", averageScore=" + this.getAverageScore()
+                + ", winningPercentage=" + this.getWinningPercentage()
+                + ", placementCounts=" + getDetailedPlacement() + '}';
     }
 }

@@ -39,6 +39,7 @@ class CliTest {
 
     @BeforeEach
     void setUp() {
+        CustomLogger.setLevel(Level.ALL);
         view = new Cli();
         player = spy(new RandomBot(10, new Deck(), view));
         testHandler = new TestHandler();
