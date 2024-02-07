@@ -8,4 +8,9 @@ public class Architect extends Character {
     public Architect() {
         super(Role.ARCHITECT);
     }
+
+    @Override
+    public void applyEffect() {
+        this.getPlayer().useEffectArchitect();
+    }
 }

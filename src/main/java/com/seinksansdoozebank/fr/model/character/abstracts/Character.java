@@ -91,4 +91,6 @@ public abstract class Character {
         this.getPlayer().decreaseGold(this.getPlayer().getNbGold());
         this.setSavedThief(null);
     }
+
+    public abstract void applyEffect();
 }
