@@ -113,17 +113,18 @@ public class RichardBot extends SmartBot {
      * Cette méthode nous permet de choisir notre personnage en prenant en compte les cas où un opposant est sur le point
      * de poser son dernier district et de gagner. On doit évaluer si l'opposant doit choisir
      * son caractère en premier deuxième ou troisième et faire en fonction
+     *
      * @param characters list of available characters
-     * @param opponent the opponent who gets 7 districts in it citadel
+     * @param opponent   the opponent who gets 7 districts in it citadel
      * @return an optional of the character that will be assigned to the current player
      */
-    Optional<Character> chooseCharacterWHenOpponentHasOneDistrictLeft(List<Character> characters,Opponent opponent){
+    Optional<Character> chooseCharacterWhenOpponentHasOneDistrictLeft(List<Character> characters, Opponent opponent) {
         //Si l'opposant est deuxième à choisir son role alors, on doit choisir l'assassin
-        if( opponent.getPositionInDrawToPickACharacter()==1){
+        if (opponent.getPositionInDrawToPickACharacter() == 1) {
             return Optional.of(new Assassin());
         }
         //Cas où l'opposant est 3ème à choisir
-        if(opponent.getPositionInDrawToPickACharacter()==2) {
+        if (opponent.getPositionInDrawToPickACharacter() == 2) {
             if (characters.contains(new King())) {
                 return Optional.of(new King());
             }
@@ -132,10 +133,9 @@ public class RichardBot extends SmartBot {
             }
             if (!characters.contains(new Condottiere())) {
                 return whenCharacterDoesNotContainCondottiere();
-            } else if(!characters.contains(new Bishop())){
+            } else if (!characters.contains(new Bishop())) {
                 return whenCharacterDoesNotContainBishop();
-            }
-            else {
+            } else {
                 return whenCharacterDoesNotContainAssassin();
             }
         }
@@ -145,12 +145,13 @@ public class RichardBot extends SmartBot {
     /**
      * Cas où l'évêque, l'assassin, condottière n'a pas été pris
      * Prendre en compte le rang du perso actuel
+     *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterContainsBishopCondottiereAssassin(){
-        if(this.getPositionInDrawToPickACharacter()==0){
+    Optional<Character> whenCharacterContainsBishopCondottiereAssassin() {
+        if (this.getPositionInDrawToPickACharacter() == 0) {
             return Optional.of(new Condottiere());
-        } else if (this.getPositionInDrawToPickACharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter() == 1) {
             return Optional.of(new Assassin());
         }
         return Optional.of(new Condottiere());
@@ -158,12 +159,13 @@ public class RichardBot extends SmartBot {
 
     /**
      * Cas où le condottière n'est pas présente dans la liste des perso disponibles
+     *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterDoesNotContainCondottiere(){
-        if(this.getPositionInDrawToPickACharacter()==0){
+    Optional<Character> whenCharacterDoesNotContainCondottiere() {
+        if (this.getPositionInDrawToPickACharacter() == 0) {
             return Optional.of(new Assassin());
-        } else if (this.getPositionInDrawToPickACharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter() == 1) {
             return Optional.of(new Magician());
         }
         return Optional.of(new Assassin());
@@ -171,12 +173,13 @@ public class RichardBot extends SmartBot {
 
     /**
      * Cas où l'évêque n'est pas présente dans la liste des perso disponibles
+     *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterDoesNotContainBishop(){
-        if(this.getPositionInDrawToPickACharacter()==0){
+    Optional<Character> whenCharacterDoesNotContainBishop() {
+        if (this.getPositionInDrawToPickACharacter() == 0) {
             return Optional.of(new Assassin());
-        } else if (this.getPositionInDrawToPickACharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter() == 1) {
             return Optional.of(new Condottiere());
         }
         return Optional.of(new Assassin());
@@ -184,12 +187,13 @@ public class RichardBot extends SmartBot {
 
     /**
      * Cas où l'assassin n'est pas présente dans la liste des perso disponibles
+     *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterDoesNotContainAssassin(){
-        if(this.getPositionInDrawToPickACharacter()==0){
+    Optional<Character> whenCharacterDoesNotContainAssassin() {
+        if (this.getPositionInDrawToPickACharacter() == 0) {
             return Optional.of(new Condottiere());
-        } else if (this.getPositionInDrawToPickACharacter()==1){
+        } else if (this.getPositionInDrawToPickACharacter() == 1) {
             return Optional.of(new Bishop());
         }
         return Optional.of(new Condottiere());
@@ -197,13 +201,13 @@ public class RichardBot extends SmartBot {
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
-        Optional<Character> optionalCharacter ;
-        Optional<Opponent> optionalOpponent=getOpponents().stream().filter(opponent -> opponent.getCitadel().size()==7).findFirst();
-        if(optionalOpponent.isPresent()){
-           optionalCharacter=chooseCharacterWHenOpponentHasOneDistrictLeft(characters,optionalOpponent.get());
-           if(optionalCharacter.isPresent() && characters.contains(optionalCharacter.get())){
-               return optionalCharacter.get();
-           }
+        Optional<Character> optionalCharacter;
+        Optional<Opponent> optionalOpponent = getOpponents().stream().filter(opponent -> opponent.getCitadel().size() == 7).findFirst();
+        if (optionalOpponent.isPresent()) {
+            optionalCharacter = chooseCharacterWhenOpponentHasOneDistrictLeft(characters, optionalOpponent.get());
+            if (optionalCharacter.isPresent() && characters.contains(optionalCharacter.get())) {
+                return optionalCharacter.get();
+            }
         }
         List<Character> orderedCharacters = ordinateCharacters(characters);
         optionalCharacter = shouldChooseBecauseLastCardToBuy(characters);
