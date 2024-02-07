@@ -9,7 +9,6 @@ public class PlayerStatistics {
     private int gamesLost;
     private int totalScore;
     private double averageScore;
-    private double winningPercentage;
     private final Map<Integer, Integer> placementCounts;
 
     public PlayerStatistics() {
