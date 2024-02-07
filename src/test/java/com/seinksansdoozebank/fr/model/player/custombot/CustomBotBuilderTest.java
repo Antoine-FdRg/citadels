@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-class CustomBuilderBotTest {
+class CustomBotBuilderTest {
 
     CustomBotBuilder customBotBuilder;
     IPickingStrategy mockPickingStrategy;
