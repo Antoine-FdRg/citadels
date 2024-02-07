@@ -8,8 +8,8 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 import com.seinksansdoozebank.fr.view.IView;
 
-import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -300,11 +300,17 @@ public class RichardBot extends SmartBot {
     public MagicianTarget useEffectMagician() {
         Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this);
         if (leadingOpponent.isAboutToWin()) {
+            this.view.displayPlayerUseMagicianEffect(this, leadingOpponent);
             return new MagicianTarget(leadingOpponent, null);
         }
         Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream()
                 .max(Comparator.comparingInt(Opponent::getHandSize));
-        return new MagicianTarget(playerWithMostDistricts.orElse(null), null);
+
+        if (playerWithMostDistricts.isPresent()) {
+            this.view.displayPlayerUseMagicianEffect(this, playerWithMostDistricts.get());
+            return new MagicianTarget(playerWithMostDistricts.get(), null);
+        }
+        return null;
     }
 
 

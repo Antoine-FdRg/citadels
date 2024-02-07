@@ -312,7 +312,7 @@ class CliTest {
         Player targetPlayer = spy(new RandomBot(10, new Deck(), view));
         view.displayPlayerUseMagicianEffect(player, targetPlayer);
 
-        String expectedOutput = "Le " + player + " utilise le magicien pour échanger sa main avec celle du " + targetPlayer + ".";
+        String expectedOutput = player + " utilise le magicien pour échanger sa main avec celle du " + targetPlayer + ".";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
