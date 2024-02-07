@@ -86,10 +86,7 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
-    public static Game createGameOfAllTypeOfBot(IView view, int nbPlayers) {
-        if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
-            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
-        }
+    public static Game createGameOfAllTypeOfBot(IView view) {
         GameBuilder gameBuilder = new GameBuilder(view, new Deck());
         gameBuilder.addRandomBot();
         gameBuilder.addSmartBot();

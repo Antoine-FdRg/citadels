@@ -644,4 +644,8 @@ public abstract class Player implements Opponent {
     public boolean isAboutToWin() {
         return this.getCitadel().size() == 7;
     }
+
+    public void setRandom(Random mockRandom) {
+        this.random = mockRandom;
+    }
 }

@@ -18,6 +18,14 @@ public class BuilderBot extends SmartBot {
         super(nbGold, deck, view);
     }
 
+    /**
+     * Chooses a character based on the current state of the player's citadel and hand.
+     * Prioritizes characters related to Nobility, Commerce and Crafts, and Architect roles.
+     * If no specific criteria are met, makes a random choice.
+     *
+     * @param characters The available characters to choose from.
+     * @return The chosen character.
+     */
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
         Character choice = null;
@@ -40,11 +48,11 @@ public class BuilderBot extends SmartBot {
     }
 
     /**
-     * Choose q districtType of Nobility or Commerce and Crafts
-     * If none of the above, choose the cheapest one
+     * Chooses a district card to keep from a list of picked cards.
+     * Prioritizes Nobility and Commerce and Crafts cards. If none are found, chooses the cheapest card.
      *
-     * @param pickedCards the cards picked
-     * @return the card to keep
+     * @param pickedCards The list of cards to choose from.
+     * @return The chosen card to keep.
      */
     @Override
     protected Card keepOneDiscardOthers(List<Card> pickedCards) {
@@ -66,6 +74,12 @@ public class BuilderBot extends SmartBot {
     }
 
 
+    /**
+     * Chooses a card to play based on the current character and available cards in hand.
+     * Prioritizes playing cards matching the character's target district type or the most expensive card otherwise.
+     *
+     * @return An optional containing the chosen card to play.
+     */
     @Override
     protected Optional<Card> chooseCard() {
         List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(d -> !this.getCitadel().contains(d)).toList();
@@ -85,24 +99,14 @@ public class BuilderBot extends SmartBot {
         }
     }
 
+    /**
+     * Gets the most expensive card from a list of cards.
+     *
+     * @param notAlreadyPlayedCardList The list of cards to choose from.
+     * @return An optional containing the most expensive card.
+     */
     protected Optional<Card> getMostExpensiveCard(List<Card> notAlreadyPlayedCardList) {
         return notAlreadyPlayedCardList.stream().max(Comparator.comparing(card -> card.getDistrict().getCost()));
-    }
-
-    @Override
-    protected void useEffectOfTheArchitect() {
-        int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
-        int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();
-        if (this.getCitadel().size() >= 5 && this.getHand().size() >= 3 && getPriceOfNumbersOfCheaperCards(numberOfCardsNeededToFinishTheGame) >= this.getNbGold()) {
-            this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
-        } else {
-            Optional<Card> prestigeCard = this.getHand().stream().filter(card -> card.getDistrict().getDistrictType().equals(DistrictType.PRESTIGE) && canPlayCard(card)).findFirst();
-            if (prestigeCard.isPresent()) {
-                buyACardAndAddItToCitadel(prestigeCard.get());
-            } else {
-                this.buyXCardsAndAddThemToCitadel(nbDistrictsCanBeBuild);
-            }
-        }
     }
 
     @Override

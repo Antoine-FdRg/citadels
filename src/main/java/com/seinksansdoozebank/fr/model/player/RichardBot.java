@@ -316,7 +316,7 @@ public class RichardBot extends SmartBot {
 
     @Override
     public String toString() {
-        return "Le bot richard " + this.id;
+        return "Le bot Richard " + this.id;
     }
 
 }

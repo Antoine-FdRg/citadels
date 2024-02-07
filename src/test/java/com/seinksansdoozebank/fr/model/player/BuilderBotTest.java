@@ -20,6 +20,7 @@ import org.mockito.internal.stubbing.answers.DoesNothing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,6 +73,32 @@ class BuilderBotTest {
 
         assertEquals(Role.MERCHANT, chosenCharacter.getRole());
     }
+
+    @Test
+    void chooseCharacterWithAllTypeOfDistrictsShouldGetKing() {
+        List<Character> characters = new ArrayList<>(List.of(new King(), new Merchant(), new Architect()));
+        when(spyBuilderBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PALACE), new Card(District.TAVERN), new Card(District.WATCH_TOWER), new Card(District.PORT))));
+
+        Character chosenCharacter = spyBuilderBot.chooseCharacter(characters);
+
+        assertEquals(Role.KING, chosenCharacter.getRole());
+    }
+
+
+    @Test
+    void chooseCharacterWithoutAnyCriteria() {
+        List<Character> characters = new ArrayList<>(List.of(new King(), new Merchant(), new Architect()));
+
+        when(spyBuilderBot.getNbGold()).thenReturn(0);
+        Random mockRandom = mock(Random.class);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+        spyBuilderBot.setRandom(mockRandom);
+
+        Character chosenCharacter = spyBuilderBot.chooseCharacter(characters);
+
+        assertEquals(Role.KING, chosenCharacter.getRole());
+    }
+
 
     @Test
     void chooseCharacterWithArchitectCriteria() {
@@ -143,47 +170,5 @@ class BuilderBotTest {
         Optional<Card> chosenCard = spyBuilderBot.chooseCard();
 
         assertEquals(tradeCard, chosenCard.orElse(null));
-    }
-
-    @Test
-    void useEffectOfTheArchitectWithEnoughCardsAndGold() {
-        BuilderBot spyBuilderBot = spy(new BuilderBot(2, deck, view));
-        when(spyBuilderBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.MANOR), new Card(District.TEMPLE))));
-        when(spyBuilderBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.MANOR), new Card(District.TEMPLE))));
-        when(spyBuilderBot.getCharacter()).thenReturn(new Architect());
-
-        spyBuilderBot.useEffectOfTheArchitect();
-
-        verify(spyBuilderBot, times(1)).buyXCardsAndAddThemToCitadel(anyInt());
-    }
-
-    @Test
-    void useEffectOfTheArchitectWithPrestigeCard() {
-        Bank bank = Bank.getInstance();
-        BuilderBot spyBuilderBot = spy(new BuilderBot(0, deck, view));
-        when(spyBuilderBot.getHand()).thenReturn(new ArrayList<>(
-                List.of(new Card(District.LABORATORY), new Card(District.DONJON), new Card(District.PORT_FOR_DRAGONS))));
-        when(spyBuilderBot.getCharacter()).thenReturn(new Architect());
-        when(spyBuilderBot.getCitadel()).thenReturn(new ArrayList<>(
-                List.of(new Card(District.PALACE), new Card(District.TAVERN), new Card(District.MARKET_PLACE))));
-        when(spyBuilderBot.getNbGold()).thenReturn(bank.pickXCoin(3));
-        // When calling returnGoldBank(int) set the parameter to 0
-        doNothing().when(spyBuilderBot).returnGoldToBank(0);
-
-        spyBuilderBot.useEffectOfTheArchitect();
-
-        verify(spyBuilderBot, times(1)).buyACardAndAddItToCitadel(any());
-    }
-
-    @Test
-    void useEffectOfTheArchitectWithoutEnoughCardsAndGold() {
-        BuilderBot spyBuilderBot = spy(new BuilderBot(0, deck, view));
-        when(spyBuilderBot.getCharacter()).thenReturn(new Architect());
-        when(spyBuilderBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.MANOR), new Card(District.TEMPLE))));
-        when(spyBuilderBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PALACE), new Card(District.TAVERN), new Card(District.MARKET_PLACE), new Card(District.WATCH_TOWER), new Card(District.PORT))));
-
-        spyBuilderBot.useEffectOfTheArchitect();
-
-        verify(spyBuilderBot, times(1)).buyXCardsAndAddThemToCitadel(anyInt());
     }
 }
