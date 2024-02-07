@@ -192,6 +192,13 @@ public class Cli implements IView {
     }
 
     @Override
+    public void displayGoldCollectedFromMerchant(Player player) {
+        CustomLogger.log(Level.INFO, "{0} pioche 1 pièce d''or en début de tour car c'est un marchand.", player);
+    }
+
+
+
+    @Override
     public void displayGameFinished() {
         CustomLogger.log(Level.INFO, "\n\n" + ANSI_DEFAULT_STYLE_START + "### La partie est terminée ! ###" + ANSI_DEFAULT_STYLE_END);
     }
