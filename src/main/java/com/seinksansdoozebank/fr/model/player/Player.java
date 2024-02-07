@@ -255,6 +255,9 @@ public abstract class Player implements Opponent {
         if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
             int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDistrictType();
+            if(this.getCharacter().getRole()==Role.MERCHANT){
+                view.displayGoldCollectedFromMerchant(this);
+            }
             if (this.getNbGold() - nbGoldSave > 0)
                 this.view.displayGoldCollectedFromDistrictType(this, this.getNbGold() - nbGoldSave, commonCharacter.getTarget());
         }
@@ -354,7 +357,6 @@ public abstract class Player implements Opponent {
     public final void pickGold(int nbOfGold) {
         int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
         if (nbPickedGold > 0) {
-            view.displayPlayerPicksGold(this, nbPickedGold);
             this.nbGold += nbPickedGold;
         }
     }
