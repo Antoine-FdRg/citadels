@@ -164,8 +164,8 @@ public class Game {
     protected void playersChooseCharacters() {
         List<Opponent> opponentsWhichHasChosenCharacter = new ArrayList<>();
         for (Player player : players) {
+            player.setRankToPickCharacter(players.indexOf(player));
             player.setOpponentsWhichHasChosenCharacterBefore(opponentsWhichHasChosenCharacter);
-            player.setRankToPickCharacter(player.getCharacter().getRole().ordinal());
             availableCharacters.remove(player.chooseCharacter(availableCharacters));
             opponentsWhichHasChosenCharacter.add(player);
         }
