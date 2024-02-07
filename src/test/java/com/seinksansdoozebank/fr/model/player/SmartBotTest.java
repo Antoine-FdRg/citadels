@@ -357,7 +357,7 @@ class SmartBotTest {
     @Test
     void useEffectTestCondottiereWithOpponents() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        Player opponent = spy(new SmartBot(10, deck, view));
+        Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
         when(opponent.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE)));
         opponent.reveal();

@@ -105,7 +105,7 @@ public class GameBuilder {
 
     public GameBuilder addOpportunistBot() {
         checkNbPlayers();
-        playerList.add(new OpportunistBot(Bank.getInstance().pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view));
+        playerList.add(new OpportunistBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
