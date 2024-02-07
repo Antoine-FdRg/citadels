@@ -40,14 +40,17 @@ public class PlayerStatistics {
     }
 
     public void setTotalGames(int totalGames) {
+        if (totalGames < 0) return;
         this.totalGames += totalGames;
     }
 
     public void setGamesWon(int gamesWon) {
+        if (gamesWon < 0) return;
         this.gamesWon += gamesWon;
     }
 
     public void setGamesLost(int gamesLost) {
+        if (gamesLost < 0) return;
         this.gamesLost += gamesLost;
     }
 
@@ -56,6 +59,7 @@ public class PlayerStatistics {
     }
 
     public void setAverageScore(double averageScore) {
+        if (averageScore < 0) return;
         this.averageScore = averageScore;
     }
 
@@ -80,6 +84,7 @@ public class PlayerStatistics {
     }
 
     public void addScore(int score) {
+        if (score < 0) return;
         totalScore += score;
     }
 
@@ -88,6 +93,7 @@ public class PlayerStatistics {
     }
 
     public void recordPlacement(int placement) {
+        if (placement < 1 || placement > 6) return;
         placementCounts.put(placement, placementCounts.getOrDefault(placement, 0) + 1);
     }
 
