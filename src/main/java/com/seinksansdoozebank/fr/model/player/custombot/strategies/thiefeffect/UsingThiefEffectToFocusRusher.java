@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 
@@ -19,18 +18,18 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
     private static final Random random = new Random();
 
     @Override
-    public void apply(Player player, Thief thief) {
+    public Character apply(Player player) {
         List<Character> characters = player.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
                 !character.isDead()).toList();
         if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
-            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters));
+            return StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters);
         } else if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
-            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters));
+            return StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters);
         } else if (StrategyUtils.isRoleInCharacterList(Role.KING, characters)) {
-            thief.useEffect(StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters));
+            return StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters);
         } else { //random
-            thief.useEffect(characters.get(random.nextInt(characters.size())));
+            return characters.get(random.nextInt(characters.size()));
         }
     }
 

@@ -205,9 +205,8 @@ class RandomBotTest {
         opponent.reveal();
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
-        spyRandomBot.useEffect();
-        verify(spyRandomBot, times(1)).useEffect();
-        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+        spyRandomBot.getCharacter().applyEffect();
+        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
     }
 
     @Test
@@ -227,9 +226,8 @@ class RandomBotTest {
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         int nbGold = spyRandomBot.getNbGold();
-        spyRandomBot.useEffect();
-        verify(spyRandomBot, times(1)).useEffect();
-        verify(spyRandomBot, times(1)).useEffectCondottiere(any(Condottiere.class));
+        spyRandomBot.getCharacter().applyEffect();
+        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
         assertEquals(nbGold, spyRandomBot.getNbGold());
     }
 
@@ -271,7 +269,7 @@ class RandomBotTest {
         player.chooseCharacter(new ArrayList<>(List.of(bishop)));
         when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(bishop));
 
-        spyRandomBot.useEffect();
+        spyRandomBot.getCharacter().applyEffect();
 
         verify(view, times(1)).displayPlayerUseThiefEffect(spyRandomBot);
         assertEquals(spyRandomBot, bishop.getSavedThief());
@@ -292,7 +290,7 @@ class RandomBotTest {
         when(spyRandomBot.getCharacter()).thenReturn(thief);
         when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(assassin));
 
-        spyRandomBot.useEffect();
+        spyRandomBot.getCharacter().applyEffect();
 
         verify(view, times(0)).displayPlayerUseThiefEffect(spyRandomBot);
         assertNull(assassin.getSavedThief());

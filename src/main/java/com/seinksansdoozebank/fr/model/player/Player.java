@@ -7,11 +7,9 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
@@ -256,7 +254,7 @@ public abstract class Player implements Opponent {
     /**
      * Effect of architect character (pick 2 cards)
      */
-    protected void useEffectArchitectPickCards() {
+    public void useEffectArchitect() {
         int i;
         for (i = 0; i < 2; i++) {
             Optional<Card> cardPick = this.deck.pick();
@@ -267,27 +265,27 @@ public abstract class Player implements Opponent {
         view.displayPlayerPickCards(this, i);
     }
 
-    abstract void useEffectMagician(Magician magician);
+    public abstract MagicianTarget useEffectMagician();
 
-    abstract void useEffectAssassin(Assassin assassin);
+    public abstract Character useEffectAssassin();
 
     abstract Character chooseAssassinTarget();
 
-    abstract void useEffectCondottiere(Condottiere condottiere);
+    public abstract CondottiereTarget chooseCondottiereTarget();
 
     abstract Optional<Character> chooseThiefTarget();
 
     /**
      * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
      *
-     * @param thief the thief
      */
-    protected void useEffectThief(Thief thief) {
+    public Character useEffectThief() {
         Optional<Character> victim = this.chooseThiefTarget();
-        victim.ifPresent(target -> {
-            thief.useEffect(target);
+        if (victim.isPresent()) {
             view.displayPlayerUseThiefEffect(this);
-        });
+            return victim.get();
+        }
+        return null;
     }
 
     protected boolean hasACardToPlay() {

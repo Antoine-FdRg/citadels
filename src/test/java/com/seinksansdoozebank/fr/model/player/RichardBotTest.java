@@ -603,7 +603,7 @@ class RichardBotTest {
                         new Card(District.CASTLE),
                         new Card(District.CASTLE)
                 )));
-        richardBot.useEffectMagician(magician);
+        richardBot.getCharacter().applyEffect();
         verify(opponent).switchHandWith(richardBot);
         assertTrue(richardBot.getHand().contains(templeCard));
         assertFalse(richardBot.getHand().contains(churchCard)); // check that we didn't switch with opponent2
@@ -636,7 +636,7 @@ class RichardBotTest {
                         new Card(District.CASTLE),
                         new Card(District.CASTLE)
                 )));
-        richardBot.useEffectMagician(magician);
+        richardBot.getCharacter().applyEffect();
         verify(opponent2).switchHandWith(richardBot);
         assertTrue(richardBot.getHand().contains(templeCard));
         assertTrue(richardBot.getHand().contains(churchCard));

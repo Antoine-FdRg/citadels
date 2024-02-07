@@ -12,18 +12,31 @@ public class Condottiere extends CommonCharacter {
         super(Role.CONDOTTIERE, DistrictType.SOLDIERLY);
     }
 
+    @Override
+    public void applyEffect() {
+        CondottiereTarget condottiereTarget = this.getPlayer().chooseCondottiereTarget();
+        if (condottiereTarget != null) {
+            this.useEffect(condottiereTarget);
+        }
+    }
+
     /**
      * The condottiere can choose to destroy a district of another player
      * Paying the cost of the district to the bank -1
      *
-     * @param opponent the opponent to destroy the district
+     * @param condottiereTarget the opponent to destroy the district
      *                 (the opponent must have a character revealed)
      *                 (the opponent can't be the bishop)
      *                 (the opponent can't have a complete citadel)
      *                 (the opponent can't destroy the donjon)
-     * @param district the district to destroy
+     *          district the district to destroy
      */
-    public void useEffect(Opponent opponent, District district) {
+    public void useEffect(CondottiereTarget condottiereTarget) {
+        if (condottiereTarget == null) {
+            throw new IllegalArgumentException("The player must choose a target");
+        }
+        Opponent opponent = condottiereTarget.opponent();
+        District district = condottiereTarget.district();
         if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }

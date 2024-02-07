@@ -8,4 +8,9 @@ public class Bishop extends CommonCharacter {
     public Bishop() {
         super(Role.BISHOP, DistrictType.RELIGION);
     }
+
+    @Override
+    public void applyEffect() {
+        // No effect
+    }
 }
