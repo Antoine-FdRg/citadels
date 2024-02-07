@@ -6,7 +6,6 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -134,27 +133,43 @@ public class SmartBot extends Player {
 
     @Override
     public Character chooseCharacterImpl(List<Character> characters) {
-        if (this.getHand().size() <= 1) {
+        Character characterChoosen = null;
+        Role roleToAvoid = null;
+        if (this.getNbCharacterChosenInARow() >= Player.NB_MAX_CHARACTER_CHOSEN_IN_A_ROW) {
+            roleToAvoid = this.getLastCharacterChosen().getRole();
+        }
+        if (this.getHand().size() <= 1 && Role.MAGICIAN != roleToAvoid) {
             Optional<Character> optionalCharacter = characters.stream().filter(c -> c.getRole() == Role.MAGICIAN).findFirst();
             if (optionalCharacter.isPresent()) {
-                return optionalCharacter.get();
+                characterChoosen = optionalCharacter.get();
             }
         }
         // Choose the character by getting the frequency of each districtType in the citadel
         // and choosing the districtType with the highest frequency for the character
         List<DistrictType> districtTypeFrequencyList = getDistrictTypeFrequencyList(this.getCitadel());
-        if (!districtTypeFrequencyList.isEmpty()) {
+        if (!districtTypeFrequencyList.isEmpty() && characterChoosen == null) {
             // Choose the character with the mostOwnedDistrictType
             for (DistrictType districtType : districtTypeFrequencyList) {
                 for (Character character : characters) {
+                    if (character.getRole() == roleToAvoid) {
+                        continue;
+                    }
                     if (character instanceof CommonCharacter commonCharacter && (commonCharacter.getTarget() == districtType)) {
-                        return character;
+                        characterChoosen = character;
                     }
                 }
             }
         }
         // If no character has the mostOwnedDistrictType, choose a random character
-        return characters.get(random.nextInt(characters.size()));
+        if (characterChoosen == null) {
+            characterChoosen = characters.get(random.nextInt(characters.size()));
+        }
+        if (characterChoosen.equals(this.getLastCharacterChosen())) {
+            this.setNbCharacterChosenInARow(this.getNbCharacterChosenInARow() + 1);
+        } else {
+            this.setNbCharacterChosenInARow(1);
+        }
+        return characterChoosen;
     }
 
     /**
@@ -175,10 +190,9 @@ public class SmartBot extends Player {
 
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget() {
+    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
         // Get the player with the most districts
-        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
-                .filter(opponent -> !(opponent.getOpponentCharacter() instanceof Bishop)) // can't destroy the districts of the bishop
+        Optional<Opponent> playerWithMostDistricts = opponentsFocusable.stream()
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
         if (playerWithMostDistricts.isEmpty()) {
             return null;
@@ -191,11 +205,7 @@ public class SmartBot extends Player {
         // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
-                try {
-                    return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
-                } catch (IllegalArgumentException e) {
-                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");
-                }
+                return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
             }
         }
         return null;
@@ -372,7 +382,7 @@ public class SmartBot extends Player {
     protected Optional<Character> chooseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
-                !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
+                        !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
         if (victim.isEmpty()) {
             victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();

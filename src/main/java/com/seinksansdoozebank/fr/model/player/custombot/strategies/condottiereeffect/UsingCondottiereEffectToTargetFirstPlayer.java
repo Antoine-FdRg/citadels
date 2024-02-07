@@ -9,6 +9,7 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.StrategyUtils;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,8 +18,8 @@ import java.util.Optional;
 public class UsingCondottiereEffectToTargetFirstPlayer implements IUsingCondottiereEffectStrategy {
 
     @Override
-    public CondottiereTarget apply(Player player) {
-        Opponent targetOpponent = StrategyUtils.getLeadingOpponent(player);
+    public CondottiereTarget apply(Player player, List<Opponent> opponents) {
+        Opponent targetOpponent = StrategyUtils.getLeadingOpponent(opponents);
         if ((targetOpponent.getOpponentCharacter() != null && targetOpponent.getOpponentCharacter().getRole() == Role.BISHOP) || targetOpponent.nbDistrictsInCitadel() >= 8) {
             return null;
         }

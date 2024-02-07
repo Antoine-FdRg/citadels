@@ -3,7 +3,6 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.player.Opponent;
-import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.Comparator;
 import java.util.List;
@@ -22,9 +21,8 @@ public class StrategyUtils {
         return characters.stream().filter(character -> character.getRole().equals(role)).findFirst().orElseThrow();
     }
 
-    public static Opponent getLeadingOpponent(Player player) {
-        Optional<Opponent> optionalOpponent = player.getOpponents().stream()
-                .filter(o -> !o.equals(player))
+    public static Opponent getLeadingOpponent(List<Opponent> opponents) {
+        Optional<Opponent> optionalOpponent = opponents.stream()
                 .max(Comparator.comparingInt(Opponent::nbDistrictsInCitadel));
         if (optionalOpponent.isPresent()) {
             return optionalOpponent.get();

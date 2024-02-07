@@ -348,10 +348,22 @@ class SmartBotTest {
     }
 
     @Test
-    void useEffectTestCondottiere() {
+    void useEffectTestCondottiereWithEmptyOpponents() {
         spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         spySmartBot.getCharacter().applyEffect();
-        verify(spySmartBot, times(1)).chooseCondottiereTarget();
+        verify(spySmartBot, times(0)).chooseCondottiereTarget(any());
+    }
+
+    @Test
+    void useEffectTestCondottiereWithOpponents() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        Player opponent = spy(new SmartBot(10, deck, view));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
+        when(opponent.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE)));
+        opponent.reveal();
+        when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
+        spySmartBot.getCharacter().applyEffect();
+        verify(spySmartBot, times(1)).chooseCondottiereTarget(any());
     }
 
     @Test
@@ -769,7 +781,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.chooseCondottiereTarget();
+        spySmartBot.chooseCondottiereTarget(Condottiere.getOpponentsFocusableForCondottiere(List.of(opponent)));
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }

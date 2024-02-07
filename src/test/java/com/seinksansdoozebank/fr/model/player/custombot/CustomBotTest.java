@@ -9,7 +9,6 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
-import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -124,24 +123,22 @@ class CustomBotTest {
     @Test
     void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.chooseCondottiereTarget();
-        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot);
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, List.of(mockOpponent));
     }
 
     @Test
     void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
         spyCustomBot.usingCondottiereEffectStrategy = null;
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.chooseCondottiereTarget();
-        verify(spyCustomBot).randomUseCondottiereEffect();
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(spyCustomBot).randomUseCondottiereEffect(List.of(mockOpponent));
     }
 
     @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
-        Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
+        CustomBot customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
