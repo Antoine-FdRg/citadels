@@ -30,7 +30,7 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {                // si le condottiere est disponible
             return StrategyUtils.getCharacterFromRoleInLIst(Role.CONDOTTIERE, characters);      // on le prend pour détruire un quartier du leadingOpponent
         }
-        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(player);                    // on récupère le leadingOpponent pour regarder som nombre de pièces
+        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(player.getOpponents());                    // on récupère le leadingOpponent pour regarder som nombre de pièces
         if (leadingOpponent.getNbGold() > NB_GOLD_MIN_FOR_MANY_GOLD) {                          // s'il a beaucoup de pièces
             if (StrategyUtils.isRoleInCharacterList(Role.THIEF, characters)) {                  // et si le voleur est disponible
                 return StrategyUtils.getCharacterFromRoleInLIst(Role.THIEF, characters);        // on le prend pour le voler (car en ayant beaucoup de pièces, il va probablement construire)

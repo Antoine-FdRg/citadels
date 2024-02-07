@@ -74,7 +74,7 @@ public class RichardBot extends SmartBot {
      */
     boolean thinkCondottiereHasBeenChosenByTheLeadingOpponent() {
         // if leadingOpponent is about to win, he will choose Condottiere or Bishop, but the bishop is not killable
-        return StrategyUtils.getLeadingOpponent(this).isAboutToWin();
+        return StrategyUtils.getLeadingOpponent(this.getOpponents()).isAboutToWin();
     }
 
     /**
@@ -298,7 +298,7 @@ public class RichardBot extends SmartBot {
      */
     @Override
     public MagicianTarget useEffectMagician() {
-        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this);
+        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(this.getOpponents());
         if (leadingOpponent.isAboutToWin()) {
             this.view.displayPlayerUseMagicianEffect(this, leadingOpponent);
             return new MagicianTarget(leadingOpponent, null);

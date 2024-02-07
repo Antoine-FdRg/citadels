@@ -206,7 +206,7 @@ class RandomBotTest {
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         spyRandomBot.getCharacter().applyEffect();
-        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
+        verify(spyRandomBot, times(1)).chooseCondottiereTarget(any());
     }
 
     @Test
@@ -227,7 +227,7 @@ class RandomBotTest {
         // Test the useEffect method
         int nbGold = spyRandomBot.getNbGold();
         spyRandomBot.getCharacter().applyEffect();
-        verify(spyRandomBot, times(1)).chooseCondottiereTarget();
+        verify(spyRandomBot, times(0)).chooseCondottiereTarget(any());
         assertEquals(nbGold, spyRandomBot.getNbGold());
     }
 

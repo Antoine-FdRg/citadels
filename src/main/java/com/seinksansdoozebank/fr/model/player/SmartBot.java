@@ -6,7 +6,6 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -175,10 +174,9 @@ public class SmartBot extends Player {
 
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget() {
+    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
         // Get the player with the most districts
-        Optional<Opponent> playerWithMostDistricts = this.getOpponents().stream() // get players is not possible because it will create a link between model and controller
-                .filter(opponent -> !(opponent.getOpponentCharacter() instanceof Bishop)) // can't destroy the districts of the bishop
+        Optional<Opponent> playerWithMostDistricts = opponentsFocusable.stream()
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
         if (playerWithMostDistricts.isEmpty()) {
             return null;
@@ -191,11 +189,7 @@ public class SmartBot extends Player {
         // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
-                try {
-                    return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
-                } catch (IllegalArgumentException e) {
-                    view.displayPlayerStrategy(this, this + " ne peut pas détruire le quartier " + card.getDistrict().getName() + " du joueur " + playerWithMostDistricts.get() + ", il passe donc à la carte suivante");
-                }
+                return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
             }
         }
         return null;
@@ -372,7 +366,7 @@ public class SmartBot extends Player {
     protected Optional<Character> chooseThiefTarget() {
         Optional<Character> victim = this.getAvailableCharacters().stream().filter(
                 character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
-                !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
+                        !character.isDead() && (character.getRole() == Role.ARCHITECT || character.getRole() == Role.MERCHANT)).findFirst();
         if (victim.isEmpty()) {
             victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN && character.getRole() != Role.THIEF &&
                     !character.isDead()).findFirst();

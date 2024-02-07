@@ -124,18 +124,16 @@ class CustomBotTest {
     @Test
     void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.chooseCondottiereTarget();
-        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot);
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, List.of(mockOpponent));
     }
 
     @Test
     void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
         spyCustomBot.usingCondottiereEffectStrategy = null;
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.chooseCondottiereTarget();
-        verify(spyCustomBot).randomUseCondottiereEffect();
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(spyCustomBot).randomUseCondottiereEffect(List.of(mockOpponent));
     }
 
     @Test

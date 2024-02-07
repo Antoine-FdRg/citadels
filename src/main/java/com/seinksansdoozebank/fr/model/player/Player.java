@@ -271,7 +271,7 @@ public abstract class Player implements Opponent {
 
     abstract Character chooseAssassinTarget();
 
-    public abstract CondottiereTarget chooseCondottiereTarget();
+    public abstract CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable);
 
     abstract Optional<Character> chooseThiefTarget();
 
@@ -644,4 +644,6 @@ public abstract class Player implements Opponent {
     public boolean isAboutToWin() {
         return this.getCitadel().size() == 7;
     }
+
+
 }

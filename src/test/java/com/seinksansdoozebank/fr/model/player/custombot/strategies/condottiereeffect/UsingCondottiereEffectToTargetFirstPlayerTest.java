@@ -39,8 +39,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
 
     @Test
     void applyWithNotOpponentShouldThrowExceptionAndNotUseCondottiereEffect() {
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-        assertThrows(IllegalStateException.class, () -> strategy.apply(mockPlayer));
+        assertThrows(IllegalStateException.class, () -> strategy.apply(mockPlayer, opponentList));
         verify(spyCondottiere, never()).useEffect(any());
     }
 
@@ -53,9 +52,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Opponent mockOpponent2 = mock(Opponent.class);
         when(mockOpponent2.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNull(strategy.apply(mockPlayer));
+        assertNull(strategy.apply(mockPlayer, opponentList));
     }
 
     //with a dead bishop
@@ -70,9 +67,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Opponent mockOpponent2 = mock(Opponent.class);
         when(mockOpponent2.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNotNull(strategy.apply(mockPlayer));
+        assertNotNull(strategy.apply(mockPlayer, opponentList));
     }
 
     @Test
@@ -84,9 +79,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         when(mockOpponent2.getOpponentCharacter()).thenReturn(new King());
         when(mockOpponent2.nbDistrictsInCitadel()).thenReturn(8);
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNull(strategy.apply(mockPlayer));
+        assertNull(strategy.apply(mockPlayer, opponentList));
     }
 
     @Test
@@ -98,9 +91,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Opponent mockOpponent2 = mock(Opponent.class);
         when(mockOpponent2.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNull(strategy.apply(mockPlayer));
+        assertNull(strategy.apply(mockPlayer, opponentList));
     }
 
     @Test
@@ -114,9 +105,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Card tooExpensiveCard = new Card(District.LIBRARY);
         when(mockOpponent2.getCitadel()).thenReturn(List.of(tooExpensiveCard));
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNull(strategy.apply(mockPlayer));
+        assertNull(strategy.apply(mockPlayer, opponentList));
     }
 
     @Test
@@ -130,9 +119,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Card donjon = new Card(District.DONJON);
         when(mockOpponent2.getCitadel()).thenReturn(List.of(donjon));
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertNull(strategy.apply(mockPlayer));
+        assertNull(strategy.apply(mockPlayer, opponentList));
     }
 
 
@@ -147,8 +134,6 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Card destroyableCard = new Card(District.TAVERN);
         when(mockOpponent2.getCitadel()).thenReturn(List.of(destroyableCard));
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getOpponents()).thenReturn(opponentList);
-
-        assertEquals(strategy.apply(mockPlayer), new CondottiereTarget(mockOpponent2, destroyableCard.getDistrict()));
+        assertEquals(strategy.apply(mockPlayer, opponentList), new CondottiereTarget(mockOpponent2, destroyableCard.getDistrict()));
     }
 }

@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
@@ -100,16 +101,16 @@ public class CustomBot extends RandomBot {
     }
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget() {
+    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
         if (usingCondottiereEffectStrategy == null) {
-            return this.randomUseCondottiereEffect();
+            return this.randomUseCondottiereEffect(opponentsFocusable);
         } else {
-            return this.usingCondottiereEffectStrategy.apply(this);
+            return this.usingCondottiereEffectStrategy.apply(this, opponentsFocusable);
         }
     }
 
-    protected CondottiereTarget randomUseCondottiereEffect() {
-        return super.chooseCondottiereTarget();
+    protected CondottiereTarget randomUseCondottiereEffect(List<Opponent> opponentsFocusable) {
+        return super.chooseCondottiereTarget(opponentsFocusable);
     }
 
     @Override
