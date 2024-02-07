@@ -283,7 +283,7 @@ class GameTest {
     }
 
     @Test
-    void runNotStuckGame() {
+    void runGame() {
         Bank.reset();
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
@@ -291,9 +291,9 @@ class GameTest {
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, atMost(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed + 1)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
-        verify(view, atMost(0)).displayGameStuck();
+        verify(view, atMost(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }

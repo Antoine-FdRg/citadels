@@ -29,4 +29,12 @@ public class Thief extends Character {
         //We set the attribute goldWillBeStolen to true.
         character.setSavedThief(this.getPlayer());
     }
+
+    @Override
+    public void applyEffect() {
+        Character target = this.getPlayer().useEffectThief();
+        if (target != null) {
+            this.useEffect(target);
+        }
+    }
 }

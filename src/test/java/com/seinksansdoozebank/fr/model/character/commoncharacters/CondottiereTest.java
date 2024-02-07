@@ -79,7 +79,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.DONJON));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.DONJON);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -99,7 +100,8 @@ class CondottiereTest {
         citadel.add(new Card(District.CORNER_SHOP));
         citadel.add(new Card(District.MANUFACTURE));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.BARRACK));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.BARRACK);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -112,7 +114,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.PORT_FOR_DRAGONS));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.PORT_FOR_DRAGONS));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.PORT_FOR_DRAGONS);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -125,7 +128,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.TAVERN));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.TAVERN));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.TAVERN);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -138,7 +142,7 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.TAVERN));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        condottiere.useEffect(otherPlayer, District.TAVERN);
+        condottiere.useEffect(new CondottiereTarget(otherPlayer, District.TAVERN));
         verify(deck, times(1)).discard(any());
     }
 }
