@@ -315,7 +315,8 @@ public abstract class Player implements Opponent {
      * @return true if the player can build the district passed in parameter, false otherwise
      */
     public final boolean canPlayCard(Card card) {
-        return card.getDistrict().getCost() <= this.getNbGold() && !this.getCitadel().contains(card) && this.getCitadel().size() < 8;
+        return card.getDistrict().getCost() <= this.getNbGold()
+                && this.getCitadel().stream().noneMatch(c -> c.getDistrict().equals(card.getDistrict()));
     }
 
     public void decreaseGold(int gold) {
