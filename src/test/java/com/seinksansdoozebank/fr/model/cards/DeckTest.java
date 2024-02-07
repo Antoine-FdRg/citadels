@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,12 +26,10 @@ class DeckTest {
 
     @Test
     void fillDeckTest() {
-
         assertEquals(65, districtList.getDeck().size());
-
+        List<District> mappedDeck = districtList.getDeck().stream().map(Card::getDistrict).toList();
         for (District district : District.values()) {
-            Card card=new Card(district);
-            assertEquals(district.getNumberOfAppearance(), Collections.frequency(districtList.getDeck(),card ));
+            assertEquals(district.getNumberOfAppearance(), Collections.frequency(mappedDeck, district));
         }
 
     }
