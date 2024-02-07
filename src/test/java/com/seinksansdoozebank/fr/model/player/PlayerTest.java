@@ -60,7 +60,7 @@ class PlayerTest {
     }
 
     @Test
-    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold3() {
+    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold() {
         IView view = mock(Cli.class);
         Player player = new RandomBot(3, deck, view);
         player.pickGold(3);
