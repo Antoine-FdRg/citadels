@@ -460,7 +460,7 @@ public abstract class Player implements Opponent {
     }
 
     @Override
-    public final void havingADistrictDestroyed(Player attacker, District targetedDistrict) {
+    public final void destroyDistrict(Player attacker, District targetedDistrict) {
         // if the targetedDistrict is in the citadel, we remove it and return the card removed
         Optional<Card> card = this.getCitadel().stream().filter(c -> c.getDistrict().equals(targetedDistrict)).findFirst();
         if (card.isPresent()) {

@@ -24,7 +24,7 @@ public interface Opponent {
 
     boolean isAboutToWin();
 
-    void havingADistrictDestroyed(Player attacker, District district);
+    void destroyDistrict(Player attacker, District district);
 
     boolean isUsingCemeteryEffect(Card card);
 

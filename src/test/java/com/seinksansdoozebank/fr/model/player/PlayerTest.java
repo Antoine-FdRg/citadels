@@ -327,14 +327,14 @@ class PlayerTest {
     void havingADistrictDestroyedWithNoDistrictInCitadelShouldThrowException() {
         Player attacker = mock(Player.class);
         when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>());
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.havingADistrictDestroyed(attacker, District.TEMPLE));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
     }
 
     @Test
     void havingADistrictDestroyedWithNoTargetedDistrictInCitadelShouldThrowException() {
         Player attacker = mock(Player.class);
         when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TAVERN), new Card(District.PORT))));
-        assertThrows(IllegalArgumentException.class, () -> spyPlayer.havingADistrictDestroyed(attacker, District.TEMPLE));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
     }
 
     @Test
@@ -343,7 +343,7 @@ class PlayerTest {
         Card temple = new Card(District.TEMPLE);
         spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
         doReturn(false).when(spyPlayer).askOpponentForCemeteryEffect(temple);
-        spyPlayer.havingADistrictDestroyed(attacker, District.TEMPLE);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
         assertFalse(spyPlayer.getCitadel().contains(temple));
         verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
         verify(deck, times(1)).discard(temple);
@@ -357,7 +357,7 @@ class PlayerTest {
         Card temple = new Card(District.TEMPLE);
         spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
         doReturn(true).when(spyPlayer).askOpponentForCemeteryEffect(temple);
-        spyPlayer.havingADistrictDestroyed(attacker, District.TEMPLE);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
         assertFalse(spyPlayer.getCitadel().contains(temple));
         verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
         verify(deck, times(0)).discard(temple);

@@ -36,7 +36,7 @@ public class Condottiere extends CommonCharacter {
         if (opponent.getCitadel().size() >= 8) {
             throw new IllegalArgumentException("The player can't destroy a district if the player has a complete citadel");
         }
-        opponent.havingADistrictDestroyed(this.getPlayer(), district);
+        opponent.destroyDistrict(this.getPlayer(), district);
         this.getPlayer().returnGoldToBank(district.getCost() - 1);
     }
 
