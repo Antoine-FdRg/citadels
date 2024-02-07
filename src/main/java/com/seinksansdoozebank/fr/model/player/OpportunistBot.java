@@ -53,8 +53,6 @@ public class OpportunistBot extends SmartBot {
     /**
      * Chooses a religious district if available; otherwise, selects the least expensive district.
      *
-     * @param joueur    The player making the choice.
-     * @param quartiers The list of available districts.
      * @return The chosen district card.
      */
     @Override
