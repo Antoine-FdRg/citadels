@@ -10,6 +10,8 @@ public interface Opponent {
 
     int getNbGold();
 
+    int getPositionInDrawToPickACharacter();
+
     int nbDistrictsInCitadel();
 
     List<Card> getCitadel();

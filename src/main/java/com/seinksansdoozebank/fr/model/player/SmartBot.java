@@ -105,7 +105,7 @@ public class SmartBot extends Player {
     @Override
     protected Optional<Card> chooseCard() {
         //Gathering districts which are not already built in player's citadel
-        List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(d -> !this.getCitadel().contains(d)).toList();
+        List<Card> notAlreadyPlayedCardList = this.getHand().stream().filter(cardHand -> this.getCitadel().stream().noneMatch(cardCitadel -> cardHand.getDistrict().equals(cardCitadel.getDistrict()))).toList();
         Optional<Card> cardToPlay;
         if (this.character instanceof CommonCharacter commonCharacter) {
             DistrictType target = commonCharacter.getTarget();

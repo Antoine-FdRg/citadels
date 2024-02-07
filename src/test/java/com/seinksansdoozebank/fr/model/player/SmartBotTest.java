@@ -490,8 +490,6 @@ class SmartBotTest {
         // Check that the magician effect is used
         verify(spySmartBot, times(1)).useEffectMagician();
         // Check that the magician have the old hand of the other player
-        System.out.println(otherPlayerHandCopy);
-        System.out.println(spySmartBot.getHand());
         assertEquals(otherPlayerHandCopy, spySmartBot.getHand());
         // Check that the other player have the old hand of the magician
         assertEquals(0, otherPlayer.getHand().size());

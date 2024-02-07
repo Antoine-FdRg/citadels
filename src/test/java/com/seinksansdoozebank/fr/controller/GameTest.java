@@ -656,4 +656,5 @@ class GameTest {
 
         assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
+
 }
