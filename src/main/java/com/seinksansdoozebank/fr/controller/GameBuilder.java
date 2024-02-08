@@ -19,6 +19,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.I
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -118,9 +119,11 @@ public class GameBuilder {
         if (playerList.size() < Game.NB_PLAYER_MIN) {
             throw new IllegalStateException("The number of players must be between " + Game.NB_PLAYER_MIN + " and " + Game.NB_PLAYER_MAX);
         }
+        Collections.shuffle(playerList);
         for (Player player : playerList) {
             List<Opponent> opponents = new ArrayList<>(playerList);
             opponents.remove(player);
+            Collections.shuffle(opponents);
             player.setOpponents(opponents);
         }
         return new Game(this.view, this.deck, this.bank, this.playerList);
