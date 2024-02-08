@@ -9,11 +9,12 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
+import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
@@ -29,25 +30,30 @@ public class Game {
     protected static final int NB_PLAYER_MIN = 4;
     private static final int NB_CARD_BY_PLAYER = 4;
     private boolean findFirstPlayerWithEightDistricts = false;
-    private final Deck deck;
+    final Deck deck;
+    final Bank bank;
+    protected List<Player> playersInInitialOrder;
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
     private List<Character> charactersInTheRound;
+    private List<Character> unusedCharacters;
     private final IView view;
     private int nbCurrentRound;
     private boolean finished;
 
-    Game(IView view, Deck deck, List<Player> playerList) {
+    protected Game(IView view, Deck deck, Bank bank, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
         }
         this.view = view;
         this.deck = deck;
-        this.players = playerList;
+        this.playersInInitialOrder = playerList;
+        this.players = new ArrayList<>(playerList);
         this.availableCharacters = new ArrayList<>();
         this.crownedPlayer = null;
         this.finished = false;
+        this.bank = bank;
     }
 
     /**
@@ -73,8 +79,8 @@ public class Game {
     protected boolean isStuck() {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
-                        .anyMatch(card -> card.getDistrict().getCost() < player.getNbGold()));
-        return deck.getDeck().isEmpty() && Bank.getInstance().getNbOfAvailableCoin() <= 0 && !aPlayerCanPlay;
+                        .anyMatch(player::canPlayCard));
+        return (deck.getDeck().isEmpty() && this.bank.getNbOfAvailableCoins() <= 0 && !aPlayerCanPlay) || this.nbCurrentRound > 1000;
     }
 
     /**
@@ -87,13 +93,10 @@ public class Game {
         for (Player player : players) {
             if (!player.getCharacter().isDead()) {
                 player.setAvailableCharacters(charactersInTheRound);
+                player.setCharactersNotInRound(unusedCharacters);
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
-                // Check if the player has the Condottiere role
-                if (player.getCharacter() instanceof Condottiere condottiere) {
-                    this.useCemeteryEffect(condottiere);
-                }
             }
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveEightDistricts(player);
@@ -129,7 +132,7 @@ public class Game {
      * player revealed himself being the king during the last round
      */
     void orderPlayerBeforeChoosingCharacter() {
-        players.sort(Comparator.comparing(Player::getId));
+        players = new ArrayList<>(playersInInitialOrder);
         if (crownedPlayer != null) {
             List<Player> orderedPlayers = new ArrayList<>();
             //récupération de l'index du roi dans la liste des joueurs
@@ -144,14 +147,20 @@ public class Game {
         }
     }
 
+
     /**
      * Ask the player to choose their characters
      */
     protected void playersChooseCharacters() {
+        List<Opponent> opponentsWhichHasChosenCharacter = new ArrayList<>();
         for (Player player : players) {
+            player.setPositionInDrawToPickACharacter(players.indexOf(player));
+            player.setOpponentsWhichHasChosenCharacterBefore(opponentsWhichHasChosenCharacter);
             availableCharacters.remove(player.chooseCharacter(availableCharacters));
+            opponentsWhichHasChosenCharacter.add(player);
         }
     }
+
 
     /**
      * Initialize the game
@@ -190,6 +199,7 @@ public class Game {
         //remove the characters that are available from the list of not mandatory characters
         notMandatoryCharacters.removeAll(availableCharacters);
         //display the characters that are not in availableCharacters
+        this.unusedCharacters = notMandatoryCharacters;
         for (Character unusedCharacter : notMandatoryCharacters) {
             view.displayUnusedCharacterInRound(unusedCharacter);
         }
@@ -212,14 +222,38 @@ public class Game {
      *
      * @return The player who win the game
      */
-    protected Player getWinner() {
-        Player bestPlayer = players.get(0);
-        for (Player currentPlayer : players) {
-            if (currentPlayer.getScore() > bestPlayer.getScore()) {
-                bestPlayer = currentPlayer;
+    public Player getWinner() {
+        this.orderPlayersByPoints();
+        return this.players.get(0);
+    }
+
+    /**
+     * Order the players by points, considering tiebreakers.
+     */
+    protected void orderPlayersByPoints() {
+        this.getPlayers().sort((player1, player2) -> {
+            // Compare by total points
+            int scoreComparaison = Integer.compare(player2.getScore(), player1.getScore());
+
+            if (scoreComparaison == 0) {
+                // If points are tied, compare by the number of districts in the citadel
+                int citadelComparaison = Integer.compare(player2.getCitadel().size(), player1.getCitadel().size());
+
+                if (citadelComparaison == 0) {
+                    // If districts are tied, compare by the total points of all districts
+                    return Integer.compare(
+                            player2.getCitadel().stream().mapToInt(
+                                    card -> card.getDistrict().getCost()
+                            ).sum(),
+                            player1.getCitadel().stream().mapToInt(
+                                    card -> card.getDistrict().getCost()
+                            ).sum()
+                    );
+                }
+                return citadelComparaison;
             }
-        }
-        return bestPlayer;
+            return scoreComparaison;
+        });
     }
 
     /**
@@ -324,37 +358,7 @@ public class Game {
         }
     }
 
-    /**
-     * This method is used to use the effect of the cemetery
-     *
-     * @param condottiere the condottiere who destroyed a district
-     */
-    public void useCemeteryEffect(Condottiere condottiere) {
-        // Get the district destroyed by the condottiere
-        Optional<Card> districtDestroyed = condottiere.getDistrictDestroyed();
-        // if there is a district destroyed
-        if (districtDestroyed.isPresent()) {
-            // Get the player who has the cemetery and ask him if he wants to use the effect
-            Optional<Player> playerWithCemetery = getPlayerWithCemetery();
-            if (playerWithCemetery.isPresent()) {
-                playerWithCemetery.get().useCemeteryEffect(districtDestroyed.get());
-                this.view.displayPlayerInfo(playerWithCemetery.get());
-            }
-        }
-    }
-
-
-    /**
-     * This method is used to get the player who has the cemetery in his citadel
-     *
-     * @return an optional of Player with the cemetery
-     */
-    public Optional<Player> getPlayerWithCemetery() {
-        for (Player player : players) {
-            if (player.getCitadel().stream().anyMatch(card -> card.getDistrict() == District.CEMETERY)) {
-                return Optional.of(player);
-            }
-        }
-        return Optional.empty();
+    public List<Player> getPlayers() {
+        return players;
     }
 }

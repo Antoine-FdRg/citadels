@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing;
 
-import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -11,7 +10,7 @@ import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
-import com.seinksansdoozebank.fr.model.player.Player;
+import com.seinksansdoozebank.fr.model.player.custombot.CustomBot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,16 +24,14 @@ import static org.mockito.Mockito.when;
 
 class ChoosingCharacterToTargetFirstPlayerTest {
     ChoosingCharacterToTargetFirstPlayer choosingCharacterToTargetFirstPlayer;
-    Player mockPlayer;
+    CustomBot mockCustomBot;
 
     List<Character> characterList;
     Opponent leadingOpponent;
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
-        mockPlayer = mock(Player.class);
+        mockCustomBot = mock(CustomBot.class);
         choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
         characterList = new ArrayList<>();
         leadingOpponent = mock(Opponent.class);
@@ -46,73 +43,74 @@ class ChoosingCharacterToTargetFirstPlayerTest {
         characterList.add(new Assassin());
         characterList.add(new Magician());
         characterList.add(new Condottiere());
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
 
-        assertEquals(new Condottiere(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new Condottiere(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithLeadingOpponentHavingManyGoldAndThiefInListShouldReturnThief() {
         when(leadingOpponent.getNbGold()).thenReturn(4);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Assassin());
         characterList.add(new Thief());
         characterList.add(new Merchant());
 
-        assertEquals(new Thief(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new Thief(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithLeadingOpponentHavingManyGoldAndNoThiefInListShouldReturnArchitect() {
         when(leadingOpponent.getNbGold()).thenReturn(4);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Assassin());
         characterList.add(new Merchant());
         characterList.add(new Architect());
 
-        assertEquals(new Architect(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new Architect(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithLeadingOpponentHavingFewGoldAndAssassinInListShouldReturnAssassin() {
         when(leadingOpponent.getNbGold()).thenReturn(1);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Assassin());
         characterList.add(new Merchant());
         characterList.add(new Architect());
 
-        assertEquals(new Assassin(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new Assassin(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithLeadingOpponentHavingFewGoldAndNoAssassinInListShouldReturnMerchant() {
         when(leadingOpponent.getNbGold()).thenReturn(1);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Thief());
         characterList.add(new Merchant());
         characterList.add(new King());
 
-        assertEquals(new Merchant(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new Merchant(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithNoCharacterBetterThanKingShouldReturnKing() {
         when(leadingOpponent.getNbGold()).thenReturn(1);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Bishop());
         characterList.add(new Magician());
         characterList.add(new King());
 
-        assertEquals(new King(), choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList));
+        assertEquals(new King(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test
     void applyWithNoCharacterBetterThanKingAndNoKingShouldReturnRandomCharacter() {
         when(leadingOpponent.getNbGold()).thenReturn(1);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(leadingOpponent));
+        when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
         characterList.add(new Bishop());
         characterList.add(new Magician());
 
-        assertTrue(characterList.contains(choosingCharacterToTargetFirstPlayer.apply(mockPlayer, characterList)));
+        assertTrue(characterList.contains(choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList)));
     }
 
 }

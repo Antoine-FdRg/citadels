@@ -78,4 +78,6 @@ public interface IView {
     void displayGameStuck();
 
     void displayPlayerUseCemeteryEffect(Player player, Card card);
+
+    void displayGoldCollectedFromMerchant(Player player);
 }

@@ -155,10 +155,10 @@ public class Cli implements IView {
     @Override
     public void displayPlayerUseMagicianEffect(Player player, Opponent targetPlayer) {
         if (targetPlayer == null) {
-            CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec le deck.", player);
+            CustomLogger.log(Level.INFO, "{0} utilise le magicien pour échanger sa main avec le deck.", player);
             return;
         }
-        CustomLogger.log(Level.INFO, "Le {0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer}, player);
+        CustomLogger.log(Level.INFO, "{0} utilise le magicien pour échanger sa main avec celle du {1}.", new Object[]{player, targetPlayer}, player);
     }
 
     @Override
@@ -190,6 +190,13 @@ public class Cli implements IView {
     public void displayGoldCollectedFromDistrictType(Player player, int nbGold, DistrictType districtType) {
         CustomLogger.log(Level.INFO, "{0} gagne {1} pièces d''or grâce à ses quartiers de type {2} et l''effet du {3}.", new Object[]{player, nbGold, districtType, player.getCharacter()}, player);
     }
+
+    @Override
+    public void displayGoldCollectedFromMerchant(Player player) {
+        CustomLogger.log(Level.INFO, "{0} pioche 1 pièce d''or en début de tour car c'est un marchand.", player);
+    }
+
+
 
     @Override
     public void displayGameFinished() {

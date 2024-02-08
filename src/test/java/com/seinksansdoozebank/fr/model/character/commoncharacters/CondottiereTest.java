@@ -24,15 +24,15 @@ class CondottiereTest {
     Condottiere condottiere;
     IView view;
     Deck deck;
+    Bank bank;
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        player = spy(new RandomBot(2, deck, view));
+        bank = new Bank();
+        player = spy(new RandomBot(2, deck, view, bank));
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel
@@ -72,19 +72,21 @@ class CondottiereTest {
 
     @Test
     void cantDestroyDonjon() {
-        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Player otherPlayer = spy(new RandomBot(2, deck, view, bank));
         Merchant merchant = new Merchant();
         otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
         otherPlayer.reveal();
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.DONJON));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.DONJON);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        verify(deck, times(0)).discard(any());
     }
 
     @Test
     void cantDestroyCompletedCitadelOfPlayer() {
-        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Player otherPlayer = spy(new RandomBot(2, deck, view, bank));
         Merchant merchant = new Merchant();
         otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
         otherPlayer.reveal();
@@ -98,18 +100,49 @@ class CondottiereTest {
         citadel.add(new Card(District.CORNER_SHOP));
         citadel.add(new Card(District.MANUFACTURE));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.BARRACK));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.BARRACK);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        verify(deck, times(0)).discard(any());
     }
 
     @Test
     void cantDestroyDistrictDueToLackOfGold() {
-        Player otherPlayer = spy(new RandomBot(2, deck, view));
+        Player otherPlayer = spy(new RandomBot(2, deck, view, bank));
         Merchant merchant = new Merchant();
         otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
         otherPlayer.reveal();
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.PORT_FOR_DRAGONS));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(otherPlayer, District.PORT_FOR_DRAGONS));
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.PORT_FOR_DRAGONS);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        verify(deck, times(0)).discard(any());
+    }
+
+    @Test
+    void cantDestroyDistrictOfBishop() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view, bank));
+        Bishop bishop = new Bishop();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(bishop)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.TAVERN));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.TAVERN);
+        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        verify(deck, times(0)).discard(any());
+    }
+
+    @Test
+    void useEffectWhenCanDestroyShouldDestroy() {
+        Player otherPlayer = spy(new RandomBot(2, deck, view, bank));
+        Merchant merchant = new Merchant();
+        otherPlayer.chooseCharacter(new ArrayList<>(List.of(merchant)));
+        otherPlayer.reveal();
+        List<Card> citadel = new ArrayList<>();
+        citadel.add(new Card(District.TAVERN));
+        when(otherPlayer.getCitadel()).thenReturn(citadel);
+        condottiere.useEffect(new CondottiereTarget(otherPlayer, District.TAVERN));
+        verify(deck, times(1)).discard(any());
     }
 }

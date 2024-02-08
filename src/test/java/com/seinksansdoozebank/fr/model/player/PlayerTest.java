@@ -1,8 +1,10 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.effect.ManufactureEffect;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
@@ -24,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -39,37 +40,38 @@ class PlayerTest {
     Deck deck;
     Card cardCostThree;
     Card cardCostFive;
+    Bank bank;
 
     @BeforeEach
     void setup() {
         view = mock(Cli.class);
         deck = mock(Deck.class);
+        bank = new Bank();
         cardCostThree = new Card(District.BARRACK);
         cardCostFive = new Card(District.FORTRESS);
-        player = new RandomBot(10, deck, view);
-        spyPlayer = spy(new RandomBot(10, deck, view));
+        player = new RandomBot(10, deck, view, bank);
+        spyPlayer = spy(new RandomBot(10, deck, view, bank));
     }
 
     @Test
     void testPickGold() {
-        Player player = new RandomBot(10, deck, view);
+        Player player = new RandomBot(10, deck, view, bank);
         player.pickGold();
         assertEquals(12, player.getNbGold());
     }
 
     @Test
-    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold3AndLogIt() {
+    void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold() {
         IView view = mock(Cli.class);
-        Player player = new RandomBot(3, deck, view);
+        Player player = new RandomBot(3, deck, view, bank);
         player.pickGold(3);
         assertEquals(6, player.getNbGold());
-        verify(view, times(1)).displayPlayerPicksGold(player, 3);
     }
 
     @Test
     void testPickGoldWith0GoldShouldGiveThePlayer0GoldAndLogNothing() {
         IView view = mock(Cli.class);
-        Player player = new RandomBot(0, deck, view);
+        Player player = new RandomBot(0, deck, view, bank);
         player.pickGold(0);
         assertEquals(0, player.getNbGold());
         verify(view, times(0)).displayPlayerPicksGold(player, 0);
@@ -89,6 +91,7 @@ class PlayerTest {
 
     @Test
     void testPlayACardWithPlayableChosenCardShouldReturnCard() {
+        bank.pickXCoin(cardCostThree.getDistrict().getCost());
         spyPlayer.getHand().add(cardCostThree);
         doReturn(Optional.of(cardCostThree)).when(spyPlayer).chooseCard();
         doReturn(true).when(spyPlayer).canPlayCard(any(Card.class));
@@ -112,7 +115,7 @@ class PlayerTest {
     }
 
     @Test
-    void testCanPlayCardWithAlreadyPlayedCardShouldReturnFalse() {
+    void testCanPlayCardWithAlreadyPlayedDistrictShouldReturnFalse() {
         when(spyPlayer.getCitadel()).thenReturn(List.of(cardCostThree));
         assertFalse(spyPlayer.canPlayCard(cardCostThree));
     }
@@ -126,7 +129,7 @@ class PlayerTest {
 
     @Test
     void testDecreaseGold() {
-        Player player = new RandomBot(10, deck, view);
+        Player player = new RandomBot(10, deck, view, bank);
 
         player.decreaseGold(3);
 
@@ -137,7 +140,7 @@ class PlayerTest {
     void testResetIdCounter() {
         // Test resetting the ID counter for player
         Player.resetIdCounter();
-        Player newPlayer = new RandomBot(10, deck, view);
+        Player newPlayer = new RandomBot(10, deck, view, bank);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
     }
 
@@ -215,7 +218,7 @@ class PlayerTest {
     @Test
     void switchHandBetweenTwoPlayersWithTwoFilledHand() {
         spyPlayer.hand.add(cardCostFive);
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
         otherPlayer.hand.add(cardCostThree);
 
         spyPlayer.switchHandWith(otherPlayer);
@@ -227,7 +230,7 @@ class PlayerTest {
     @Test
     void switchHandBetweenTwoPlayersWithOneFilledHand() {
         spyPlayer.hand.add(cardCostFive);
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
 
         spyPlayer.switchHandWith(otherPlayer);
 
@@ -237,7 +240,7 @@ class PlayerTest {
 
     @Test
     void switchHandBetweenTwoPlayersWithTwoEmptyHand() {
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
 
         spyPlayer.switchHandWith(otherPlayer);
 
@@ -255,7 +258,7 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
+        Player spyPlayerSmart = spy(new SmartBot(10, deck, view, bank));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
         when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
@@ -293,11 +296,13 @@ class PlayerTest {
 
     @Test
     void playCardWithAGivenCard() {
-        spyPlayer.getHand().add(new Card(District.TEMPLE));
-        doReturn(true).when(spyPlayer).canPlayCard(new Card(District.TEMPLE));
-        spyPlayer.buyACardAndAddItToCitadel(new Card(District.TEMPLE));
-        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
-        assertTrue(spyPlayer.getCitadel().contains(new Card(District.TEMPLE)));
+        Card temple = new Card(District.TEMPLE);
+        bank.pickXCoin(temple.getDistrict().getCost());
+        spyPlayer.getHand().add(temple);
+        doReturn(true).when(spyPlayer).canPlayCard(temple);
+        spyPlayer.buyACardAndAddItToCitadel(temple);
+        assertFalse(spyPlayer.getHand().contains(temple));
+        assertTrue(spyPlayer.getCitadel().contains(temple));
     }
 
     @Test
@@ -322,39 +327,122 @@ class PlayerTest {
     }
 
     @Test
-    void destroyDistrictReturnDistrictDestroy() {
-        Player attacker = spy(new RandomBot(10, deck, view));
-        Player victim = spy(new RandomBot(10, deck, view));
-        when(victim.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        Card card = new Card(District.TEMPLE);
-        Optional<Card> optCard = victim.destroyDistrict(attacker, District.TEMPLE);
-        assertTrue(optCard.isPresent());
-        assertEquals(card, optCard.get());
+    void havingADistrictDestroyedWithNoDistrictInCitadelShouldThrowException() {
+        Player attacker = mock(Player.class);
+        when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>());
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
     }
 
+    @Test
+    void havingADistrictDestroyedWithNoTargetedDistrictInCitadelShouldThrowException() {
+        Player attacker = mock(Player.class);
+        when(spyPlayer.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.TAVERN), new Card(District.PORT))));
+        assertThrows(IllegalArgumentException.class, () -> spyPlayer.destroyDistrict(attacker, District.TEMPLE));
+    }
 
     @Test
-    void destroyDistrictThrowsExceptionWhenPlayerDoesntHaveTheDistrict() {
-        Player player = new RandomBot(10, deck, view);
-        Player player2 = new RandomBot(10, deck, view);
-        player2.setCitadel(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        assertThrows(IllegalArgumentException.class, () -> player.destroyDistrict(player2, District.TEMPLE));
+    void havingADistrictDestroyedWithTargetInCitadelShouldRemoveItFromCitadelAndAskOpponentForCemeteryEffectFalseSoDiscardTheCard() {
+        Player attacker = mock(Player.class);
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
+        doReturn(false).when(spyPlayer).askOpponentForCemeteryEffect(temple);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
+        assertFalse(spyPlayer.getCitadel().contains(temple));
+        verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
+        verify(deck, times(1)).discard(temple);
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, temple);
+        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+    }
+
+    @Test
+    void havingADistrictDestroyedWithTargetInCitadelShouldRemoveItFromCitadelAndAskOpponentForCemeteryEffectTrueSoNoDiscard() {
+        Player attacker = mock(Player.class);
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.setCitadel(new ArrayList<>(List.of(temple, new Card(District.PORT))));
+        doReturn(true).when(spyPlayer).askOpponentForCemeteryEffect(temple);
+        spyPlayer.destroyDistrict(attacker, District.TEMPLE);
+        assertFalse(spyPlayer.getCitadel().contains(temple));
+        verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
+        verify(deck, times(0)).discard(temple);
+        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, temple);
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithNoOpponentWithCemeteryShouldReturnFalse() {
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.TAVERN))));
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.BARRACK))));
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertFalse(spyPlayer.askOpponentForCemeteryEffect(new Card(District.TEMPLE)));
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithOpponentWithCemeteryButDontWantShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.CEMETERY))));
+        when(opponent1.isUsingCemeteryEffect(temple)).thenReturn(false);
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CASTLE), new Card(District.TAVERN))));
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertFalse(spyPlayer.askOpponentForCemeteryEffect(temple));
+    }
+
+    @Test
+    void askOpponentForCemeteryEffectWithOpponentWithCemeteryAndWantShouldReturnTrue() {
+        Card temple = new Card(District.TEMPLE);
+        Opponent opponent1 = mock(Player.class);
+        when(opponent1.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.PORT), new Card(District.DONJON))));
+        Opponent opponent2 = mock(Player.class);
+        when(opponent2.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.CEMETERY), new Card(District.TAVERN))));
+        when(opponent2.isUsingCemeteryEffect(temple)).thenReturn(true);
+        when(spyPlayer.getOpponents()).thenReturn(List.of(opponent1, opponent2));
+        assertTrue(spyPlayer.askOpponentForCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectAndWantToUseButAsCondottiereShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Condottiere());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
+        assertFalse(spyPlayer.isUsingCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectNotAsCondottiereButDontWantToUseShouldReturnFalse() {
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(false);
+        assertFalse(spyPlayer.isUsingCemeteryEffect(temple));
+    }
+
+    @Test
+    void isUsingCemeteryEffectNotAsCondottiereAndWantToUseShouldReturnTrue() {
+        bank.pickXCoin(1);
+        Card temple = new Card(District.TEMPLE);
+        when(spyPlayer.getCharacter()).thenReturn(new Merchant());
+        when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
+        assertTrue(spyPlayer.isUsingCemeteryEffect(temple));
     }
 
     @Test
     void discardFromHandWhenHandIsNotEmpty() {
-        spyPlayer.getHand().add(new Card(District.TEMPLE));
-        assertTrue(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
-        assertFalse(spyPlayer.getHand().contains(new Card(District.TEMPLE)));
-        verify(deck, times(1)).discard(new Card(District.TEMPLE));
-        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+        Card temple = new Card(District.TEMPLE);
+        spyPlayer.getHand().add(temple);
+        assertTrue(spyPlayer.discardFromHand(temple));
+        assertFalse(spyPlayer.getHand().contains(temple));
+        verify(deck, times(1)).discard(temple);
+        verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, temple);
     }
 
     @Test
     void discardFromHandWhenHandIsEmpty() {
-        assertFalse(spyPlayer.discardFromHand(new Card(District.TEMPLE)));
-        verify(deck, times(0)).discard(new Card(District.TEMPLE));
-        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, new Card(District.TEMPLE));
+        Card temple = new Card(District.TEMPLE);
+        assertFalse(spyPlayer.discardFromHand(temple));
+        verify(deck, times(0)).discard(temple);
+        verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, temple);
     }
 
     @Test
@@ -368,9 +456,10 @@ class PlayerTest {
 
     @Test
     void usePrestigesEffectWithManufacture() {
+        bank.pickXCoin(ManufactureEffect.NB_GOLD_TO_PAY_TO_USE_EFFECT);
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
-        ((RandomBot) spyPlayer).setRandom(mockRandom);
+        spyPlayer.setRandom(mockRandom);
 
         // make a hand with a one card
         spyPlayer.getHand().add(new Card(District.TEMPLE));
@@ -389,6 +478,7 @@ class PlayerTest {
         assertEquals(10, spyPlayer.getNbGold());
         spyPlayer.useCommonCharacterEffect();
         assertEquals(11, spyPlayer.getNbGold());
+        verify(view,times(1)).displayGoldCollectedFromMerchant(any());
         verify(view, times(1)).displayGoldCollectedFromDistrictType(any(), anyInt(), any());
     }
 
@@ -418,5 +508,21 @@ class PlayerTest {
         assertEquals(3, spyPlayer.getHand().size());
     }
 
+    @Test
+    void isAboutToWInTestTrue() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.LIBRARY),
+                new Card(District.TAVERN),
+                new Card(District.PORT),
+                new Card(District.CASTLE),
+                new Card(District.FORTRESS),
+                new Card(District.PORT_FOR_DRAGONS),
+                new Card(District.BARRACK))));
+        assertTrue(spyPlayer.isAboutToWin());
+    }
 
+    @Test
+    void isAboutToWInTestFalse() {
+        spyPlayer.setCitadel(new ArrayList<>(List.of(new Card(District.PORT))));
+        assertFalse(spyPlayer.isAboutToWin());
+    }
 }

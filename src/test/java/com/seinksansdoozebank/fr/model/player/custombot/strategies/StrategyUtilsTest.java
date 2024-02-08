@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies;
 
-import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
@@ -26,8 +25,6 @@ class StrategyUtilsTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         assassin = new Assassin();
         magician = new Magician();
         thief = new Thief();
@@ -71,19 +68,16 @@ class StrategyUtilsTest {
         when(o2.nbDistrictsInCitadel()).thenReturn(3);
         Opponent o3 = mock(Opponent.class);
         when(o3.nbDistrictsInCitadel()).thenReturn(2);
-        when(mockPlayer.getOpponents()).thenReturn(List.of(o1, o2, o3));
 
-        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(mockPlayer);
+        Opponent leadingOpponent = StrategyUtils.getLeadingOpponent(List.of(o1, o2, o3));
 
         assertEquals(o2, leadingOpponent);
     }
 
     @Test
     void getLeadingOpponentWithEmptyOpponentListShouldThrowException() {
-        Player mockPlayer = mock(Player.class);
-        when(mockPlayer.getOpponents()).thenReturn(List.of());
-
-        assertThrows(IllegalStateException.class, () -> StrategyUtils.getLeadingOpponent(mockPlayer));
+        List<Opponent> list = List.of();
+        assertThrows(IllegalStateException.class, () -> StrategyUtils.getLeadingOpponent(list));
     }
 
 

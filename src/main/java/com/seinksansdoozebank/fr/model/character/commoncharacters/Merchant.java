@@ -17,4 +17,9 @@ public class Merchant extends CommonCharacter {
         this.getPlayer().pickGold(1);
     }
 
+    @Override
+    public void applyEffect() {
+        this.useEffect();
+    }
+
 }

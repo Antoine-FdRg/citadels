@@ -16,10 +16,10 @@ public class Magician extends Character {
     /**
      * Switch the hand of the player with the hand of the target player
      * If the target player is not present, the player will switch his hand with the deck
-     *
-     * @param targetOpponent the target player to switch hand with
      */
-    public void useEffect(Opponent targetOpponent, List<Card> cardsToSwitchWithDeck) {
+    public void useEffect(MagicianTarget magicianTarget) {
+        Opponent targetOpponent = magicianTarget.targetOpponent();
+        List<Card> cardsToSwitchWithDeck = magicianTarget.cardsToSwitchWithDeck();
         if (targetOpponent != null) { //picking card from target player's hand
             targetOpponent.switchHandWith(this.getPlayer());
         } else { //picking card from deck
@@ -27,6 +27,14 @@ public class Magician extends Character {
                 this.getPlayer().discardACard(card);
                 this.getPlayer().pickACard();
             }
+        }
+    }
+
+    @Override
+    public void applyEffect() {
+        MagicianTarget magicianTarget = this.getPlayer().useEffectMagician();
+        if (magicianTarget != null) {
+            this.useEffect(magicianTarget);
         }
     }
 }

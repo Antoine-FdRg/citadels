@@ -4,13 +4,11 @@ import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Opponent;
-import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -48,8 +46,6 @@ class CustomBotTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockView = mock(IView.class);
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
@@ -57,7 +53,7 @@ class CustomBotTest {
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
         mockCardChoosingStrategy = mock(ICardChoosingStrategy.class);
-        spyCustomBot = spy(new CustomBot(2, new Deck(), mockView,
+        spyCustomBot = spy(new CustomBot(2, new Deck(), mockView, mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -95,60 +91,52 @@ class CustomBotTest {
     @Test
     void useThiefEffectWithAUsingThiefEffectStrategyShouldUseTheUsingThiefEffectStrategyMethod() {
         spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
-        Thief mockThief = mock(Thief.class);
-        spyCustomBot.useEffectThief(mockThief);
-        verify(mockUsingThiefEffectStrategy).apply(spyCustomBot, mockThief);
+        spyCustomBot.useEffectThief();
+        verify(mockUsingThiefEffectStrategy).apply(spyCustomBot);
     }
 
     @Test
     void useThiefEffectWithoutAUsingThiefEffectStrategyShouldCallTheSuperMethod() {
-        Thief mockThief = mock(Thief.class);
         spyCustomBot.usingThiefEffectStrategy = null;
         spyCustomBot.setAvailableCharacters(List.of(new Thief(), new King(), new Bishop()));
-        spyCustomBot.useEffectThief(mockThief);
-        verify(spyCustomBot).randomUseThiefEffect(any());
+        spyCustomBot.useEffectThief();
+        verify(spyCustomBot).randomUseThiefEffect();
     }
 
     @Test
     void useAssassinEffectWithAUsingMurdererEffectStrategyShouldUseTheUsingMurdererEffectStrategyMethod() {
         spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
-        Assassin mockAssassin = mock(Assassin.class);
-        spyCustomBot.useEffectAssassin(mockAssassin);
-        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockAssassin, mockView);
+        spyCustomBot.useEffectAssassin();
+        verify(mockUsingMurdererEffectStrategy).apply(spyCustomBot, mockView);
     }
 
     @Test
     void useAssassinEffectWithoutAUsingMurdererEffectStrategyShouldCallTheSuperMethod() {
-        Assassin mockAssassin = mock(Assassin.class);
         spyCustomBot.usingMurdererEffectStrategy = null;
         spyCustomBot.setAvailableCharacters(List.of(new Assassin(), new King(), new Bishop()));
-        spyCustomBot.useEffectAssassin(mockAssassin);
-        verify(spyCustomBot).randomUseMurdererEffect(any());
+        spyCustomBot.useEffectAssassin();
+        verify(spyCustomBot).randomUseMurdererEffect();
     }
 
     @Test
     void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
-        Condottiere mockCondottiere = mock(Condottiere.class);
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.useEffectCondottiere(mockCondottiere);
-        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, mockCondottiere);
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, List.of(mockOpponent));
     }
 
     @Test
     void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
-        Condottiere mockCondottiere = mock(Condottiere.class);
         spyCustomBot.usingCondottiereEffectStrategy = null;
         Opponent mockOpponent = mock(Opponent.class);
-        when(spyCustomBot.getOpponents()).thenReturn(List.of(mockOpponent));
-        spyCustomBot.useEffectCondottiere(mockCondottiere);
-        verify(spyCustomBot).randomUseCondottiereEffect(any());
+        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
+        verify(spyCustomBot).randomUseCondottiereEffect(List.of(mockOpponent));
     }
 
     @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
-        Player customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
+        CustomBot customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -171,41 +159,41 @@ class CustomBotTest {
     }
 
     @Test
-    void testEqualsWithBotWithSameStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+    void testNotEqualsWithBotWithSameStrategies() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        assertEquals(customBot1, customBot2);
+        assertNotEquals(customBot1, customBot2);
     }
 
     @Test
-    void testEqualsWithBotWithNoStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class));
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class));
-        assertEquals(customBot1, customBot2);
+    void testNotEqualsWithBotWithNoStrategies() {
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class));
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class));
+        assertNotEquals(customBot1, customBot2);
     }
 
     @Test
     void testNotEqualsWithBotWithDifferentStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -217,7 +205,7 @@ class CustomBotTest {
 
     @Test
     void testNotEqualsWithNotSameObject() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -230,14 +218,14 @@ class CustomBotTest {
 
     @Test
     void testHashCode() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,

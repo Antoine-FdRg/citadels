@@ -89,4 +89,8 @@ public class CustomLogger {
                 "\u001B[38;5;124m" // red
         ));
     }
+
+    public static void setLevel(Level level) {
+        logger.setLevel(level);
+    }
 }

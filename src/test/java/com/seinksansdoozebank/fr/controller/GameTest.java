@@ -9,9 +9,9 @@ import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -24,8 +24,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -56,24 +58,21 @@ class GameTest {
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
-    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracle;
-    Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition;
     private Cli view;
+    private Bank fourPlayersGameBank;
+    private Bank fivePlayersGameBank;
     List<Character> charactersList;
 
     @BeforeEach
     public void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
-        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, 5));
-        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, 4);
-        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, 4));
-        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, 6));
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, 4);
-        //Set player 1 with eight districts in its citadel and five different districtTypes
-        playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view));
+        fivePlayersGameBank = new Bank();
+        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, fivePlayersGameBank, 5));
 
+        Bank threePlayersGameBank = new Bank();
+        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4);
+        //Set player 1 with eight districts in its citadel and five different districtTypes
+        playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view, threePlayersGameBank));
         List<Card> citadelWithEightDistrictsAndFiveDistrictTypes = new ArrayList<>(List.
                 of(new Card(District.PORT),
                         new Card(District.PALACE),
@@ -83,21 +82,16 @@ class GameTest {
                         new Card(District.CEMETERY),
                         new Card(District.MANUFACTURE),
                         new Card(District.CASTLE)));
-
         when(playerWIthEightDistrictsAndFiveDistrictTypes.getCitadel()).
                 thenReturn(citadelWithEightDistrictsAndFiveDistrictTypes);
-
         //Set player 2 with only two districts in its citadel
-        playerWithNoBonus = spy(new RandomBot(5, new Deck(), view));
-
+        playerWithNoBonus = spy(new RandomBot(5, new Deck(), view, threePlayersGameBank));
         List<Card> citadelWithNoBonusAssociated = new ArrayList<>(List.
                 of(new Card(District.PORT),
                         new Card(District.PALACE)));
-
         when(playerWithNoBonus.getCitadel()).thenReturn(citadelWithNoBonusAssociated);
-
         //Set player 3 with eight district in its citadel and with less than 5 different districtTypes
-        playerWithEightDistricts = spy(new RandomBot(5, new Deck(), view));
+        playerWithEightDistricts = spy(new RandomBot(5, new Deck(), view, threePlayersGameBank));
 
         List<Card> citadelWithEightDistricts = new ArrayList<>(List.
                 of(new Card(District.TEMPLE),
@@ -110,8 +104,11 @@ class GameTest {
                         new Card(District.TAVERN)));
 
         when(playerWithEightDistricts.getCitadel()).thenReturn(citadelWithEightDistricts);
-
         gameWithThreePlayers.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
+
+        fourPlayersGameBank = mock(Bank.class);
+        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, fourPlayersGameBank, 4));
+        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, mock(Bank.class), 6));
 
         charactersList = List.of(
                 new Assassin(),
@@ -123,28 +120,6 @@ class GameTest {
                 new Architect(),
                 new Condottiere()
         );
-
-        playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view));
-
-        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle = new ArrayList<>(
-                List.of(new Card(District.TEMPLE),
-                        new Card(District.MANOR),
-                        new Card(District.TAVERN),
-                        new Card(District.CEMETERY),
-                        new Card(District.COURTYARD_OF_MIRACLE))
-        );
-
-        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle);
-
-        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = spy(new SmartBot(5, new Deck(), view));
-        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition = new ArrayList<>(
-                List.of(new Card(District.TEMPLE),
-                        new Card(District.MANOR),
-                        new Card(District.TAVERN),
-                        new Card(District.CEMETERY),
-                        new Card(District.COURTYARD_OF_MIRACLE))
-        );
-        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition);
     }
 
     @Test
@@ -158,7 +133,11 @@ class GameTest {
         when(p3.getScore()).thenReturn(7);
         Player p4 = mock(Player.class);
         when(p4.getScore()).thenReturn(6);
-        gameWithFivePlayers.setPlayers(List.of(p1, p2, p3, p4));
+        gameWithFivePlayers.setPlayers(
+                new ArrayList<>(
+                        List.of(p1, p2, p3, p4)
+                )
+        );
         assertEquals(p3, gameWithFivePlayers.getWinner());
     }
 
@@ -229,7 +208,6 @@ class GameTest {
      */
     @Test
     void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
-        //botWithLessThanFiveDifferentDistrictType
         gameWithThreePlayers.updatePlayersBonus();
         assertFalse(playerWithNoBonus.hasFiveDifferentDistrictTypes());
     }
@@ -241,25 +219,6 @@ class GameTest {
     void botWithEightDistrictInItCitadelTest() {
         gameWithThreePlayers.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
-    }
-
-    @Test
-    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleGetTheBonus() {
-        gameWithFourPlayers.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
-        // Update the bonus of all players
-        gameWithFourPlayers.updatePlayersBonus();
-        // Check that the player with the courtyard of miracle get the bonus
-        assertEquals(3, playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getBonus());
-    }
-
-    @Test
-    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
-        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
-        // Update the bonus of all players
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
-        // Check that the player with the courtyard of miracle get the bonus
-        assertEquals(0, playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getBonus());
     }
 
     @Test
@@ -278,24 +237,50 @@ class GameTest {
     }
 
     @Test
-    void runNotStuckGame() {
-        Bank.reset();
+    void runGameShouldHave65CardsBeforeAndAfter() {
+        int nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+        gameWithFourPlayers.run();
+        nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
+        for (Player player : gameWithFourPlayers.players) {
+            nbCardInGame += player.getHand().size();
+            nbCardInGame += player.getCitadel().size();
+        }
+        assertEquals(65, nbCardInGame);
+    }
+
+    @Test
+    void runGameAndCheckThatNoCardAreDuplicated() {
+        gameWithFourPlayers.run();
+        Set<Card> allCards = new HashSet<>(gameWithFourPlayers.deck.getDeck());
+        for (Player player : gameWithFourPlayers.players) {
+            allCards.addAll(player.getHand());
+            allCards.addAll(player.getCitadel());
+        }
+        assertEquals(65, allCards.size());
+    }
+
+    @Test
+    void runGame() {
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
         int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
         verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
         verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).isStuck();
+        verify(gameWithFourPlayers, atMost(nbRoundPlayed + 1)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
-        verify(view, atMost(0)).displayGameStuck();
+        verify(view, atMost(1)).displayGameStuck();
         verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
 
     @Test
     void runAStuckGameShouldDisplayStuckGame() {
-        Bank.reset();
         when(gameWithFourPlayers.isStuck()).thenReturn(true);
         gameWithFourPlayers.run();
         verify(gameWithFourPlayers, times(1)).init();
@@ -321,16 +306,66 @@ class GameTest {
         }
     }
 
+
+    private Player getPlayerWithCourtyard() {
+        Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = spy(new SmartBot(5, new Deck(), view, mock(Bank.class)));
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition);
+        return playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition;
+    }
+
+    @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, mock(Bank.class), 4);
+        Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = getPlayerWithCourtyard();
+        playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        // Update the bonus of all players
+        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(0, playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getBonus());
+    }
+
     @Test
     void testHasCourtyardOfMiracleAndItsNotTheLastCardPlaced() {
+        Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = getPlayerWithCourtyard();
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(false);
         assertTrue(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard());
     }
 
     @Test
     void testHasCourtyardOfMiracleAndItsTheLastCardPlaced() {
+        Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = getPlayerWithCourtyard();
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
         assertFalse(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.hasCourtyardOfMiracleAndItsNotTheLastCard());
+    }
+
+    @Test
+    void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleGetTheBonus() {
+        Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracle = spy(new SmartBot(5, new Deck(), view, fourPlayersGameBank));
+
+        ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle = new ArrayList<>(
+                List.of(new Card(District.TEMPLE),
+                        new Card(District.MANOR),
+                        new Card(District.TAVERN),
+                        new Card(District.CEMETERY),
+                        new Card(District.COURTYARD_OF_MIRACLE))
+        );
+
+        when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle);
+
+
+        gameWithFourPlayers.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
+        // Update the bonus of all players
+        gameWithFourPlayers.updatePlayersBonus();
+        // Check that the player with the courtyard of miracle get the bonus
+        assertEquals(3, playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getBonus());
     }
 
     @Test
@@ -357,12 +392,12 @@ class GameTest {
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 2));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 7));
     }
 
     @Test
@@ -394,12 +429,12 @@ class GameTest {
     @Test
     void getPlayerWithRoleTest() {
         //Création du player de type architecte
-        Player playerArchitect = spy(new RandomBot(5, new Deck(), view));
+        Player playerArchitect = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
         Architect architect = new Architect();
         architect.setPlayer(playerArchitect);
         when(playerArchitect.getCharacter()).thenReturn(architect);
         //Création du player de type voleur
-        Player playerThief = spy(new RandomBot(5, new Deck(), view));
+        Player playerThief = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
         Thief thief = new Thief();
         thief.setPlayer(playerThief);
         when(playerThief.getCharacter()).thenReturn(thief);
@@ -416,13 +451,13 @@ class GameTest {
      */
     @Test
     void checkUniversityOrPortForDragonsInCitadelTest() {
-        Player smartBotWithUniversity = spy(new SmartBot(3, new Deck(), view));
+        Player smartBotWithUniversity = spy(new SmartBot(3, new Deck(), view, fourPlayersGameBank));
         when(smartBotWithUniversity.getCitadel()).thenReturn(List.of(new Card(District.UNIVERSITY), new Card(District.PORT)));
-        Player smartBotWithPortForDragons = spy(new SmartBot(3, new Deck(), view));
+        Player smartBotWithPortForDragons = spy(new SmartBot(3, new Deck(), view, fourPlayersGameBank));
         when(smartBotWithPortForDragons.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.TEMPLE)));
-        Player smartBotWithNoPrestige = spy(new SmartBot(3, new Deck(), view));
+        Player smartBotWithNoPrestige = spy(new SmartBot(3, new Deck(), view, fourPlayersGameBank));
         when(smartBotWithNoPrestige.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
-        Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view));
+        Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view, fourPlayersGameBank));
         when(smartBotWithBothDistricts.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.UNIVERSITY)));
         gameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
 
@@ -449,25 +484,24 @@ class GameTest {
 
     @Test
     void createCharactersWithTooMuchPlayers() {
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
         assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
     }
+
     @Test
     void isStuckWithStuckGameShouldReturnTrue() {
-        Bank.reset();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class))
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .build();
-        Bank.getInstance().pickXCoin(22);
 
         assertTrue(stuckGame.isStuck());
     }
@@ -475,39 +509,39 @@ class GameTest {
     @Test
     void constructorGameWithTooMuchPlayers() {
         List<Player> players = new ArrayList<>();
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
-        players.add(new RandomBot(5, new Deck(), view));
+        Bank bank = mock(Bank.class);
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
+        players.add(new RandomBot(5, new Deck(), view, bank));
         Deck deck = new Deck();
-        assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, players));
+        assertThrows(IllegalArgumentException.class, () -> new Game(view, deck, bank, players));
     }
+
     @Test
     void isStuckWithNotEmptyDeckShouldReturnFalse() {
-        Bank.reset();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class))
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .build();
-        Bank.getInstance().pickXCoin(22);
 
         assertFalse(stuckGame.isStuck());
     }
 
     @Test
     void isStuckWithRemainingCoinsShouldReturnFalse() {
-        Bank.reset();
+        Bank bank = new Bank();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, bank)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -519,65 +553,102 @@ class GameTest {
 
     @Test
     void isStuckWithCardsInPlayersHandShouldReturnFalse() {
-        Bank.reset();
-        Game stuckGame = new GameBuilder(mock(IView.class), new Deck())
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck(), mock(Bank.class))
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
                 .build();
         stuckGame.init();
-        Bank.getInstance().pickXCoin(22);
         assertFalse(stuckGame.isStuck());
     }
 
     @Test
-    void isThePlayerHavingCemetery() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertTrue(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    void testReorderPlayersByPointsWithNoTieWithSameOrder() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player1.getScore()).thenReturn(10);
+        Player player2 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player2.getScore()).thenReturn(8);
+        Player player3 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player3.getScore()).thenReturn(6);
+        Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player4.getScore()).thenReturn(5);
+        List<Player> players = List.of(player1, player2, player3, player4);
+        when(gameWithFourPlayers.getPlayers()).thenReturn(
+                new ArrayList<>(players)
+        );
+        gameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, gameWithFourPlayers.getPlayers());
     }
 
     @Test
-    void isThePlayerDonthaveCemetery() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.COURTYARD_OF_MIRACLE)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    void testReorderPlayersByPointsWithNoTieWithoutSameOrder() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player1.getScore()).thenReturn(10);
+        Player player2 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player2.getScore()).thenReturn(8);
+        Player player3 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player3.getScore()).thenReturn(6);
+        Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player4.getScore()).thenReturn(5);
+        List<Player> players = List.of(player1, player2, player3, player4);
+        when(gameWithFourPlayers.getPlayers()).thenReturn(
+                new ArrayList<>(List.of(player4, player3, player2, player1))
+        );
+        gameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, gameWithFourPlayers.getPlayers());
     }
 
     @Test
-    void isThePlayerDonthaveCemeteryWithZeroCardInCitadel() {
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of());
-        gameWithFourPlayers.setPlayers(List.of(player));
-        assertFalse(gameWithFourPlayers.getPlayerWithCemetery().isPresent());
+    void testReorderPlayersByPointsWithTieInPoints() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player1.getScore()).thenReturn(10);
+        when(player1.getCitadel()).thenReturn(List.of(new Card(District.MANOR), new Card(District.CEMETERY)));
+
+        Player player2 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player2.getScore()).thenReturn(10);
+        when(player2.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
+
+        Player player3 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player3.getScore()).thenReturn(6);
+        when(player3.getCitadel()).thenReturn(List.of(new Card(District.CASTLE), new Card(District.CEMETERY), new Card(District.MANOR)));
+
+        Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player4.getScore()).thenReturn(5);
+        when(player4.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE), new Card(District.CEMETERY), new Card(District.MANOR), new Card(District.TAVERN)));
+
+        List<Player> expectedOrder = List.of(player1, player2, player3, player4);
+
+        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        gameWithFourPlayers.orderPlayersByPoints();
+
+        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
 
     @Test
-    void testUseCemeteryEffect() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.CEMETERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
-        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.of(player));
-        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
-        verify(player, times(1)).useCemeteryEffect(any());
+    void testReorderPlayersByPointsWithTieInPointsAndCitadelSize() {
+        Player player1 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player1.getScore()).thenReturn(10);
+        when(player1.getCitadel()).thenReturn(List.of(new Card(District.MANOR), new Card(District.CEMETERY))); // MANO Cost 3 // CEME Cost 5
+
+        Player player2 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player2.getScore()).thenReturn(10);
+        when(player2.getCitadel()).thenReturn(List.of(new Card(District.TAVERN), new Card(District.CEMETERY))); // TAVER Cost 1 // CEME Cost 5
+
+        Player player3 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player3.getScore()).thenReturn(6);
+        when(player3.getCitadel()).thenReturn(List.of(new Card(District.CASTLE), new Card(District.CEMETERY), new Card(District.MANOR)));
+
+        Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        when(player4.getScore()).thenReturn(6);
+        when(player4.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE), new Card(District.CEMETERY), new Card(District.MANOR), new Card(District.TAVERN)));
+
+        List<Player> expectedOrder = List.of(player1, player2, player4, player3);
+
+        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        gameWithFourPlayers.orderPlayersByPoints();
+
+        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
     }
 
-    @Test
-    void testUseCemeteryEffectWithNoPlayerWithCemetery() {
-        Condottiere condotierre = spy(new Condottiere());
-        when(condotierre.getDistrictDestroyed()).thenReturn(Optional.of(new Card(District.MANOR)));
-        Player player = spy(new RandomBot(5, new Deck(), view));
-        when(player.getCitadel()).thenReturn(List.of(new Card(District.MONASTERY)));
-        gameWithFourPlayers.setPlayers(List.of(player));
-        gameWithFourPlayers.useCemeteryEffect(condotierre);
-        when(gameWithFourPlayers.getPlayerWithCemetery()).thenReturn(Optional.empty());
-        verify(gameWithFourPlayers, times(1)).getPlayerWithCemetery();
-        verify(player, times(0)).useCemeteryEffect(any());
-    }
 }

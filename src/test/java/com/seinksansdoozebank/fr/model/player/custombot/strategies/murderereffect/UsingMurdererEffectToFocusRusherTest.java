@@ -1,6 +1,5 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect;
 
-import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
@@ -16,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UsingMurdererEffectToFocusRusherTest {
@@ -31,8 +30,6 @@ class UsingMurdererEffectToFocusRusherTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockView = mock(IView.class);
         spyAssassin = spy(Assassin.class);
         characters = new ArrayList<>(List.of(new Bishop(),
@@ -48,8 +45,7 @@ class UsingMurdererEffectToFocusRusherTest {
         characters.add(new Merchant());
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin, mockView);
-        verify(spyAssassin).useEffect(new Merchant());
+        assertEquals(strategy.apply(mockPlayer, mockView), new Merchant());
     }
 
     @Test
@@ -57,22 +53,19 @@ class UsingMurdererEffectToFocusRusherTest {
         characters.add(new King());
         characters.add(new Architect());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin, mockView);
-        verify(spyAssassin).useEffect(new Architect());
+        assertEquals(strategy.apply(mockPlayer, mockView), new Architect());
     }
 
     @Test
     void applyWithKingInListShouldTargetKing() {
         characters.add(new King());
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin, mockView);
-        verify(spyAssassin).useEffect(new King());
+        assertEquals(strategy.apply(mockPlayer, mockView), new King());
     }
 
     @Test
     void applyWithNoImportantCharacterInListShouldTargetRandom() {
         when(mockPlayer.getAvailableCharacters()).thenReturn(characters);
-        strategy.apply(mockPlayer, spyAssassin, mockView);
-        verify(spyAssassin).useEffect(any());
+        assertNotNull(strategy.apply(mockPlayer, mockView));
     }
 }

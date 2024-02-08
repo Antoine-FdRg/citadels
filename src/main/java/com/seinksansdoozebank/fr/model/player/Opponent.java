@@ -5,11 +5,12 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface Opponent {
 
     int getNbGold();
+
+    int getPositionInDrawToPickACharacter();
 
     int nbDistrictsInCitadel();
 
@@ -23,6 +24,10 @@ public interface Opponent {
 
     boolean equals(Object o);
 
-    Optional<Card> destroyDistrict(Player attacker, District district);
+    boolean isAboutToWin();
+
+    void destroyDistrict(Player attacker, District district);
+
+    boolean isUsingCemeteryEffect(Card card);
 
 }

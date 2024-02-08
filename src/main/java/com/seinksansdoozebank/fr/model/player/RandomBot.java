@@ -1,36 +1,32 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Magician;
-import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
+import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static java.util.Collections.shuffle;
 
 public class RandomBot extends Player {
 
-    public RandomBot(int nbGold, Deck deck, IView view) {
-        super(nbGold, deck, view);
+    public RandomBot(int nbGold, Deck deck, IView view, Bank bank) {
+        super(nbGold, deck, view, bank);
     }
 
     @Override
     public void playARound() {
         this.useCommonCharacterEffect();
-        this.useEffect();
+        this.getCharacter().applyEffect();
         int nbDistrictsToBuild = random.nextInt(this.getNbDistrictsCanBeBuild() + 1);
         this.chooseWhenToPickACard(nbDistrictsToBuild);
     }
@@ -110,32 +106,12 @@ public class RandomBot extends Player {
         return characters.get(random.nextInt(characters.size()));
     }
 
-    protected void useEffect() {
-        if (this.character instanceof Merchant merchant) {
-            merchant.useEffect();
-        }
-        // The strategy of the smart bot for condottiere will be to destroy the best district of the player which owns the highest number of districts
-        else if (this.character instanceof Condottiere condottiere) {
-            this.useEffectCondottiere(condottiere);
-        } else if (this.character instanceof Architect) {
-            this.useEffectArchitectPickCards();
-        } else if (this.character instanceof Assassin assassin) {
-            this.useEffectAssassin(assassin);
-        } else if (this.character instanceof Magician magician) {
-            this.useEffectMagician(magician);
-        } else if (this.getCharacter() instanceof Thief thief) {
-            this.useEffectThief(thief);
-        }
-    }
-
     /**
      * The magician can exchange all it's card with another player or
      * can exchange some card with the same number of cards with the deck
-     *
-     * @param magician the magician character
      */
     @Override
-    void useEffectMagician(Magician magician) {
+    public MagicianTarget useEffectMagician() {
         // if the value is 0, the bot is not using the magician effect, else it is using it
         if (random.nextBoolean()) {
             // if true exchange all the card with a player
@@ -143,9 +119,8 @@ public class RandomBot extends Player {
                 // get a random player
                 Opponent opponentToExchangeCards = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
                 // exchange all the cards with the player
-                magician.useEffect(opponentToExchangeCards, List.of());
                 this.view.displayPlayerUseMagicianEffect(this, opponentToExchangeCards);
-                return;
+                return new MagicianTarget(opponentToExchangeCards, List.of());
             }
             // if false exchange some cards with the deck
             // exchange some cards with the deck
@@ -155,76 +130,70 @@ public class RandomBot extends Player {
             List<Card> cardsToExchange = this.getHand().stream()
                     .limit(nbCardsToExchange)
                     .toList();
-            magician.useEffect(null, cardsToExchange);
             this.view.displayPlayerUseMagicianEffect(this, null);
+            return new MagicianTarget(null, cardsToExchange);
         }
+        return null;
     }
 
     /**
      * Effect of assassin character (kill a player)
-     *
-     * @param assassin the assassin character
      */
     @Override
-    protected void useEffectAssassin(Assassin assassin) {
+    public Character useEffectAssassin() {
         Character characterToKill = this.chooseAssassinTarget();
         // try to kill the playerToKill and if throw retry until the playerToKill is dead
         while (!characterToKill.isDead()) {
             try {
-                assassin.useEffect(characterToKill);
                 view.displayPlayerUseAssassinEffect(this, characterToKill);
-                break;
+                return characterToKill;
             } catch (IllegalArgumentException e) {
                 characterToKill = this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
             }
         }
+        return null;
     }
 
     @Override
     protected Character chooseAssassinTarget() {
-        return this.getAvailableCharacters().get(random.nextInt(this.getAvailableCharacters().size()));
+        List<Character> targetableCharacters = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+                !character.isDead()).toList();
+        return targetableCharacters.get(random.nextInt(targetableCharacters.size()));
     }
 
     @Override
-    protected void useEffectCondottiere(Condottiere condottiere) {
+    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
         // if the value is 0, the bot is not using the condottiere effect, else it is using it
         if (random.nextBoolean()) {
-            // get a random player, and destroy a district of this player randomly
-            Opponent opponentToDestroyDistrict = this.getOpponents().get(random.nextInt(this.getOpponents().size()));
+            Opponent opponentToDestroyDistrict = opponentsFocusable.get(random.nextInt(opponentsFocusable.size()));
+            List<Card> opponentCitadel = opponentToDestroyDistrict.getCitadel()
+                    .stream().filter(card -> !card.getDistrict().equals(District.DONJON)).toList();
             // if the player has no district, the bot will not use the condottiere effect
-            if (opponentToDestroyDistrict.nbDistrictsInCitadel() <= 0) {
-                return;
+            if (opponentCitadel.isEmpty()) {
+                return null;
             }
             // get the random district
-            int index = random.nextInt(opponentToDestroyDistrict.nbDistrictsInCitadel());
+            int index = random.nextInt(opponentCitadel.size());
             // get the district to destroy
-            District districtToDestroy = opponentToDestroyDistrict.getCitadel().get(index).getDistrict();
+            District districtToDestroy = opponentCitadel.get(index).getDistrict();
             // Check if the number of golds of the player is enough to destroy the district
             if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
-                try {
-                    condottiere.useEffect(opponentToDestroyDistrict, districtToDestroy);
-                } catch (IllegalArgumentException e) {
-                    view.displayPlayerError(this, e.getMessage());
-                }
+                return new CondottiereTarget(opponentToDestroyDistrict, districtToDestroy);
             }
         }
+        return null;
     }
 
-    /**
-     * Effect of thief character (chose victim)
-     *
-     * @param thief the thief character
-     */
-    @Override
-    public void useEffectThief(Thief thief) {
-        Optional<Character> victim = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
+    protected Optional<Character> chooseThiefTarget() {
+        List<Character> targetableCharacters = this.getAvailableCharacters().stream().filter(character -> character.getRole() != Role.ASSASSIN &&
                 character.getRole() != Role.THIEF &&
-                !character.isDead()).findFirst();
-        victim.ifPresent(characterVictim -> {
-            thief.useEffect(characterVictim);
-            view.displayPlayerUseThiefEffect(this);
-        });
+                !character.isDead()).toList();
+        if (targetableCharacters.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(targetableCharacters.get(random.nextInt(targetableCharacters.size())));
+        }
     }
 
 
@@ -237,12 +206,9 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public void useCemeteryEffect(Card card) {
-        if (this.getCitadel().stream().anyMatch(c -> c.getDistrict().equals(District.CEMETERY)) && (random.nextBoolean() && this.getNbGold() > 0)) {
-            this.hand.add(card);
-            this.decreaseGold(1);
-            this.view.displayPlayerUseCemeteryEffect(this, card);
-        }
+    protected boolean wantToUseCemeteryEffect(Card card) {
+        return random.nextBoolean() && this.getNbGold() > 0;
+
     }
 
     @Override
@@ -253,10 +219,6 @@ public class RandomBot extends Player {
     @Override
     public String toString() {
         return "Le bot aléatoire " + this.id;
-    }
-
-    public void setRandom(Random mockRandom) {
-        this.random = mockRandom;
     }
 
     public Card chooseCardToDiscardForLaboratoryEffect() {

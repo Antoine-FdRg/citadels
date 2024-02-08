@@ -2,7 +2,6 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.view.IView;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -24,11 +23,23 @@ public class CardChoosingStrategy implements ICardChoosingStrategy {
         // Get the mean of the cost of the cards in the player's hand
         int mean = player.getHand().stream().mapToInt(card -> card.getDistrict().getCost()).sum() / player.getHand().size();
         // Get the card that is the closest to the mean
-        Optional<Card> cardToChoose = player.getHand().stream().min(Comparator.comparingInt(card -> Math.abs(card.getDistrict().getCost() - mean)));
+        Optional<Card> cardToChoose = player.getHand().stream()
+                .filter(player::canPlayCard)
+                .min(Comparator.comparingInt(card -> Math.abs(card.getDistrict().getCost() - mean)));
         // Check that the player can play the card
         if (cardToChoose.isPresent() && player.canPlayCard(cardToChoose.get())) {
             return cardToChoose;
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CardChoosingStrategy;
+    }
+
+    @Override
+    public int hashCode() {
+        return CardChoosingStrategy.class.getName().hashCode();
     }
 }

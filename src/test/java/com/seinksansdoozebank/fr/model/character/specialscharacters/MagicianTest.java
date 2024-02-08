@@ -32,16 +32,14 @@ class MagicianTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
         firstPickedCard = new Card(District.DONJON);
         secondPickedCard = new Card(District.FORTRESS);
         firstExchangeCard = new Card(District.CEMETERY);
         secondExchangeCard = new Card(District.CASTLE);
-        spyPlayer = spy(new RandomBot(2, deck, view));
-        otherSpyPlayer = spy(new RandomBot(2, deck, view));
+        spyPlayer = spy(new RandomBot(2, deck, view, mock(Bank.class)));
+        otherSpyPlayer = spy(new RandomBot(2, deck, view, mock(Bank.class)));
         magician = new Magician();
         magician.setPlayer(spyPlayer);
         spyPlayer.chooseCharacter(new ArrayList<>(List.of(magician)));
@@ -51,7 +49,7 @@ class MagicianTest {
     void useEffectSwitchHandWithPlayer() {
         List<Card> handSave = spyPlayer.getHand();
         List<Card> otherHandSave = otherSpyPlayer.getHand();
-        ((Magician) spyPlayer.getCharacter()).useEffect(otherSpyPlayer, null);
+        ((Magician) spyPlayer.getCharacter()).useEffect(new MagicianTarget(otherSpyPlayer, null));
         verify(otherSpyPlayer, times(1)).switchHandWith(spyPlayer);
         // Check that the other player has the same hand as the ancient hand spyPlayer
         assertEquals(handSave, otherSpyPlayer.getHand());
@@ -69,7 +67,7 @@ class MagicianTest {
 
         assertEquals(3, spyPlayer.getHand().size());
 
-        ((Magician) spyPlayer.getCharacter()).useEffect(null, List.of(firstExchangeCard, secondExchangeCard));
+        ((Magician) spyPlayer.getCharacter()).useEffect(new MagicianTarget(null, List.of(firstExchangeCard, secondExchangeCard)));
 
         assertEquals(3, spyPlayer.getHand().size());
         assertEquals(firstPickedCard, spyPlayer.getHand().get(0));
