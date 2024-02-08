@@ -78,7 +78,7 @@ public class Game {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
                         .anyMatch(player::canPlayCard));
-        return deck.getDeck().isEmpty() && this.bank.getNbOfAvailableCoins() <= 0 && !aPlayerCanPlay;
+        return (deck.getDeck().isEmpty() && this.bank.getNbOfAvailableCoins() <= 0 && !aPlayerCanPlay) || this.nbCurrentRound > 1000;
     }
 
     /**

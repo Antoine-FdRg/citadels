@@ -104,13 +104,13 @@ public class GameStatisticsAnalyzer {
      * @param numBuilderBots The number of builder bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        CustomStatisticsLogger.setLevel(Level.OFF);
+        CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
             Game game = createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots);
             game.run();
-            CustomStatisticsLogger.log(Level.INFO, "Game {0} completed", new Object[]{i + 1});
+            CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
         }
 
