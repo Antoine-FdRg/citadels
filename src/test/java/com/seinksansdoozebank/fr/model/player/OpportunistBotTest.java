@@ -40,15 +40,17 @@ class OpportunistBotTest {
     Card cardPort;
     Card dracoport;
 
+    Bank bank;
+
     @BeforeEach
     void setup() {
-        Bank.reset();
         view = mock(Cli.class);
         deck = spy(new Deck());
+        Bank bank = new Bank();
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
         Player.resetIdCounter();
-        spyOpportunistBot = spy(new OpportunistBot(10, deck, view));
+        spyOpportunistBot = spy(new OpportunistBot(10, deck, view, bank));
         templeCard = new Card(District.TEMPLE);
         barrackCard = new Card(District.BARRACK);
         cardPort = new Card(District.PORT);
@@ -95,7 +97,7 @@ class OpportunistBotTest {
                 new Thief(),
                 new Merchant()
         ));
-        RandomBot opponent = spy(new RandomBot(4, deck, view));
+        RandomBot opponent = spy(new RandomBot(4, deck, view, bank));
         when(spyOpportunistBot.getNbGold()).thenReturn(2);
         when(spyOpportunistBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.MARKET_PLACE))));
         when(spyOpportunistBot.getOpponents()).thenReturn(new ArrayList<>(List.of(opponent)));
@@ -133,7 +135,6 @@ class OpportunistBotTest {
 
         Optional<Card> chosenCard = spyOpportunistBot.chooseCard();
         assertTrue(chosenCard.isPresent());
-
         assertEquals(templeCard, chosenCard.get());
     }
 

@@ -44,18 +44,18 @@ class RandomBotTest {
     RandomBot spyRandomBot;
     IView view;
     Deck deck;
+    Bank bank;
     Card cardCostThree;
     Card cardCostFive;
 
     @BeforeEach
     void setup() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
+        bank = mock(Bank.class);
         cardCostThree = new Card(District.DONJON);
         cardCostFive = new Card(District.FORTRESS);
-        spyRandomBot = spy(new RandomBot(10, deck, view));
+        spyRandomBot = spy(new RandomBot(10, deck, view, bank));
     }
 
     @Test
@@ -103,7 +103,7 @@ class RandomBotTest {
         Assassin assassin = spy(new Assassin());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
         List<Opponent> opponents = new ArrayList<>();
-        RandomBot opponent = new RandomBot(10, deck, view);
+        RandomBot opponent = new RandomBot(10, deck, view, bank);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
@@ -199,7 +199,7 @@ class RandomBotTest {
         spyRandomBot.setRandom(mockRandom);
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
-        Player opponent = new SmartBot(10, deck, view);
+        Player opponent = new SmartBot(10, deck, view, bank);
         opponent.setCitadel(opponentCitadel);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
         opponent.reveal();
@@ -219,7 +219,7 @@ class RandomBotTest {
         spyRandomBot.setRandom(mockRandom);
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
-        Player opponent = new SmartBot(10, deck, view);
+        Player opponent = new SmartBot(10, deck, view, bank);
         opponent.setCitadel(opponentCitadel);
         opponent.chooseCharacter(new ArrayList<>(List.of(new Bishop())));
         opponent.reveal();
@@ -261,7 +261,7 @@ class RandomBotTest {
      */
     @Test
     void randomBotUseEffectOfTheThiefTest() {
-        Player player = spy(new RandomBot(2, deck, view));
+        Player player = spy(new RandomBot(2, deck, view, bank));
         Thief thief = spy(new Thief());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 
@@ -280,7 +280,7 @@ class RandomBotTest {
      */
     @Test
     void randomBotUseEffectOfTheThiefWhenNoOpponentsAvailableTest() {
-        Player player = spy(new RandomBot(2, deck, view));
+        Player player = spy(new RandomBot(2, deck, view, bank));
         Thief thief = spy(new Thief());
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(thief)));
 

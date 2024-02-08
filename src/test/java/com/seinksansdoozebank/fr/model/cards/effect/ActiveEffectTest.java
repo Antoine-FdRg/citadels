@@ -23,14 +23,14 @@ class ActiveEffectTest {
     Player spyPlayer;
     IView view;
     Deck deck;
+    Bank bank;
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = spy(new Deck());
-        spyPlayer = spy(new RandomBot(10, deck, view));
+        bank = new Bank();
+        spyPlayer = spy(new RandomBot(10, deck, view, bank));
     }
 
     @Test
@@ -39,7 +39,7 @@ class ActiveEffectTest {
         spyPlayer.getHand().add(new Card(District.TEMPLE));
 
         when(mockRandom.nextInt(spyPlayer.getHand().size())).thenReturn(0);
-        ((RandomBot) spyPlayer).setRandom(mockRandom);
+        spyPlayer.setRandom(mockRandom);
 
         // give to the player a card in his hand
         Card laboratory = new Card(District.LABORATORY);
@@ -51,9 +51,10 @@ class ActiveEffectTest {
     void useManufactureEffect() {
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
-        ((RandomBot) spyPlayer).setRandom(mockRandom);
+        spyPlayer.setRandom(mockRandom);
 
         Card manufacture = new Card(District.MANUFACTURE);
+        bank.pickXCoin(manufacture.getDistrict().getCost());
         manufacture.getDistrict().useActiveEffect(spyPlayer, view);
         assertEquals(7, spyPlayer.getNbGold());
     }

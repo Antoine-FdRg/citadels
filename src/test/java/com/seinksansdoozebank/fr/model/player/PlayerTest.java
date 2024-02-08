@@ -4,6 +4,7 @@ import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
+import com.seinksansdoozebank.fr.model.cards.effect.ManufactureEffect;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
@@ -39,22 +40,22 @@ class PlayerTest {
     Deck deck;
     Card cardCostThree;
     Card cardCostFive;
+    Bank bank;
 
     @BeforeEach
     void setup() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(Cli.class);
         deck = mock(Deck.class);
+        bank = new Bank();
         cardCostThree = new Card(District.BARRACK);
         cardCostFive = new Card(District.FORTRESS);
-        player = new RandomBot(10, deck, view);
-        spyPlayer = spy(new RandomBot(10, deck, view));
+        player = new RandomBot(10, deck, view, bank);
+        spyPlayer = spy(new RandomBot(10, deck, view, bank));
     }
 
     @Test
     void testPickGold() {
-        Player player = new RandomBot(10, deck, view);
+        Player player = new RandomBot(10, deck, view, bank);
         player.pickGold();
         assertEquals(12, player.getNbGold());
     }
@@ -62,7 +63,7 @@ class PlayerTest {
     @Test
     void testPickGoldWith3Gold3ShouldGiveThePlayer3Gold() {
         IView view = mock(Cli.class);
-        Player player = new RandomBot(3, deck, view);
+        Player player = new RandomBot(3, deck, view, bank);
         player.pickGold(3);
         assertEquals(6, player.getNbGold());
     }
@@ -70,7 +71,7 @@ class PlayerTest {
     @Test
     void testPickGoldWith0GoldShouldGiveThePlayer0GoldAndLogNothing() {
         IView view = mock(Cli.class);
-        Player player = new RandomBot(0, deck, view);
+        Player player = new RandomBot(0, deck, view, bank);
         player.pickGold(0);
         assertEquals(0, player.getNbGold());
         verify(view, times(0)).displayPlayerPicksGold(player, 0);
@@ -90,6 +91,7 @@ class PlayerTest {
 
     @Test
     void testPlayACardWithPlayableChosenCardShouldReturnCard() {
+        bank.pickXCoin(cardCostThree.getDistrict().getCost());
         spyPlayer.getHand().add(cardCostThree);
         doReturn(Optional.of(cardCostThree)).when(spyPlayer).chooseCard();
         doReturn(true).when(spyPlayer).canPlayCard(any(Card.class));
@@ -127,7 +129,7 @@ class PlayerTest {
 
     @Test
     void testDecreaseGold() {
-        Player player = new RandomBot(10, deck, view);
+        Player player = new RandomBot(10, deck, view, bank);
 
         player.decreaseGold(3);
 
@@ -138,7 +140,7 @@ class PlayerTest {
     void testResetIdCounter() {
         // Test resetting the ID counter for player
         Player.resetIdCounter();
-        Player newPlayer = new RandomBot(10, deck, view);
+        Player newPlayer = new RandomBot(10, deck, view, bank);
         assertEquals(1, newPlayer.getId()); // Should start counting from 1 again
     }
 
@@ -216,7 +218,7 @@ class PlayerTest {
     @Test
     void switchHandBetweenTwoPlayersWithTwoFilledHand() {
         spyPlayer.hand.add(cardCostFive);
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
         otherPlayer.hand.add(cardCostThree);
 
         spyPlayer.switchHandWith(otherPlayer);
@@ -228,7 +230,7 @@ class PlayerTest {
     @Test
     void switchHandBetweenTwoPlayersWithOneFilledHand() {
         spyPlayer.hand.add(cardCostFive);
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
 
         spyPlayer.switchHandWith(otherPlayer);
 
@@ -238,7 +240,7 @@ class PlayerTest {
 
     @Test
     void switchHandBetweenTwoPlayersWithTwoEmptyHand() {
-        RandomBot otherPlayer = new RandomBot(10, deck, view);
+        RandomBot otherPlayer = new RandomBot(10, deck, view, bank);
 
         spyPlayer.switchHandWith(otherPlayer);
 
@@ -256,7 +258,7 @@ class PlayerTest {
 
     @Test
     void playerWithArchitectCharacterShouldGet3DistrictsAfterPlay() {
-        Player spyPlayerSmart = spy(new SmartBot(10, deck, view));
+        Player spyPlayerSmart = spy(new SmartBot(10, deck, view, bank));
         when(spyPlayerSmart.chooseCard()).thenReturn(Optional.empty());
         when(deck.pick()).thenReturn(Optional.of(new Card(District.MANOR)));
         spyPlayerSmart.chooseCharacter(new ArrayList<>(List.of(new Architect())));
@@ -295,6 +297,7 @@ class PlayerTest {
     @Test
     void playCardWithAGivenCard() {
         Card temple = new Card(District.TEMPLE);
+        bank.pickXCoin(temple.getDistrict().getCost());
         spyPlayer.getHand().add(temple);
         doReturn(true).when(spyPlayer).canPlayCard(temple);
         spyPlayer.buyACardAndAddItToCitadel(temple);
@@ -417,6 +420,7 @@ class PlayerTest {
 
     @Test
     void isUsingCemeteryEffectNotAsCondottiereAndWantToUseShouldReturnTrue() {
+        bank.pickXCoin(1);
         Card temple = new Card(District.TEMPLE);
         when(spyPlayer.getCharacter()).thenReturn(new Merchant());
         when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
@@ -452,6 +456,7 @@ class PlayerTest {
 
     @Test
     void usePrestigesEffectWithManufacture() {
+        bank.pickXCoin(ManufactureEffect.NB_GOLD_TO_PAY_TO_USE_EFFECT);
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
         spyPlayer.setRandom(mockRandom);

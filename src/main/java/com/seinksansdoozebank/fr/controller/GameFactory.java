@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.controller;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
@@ -24,33 +25,34 @@ public class GameFactory {
      * @param nbPlayers the number of random bots to add to the game
      * @return the game created
      */
-    public static Game createGameOfRandomBot(IView view, int nbPlayers) {
+    public static Game createGameOfRandomBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addRandomBot();
         }
         return gameBuilder.build();
     }
 
-    public static Game createGameOfSmartBot(IView view, int nbPlayers) {
+    public static Game createGameOfSmartBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addSmartBot();
         }
         return gameBuilder.build();
     }
 
-    public static Game createGameOfCustomBot(IView view, int nbPlayers) {
+    public static Game createGameOfCustomBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addCustomBot(
                     null,
@@ -64,41 +66,41 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
-    public static Game createGameOfRichardBot(IView view, int nbPlayers) {
+    public static Game createGameOfRichardBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addRichardBot();
         }
         return gameBuilder.build();
     }
 
-    public static Game createGameOfBuilderBot(IView view, int nbPlayers) {
+    public static Game createGameOfBuilderBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addBuilderBot();
         }
         return gameBuilder.build();
     }
 
-    public static Game createGameOfOpportunistBot(IView view, int nbPlayers) {
+    public static Game createGameOfOpportunistBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addOpportunistBot();
         }
         return gameBuilder.build();
     }
 
-    public static Game createGameOfAllTypeOfBot(IView view) {
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck());
+    public static Game createGameOfAllTypeOfBot(IView view, Bank bank) {
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         gameBuilder.addRandomBot();
         gameBuilder.addSmartBot();
         gameBuilder.addCustomBot(

@@ -46,8 +46,6 @@ class CustomBotTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         mockView = mock(IView.class);
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
@@ -55,7 +53,7 @@ class CustomBotTest {
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
         mockCardChoosingStrategy = mock(ICardChoosingStrategy.class);
-        spyCustomBot = spy(new CustomBot(2, new Deck(), mockView,
+        spyCustomBot = spy(new CustomBot(2, new Deck(), mockView, mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -138,7 +136,7 @@ class CustomBotTest {
     @Test
     void chooseCharacterLinksThePlayerAndTheCharacter() {
         ICharacterChoosingStrategy spyChoosingStrategy = spy(new ChoosingCharacterToTargetFirstPlayer());
-        CustomBot customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class),
+        CustomBot customBotWithARealChoosingStrat = new CustomBot(2, null, mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -162,14 +160,14 @@ class CustomBotTest {
 
     @Test
     void testNotEqualsWithBotWithSameStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -181,21 +179,21 @@ class CustomBotTest {
 
     @Test
     void testNotEqualsWithBotWithNoStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class));
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class));
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class));
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class));
         assertNotEquals(customBot1, customBot2);
     }
 
     @Test
     void testNotEqualsWithBotWithDifferentStrategies() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -207,7 +205,7 @@ class CustomBotTest {
 
     @Test
     void testNotEqualsWithNotSameObject() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
@@ -220,14 +218,14 @@ class CustomBotTest {
 
     @Test
     void testHashCode() {
-        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot1 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
                 mockUsingCondottiereEffectStrategy,
                 mockCardChoosingStrategy);
-        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class),
+        CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,

@@ -26,12 +26,10 @@ class BishopTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         // Create a player
         view = mock(Cli.class);
         deck = mock(Deck.class);
-        player = spy(new RandomBot(2, deck, view));
+        player = spy(new RandomBot(2, deck, view, new Bank()));
         // Create a list of districts for the citadel
         citadel = new ArrayList<>();
         // Add a district to the citadel

@@ -25,9 +25,7 @@ class CustomBotBuilderTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
-        customBotBuilder = new CustomBotBuilder(2, null, null);
+        customBotBuilder = new CustomBotBuilder(2, null, null, mock(Bank.class));
         mockPickingStrategy = mock(IPickingStrategy.class);
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class AssassinTest {
 
@@ -23,14 +24,12 @@ class AssassinTest {
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         Deck deckAssassin = new Deck();
         assassin = new Assassin();
-        Player playerAssassin = new RandomBot(2, deckAssassin, view);
+        Player playerAssassin = new RandomBot(2, deckAssassin, view, mock(Bank.class));
         assassin.setPlayer(playerAssassin);
         Deck deckBishop = new Deck();
-        Player playerBishop = new RandomBot(2, deckBishop, view);
+        Player playerBishop = new RandomBot(2, deckBishop, view, mock(Bank.class));
         bishop = new Bishop();
         bishop.setPlayer(playerBishop);
     }
