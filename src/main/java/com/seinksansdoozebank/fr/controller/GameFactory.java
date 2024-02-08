@@ -111,7 +111,10 @@ public class GameFactory {
      * @param numCustomBots The number of custom bots to be added to the game.
      * @return The newly created game instance.
      */
-    public static Game createGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {
+    public static Game createCustomGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {
+        if (numRandomBots + numSmartBots + numCustomBots + numRichardBots + numBuilderBots + numOpportunistBots < Game.NB_PLAYER_MIN || numRandomBots + numSmartBots + numCustomBots + numRichardBots + numBuilderBots + numOpportunistBots > Game.NB_PLAYER_MAX) {
+            throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
+        }
         GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck(), new Bank());
         for (int i = 0; i < numRandomBots; i++) {
             gameBuilder.addRandomBot();

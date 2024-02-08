@@ -10,12 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 class GameFactoryTest {
     IView view;
     Bank bank;
+
     @BeforeEach
     void setUp() {
         view = mock(IView.class);
@@ -32,11 +35,13 @@ class GameFactoryTest {
         Game game = GameFactory.createGameOfRandomBot(view, bank, 4);
         assertEquals(4, game.players.size());
     }
+
     @Test
     void createGameOfRandomBotWith5Bot() {
         Game game = GameFactory.createGameOfRandomBot(view, bank, 5);
         assertEquals(5, game.players.size());
     }
+
     @Test
     void createGameOfRandomBotWith6Bot() {
         Game game = GameFactory.createGameOfRandomBot(view, bank, 6);
@@ -103,5 +108,30 @@ class GameFactoryTest {
     @Test
     void createGameOfRichardBotWithMoreThan6BotThrowException() {
         assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 7));
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            {
+                    "1, 1, 1, 1, 1, 1, 6", // Game of 6 players
+                    "1, 1, 1, 1, 1, 0, 5", // Game of 5 players
+                    "1, 1, 1, 0, 1, 1, 5", // Game of 5 players
+                    "1, 1, 1, 1, 0, 0, 4", // Game of 4 players
+                    "1, 2, 0, 1, 0, 0, 4", // Game of 5 players
+                    "1, 0, 0, 1, 4, 0, 6", // Game of 6 players
+            })
+    void createCustomGameWithNPlayers(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots, int expected) {
+        Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
+        assertEquals(expected, game.players.size());
+    }
+
+    @Test
+    void createCustomGameWith7PlayersThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(1, 1, 1, 1, 1, 2));
+    }
+
+    @Test
+    void createCustomGameWith3PlayersThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(0, 1, 1, 0, 1, 0));
     }
 }

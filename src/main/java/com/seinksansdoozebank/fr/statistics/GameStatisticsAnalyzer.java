@@ -98,7 +98,7 @@ public class GameStatisticsAnalyzer {
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
-            Game game = GameFactory.createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
+            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
             game.run();
             CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
