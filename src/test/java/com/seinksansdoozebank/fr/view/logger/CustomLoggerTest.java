@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.view.logger;
 
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -34,7 +35,7 @@ class CustomLoggerTest {
     @BeforeEach
     void setUp() {
         IView view = mock(IView.class);
-        player = new RandomBot(10, new Deck(), view);
+        player = new RandomBot(10, new Deck(), view, new Bank());
         testHandler = new TestHandler();
         LOGGER.addHandler(testHandler);
     }

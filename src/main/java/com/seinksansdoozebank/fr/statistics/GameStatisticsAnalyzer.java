@@ -73,9 +73,8 @@ public class GameStatisticsAnalyzer {
 
     public void runDemo() {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
-        Bank.reset();
         Player.resetIdCounter();
-        Game game = new GameBuilder(new Cli(), new Deck())
+        Game game = new GameBuilder(new Cli(), new Deck(), new Bank())
                 .addRandomBot()
                 .addRandomBot()
                 .addBuilderBot()
@@ -105,14 +104,13 @@ public class GameStatisticsAnalyzer {
      * @param numBuilderBots The number of builder bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        CustomStatisticsLogger.setLevel(Level.ALL);
+        CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
-            Bank.reset();
             Game game = createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots);
             game.run();
-            CustomStatisticsLogger.log(Level.INFO, "Game {0} completed", new Object[]{i + 1});
+            CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
         }
 
@@ -217,7 +215,7 @@ public class GameStatisticsAnalyzer {
      * @return The newly created game instance.
      */
     Game createGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck());
+        GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck(), new Bank());
         for (int i = 0; i < numRandomBots; i++) {
             gameBuilder.addRandomBot();
         }

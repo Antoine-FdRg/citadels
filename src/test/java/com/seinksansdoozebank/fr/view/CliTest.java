@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.view;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
@@ -37,11 +38,14 @@ class CliTest {
 
     private static final Logger LOGGER = Logger.getLogger(CustomLogger.class.getName());
 
+    Bank bank;
+
     @BeforeEach
     void setUp() {
         CustomLogger.setLevel(Level.ALL);
         view = new Cli();
-        player = spy(new RandomBot(10, new Deck(), view));
+        bank = new Bank();
+        player = spy(new RandomBot(10, new Deck(), view, bank));
         testHandler = new TestHandler();
         LOGGER.addHandler(testHandler);
     }
@@ -126,7 +130,7 @@ class CliTest {
 
     @Test
     void testDisplayPlayerUseCondottiereDistrict() {
-        Player defender = spy(new RandomBot(10, new Deck(), view));
+        Player defender = spy(new RandomBot(10, new Deck(), view, bank));
 
         view.displayPlayerUseCondottiereDistrict(player, defender, card.getDistrict());
 
@@ -310,7 +314,7 @@ class CliTest {
 
     @Test
     void testDisplayPlayerUseMagicianEffect() {
-        Player targetPlayer = spy(new RandomBot(10, new Deck(), view));
+        Player targetPlayer = spy(new RandomBot(10, new Deck(), view, bank));
         view.displayPlayerUseMagicianEffect(player, targetPlayer);
 
         String expectedOutput = player + " utilise le magicien pour échanger sa main avec celle du " + targetPlayer + ".";

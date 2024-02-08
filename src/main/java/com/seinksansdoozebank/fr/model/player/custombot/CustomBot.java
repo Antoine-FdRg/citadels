@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
@@ -27,15 +28,14 @@ public class CustomBot extends RandomBot {
     IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
     ICardChoosingStrategy cardChoosingStrategy;
 
-
-    protected CustomBot(int nbGold, Deck deck, IView view,
+    protected CustomBot(int nbGold, Deck deck, IView view, Bank bank,
                         IPickingStrategy pickingStrategy,
                         ICharacterChoosingStrategy characterChoosingStrategy,
                         IUsingThiefEffectStrategy usingThiefEffectStrategy,
                         IUsingMurdererEffectStrategy usingMurdererEffectStrategy,
                         IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy,
                         ICardChoosingStrategy cardChoosingStrategy) {
-        super(nbGold, deck, view);
+        super(nbGold, deck, view, bank);
         this.pickingStrategy = pickingStrategy;
         this.characterChoosingStrategy = characterChoosingStrategy;
         this.usingThiefEffectStrategy = usingThiefEffectStrategy;
@@ -44,8 +44,8 @@ public class CustomBot extends RandomBot {
         this.cardChoosingStrategy = cardChoosingStrategy;
     }
 
-    public CustomBot(int nbGold, Deck deck, IView view) {
-        super(nbGold, deck, view);
+    public CustomBot(int nbGold, Deck deck, IView view, Bank bank) {
+        super(nbGold, deck, view, bank);
     }
 
     @Override
