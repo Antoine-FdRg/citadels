@@ -123,6 +123,7 @@ public class GameBuilder {
         for (Player player : playerList) {
             List<Opponent> opponents = new ArrayList<>(playerList);
             opponents.remove(player);
+            Collections.shuffle(opponents);
             player.setOpponents(opponents);
         }
         return new Game(this.view, this.deck, this.bank, this.playerList);
