@@ -446,6 +446,20 @@ class RichardBotTest {
     }
 
     @Test
+    void chooseThiefTargetWhenOpponentIsDeadShouldReturnEmpty() {
+        Architect opponent = spy(new Architect());
+        List<Character> availableCharacters = List.of(opponent);
+        when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
+        when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentWithEmptyHand));
+        when(opponent.isDead()).thenReturn(true);
+
+        Optional<Character> result = richardBot.chooseThiefTarget();
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
     void chooseAssassinTargetIfThiefIsPresentAndShouldPreventWealth() {
         // Configuration des joueurs et de leurs rôles
         Player thiefPlayer = spy(new SmartBot(10, deck, view));
