@@ -162,7 +162,7 @@ public class GameStatisticsAnalyzer {
             for (int i = 1; i <= this.getPlayerStatisticsMap().size(); i++) {
                 placementDetails.add(String.valueOf(detailedPlacement.getOrDefault(i, 0)));
             }
-            StringBuilder row = new StringBuilder(String.format("| %-18s| %-12d| %-10d| %-11d| %-14.3f| %-19.1f|",
+            StringBuilder row = new StringBuilder(String.format("| %-21s| %-12d| %-10d| %-11d| %-14.3f| %-19.1f|",
                     player.toString(), stats.getTotalGames(), stats.getGamesWon(),
                     stats.getGamesLost(), stats.getAverageScore(),
                     stats.getWinningPercentage()));
@@ -183,12 +183,12 @@ public class GameStatisticsAnalyzer {
 
     private StringBuilder getStringBuilder() {
         // Construct header with dynamic Pos columns
-        StringBuilder header = new StringBuilder("| Player            | Total Games | Games Won | Games Lost | Average Score | Winning Percentage |");
+        StringBuilder header = new StringBuilder("| Player               | Total Games | Games Won | Games Lost | Average Score | Winning Percentage |");
         for (int i = 1; i <= this.getPlayerStatisticsMap().size(); i++) {
             header.append(String.format(" Pos %d |", i));
         }
         header.append("\n");
-        header.append("|-------------------|-------------|-----------|------------|---------------|--------------------|");
+        header.append("|----------------------|-------------|-----------|------------|---------------|--------------------|");
         header.append("-------|".repeat(this.getPlayerStatisticsMap().size()));
         header.append("\n");
         return header;
