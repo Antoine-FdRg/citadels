@@ -25,6 +25,7 @@ public abstract class Player implements Opponent {
     private int bonus;
     private boolean isFirstToHaveEightDistricts;
     protected Deck deck;
+    protected Bank bank;
     protected final List<Card> hand;
     private final List<Card> citadel;
     protected final IView view;
@@ -50,7 +51,7 @@ public abstract class Player implements Opponent {
     private Character lastCharacterChosen;
 
 
-    protected Player(int nbGold, Deck deck, IView view) {
+    protected Player(int nbGold, Deck deck, IView view, Bank bank) {
         this.id = counter++;
         this.nbGold = nbGold;
         this.deck = deck;
@@ -61,6 +62,7 @@ public abstract class Player implements Opponent {
         this.bonus = 0;
         this.isFirstToHaveEightDistricts = false;
         this.hasPlayed = false;
+        this.bank = bank;
     }
 
     public int getPositionInDrawToPickACharacter() {
@@ -339,14 +341,14 @@ public abstract class Player implements Opponent {
      */
     public void returnGoldToBank(int gold) {
         this.nbGold -= gold;
-        Bank.getInstance().retrieveCoin(gold);
+        this.bank.retrieveCoin(gold);
     }
 
     /**
      * Represents the player's choice to draw 2 gold coins from the bank
      */
     public final void pickGold() {
-        int nbPickedGold = Bank.getInstance().pickXCoin();
+        int nbPickedGold = this.bank.pickXCoin();
         view.displayPlayerPicksGold(this, nbPickedGold);
         this.nbGold += nbPickedGold;
     }
@@ -357,7 +359,7 @@ public abstract class Player implements Opponent {
      * @param nbOfGold the number of gold coins to pick
      */
     public final void pickGold(int nbOfGold) {
-        int nbPickedGold = Bank.getInstance().pickXCoin(nbOfGold);
+        int nbPickedGold = this.bank.pickXCoin(nbOfGold);
         if (nbPickedGold > 0) {
             this.nbGold += nbPickedGold;
         }

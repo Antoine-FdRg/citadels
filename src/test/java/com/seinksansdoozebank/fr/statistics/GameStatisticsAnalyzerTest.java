@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.statistics;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import com.seinksansdoozebank.fr.controller.Game;
@@ -13,6 +14,7 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereef
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
+import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,6 +22,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,7 +40,7 @@ class GameStatisticsAnalyzerTest {
 
     @BeforeEach
     void setUp() {
-        player = spy(new RandomBot(2, new Deck(), new Cli()));
+        player = spy(new RandomBot(2, new Deck(), new Cli(), new Bank()));
         // Initialize the GameStatisticsAnalyzer instance
         analyzer = spy(new GameStatisticsAnalyzer(false)); // Assuming saveStatsToCsv is set to false for testing
     }
@@ -95,7 +98,7 @@ class GameStatisticsAnalyzerTest {
         // Mock necessary dependencies
         Player.resetIdCounter(); // Ensure Player ID counter is reset
 
-        Game game = new GameBuilder(new Cli(), new Deck())
+        Game game = new GameBuilder(new Cli(), new Deck(), new Bank())
                 .addRandomBot()
                 .addRandomBot()
                 .addBuilderBot()

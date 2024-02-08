@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -21,8 +22,8 @@ import java.util.Optional;
 
 public class RichardBot extends SmartBot {
 
-    public RichardBot(int nbGold, Deck deck, IView view) {
-        super(nbGold, deck, view);
+    public RichardBot(int nbGold, Deck deck, IView view, Bank bank) {
+        super(nbGold, deck, view, bank);
     }
 
     boolean anOpponentIsAboutToWin() {

@@ -25,14 +25,14 @@ class GameBuilderTest {
     GameBuilder gameBuilder;
     IView view;
     Deck deck;
+    Bank bank;
 
     @BeforeEach
     void setUp() {
-        Bank.reset();
-        Bank.getInstance().pickXCoin(Bank.MAX_COIN / 2);
         view = mock(IView.class);
         deck = mock(Deck.class);
-        gameBuilder = spy(new GameBuilder(view,deck));
+        bank = new Bank();
+        gameBuilder = spy(new GameBuilder(view, deck, bank));
     }
 
     @Test
