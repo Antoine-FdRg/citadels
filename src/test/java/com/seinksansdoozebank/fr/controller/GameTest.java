@@ -60,14 +60,12 @@ class GameTest {
     Player playerWithEightDistricts;
     private Cli view;
     private Bank fourPlayersGameBank;
-    private Bank fivePlayersGameBank;
     List<Character> charactersList;
 
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        fivePlayersGameBank = new Bank();
-        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, fivePlayersGameBank, 5));
+        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, new Bank(), 5));
 
         Bank threePlayersGameBank = new Bank();
         gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4);

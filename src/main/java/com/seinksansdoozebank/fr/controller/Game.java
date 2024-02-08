@@ -29,7 +29,7 @@ public class Game {
     protected static final int NB_PLAYER_MAX = 6;
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private int nbOfDistrictsInCitadel;
+    private final int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
