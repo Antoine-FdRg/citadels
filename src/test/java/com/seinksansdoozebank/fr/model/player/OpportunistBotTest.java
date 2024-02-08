@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -135,6 +136,13 @@ class OpportunistBotTest {
         Optional<Card> chosenCard = spyOpportunistBot.chooseCard();
         assertTrue(chosenCard.isPresent());
         assertEquals(templeCard, chosenCard.get());
+    }
+
+    @Test
+    void testChooseCardWithEmptyHand() {
+        when(spyOpportunistBot.getHand()).thenReturn(new ArrayList<>());
+
+        assertFalse(spyOpportunistBot.chooseCard().isPresent());
     }
 
     @Test
