@@ -8,7 +8,7 @@ public enum Role {
     BISHOP("Evêque"),
     MERCHANT("Marchand"),
     ARCHITECT("Architecte"),
-    CONDOTTIERE("Condottiere");
+    WARLORD("Warlord");
 
     private final String name;
 

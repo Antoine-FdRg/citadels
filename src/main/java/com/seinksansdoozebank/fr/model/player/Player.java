@@ -7,7 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.view.IView;
@@ -288,7 +288,7 @@ public abstract class Player implements Opponent {
 
     abstract Character chooseAssassinTarget();
 
-    public abstract CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable);
+    public abstract WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable);
 
     abstract Optional<Character> chooseThiefTarget();
 
@@ -485,7 +485,7 @@ public abstract class Player implements Opponent {
                 this.deck.discard(cardDestroyed);
                 this.view.displayPlayerDiscardCard(this, cardDestroyed);
             }
-            this.view.displayPlayerUseCondottiereDistrict(attacker, this, targetedDistrict);
+            this.view.displayPlayerUseWarlordDistrict(attacker, this, targetedDistrict);
         } else {
             throw new IllegalArgumentException("The player doesn't have the targetedDistrict to destroy");
         }
@@ -504,7 +504,7 @@ public abstract class Player implements Opponent {
     }
 
     public final boolean isUsingCemeteryEffect(Card card) {
-        if (!this.getCharacter().getRole().equals(Role.CONDOTTIERE) && this.wantToUseCemeteryEffect(card)) {
+        if (!this.getCharacter().getRole().equals(Role.WARLORD) && this.wantToUseCemeteryEffect(card)) {
             this.hand.add(card);
             this.returnGoldToBank(1);
             this.view.displayPlayerUseCemeteryEffect(this, card);

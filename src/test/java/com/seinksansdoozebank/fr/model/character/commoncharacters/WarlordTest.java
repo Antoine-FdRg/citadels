@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class CondottiereTest {
+class WarlordTest {
     List<Card> citadel;
     Player player;
-    Condottiere condottiere;
+    Warlord warlord;
     IView view;
     Deck deck;
     Bank bank;
@@ -45,15 +45,15 @@ class CondottiereTest {
         // Set the citadel to the player
         when(player.getCitadel()).thenReturn(citadel);
         // Create a Bishop character
-        condottiere = new Condottiere();
+        warlord = new Warlord();
         // Set the player and the citadel to the character
-        condottiere.setPlayer(player);
+        warlord.setPlayer(player);
     }
 
     @Test
     void testGoldCollectedFromDistrictType() {
         // Perform the action
-        condottiere.goldCollectedFromDistrictType();
+        warlord.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(6, player.getNbGold());
@@ -64,7 +64,7 @@ class CondottiereTest {
         // Add a district to the citadel
         citadel.add(new Card(District.SCHOOL_OF_MAGIC));
         // Perform the action
-        condottiere.goldCollectedFromDistrictType();
+        warlord.goldCollectedFromDistrictType();
 
         // Check if the player's gold has been increased correctly
         assertEquals(7, player.getNbGold());
@@ -79,8 +79,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.DONJON));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.DONJON);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        WarlordTarget target = new WarlordTarget(otherPlayer, District.DONJON);
+        assertThrows(IllegalArgumentException.class, () -> warlord.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -100,8 +100,8 @@ class CondottiereTest {
         citadel.add(new Card(District.CORNER_SHOP));
         citadel.add(new Card(District.MANUFACTURE));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.BARRACK);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        WarlordTarget target = new WarlordTarget(otherPlayer, District.BARRACK);
+        assertThrows(IllegalArgumentException.class, () -> warlord.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -114,8 +114,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.PORT_FOR_DRAGONS));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.PORT_FOR_DRAGONS);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        WarlordTarget target = new WarlordTarget(otherPlayer, District.PORT_FOR_DRAGONS);
+        assertThrows(IllegalArgumentException.class, () -> warlord.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -128,8 +128,8 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.TAVERN));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        CondottiereTarget target = new CondottiereTarget(otherPlayer, District.TAVERN);
-        assertThrows(IllegalArgumentException.class, () -> condottiere.useEffect(target));
+        WarlordTarget target = new WarlordTarget(otherPlayer, District.TAVERN);
+        assertThrows(IllegalArgumentException.class, () -> warlord.useEffect(target));
         verify(deck, times(0)).discard(any());
     }
 
@@ -142,7 +142,7 @@ class CondottiereTest {
         List<Card> citadel = new ArrayList<>();
         citadel.add(new Card(District.TAVERN));
         when(otherPlayer.getCitadel()).thenReturn(citadel);
-        condottiere.useEffect(new CondottiereTarget(otherPlayer, District.TAVERN));
+        warlord.useEffect(new WarlordTarget(otherPlayer, District.TAVERN));
         verify(deck, times(1)).discard(any());
     }
 }

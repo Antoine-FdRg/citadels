@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
@@ -118,7 +118,7 @@ class GameTest {
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere()
+                new Warlord()
         );
     }
 
@@ -370,7 +370,7 @@ class GameTest {
 
     @Test
     void crownedPlayerIsUpdatedWhilePlayingARoundANdKingIsAlive() {
-        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Condottiere()));
+        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Warlord()));
 
         gameWithFourPlayers.playARound();
 
@@ -382,7 +382,7 @@ class GameTest {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
-        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Condottiere()));
+        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
 
         gameWithFourPlayers.playARound();
 

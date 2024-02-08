@@ -34,8 +34,8 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
         if (customBot.getNbCharacterChosenInARow() >= Player.NB_MAX_CHARACTER_CHOSEN_IN_A_ROW) {
             roleToAvoid = customBot.getLastCharacterChosen().getRole();
         }
-        if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters) && Role.CONDOTTIERE != roleToAvoid) {                // si le condottiere est disponible
-            character = StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters);      // on le prend pour détruire un quartier du leadingOpponent
+        if (StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters) && Role.WARLORD != roleToAvoid) {                // si le warlord est disponible
+            character = StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters);      // on le prend pour détruire un quartier du leadingOpponent
         } else if (leadingOpponent.getNbGold() > NB_GOLD_MIN_FOR_MANY_GOLD) {                          // s'il a beaucoup de pièces
             if (StrategyUtils.isRoleInCharacterList(Role.THIEF, characters) && Role.THIEF != roleToAvoid) {                  // et si le voleur est disponible
                 character = StrategyUtils.getCharacterFromRoleInList(Role.THIEF, characters);        // on le prend pour le voler (car en ayant beaucoup de pièces, il va probablement construire)

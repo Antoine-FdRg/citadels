@@ -40,7 +40,7 @@ class StrategyUtilsTest {
     @Test
     void isRoleInCharacterListWithRoleNotInCharacterListShouldBeFalse() {
         List<Character> characters = List.of(new Assassin(), new Magician(), new Thief());
-        assertFalse(StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters));
+        assertFalse(StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters));
         assertFalse(StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters));
     }
 
@@ -53,7 +53,7 @@ class StrategyUtilsTest {
 
     @Test
     void getCharacterFromRoleInLIstWithRoleNotInCharacterListShouldReturnNull() {
-        assertNull(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+        assertNull(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         assertNull(StrategyUtils.getCharacterFromRoleInList(Role.ARCHITECT, characters));
     }
 

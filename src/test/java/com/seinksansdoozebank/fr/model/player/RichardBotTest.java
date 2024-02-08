@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
@@ -66,7 +66,7 @@ class RichardBotTest {
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere()
+                new Warlord()
         ));
         opponentWithEmptyHand = spy(new RandomBot(10, deck, view, bank));
         opponentWithMoreGoldThanRichard = spy(new RandomBot(10, deck, view, bank));
@@ -89,7 +89,7 @@ class RichardBotTest {
         assertEquals(new Merchant(), orderedCharacters.get(2));
         assertEquals(new Architect(), orderedCharacters.get(3));
         assertEquals(new Bishop(), orderedCharacters.get(4));
-        assertEquals(new Condottiere(), orderedCharacters.get(5));
+        assertEquals(new Warlord(), orderedCharacters.get(5));
     }
 
     @Test
@@ -230,16 +230,16 @@ class RichardBotTest {
     }
 
     @Test
-    void shouldChooseCondottiereTestTrue() {
+    void shouldChooseWarlordTestTrue() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
         richardBot.decreaseGold(9);
-        assertTrue(richardBot.shouldChooseCondottiere());
+        assertTrue(richardBot.shouldChooseWarlord());
     }
 
     @Test
-    void shouldChooseCondottiereTestFalse() {
+    void shouldChooseWarlordTestFalse() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.TAVERN),
                 new Card(District.PORT),
@@ -247,7 +247,7 @@ class RichardBotTest {
                 new Card(District.FORTRESS),
                 new Card(District.PORT_FOR_DRAGONS),
                 new Card(District.BARRACK))));
-        assertFalse(richardBot.shouldChooseCondottiere());
+        assertFalse(richardBot.shouldChooseWarlord());
     }
 
     @Test
@@ -349,13 +349,13 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterAndShouldChooseBCondottiereTest() {
+    void chooseCharacterAndShouldChooseBWarlordTest() {
         when(richardBot.getHand()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY),
                 new Card(District.PORT_FOR_DRAGONS))));
         when(richardBot.getCitadel()).thenReturn(new ArrayList<>(List.of(new Card(District.LIBRARY))));
         richardBot.decreaseGold(8);
         richardBot.chooseCharacterImpl(charactersList);
-        verify(richardBot, times(1)).shouldChooseCondottiere();
+        verify(richardBot, times(1)).shouldChooseWarlord();
     }
 
 
@@ -397,7 +397,7 @@ class RichardBotTest {
 
     @Test
     void chooseThiefTargetWhenNoOpponentIsAboutToWinShouldCallSuperMethod() {
-        List<Character> availableCharacters = List.of(new Thief(), new Bishop(), new King(), new Condottiere());
+        List<Character> availableCharacters = List.of(new Thief(), new Bishop(), new King(), new Warlord());
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(false);
 
@@ -407,7 +407,7 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseThiefTargetWhenOpponentIsAboutToWinAndNoBishopOrCondottiereShouldCallSuperMethod() {
+    void chooseThiefTargetWhenOpponentIsAboutToWinAndNoBishopOrWarlordShouldCallSuperMethod() {
         List<Character> availableCharacters = List.of(new Architect(), new King(), new Thief(), new Merchant());
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
@@ -419,7 +419,7 @@ class RichardBotTest {
 
     @Test
     void chooseThiefTargetWhenOpponentIsAboutToWinAndBishopAvailableShouldReturnBishop() {
-        List<Character> availableCharacters = List.of(new Condottiere(), new King(), new Bishop(), new Merchant());
+        List<Character> availableCharacters = List.of(new Warlord(), new King(), new Bishop(), new Merchant());
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
 
@@ -432,14 +432,14 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseThiefTargetWhenOpponentIsAboutToWinAndCondottiereAvailableShouldReturnCondottiere() {
-        List<Character> availableCharacters = List.of(new Architect(), new King(), new Condottiere(), new Merchant());
+    void chooseThiefTargetWhenOpponentIsAboutToWinAndWarlordAvailableShouldReturnWarlord() {
+        List<Character> availableCharacters = List.of(new Architect(), new King(), new Warlord(), new Merchant());
         when(richardBot.getAvailableCharacters()).thenReturn(availableCharacters);
         when(richardBot.anOpponentIsAboutToWin()).thenReturn(true);
 
         Optional<Character> result = richardBot.chooseThiefTarget();
 
-        Character expectedCharacter = new Condottiere();
+        Character expectedCharacter = new Warlord();
         assertTrue(result.isPresent());
         verify(richardBot, never()).useSuperChoseThiefEffect();
         assertEquals(expectedCharacter, result.get());
@@ -477,22 +477,22 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseAssassinTargetIfCondottiereIsPresentAndThinkCondottiereWillBeChosenByTheLeadingOpponent() {
+    void chooseAssassinTargetIfWarlordIsPresentAndThinkWarlordWillBeChosenByTheLeadingOpponent() {
         // Configuration des joueurs et de leurs rôles
-        Player condottierePlayer = spy(new SmartBot(10, deck, view, bank));
-        condottierePlayer.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        Player warlordPlayer = spy(new SmartBot(10, deck, view, bank));
+        warlordPlayer.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
 
 
         // Configuration des conditions spécifiques du test
         richardBot.chooseCharacter(new ArrayList<>(List.of(new Assassin())));
-        when(richardBot.getOpponents()).thenReturn(List.of(condottierePlayer));
-        when(richardBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
-        when(richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent()).thenReturn(true); // Simuler une condition pour choisir le condottiere
+        when(richardBot.getOpponents()).thenReturn(List.of(warlordPlayer));
+        when(richardBot.getAvailableCharacters()).thenReturn(List.of(new Warlord()));
+        when(richardBot.thinkWarlordHasBeenChosenByTheLeadingOpponent()).thenReturn(true); // Simuler une condition pour choisir le warlord
         // Exécution de la méthode à tester
         Character target = richardBot.chooseAssassinTarget();
 
-        // Vérification que le personnage ciblé est le condottiere, sous condition spécifique
-        assertEquals(Role.CONDOTTIERE, target.getRole(), "The target should be the Condottiere under specific conditions.");
+        // Vérification que le personnage ciblé est le warlord, sous condition spécifique
+        assertEquals(Role.WARLORD, target.getRole(), "The target should be the Warlord under specific conditions.");
     }
 
     @Test
@@ -507,11 +507,11 @@ class RichardBotTest {
         when(richardBot.getOpponents()).thenReturn(List.of(kingPlayer));
 
         when(richardBot.shouldPreventWealth()).thenReturn(false); // Simuler une condition pour choisir le voleur
-        when(richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent()).thenReturn(false); // Simuler une condition pour choisir le condottiere
+        when(richardBot.thinkWarlordHasBeenChosenByTheLeadingOpponent()).thenReturn(false); // Simuler une condition pour choisir le warlord
         // Exécution de la méthode à tester
         Character target = richardBot.chooseAssassinTarget();
 
-        // Vérification que le personnage ciblé est le condottiere, sous condition spécifique
+        // Vérification que le personnage ciblé est le warlord, sous condition spécifique
         assertEquals(Role.KING, target.getRole(), "The target should be the King under no specific conditions.");
     }
 
@@ -533,34 +533,34 @@ class RichardBotTest {
     }
 
     @Test
-    void thinkCondottiereHasBeenChosenByTheLeadingOpponent() {
+    void thinkWarlordHasBeenChosenByTheLeadingOpponent() {
         Player opponent = spy(new SmartBot(10, deck, view, bank));
-        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(true);
-        boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent();
-        assertTrue(thinkCondottiereWillBeChosenByTheLeadingOpponent, "The bot should think the Condottiere will be chosen by the leading opponent if he is about to win.");
+        boolean thinkWarlordWillBeChosenByTheLeadingOpponent = richardBot.thinkWarlordHasBeenChosenByTheLeadingOpponent();
+        assertTrue(thinkWarlordWillBeChosenByTheLeadingOpponent, "The bot should think the Warlord will be chosen by the leading opponent if he is about to win.");
     }
 
     @Test
-    void thinkCondottiereHasNotBeenChosenByTheLeadingOpponent() {
+    void thinkWarlordHasNotBeenChosenByTheLeadingOpponent() {
         Player opponent = spy(new SmartBot(10, deck, view, bank));
-        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         when(richardBot.getOpponents()).thenReturn(List.of(opponent));
         when(opponent.isAboutToWin()).thenReturn(false);
-        boolean thinkCondottiereWillBeChosenByTheLeadingOpponent = richardBot.thinkCondottiereHasBeenChosenByTheLeadingOpponent();
-        assertFalse(thinkCondottiereWillBeChosenByTheLeadingOpponent, "The bot should think the Condottiere will not be chosen by the leading opponent if he is not about to win.");
+        boolean thinkWarlordWillBeChosenByTheLeadingOpponent = richardBot.thinkWarlordHasBeenChosenByTheLeadingOpponent();
+        assertFalse(thinkWarlordWillBeChosenByTheLeadingOpponent, "The bot should think the Warlord will not be chosen by the leading opponent if he is not about to win.");
     }
 
     @Test
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasBeenSeen() {
         Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
-        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        Player opponentWarlord = spy(new SmartBot(10, deck, view, bank));
+        opponentWarlord.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentWarlord));
         when(opponentThief.isAboutToWin()).thenReturn(true);
-        when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentCondottiere));
+        when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentWarlord));
         when(richardBot.getCharactersSeenInRound()).thenReturn(List.of(new Thief()));
         when(richardBot.getCharactersNotInRound()).thenReturn(List.of());
         boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
@@ -571,12 +571,12 @@ class RichardBotTest {
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefHasntBeenSeen() {
         Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
-        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        Player opponentWarlord = spy(new SmartBot(10, deck, view, bank));
+        opponentWarlord.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentWarlord));
         when(opponentThief.isAboutToWin()).thenReturn(true);
         when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentThief));
-        when(richardBot.getCharactersSeenInRound()).thenReturn(List.of(new Condottiere()));
+        when(richardBot.getCharactersSeenInRound()).thenReturn(List.of(new Warlord()));
         when(richardBot.getCharactersNotInRound()).thenReturn(List.of());
         boolean thinkThiefWillBeChosenByTheLeadingOpponent = richardBot.thinkThiefHasBeenChosenByTheLeadingOpponent();
         assertTrue(thinkThiefWillBeChosenByTheLeadingOpponent, "The bot should think the Thief has been chosen by the leading opponent if he is about to win.");
@@ -586,9 +586,9 @@ class RichardBotTest {
     void thinkThiefHasBeenChosenByTheLeadingOpponentWhenThiefIsNotInRound() {
         Player opponentThief = spy(new SmartBot(10, deck, view, bank));
         opponentThief.chooseCharacter(new ArrayList<>(List.of(new Thief())));
-        Player opponentCondottiere = spy(new SmartBot(10, deck, view, bank));
-        opponentCondottiere.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
-        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentCondottiere));
+        Player opponentWarlord = spy(new SmartBot(10, deck, view, bank));
+        opponentWarlord.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
+        when(richardBot.getOpponents()).thenReturn(List.of(opponentThief, opponentWarlord));
         when(opponentThief.isAboutToWin()).thenReturn(true);
         when(richardBot.getOpponentsWhichHasChosenCharacterBefore()).thenReturn(List.of(opponentThief));
         when(richardBot.getCharactersSeenInRound()).thenReturn(List.of());
@@ -684,12 +684,12 @@ class RichardBotTest {
     }
 
     @Test
-    void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingIsNotAvailableButBishopCondottiereAssassinAvailables() {
+    void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingIsNotAvailableButBishopWarlordAssassinAvailables() {
         charactersList.remove(new King());
         richardBot.setPositionInDrawToPickACharacter(4);
-        assertEquals(Optional.of(new Condottiere()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
+        assertEquals(Optional.of(new Warlord()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(0);
-        assertEquals(Optional.of(new Condottiere()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
+        assertEquals(Optional.of(new Warlord()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(1);
         assertEquals(Optional.of(new Assassin()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
     }
@@ -703,14 +703,14 @@ class RichardBotTest {
         richardBot.setPositionInDrawToPickACharacter(0);
         assertEquals(Optional.of(new Assassin()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(1);
-        assertEquals(Optional.of(new Condottiere()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
+        assertEquals(Optional.of(new Warlord()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
 
     }
 
     @Test
-    void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingCondottiereAreNotAvailable() {
+    void chooseCharacterWHenOpponentHasOneDistrictLeftWhenKingWarlordAreNotAvailable() {
         charactersList.remove(new King());
-        charactersList.remove(new Condottiere());
+        charactersList.remove(new Warlord());
         richardBot.setPositionInDrawToPickACharacter(4);
         assertEquals(Optional.of(new Assassin()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(0);
@@ -724,9 +724,9 @@ class RichardBotTest {
         charactersList.remove(new King());
         charactersList.remove(new Assassin());
         richardBot.setPositionInDrawToPickACharacter(4);
-        assertEquals(Optional.of(new Condottiere()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
+        assertEquals(Optional.of(new Warlord()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(0);
-        assertEquals(Optional.of(new Condottiere()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
+        assertEquals(Optional.of(new Warlord()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
         richardBot.setPositionInDrawToPickACharacter(1);
         assertEquals(Optional.of(new Bishop()), richardBot.chooseCharacterWhenOpponentHasOneDistrictLeft(charactersList, opponentWithSevenDistrictsInCitadel));
     }

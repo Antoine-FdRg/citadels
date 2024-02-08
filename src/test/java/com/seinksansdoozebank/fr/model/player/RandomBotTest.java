@@ -7,7 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -104,10 +104,10 @@ class RandomBotTest {
         spyRandomBot.chooseCharacter(new ArrayList<>(List.of(assassin)));
         List<Opponent> opponents = new ArrayList<>();
         RandomBot opponent = new RandomBot(10, deck, view, bank);
-        opponent.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        opponent.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         opponents.add(opponent);
         when(spyRandomBot.getOpponents()).thenReturn(opponents);
-        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Condottiere()));
+        when(spyRandomBot.getAvailableCharacters()).thenReturn(List.of(new Warlord()));
 
         spyRandomBot.play();
 
@@ -179,7 +179,7 @@ class RandomBotTest {
         characters.add(new Bishop());
         characters.add(new King());
         characters.add(new Merchant());
-        characters.add(new Condottiere());
+        characters.add(new Warlord());
 
         spyRandomBot.chooseCharacter(characters);
 
@@ -190,14 +190,14 @@ class RandomBotTest {
     }
 
     @Test
-    void testRandomBotUseEffectCondottiere() {
+    void testRandomBotUseEffectWarlord() {
         // Create a mock Random object that always returns true
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
 
         // Set the mockRandom in the RandomBot for testing
         spyRandomBot.setRandom(mockRandom);
-        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         Player opponent = new SmartBot(10, deck, view, bank);
         opponent.setCitadel(opponentCitadel);
@@ -206,18 +206,18 @@ class RandomBotTest {
         spyRandomBot.setOpponents(new ArrayList<>(List.of(opponent)));
         // Test the useEffect method
         spyRandomBot.getCharacter().applyEffect();
-        verify(spyRandomBot, times(1)).chooseCondottiereTarget(any());
+        verify(spyRandomBot, times(1)).chooseWarlordTarget(any());
     }
 
     @Test
-    void testRandomBotCantUseEffectCondottiere() {
+    void testRandomBotCantUseEffectWarlord() {
         // Create a mock Random object that always returns true
         Random mockRandom = mock(Random.class);
         when(mockRandom.nextBoolean()).thenReturn(true);
 
         // Set the mockRandom in the RandomBot for testing
         spyRandomBot.setRandom(mockRandom);
-        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+        spyRandomBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         Player opponent = new SmartBot(10, deck, view, bank);
         opponent.setCitadel(opponentCitadel);
@@ -227,7 +227,7 @@ class RandomBotTest {
         // Test the useEffect method
         int nbGold = spyRandomBot.getNbGold();
         spyRandomBot.getCharacter().applyEffect();
-        verify(spyRandomBot, times(0)).chooseCondottiereTarget(any());
+        verify(spyRandomBot, times(0)).chooseWarlordTarget(any());
         assertEquals(nbGold, spyRandomBot.getNbGold());
     }
 

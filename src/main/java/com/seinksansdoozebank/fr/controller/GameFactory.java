@@ -6,8 +6,8 @@ import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.UsingWarlordEffectToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -65,7 +65,7 @@ public class GameFactory {
                     new ChoosingCharacterToTargetFirstPlayer(),
                     new UsingThiefEffectToFocusRusher(),
                     new UsingMurdererEffectToFocusRusher(),
-                    new UsingCondottiereEffectToTargetFirstPlayer(),
+                    new UsingWarlordEffectToTargetFirstPlayer(),
                     new CardChoosingStrategy()
             );
         }
@@ -92,7 +92,7 @@ public class GameFactory {
                 new ChoosingCharacterToTargetFirstPlayer(),
                 new UsingThiefEffectToFocusRusher(),
                 new UsingMurdererEffectToFocusRusher(),
-                new UsingCondottiereEffectToTargetFirstPlayer(),
+                new UsingWarlordEffectToTargetFirstPlayer(),
                 new CardChoosingStrategy()
         );
         gameBuilder.addRichardBot();
@@ -141,7 +141,7 @@ public class GameFactory {
      * Generates a random custom bot for the game using various strategies.
      * This method adds a custom bot to the game being built by the provided {@code gameBuilder}.
      * The bot is configured with different strategies for character choosing, using thief effect,
-     * using murderer effect, using condottiere effect, and card choosing.
+     * using murderer effect, using warlord effect, and card choosing.
      *
      * @param gameBuilder The builder object for the game to which the custom bot will be added.
      */
@@ -149,13 +149,13 @@ public class GameFactory {
         ICharacterChoosingStrategy choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
         IUsingThiefEffectStrategy usingThiefEffectToFocusRusher = new UsingThiefEffectToFocusRusher();
         IUsingMurdererEffectStrategy usingMurdererEffectToFocusRusher = new UsingMurdererEffectToFocusRusher();
-        IUsingCondottiereEffectStrategy usingCondottiereEffectToTargetFirstPlayer = new UsingCondottiereEffectToTargetFirstPlayer();
+        IUsingWarlordEffectStrategy usingWarlordEffectToTargetFirstPlayer = new UsingWarlordEffectToTargetFirstPlayer();
         ICardChoosingStrategy cardChoosingStrategy = new CardChoosingStrategy();
         gameBuilder.addCustomBot(null,
                 choosingCharacterToTargetFirstPlayer,
                 usingThiefEffectToFocusRusher,
                 usingMurdererEffectToFocusRusher,
-                usingCondottiereEffectToTargetFirstPlayer,
+                usingWarlordEffectToTargetFirstPlayer,
                 cardChoosingStrategy);
     }
 }

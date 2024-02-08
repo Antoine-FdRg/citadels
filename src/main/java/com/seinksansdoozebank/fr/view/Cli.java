@@ -54,8 +54,8 @@ public class Cli implements IView {
     }
 
     @Override
-    public void displayPlayerUseCondottiereDistrict(Player attacker, Player defender, District district) {
-        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Condottiere pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() - 1}, attacker);
+    public void displayPlayerUseWarlordDistrict(Player attacker, Player defender, District district) {
+        CustomLogger.log(Level.INFO, "{0} utilise l''effet du Warlord pour détruire le quartier {1} de {2} en payant {3} pièces d''or.", new Object[]{attacker, district.getName(), defender, district.getCost() - 1}, attacker);
     }
 
     @Override

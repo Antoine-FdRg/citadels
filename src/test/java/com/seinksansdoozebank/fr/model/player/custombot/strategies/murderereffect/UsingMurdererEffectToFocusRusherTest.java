@@ -2,7 +2,7 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffe
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -34,7 +34,7 @@ class UsingMurdererEffectToFocusRusherTest {
         spyAssassin = spy(Assassin.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyAssassin,
-                new Condottiere()));
+                new Warlord()));
         strategy = new UsingMurdererEffectToFocusRusher();
         mockPlayer = mock(Player.class);
     }

@@ -12,7 +12,7 @@ import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -78,7 +78,7 @@ public class GameBuilder {
                                     ICharacterChoosingStrategy characterChoosingStrategy,
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
                                     IUsingMurdererEffectStrategy murdererEffectStrategy,
-                                    IUsingCondottiereEffectStrategy condottiereEffectStrategy,
+                                    IUsingWarlordEffectStrategy warlordEffectStrategy,
                                     ICardChoosingStrategy cardChosingStrategy) {
         checkNbPlayers();
         playerList.add(new CustomBotBuilder(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck, this.bank)
@@ -86,7 +86,7 @@ public class GameBuilder {
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
                 .setUsingMurdererEffectStrategy(murdererEffectStrategy)
-                .setUsingCondottiereEffectStrategy(condottiereEffectStrategy)
+                .setUsingWarlordEffectStrategy(warlordEffectStrategy)
                 .setCardChoosingStrategy(cardChosingStrategy)
                 .build());
         return this;
