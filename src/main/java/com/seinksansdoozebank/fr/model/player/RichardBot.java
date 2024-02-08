@@ -40,9 +40,9 @@ public class RichardBot extends SmartBot {
                 .toList();
         if (this.anOpponentIsAboutToWin()) {
             if (charactersInTheRound.contains(Role.BISHOP)) {
-                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInLIst(Role.BISHOP, this.getAvailableCharacters()));
+                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.BISHOP, this.getAvailableCharacters()));
             } else if (charactersInTheRound.contains(Role.CONDOTTIERE)) {
-                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInLIst(Role.CONDOTTIERE, this.getAvailableCharacters()));
+                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, this.getAvailableCharacters()));
             }
         }
         return useSuperChoseThiefEffect();

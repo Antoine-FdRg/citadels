@@ -35,22 +35,22 @@ public class ChoosingCharacterToTargetFirstPlayer implements ICharacterChoosingS
             roleToAvoid = customBot.getLastCharacterChosen().getRole();
         }
         if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters) && Role.CONDOTTIERE != roleToAvoid) {                // si le condottiere est disponible
-            character = StrategyUtils.getCharacterFromRoleInLIst(Role.CONDOTTIERE, characters);      // on le prend pour détruire un quartier du leadingOpponent
+            character = StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters);      // on le prend pour détruire un quartier du leadingOpponent
         } else if (leadingOpponent.getNbGold() > NB_GOLD_MIN_FOR_MANY_GOLD) {                          // s'il a beaucoup de pièces
             if (StrategyUtils.isRoleInCharacterList(Role.THIEF, characters) && Role.THIEF != roleToAvoid) {                  // et si le voleur est disponible
-                character = StrategyUtils.getCharacterFromRoleInLIst(Role.THIEF, characters);        // on le prend pour le voler (car en ayant beaucoup de pièces, il va probablement construire)
+                character = StrategyUtils.getCharacterFromRoleInList(Role.THIEF, characters);        // on le prend pour le voler (car en ayant beaucoup de pièces, il va probablement construire)
             } else if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters) && Role.ARCHITECT != roleToAvoid) {              // sinon, si l'architecte est disponible
-                character = StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters);    // on le prend pour l'empêcher de construire avec toutes ses pièces
+                character = StrategyUtils.getCharacterFromRoleInList(Role.ARCHITECT, characters);    // on le prend pour l'empêcher de construire avec toutes ses pièces
             }
         } else {                                                                                // sinon
             if (StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters) && Role.ASSASSIN != roleToAvoid) {               // si l'assassin est disponible
-                character = StrategyUtils.getCharacterFromRoleInLIst(Role.ASSASSIN, characters);     // on le prend pour tuer le marchand (car en ayant peu de pièces, il va probablement essayer d'en gagner)
+                character = StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters);     // on le prend pour tuer le marchand (car en ayant peu de pièces, il va probablement essayer d'en gagner)
             } else if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters) && Role.MERCHANT != roleToAvoid) {               // si le marchand est disponible
-                character = StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters);     // on le prend pour empêcher le leadingOpponent de gagner des pièces
+                character = StrategyUtils.getCharacterFromRoleInList(Role.MERCHANT, characters);     // on le prend pour empêcher le leadingOpponent de gagner des pièces
             }
         }
         if (StrategyUtils.isRoleInCharacterList(Role.KING, characters) && Role.KING != roleToAvoid && character == null) {                       // si rien de tout ça n'est disponible, on essaye de prendre le roi pour
-            character = StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters);             // pouvoir choisir en premier au prochain tour
+            character = StrategyUtils.getCharacterFromRoleInList(Role.KING, characters);             // pouvoir choisir en premier au prochain tour
         } else if (character == null) {
             character = characters.get(this.random.nextInt(characters.size()));
         }
