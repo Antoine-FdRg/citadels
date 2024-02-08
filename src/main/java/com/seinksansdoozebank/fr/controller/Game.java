@@ -18,14 +18,12 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
-import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
 public class Game {
     protected static final int NB_PLAYER_MAX = 6;
@@ -75,7 +73,6 @@ public class Game {
             view.displayGameStuck();
         }
         updatePlayersBonus();
-        CustomStatisticsLogger.log(Level.WARNING, "Le gagnant est " + this.getWinner());
         view.displayWinner(this.getWinner());
     }
 
