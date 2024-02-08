@@ -23,11 +23,11 @@ public class UsingThiefEffectToFocusRusher implements IUsingThiefEffectStrategy 
                 character.getRole() != Role.THIEF &&
                 !character.isDead()).toList();
         if (StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters)) {
-            return StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters);
+            return StrategyUtils.getCharacterFromRoleInList(Role.ARCHITECT, characters);
         } else if (StrategyUtils.isRoleInCharacterList(Role.MERCHANT, characters)) {
-            return StrategyUtils.getCharacterFromRoleInLIst(Role.MERCHANT, characters);
+            return StrategyUtils.getCharacterFromRoleInList(Role.MERCHANT, characters);
         } else if (StrategyUtils.isRoleInCharacterList(Role.KING, characters)) {
-            return StrategyUtils.getCharacterFromRoleInLIst(Role.KING, characters);
+            return StrategyUtils.getCharacterFromRoleInList(Role.KING, characters);
         } else { //random
             return characters.get(random.nextInt(characters.size()));
         }

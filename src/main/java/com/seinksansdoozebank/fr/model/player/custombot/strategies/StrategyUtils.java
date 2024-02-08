@@ -17,8 +17,8 @@ public class StrategyUtils {
         return characters.stream().anyMatch(character -> character.getRole().equals(role));
     }
 
-    public static Character getCharacterFromRoleInLIst(Role role, List<Character> characters) {
-        return characters.stream().filter(character -> character.getRole().equals(role)).findFirst().orElseThrow();
+    public static Character getCharacterFromRoleInList(Role role, List<Character> characters) {
+        return characters.stream().filter(character -> character.getRole().equals(role)).findFirst().orElse(null);
     }
 
     public static Opponent getLeadingOpponent(List<Opponent> opponents) {

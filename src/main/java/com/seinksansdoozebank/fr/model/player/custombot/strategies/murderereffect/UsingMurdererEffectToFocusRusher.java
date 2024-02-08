@@ -35,7 +35,7 @@ public class UsingMurdererEffectToFocusRusher implements IUsingMurdererEffectStr
     }
 
     private static Character useAndDisplayMurderEffect(Role role, List<Character> characters, IView view, Player player) {
-        Character targetCharacter = StrategyUtils.getCharacterFromRoleInLIst(role, characters);
+        Character targetCharacter = StrategyUtils.getCharacterFromRoleInList(role, characters);
         view.displayPlayerUseAssassinEffect(player, targetCharacter);
         return targetCharacter;
     }
