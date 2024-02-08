@@ -7,8 +7,11 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class StrategyUtils {
+
+    public static final Random RANDOM = new Random();
 
     private StrategyUtils() {
     }
@@ -19,6 +22,10 @@ public class StrategyUtils {
 
     public static Character getCharacterFromRoleInList(Role role, List<Character> characters) {
         return characters.stream().filter(character -> character.getRole().equals(role)).findFirst().orElse(null);
+    }
+
+    public static Character getRandomCharacterFromList(List<Character> characters) {
+        return characters.get(RANDOM.nextInt(characters.size()));
     }
 
     public static Opponent getLeadingOpponent(List<Opponent> opponents) {
