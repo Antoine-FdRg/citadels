@@ -4,11 +4,11 @@ import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -25,7 +25,7 @@ public class CustomBot extends RandomBot {
     ICharacterChoosingStrategy characterChoosingStrategy;
     IUsingThiefEffectStrategy usingThiefEffectStrategy;
     IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
-    IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
+    IUsingWarlordEffectStrategy usingWarlordEffectStrategy;
     ICardChoosingStrategy cardChoosingStrategy;
 
     protected CustomBot(int nbGold, Deck deck, IView view, Bank bank,
@@ -33,14 +33,14 @@ public class CustomBot extends RandomBot {
                         ICharacterChoosingStrategy characterChoosingStrategy,
                         IUsingThiefEffectStrategy usingThiefEffectStrategy,
                         IUsingMurdererEffectStrategy usingMurdererEffectStrategy,
-                        IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy,
+                        IUsingWarlordEffectStrategy usingWarlordEffectStrategy,
                         ICardChoosingStrategy cardChoosingStrategy) {
         super(nbGold, deck, view, bank);
         this.pickingStrategy = pickingStrategy;
         this.characterChoosingStrategy = characterChoosingStrategy;
         this.usingThiefEffectStrategy = usingThiefEffectStrategy;
         this.usingMurdererEffectStrategy = usingMurdererEffectStrategy;
-        this.usingCondottiereEffectStrategy = usingCondottiereEffectStrategy;
+        this.usingWarlordEffectStrategy = usingWarlordEffectStrategy;
         this.cardChoosingStrategy = cardChoosingStrategy;
     }
 
@@ -106,16 +106,16 @@ public class CustomBot extends RandomBot {
     }
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
-        if (usingCondottiereEffectStrategy == null) {
-            return this.randomUseCondottiereEffect(opponentsFocusable);
+    public WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable) {
+        if (usingWarlordEffectStrategy == null) {
+            return this.randomUseWarlordEffect(opponentsFocusable);
         } else {
-            return this.usingCondottiereEffectStrategy.apply(this, opponentsFocusable);
+            return this.usingWarlordEffectStrategy.apply(this, opponentsFocusable);
         }
     }
 
-    protected CondottiereTarget randomUseCondottiereEffect(List<Opponent> opponentsFocusable) {
-        return super.chooseCondottiereTarget(opponentsFocusable);
+    protected WarlordTarget randomUseWarlordEffect(List<Opponent> opponentsFocusable) {
+        return super.chooseWarlordTarget(opponentsFocusable);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class CustomBot extends RandomBot {
                 Objects.equals(pickingStrategy, customBot.pickingStrategy) &&
                 Objects.equals(usingThiefEffectStrategy, customBot.usingThiefEffectStrategy) &&
                 Objects.equals(usingMurdererEffectStrategy, customBot.usingMurdererEffectStrategy) &&
-                Objects.equals(usingCondottiereEffectStrategy, customBot.usingCondottiereEffectStrategy);
+                Objects.equals(usingWarlordEffectStrategy, customBot.usingWarlordEffectStrategy);
     }
 
 

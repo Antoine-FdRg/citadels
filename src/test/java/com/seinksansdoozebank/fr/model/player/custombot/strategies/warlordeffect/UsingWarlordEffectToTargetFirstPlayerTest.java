@@ -1,10 +1,10 @@
-package com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect;
+package com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect;
 
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -21,30 +21,30 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UsingCondottiereEffectToTargetFirstPlayerTest {
+class UsingWarlordEffectToTargetFirstPlayerTest {
 
-    IUsingCondottiereEffectStrategy strategy;
-    Condottiere spyCondottiere;
+    IUsingWarlordEffectStrategy strategy;
+    Warlord spyWarlord;
     Player mockPlayer;
     List<Opponent> opponentList;
 
     @BeforeEach
     void setUp() {
-        strategy = new UsingCondottiereEffectToTargetFirstPlayer();
-        spyCondottiere = mock(Condottiere.class);
+        strategy = new UsingWarlordEffectToTargetFirstPlayer();
+        spyWarlord = mock(Warlord.class);
         mockPlayer = mock(Player.class);
         when(mockPlayer.getNbGold()).thenReturn(4);
         opponentList = new ArrayList<>();
     }
 
     @Test
-    void applyWithNotOpponentShouldThrowExceptionAndNotUseCondottiereEffect() {
+    void applyWithNotOpponentShouldThrowExceptionAndNotUseWarlordEffect() {
         assertThrows(IllegalStateException.class, () -> strategy.apply(mockPlayer, opponentList));
-        verify(spyCondottiere, never()).useEffect(any());
+        verify(spyWarlord, never()).useEffect(any());
     }
 
     @Test
-    void applyWithOpponentWithBishopShouldNotUseCondottiereEffect() {
+    void applyWithOpponentWithBishopShouldNotUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(1);
         opponentList.add(mockOpponent1);
@@ -57,7 +57,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
 
     //with a dead bishop
     @Test
-    void applyWithOpponentWithDeadBishopShouldUseCondottiereEffect() {
+    void applyWithOpponentWithDeadBishopShouldUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(4);
         when(mockOpponent1.getOpponentCharacter()).thenReturn(null);
@@ -71,7 +71,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     }
 
     @Test
-    void applyWithOpponentWithCitadelFullShouldNotUseCondottiereEffect() {
+    void applyWithOpponentWithCitadelFullShouldNotUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent1);
@@ -83,7 +83,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     }
 
     @Test
-    void applyWithOpponentWithNoDistrictInLeadingOpponentCitadelShouldNotUseCondottiereEffect() {
+    void applyWithOpponentWithNoDistrictInLeadingOpponentCitadelShouldNotUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
         when(mockOpponent1.getOpponentCharacter()).thenReturn(new King());
@@ -95,7 +95,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     }
 
     @Test
-    void applyWithOpponentWithTooExpensiveDistrictInLeadingOpponentCitadelShouldNotUseCondottiereEffect() {
+    void applyWithOpponentWithTooExpensiveDistrictInLeadingOpponentCitadelShouldNotUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent1);
@@ -109,7 +109,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
     }
 
     @Test
-    void applyWithOpponentWithJustDonjonInLeadingOpponentCitadelShouldNotUseCondottiereEffect() {
+    void applyWithOpponentWithJustDonjonInLeadingOpponentCitadelShouldNotUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent1);
@@ -124,7 +124,7 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
 
 
     @Test
-    void applyWithOpponentWithCheaperDistrictInLeadingOpponentCitadelShouldUseCondottiereEffect() {
+    void applyWithOpponentWithCheaperDistrictInLeadingOpponentCitadelShouldUseWarlordEffect() {
         Opponent mockOpponent1 = mock(Opponent.class);
         when(mockOpponent1.nbDistrictsInCitadel()).thenReturn(0);
         opponentList.add(mockOpponent1);
@@ -134,6 +134,6 @@ class UsingCondottiereEffectToTargetFirstPlayerTest {
         Card destroyableCard = new Card(District.TAVERN);
         when(mockOpponent2.getCitadel()).thenReturn(List.of(destroyableCard));
         opponentList.add(mockOpponent2);
-        assertEquals(strategy.apply(mockPlayer, opponentList), new CondottiereTarget(mockOpponent2, destroyableCard.getDistrict()));
+        assertEquals(strategy.apply(mockPlayer, opponentList), new WarlordTarget(mockOpponent2, destroyableCard.getDistrict()));
     }
 }

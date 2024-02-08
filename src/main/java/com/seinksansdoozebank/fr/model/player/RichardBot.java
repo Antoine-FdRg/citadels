@@ -35,8 +35,8 @@ public class RichardBot extends SmartBot {
         if (this.anOpponentIsAboutToWin()) {
             if (charactersInTheRound.contains(Role.BISHOP)) {
                 return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.BISHOP, this.getAvailableCharacters()));
-            } else if (charactersInTheRound.contains(Role.CONDOTTIERE)) {
-                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, this.getAvailableCharacters()));
+            } else if (charactersInTheRound.contains(Role.WARLORD)) {
+                return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, this.getAvailableCharacters()));
             }
         }
         return useSuperChoseThiefEffect();
@@ -49,11 +49,11 @@ public class RichardBot extends SmartBot {
     @Override
     protected Character chooseAssassinTarget() {
         List<Character> charactersList = this.getAvailableCharacters();
-        // Conditions spécifiques pour Voleur et Condottiere
+        // Conditions spécifiques pour Voleur et Warlord
         Character target = null;
         for (Character character : charactersList) {
             if (character.getRole() == Role.THIEF && (shouldPreventWealth() || thinkThiefHasBeenChosenByTheLeadingOpponent())
-                    || character.getRole() == Role.CONDOTTIERE && (this.isAboutToWin() || thinkCondottiereHasBeenChosenByTheLeadingOpponent())) {
+                    || character.getRole() == Role.WARLORD && (this.isAboutToWin() || thinkWarlordHasBeenChosenByTheLeadingOpponent())) {
                 target = character;
             }
         }
@@ -73,12 +73,12 @@ public class RichardBot extends SmartBot {
     }
 
     /**
-     * Check if the Condottiere will be chosen by the leading opponent
+     * Check if the Warlord will be chosen by the leading opponent
      *
-     * @return true if the player think Condottiere has been chosen by the leading opponent, false otherwise
+     * @return true if the player think Warlord has been chosen by the leading opponent, false otherwise
      */
-    boolean thinkCondottiereHasBeenChosenByTheLeadingOpponent() {
-        // if leadingOpponent is about to win, he will choose Condottiere or Bishop, but the bishop is not killable
+    boolean thinkWarlordHasBeenChosenByTheLeadingOpponent() {
+        // if leadingOpponent is about to win, he will choose Warlord or Bishop, but the bishop is not killable
         return StrategyUtils.getLeadingOpponent(this.getOpponents()).isAboutToWin();
     }
 
@@ -128,12 +128,12 @@ public class RichardBot extends SmartBot {
                 return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.KING, characters));
             }
             if (StrategyUtils.isRoleInCharacterList(Role.BISHOP, characters) &&
-                    StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters) &&
+                    StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters) &&
                     StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters)) {
-                return whenCharacterContainsBishopCondottiereAssassin(characters);
+                return whenCharacterContainsBishopWarlordAssassin(characters);
             }
-            if (!StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-                return whenCharacterDoesNotContainCondottiere(characters);
+            if (!StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+                return whenCharacterDoesNotContainWarlord(characters);
             } else if (!StrategyUtils.isRoleInCharacterList(Role.BISHOP, characters)) {
                 return whenCharacterDoesNotContainBishop(characters);
             } else {
@@ -152,14 +152,14 @@ public class RichardBot extends SmartBot {
      *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterContainsBishopCondottiereAssassin(List<Character> characters) {
-        if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-            return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+    Optional<Character> whenCharacterContainsBishopWarlordAssassin(List<Character> characters) {
+        if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+            return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         } else if (this.getPositionInDrawToPickACharacter() == 1 && StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters)) {
             return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters));
         }
-        if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-            return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+        if (StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+            return Optional.ofNullable(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         }
         return Optional.ofNullable(StrategyUtils.getRandomCharacterFromList(characters));
     }
@@ -169,7 +169,7 @@ public class RichardBot extends SmartBot {
      *
      * @return an optional of the character
      */
-    Optional<Character> whenCharacterDoesNotContainCondottiere(List<Character> characters) {
+    Optional<Character> whenCharacterDoesNotContainWarlord(List<Character> characters) {
         if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters)) {
             return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters));
         } else if (this.getPositionInDrawToPickACharacter() == 1 && StrategyUtils.isRoleInCharacterList(Role.MAGICIAN, characters)) {
@@ -189,8 +189,8 @@ public class RichardBot extends SmartBot {
     Optional<Character> whenCharacterDoesNotContainBishop(List<Character> characters) {
         if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters)) {
             return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters));
-        } else if (this.getPositionInDrawToPickACharacter() == 1 && StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+        } else if (this.getPositionInDrawToPickACharacter() == 1 && StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         }
         if (StrategyUtils.isRoleInCharacterList(Role.ASSASSIN, characters)) {
             return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters));
@@ -204,13 +204,13 @@ public class RichardBot extends SmartBot {
      * @return an optional of the character
      */
     Optional<Character> whenCharacterDoesNotContainAssassin(List<Character> characters) {
-        if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+        if (this.getPositionInDrawToPickACharacter() == 0 && StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         } else if (this.getPositionInDrawToPickACharacter() == 1 && StrategyUtils.isRoleInCharacterList(Role.BISHOP, characters)) {
             return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.BISHOP, characters));
         }
-        if (StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters)) {
-            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.CONDOTTIERE, characters));
+        if (StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters)) {
+            return Optional.of(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
         }
         return Optional.of(StrategyUtils.getRandomCharacterFromList(characters));
     }
@@ -257,8 +257,8 @@ public class RichardBot extends SmartBot {
                         return character;
                     }
                 }
-                case CONDOTTIERE -> {
-                    if (shouldChooseCondottiere()) {
+                case WARLORD -> {
+                    if (shouldChooseWarlord()) {
                         return character;
                     }
                 }
@@ -303,10 +303,10 @@ public class RichardBot extends SmartBot {
             orderedCharacters.add(bishop);
             copyCharacters.remove(bishop);
         });
-        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.CONDOTTIERE).findFirst();
-        optionalCharacter.ifPresent(condottiere -> {
-            orderedCharacters.add(condottiere);
-            copyCharacters.remove(condottiere);
+        optionalCharacter = copyCharacters.stream().filter(c -> c.getRole() == Role.WARLORD).findFirst();
+        optionalCharacter.ifPresent(warlord -> {
+            orderedCharacters.add(warlord);
+            copyCharacters.remove(warlord);
         });
         List<Character> charactersRemaining = new ArrayList<>(copyCharacters);
 
@@ -393,7 +393,7 @@ public class RichardBot extends SmartBot {
      *
      * @return a boolean
      */
-    boolean shouldChooseCondottiere() {
+    boolean shouldChooseWarlord() {
         return getPriceOfNumbersOfCheaperCards(1) > this.getNbGold();
     }
 
@@ -406,7 +406,7 @@ public class RichardBot extends SmartBot {
      */
     Optional<Character> shouldChooseBecauseLastCardToBuy(List<Character> characters) {
         if (isAboutToWin()) {
-            return characters.stream().filter(c -> c.getRole() == Role.ASSASSIN || c.getRole() == Role.BISHOP || c.getRole() == Role.CONDOTTIERE).findFirst();
+            return characters.stream().filter(c -> c.getRole() == Role.ASSASSIN || c.getRole() == Role.BISHOP || c.getRole() == Role.WARLORD).findFirst();
         }
         return Optional.empty();
     }

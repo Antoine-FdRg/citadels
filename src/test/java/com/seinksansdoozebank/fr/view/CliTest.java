@@ -5,7 +5,7 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
@@ -129,12 +129,12 @@ class CliTest {
     }
 
     @Test
-    void testDisplayPlayerUseCondottiereDistrict() {
+    void testDisplayPlayerUseWarlordDistrict() {
         Player defender = spy(new RandomBot(10, new Deck(), view, bank));
 
-        view.displayPlayerUseCondottiereDistrict(player, defender, card.getDistrict());
+        view.displayPlayerUseWarlordDistrict(player, defender, card.getDistrict());
 
-        String expectedOutput = player + " utilise l'effet du Condottiere pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() - 1) + " pièces d'or.";
+        String expectedOutput = player + " utilise l'effet du Warlord pour détruire le quartier " + card.getDistrict().getName() + " de " + defender + " en payant " + (card.getDistrict().getCost() - 1) + " pièces d'or.";
 
         assertLogged(Level.INFO, expectedOutput, false);
     }
@@ -302,8 +302,8 @@ class CliTest {
 
     @Test
     void testDisplayActualNumberOfGold() {
-        Condottiere condottiere = new Condottiere();
-        when(player.getCharacter()).thenReturn(condottiere);
+        Warlord warlord = new Warlord();
+        when(player.getCharacter()).thenReturn(warlord);
         when(player.getNbGold()).thenReturn(10);
         view.displayActualNumberOfGold(player);
 

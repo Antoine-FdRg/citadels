@@ -7,7 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
@@ -191,7 +191,7 @@ public class SmartBot extends Player {
 
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
+    public WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = opponentsFocusable.stream()
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
@@ -206,7 +206,7 @@ public class SmartBot extends Player {
         // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
-                return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
+                return new WarlordTarget(playerWithMostDistricts.get(), card.getDistrict());
             }
         }
         return null;

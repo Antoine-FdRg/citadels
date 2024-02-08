@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.effect.ManufactureEffect;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.view.Cli;
@@ -160,15 +160,15 @@ class PlayerTest {
     @Test
     void retrieveCharacter() {
         List<Character> characters = new ArrayList<>();
-        Character condottiere = new Condottiere();
-        characters.add(condottiere);
+        Character warlord = new Warlord();
+        characters.add(warlord);
         player.chooseCharacter(characters);
         player.reveal();
         Character retrievedCharacter = player.retrieveCharacter();
 
-        assertEquals(condottiere, retrievedCharacter);
+        assertEquals(warlord, retrievedCharacter);
         assertThrows(IllegalStateException.class, () -> player.retrieveCharacter());
-        assertNull(condottiere.getPlayer());
+        assertNull(warlord.getPlayer());
     }
 
     @Test
@@ -351,7 +351,7 @@ class PlayerTest {
         verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
         verify(deck, times(1)).discard(temple);
         verify(view, times(1)).displayPlayerDiscardCard(spyPlayer, temple);
-        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+        verify(view, times(1)).displayPlayerUseWarlordDistrict(attacker, spyPlayer, temple.getDistrict());
     }
 
     @Test
@@ -364,7 +364,7 @@ class PlayerTest {
         assertFalse(spyPlayer.getCitadel().contains(temple));
         verify(spyPlayer, times(1)).askOpponentForCemeteryEffect(temple);
         verify(deck, times(0)).discard(temple);
-        verify(view, times(1)).displayPlayerUseCondottiereDistrict(attacker, spyPlayer, temple.getDistrict());
+        verify(view, times(1)).displayPlayerUseWarlordDistrict(attacker, spyPlayer, temple.getDistrict());
         verify(view, times(0)).displayPlayerDiscardCard(spyPlayer, temple);
     }
 
@@ -403,15 +403,15 @@ class PlayerTest {
     }
 
     @Test
-    void isUsingCemeteryEffectAndWantToUseButAsCondottiereShouldReturnFalse() {
+    void isUsingCemeteryEffectAndWantToUseButAsWarlordShouldReturnFalse() {
         Card temple = new Card(District.TEMPLE);
-        when(spyPlayer.getCharacter()).thenReturn(new Condottiere());
+        when(spyPlayer.getCharacter()).thenReturn(new Warlord());
         when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(true);
         assertFalse(spyPlayer.isUsingCemeteryEffect(temple));
     }
 
     @Test
-    void isUsingCemeteryEffectNotAsCondottiereButDontWantToUseShouldReturnFalse() {
+    void isUsingCemeteryEffectNotAsWarlordButDontWantToUseShouldReturnFalse() {
         Card temple = new Card(District.TEMPLE);
         when(spyPlayer.getCharacter()).thenReturn(new Merchant());
         when(spyPlayer.wantToUseCemeteryEffect(temple)).thenReturn(false);
@@ -419,7 +419,7 @@ class PlayerTest {
     }
 
     @Test
-    void isUsingCemeteryEffectNotAsCondottiereAndWantToUseShouldReturnTrue() {
+    void isUsingCemeteryEffectNotAsWarlordAndWantToUseShouldReturnTrue() {
         bank.pickXCoin(1);
         Card temple = new Card(District.TEMPLE);
         when(spyPlayer.getCharacter()).thenReturn(new Merchant());

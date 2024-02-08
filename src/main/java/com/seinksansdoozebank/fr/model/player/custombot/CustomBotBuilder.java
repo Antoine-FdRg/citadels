@@ -3,7 +3,7 @@ package com.seinksansdoozebank.fr.model.player.custombot;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
@@ -19,7 +19,7 @@ public class CustomBotBuilder {
     private ICharacterChoosingStrategy characterChoosingStrategy;
     private IUsingThiefEffectStrategy usingThiefEffectStrategy;
     private IUsingMurdererEffectStrategy usingMurdererEffectStrategy;
-    private IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy;
+    private IUsingWarlordEffectStrategy usingWarlordEffectStrategy;
     private ICardChoosingStrategy cardChoosingStrategy;
 
     public CustomBotBuilder(int nbGold, IView view, Deck deck, Bank bank) {
@@ -49,8 +49,8 @@ public class CustomBotBuilder {
         return this;
     }
 
-    public CustomBotBuilder setUsingCondottiereEffectStrategy(IUsingCondottiereEffectStrategy usingCondottiereEffectStrategy) {
-        this.usingCondottiereEffectStrategy = usingCondottiereEffectStrategy;
+    public CustomBotBuilder setUsingWarlordEffectStrategy(IUsingWarlordEffectStrategy usingWarlordEffectStrategy) {
+        this.usingWarlordEffectStrategy = usingWarlordEffectStrategy;
         return this;
     }
 
@@ -65,7 +65,7 @@ public class CustomBotBuilder {
                 this.characterChoosingStrategy,
                 this.usingThiefEffectStrategy,
                 this.usingMurdererEffectStrategy,
-                this.usingCondottiereEffectStrategy,
+                this.usingWarlordEffectStrategy,
                 this.cardChoosingStrategy);
     }
 }

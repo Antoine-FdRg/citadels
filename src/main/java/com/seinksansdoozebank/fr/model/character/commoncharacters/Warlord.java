@@ -8,31 +8,31 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 
 import java.util.List;
 
-public class Condottiere extends CommonCharacter {
+public class Warlord extends CommonCharacter {
 
-    public Condottiere() {
-        super(Role.CONDOTTIERE, DistrictType.SOLDIERLY);
+    public Warlord() {
+        super(Role.WARLORD, DistrictType.SOLDIERLY);
     }
 
     @Override
     public void applyEffect() {
-        List<Opponent> opponentsFocusableForCondottiere = getOpponentsFocusableForCondottiere(this.getPlayer().getOpponents());
-        if (opponentsFocusableForCondottiere.isEmpty()) {
+        List<Opponent> opponentsFocusableForWarlord = getOpponentsFocusableForWarlord(this.getPlayer().getOpponents());
+        if (opponentsFocusableForWarlord.isEmpty()) {
             return;
         }
-        CondottiereTarget condottiereTarget = this.getPlayer().chooseCondottiereTarget(opponentsFocusableForCondottiere);
-        if (condottiereTarget != null) {
-            this.useEffect(condottiereTarget);
+        WarlordTarget warlordTarget = this.getPlayer().chooseWarlordTarget(opponentsFocusableForWarlord);
+        if (warlordTarget != null) {
+            this.useEffect(warlordTarget);
         }
     }
 
     /**
-     * Get the opponents that the condottiere can destroy a district
+     * Get the opponents that the warlord can destroy a district
      *
      * @param playerOpponents the opponents of the player
-     * @return the opponents that the condottiere can destroy a district
+     * @return the opponents that the warlord can destroy a district
      */
-    public static List<Opponent> getOpponentsFocusableForCondottiere(List<Opponent> playerOpponents) {
+    public static List<Opponent> getOpponentsFocusableForWarlord(List<Opponent> playerOpponents) {
         return playerOpponents.stream()
                 .filter(opponent ->
                         opponent.getCitadel().size() < 8
@@ -40,22 +40,22 @@ public class Condottiere extends CommonCharacter {
     }
 
     /**
-     * The condottiere can choose to destroy a district of another player
+     * The warlord can choose to destroy a district of another player
      * Paying the cost of the district to the bank -1
      *
-     * @param condottiereTarget the opponent to destroy the district
+     * @param warlordTarget the opponent to destroy the district
      *                          (the opponent must have a character revealed)
      *                          (the opponent can't be the bishop)
      *                          (the opponent can't have a complete citadel)
      *                          (the opponent can't destroy the donjon)
      *                          district the district to destroy
      */
-    public void useEffect(CondottiereTarget condottiereTarget) {
-        if (condottiereTarget == null) {
+    public void useEffect(WarlordTarget warlordTarget) {
+        if (warlordTarget == null) {
             throw new IllegalArgumentException("The player must choose a target");
         }
-        Opponent opponent = condottiereTarget.opponent();
-        District district = condottiereTarget.district();
+        Opponent opponent = warlordTarget.opponent();
+        District district = warlordTarget.district();
         if (this.getPlayer().getNbGold() < district.getCost() - 1) {
             throw new IllegalArgumentException("The player doesn't have enough gold to destroy the district");
         }
@@ -74,7 +74,7 @@ public class Condottiere extends CommonCharacter {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Condottiere;
+        return obj instanceof Warlord;
     }
 
     @Override

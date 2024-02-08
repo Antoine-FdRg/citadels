@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
@@ -29,7 +29,7 @@ public class Game {
     protected static final int NB_PLAYER_MAX = 6;
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private int nbOfDistrictsInCitadel;
+    private final int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
@@ -189,7 +189,7 @@ public class Game {
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere()));
+                new Warlord()));
         if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
         }

@@ -2,7 +2,7 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.charactercho
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -39,13 +39,13 @@ class ChoosingCharacterToTargetFirstPlayerTest {
     }
 
     @Test
-    void applyWithCondottiereInListSgouldReturnCondottiere() {
+    void applyWithWarlordInListSgouldReturnWarlord() {
         characterList.add(new Assassin());
         characterList.add(new Magician());
-        characterList.add(new Condottiere());
+        characterList.add(new Warlord());
         when(mockCustomBot.getOpponents()).thenReturn(List.of(leadingOpponent));
 
-        assertEquals(new Condottiere(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
+        assertEquals(new Warlord(), choosingCharacterToTargetFirstPlayer.apply(mockCustomBot, characterList));
     }
 
     @Test

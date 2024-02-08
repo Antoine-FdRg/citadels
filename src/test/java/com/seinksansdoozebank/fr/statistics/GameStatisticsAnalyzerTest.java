@@ -10,11 +10,10 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.UsingWarlordEffectToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
-import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,7 +21,6 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -107,7 +105,7 @@ class GameStatisticsAnalyzerTest {
                 .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
                         new UsingThiefEffectToFocusRusher(),
                         new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
+                        new UsingWarlordEffectToTargetFirstPlayer(),
                         new CardChoosingStrategy())
                 .build();
 
