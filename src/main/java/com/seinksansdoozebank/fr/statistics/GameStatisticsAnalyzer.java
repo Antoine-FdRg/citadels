@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.controller.GameBuilder;
+import com.seinksansdoozebank.fr.controller.GameFactory;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
@@ -74,18 +75,7 @@ public class GameStatisticsAnalyzer {
     public void runDemo() {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Player.resetIdCounter();
-        Game game = new GameBuilder(new Cli(), new Deck(), new Bank())
-                .addRandomBot()
-                .addRandomBot()
-                .addBuilderBot()
-                .addRichardBot()
-                .addSmartBot()
-                .addCustomBot(null, new ChoosingCharacterToTargetFirstPlayer(),
-                        new UsingThiefEffectToFocusRusher(),
-                        new UsingMurdererEffectToFocusRusher(),
-                        new UsingCondottiereEffectToTargetFirstPlayer(),
-                        new CardChoosingStrategy())
-                .build();
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
         game.run();
         analyzeGameResults(game);
         logAggregatedStatistics();
@@ -103,12 +93,12 @@ public class GameStatisticsAnalyzer {
      * @param numRichardBots The number of richard bots to be included in each game session.
      * @param numBuilderBots The number of builder bots to be included in each game session.
      */
-    public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
+    public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
-            Game game = createGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots);
+            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
             game.run();
             CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
@@ -205,58 +195,6 @@ public class GameStatisticsAnalyzer {
     }
 
     /**
-     * Creates a new game instance based on the specified number of random bots, smart bots, and custom bots.
-     * This method initializes a game builder with a command-line interface and a deck, then adds the desired number
-     * of random bots, smart bots, and custom bots to the game builder. Finally, it builds and returns the constructed game.
-     *
-     * @param numRandomBots The number of random bots to be added to the game.
-     * @param numSmartBots  The number of smart bots to be added to the game.
-     * @param numCustomBots The number of custom bots to be added to the game.
-     * @return The newly created game instance.
-     */
-    Game createGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots) {
-        GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck(), new Bank());
-        for (int i = 0; i < numRandomBots; i++) {
-            gameBuilder.addRandomBot();
-        }
-        for (int i = 0; i < numSmartBots; i++) {
-            gameBuilder.addSmartBot();
-        }
-        for (int i = 0; i < numCustomBots; i++) {
-            generateARandomCustomBot(gameBuilder);
-        }
-        for (int i = 0; i < numRichardBots; i++) {
-            gameBuilder.addRichardBot();
-        }
-        for (int i = 0; i < numBuilderBots; i++) {
-            gameBuilder.addBuilderBot();
-        }
-        return gameBuilder.build();
-    }
-
-    /**
-     * Generates a random custom bot for the game using various strategies.
-     * This method adds a custom bot to the game being built by the provided {@code gameBuilder}.
-     * The bot is configured with different strategies for character choosing, using thief effect,
-     * using murderer effect, using condottiere effect, and card choosing.
-     *
-     * @param gameBuilder The builder object for the game to which the custom bot will be added.
-     */
-    private void generateARandomCustomBot(GameBuilder gameBuilder) {
-        ICharacterChoosingStrategy choosingCharacterToTargetFirstPlayer = new ChoosingCharacterToTargetFirstPlayer();
-        IUsingThiefEffectStrategy usingThiefEffectToFocusRusher = new UsingThiefEffectToFocusRusher();
-        IUsingMurdererEffectStrategy usingMurdererEffectToFocusRusher = new UsingMurdererEffectToFocusRusher();
-        IUsingCondottiereEffectStrategy usingCondottiereEffectToTargetFirstPlayer = new UsingCondottiereEffectToTargetFirstPlayer();
-        ICardChoosingStrategy cardChoosingStrategy = new CardChoosingStrategy();
-        gameBuilder.addCustomBot(null,
-                choosingCharacterToTargetFirstPlayer,
-                usingThiefEffectToFocusRusher,
-                usingMurdererEffectToFocusRusher,
-                usingCondottiereEffectToTargetFirstPlayer,
-                cardChoosingStrategy);
-    }
-
-    /**
      * Saves the player statistics into a CSV file.
      * Writes the player statistics including player name, total games played, games won,
      * games lost, games played in the last session, average score, winning percentage, and detailed placement
@@ -341,7 +279,11 @@ public class GameStatisticsAnalyzer {
             // Create the file if it doesn't exist
             File file = new File(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName());
             if (!file.exists()) {
-                file.createNewFile();
+                 if (file.createNewFile()) {
+                    CustomStatisticsLogger.log(Level.FINE, "File created: {0}", new Object[]{file.getName()});
+                 } else {
+                    CustomStatisticsLogger.log(Level.FINE, "File already exists.");
+                 }
             }
         } catch (IOException e) {
             CustomStatisticsLogger.log(Level.SEVERE, "Error occurred while creating file: {0}", new Object[]{e.getMessage()});
@@ -395,7 +337,6 @@ public class GameStatisticsAnalyzer {
         }
         return null;
     }
-
 
     boolean fileExists() {
         File folder = new File(FOLDER_DEFAULT_PATH);
