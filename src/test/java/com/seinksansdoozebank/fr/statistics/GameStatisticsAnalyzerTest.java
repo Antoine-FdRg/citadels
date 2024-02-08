@@ -87,7 +87,7 @@ class GameStatisticsAnalyzerTest {
     void testRunAndAnalyze() {
         when(analyzer.getNumSessions()).thenReturn(1);
 
-        analyzer.runAndAnalyze(2, 1, 1, 1, 1);
+        analyzer.runAndAnalyze(1, 1, 1, 1, 1, 1);
 
         Mockito.verify(analyzer, Mockito.times(1)).analyzeGameResults(any());
         Mockito.verify(analyzer, Mockito.times(1)).logAggregatedStatistics();
