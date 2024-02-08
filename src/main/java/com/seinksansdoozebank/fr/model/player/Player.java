@@ -23,7 +23,7 @@ public abstract class Player implements Opponent {
     protected final int id;
     private int nbGold;
     private int bonus;
-    private boolean isFirstToHaveEightDistricts;
+    private boolean isFirstToHaveAllDistricts;
     protected Deck deck;
     protected Bank bank;
     protected final List<Card> hand;
@@ -60,7 +60,7 @@ public abstract class Player implements Opponent {
         this.opponents = new ArrayList<>();
         this.view = view;
         this.bonus = 0;
-        this.isFirstToHaveEightDistricts = false;
+        this.isFirstToHaveAllDistricts = false;
         this.hasPlayed = false;
         this.bank = bank;
     }
@@ -414,15 +414,15 @@ public abstract class Player implements Opponent {
      *
      * @return a boolean which specify if the player is the first to have 8Districts in his citadel
      */
-    public boolean getIsFirstToHaveEightDistricts() {
-        return this.isFirstToHaveEightDistricts;
+    public boolean getIsFirstToHaveAllDistricts() {
+        return this.isFirstToHaveAllDistricts;
     }
 
     /**
      * setter, this method set the isFirstToHaveEightDistricts attribute to true
      */
-    public void setIsFirstToHaveEightDistricts() {
-        this.isFirstToHaveEightDistricts = true;
+    public void setIsFirstToHaveAllDistricts() {
+        this.isFirstToHaveAllDistricts = true;
     }
 
     public final int getScore() {

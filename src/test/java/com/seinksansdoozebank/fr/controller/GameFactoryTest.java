@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr.controller;
 
 import com.seinksansdoozebank.fr.model.bank.Bank;
+import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.RichardBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBot;
@@ -26,26 +27,17 @@ class GameFactoryTest {
     }
 
     @Test
-    void createGameOfRandomBotWithLessThan4BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 3));
+    void createGameOfRandomBotWithLessThan3BotThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 2));
     }
 
-    @Test
-    void createGameOfRandomBotWith4Bot() {
-        Game game = GameFactory.createGameOfRandomBot(view, bank, 4);
-        assertEquals(4, game.players.size());
-    }
-
-    @Test
-    void createGameOfRandomBotWith5Bot() {
-        Game game = GameFactory.createGameOfRandomBot(view, bank, 5);
-        assertEquals(5, game.players.size());
-    }
-
-    @Test
-    void createGameOfRandomBotWith6Bot() {
-        Game game = GameFactory.createGameOfRandomBot(view, bank, 6);
-        assertEquals(6, game.players.size());
+    @ParameterizedTest
+    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
+    void createGameOfRandomBotWithNBot(int nbPlayers, int expected) {
+        Game game = GameFactory.createGameOfRandomBot(view, bank, nbPlayers);
+        assertEquals(expected, game.players.size());
+        // Check the type of the players
+        game.players.forEach(player -> assertInstanceOf(RandomBot.class, player));
     }
 
     @Test
@@ -54,12 +46,12 @@ class GameFactoryTest {
     }
 
     @Test
-    void createGameOfSmartBotWithLessThan4BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 3));
+    void createGameOfSmartBotWithLessThan3BotThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 2));
     }
 
     @ParameterizedTest
-    @CsvSource({"4, 4", "5, 5", "6, 6"})
+    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
     void createGameOfSmartBotWithXBots(int nbPlayers, int expected) {
         Game game = GameFactory.createGameOfSmartBot(view, bank, nbPlayers);
         assertEquals(expected, game.players.size());
@@ -73,12 +65,12 @@ class GameFactoryTest {
     }
 
     @Test
-    void createGameOfCustomBotWithLessThan4BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 3));
+    void createGameOfCustomBotWithLessThan3BotThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 2));
     }
 
     @ParameterizedTest
-    @CsvSource({"4, 4", "5, 5", "6, 6"})
+    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
     void createGameOfCustomBotWith4Bot(int nbPlayers, int expected) {
         Game game = GameFactory.createGameOfCustomBot(view, bank, nbPlayers);
         assertEquals(expected, game.players.size());
@@ -92,12 +84,12 @@ class GameFactoryTest {
     }
 
     @Test
-    void createGameOfRichardBotWithLessThan4BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 3));
+    void createGameOfRichardBotWithLessThan3BotThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 2));
     }
 
     @ParameterizedTest
-    @CsvSource({"4, 4", "5, 5", "6, 6"})
+    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
     void createGameOfRichardBotWith4Bot(int nbPlayers, int expected) {
         Game game = GameFactory.createGameOfRichardBot(view, bank, nbPlayers);
         assertEquals(expected, game.players.size());
@@ -131,7 +123,7 @@ class GameFactoryTest {
     }
 
     @Test
-    void createCustomGameWith3PlayersThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(0, 1, 1, 0, 1, 0));
+    void createCustomGameWith2PlayersThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(0, 1, 0, 0, 1, 0));
     }
 }

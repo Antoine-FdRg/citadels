@@ -126,7 +126,7 @@ class GameTest {
     void getWinnerIsP3WithTheMostPoint() {
         Player p1 = mock(Player.class);
         when(p1.getScore()).thenReturn(5);
-        when(p1.getIsFirstToHaveEightDistricts()).thenReturn(true);
+        when(p1.getIsFirstToHaveAllDistricts()).thenReturn(true);
         Player p2 = mock(Player.class);
         when(p2.getScore()).thenReturn(4);
         Player p3 = mock(Player.class);
@@ -184,9 +184,9 @@ class GameTest {
     @Test
     void isFirstBotToHaveEightDistrictsTest() {
         //playerWithEightDistrictsAndFiveDistrictTypes is the first who has eight districts in that game so +7 in bonus
-        gameWithThreePlayers.isTheFirstOneToHaveEightDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
+        gameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
         //playerWithEightDistricts is not the first who has eight districts +2 in bonus
-        gameWithThreePlayers.isTheFirstOneToHaveEightDistricts(playerWithEightDistricts);
+        gameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWithEightDistricts);
         gameWithThreePlayers.updatePlayersBonus();
 
         assertEquals(7, playerWIthEightDistrictsAndFiveDistrictTypes.getBonus());
@@ -297,8 +297,8 @@ class GameTest {
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
         verify(gameWithFourPlayers, times(1)).playersChooseCharacters();
         verify(gameWithFourPlayers, times(1)).orderPlayerBeforePlaying();
-        verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveEightDistricts(any(Player.class));
-        verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveEightDistricts(any(Player.class));
+        verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveAllDistricts(any(Player.class));
+        verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveAllDistricts(any(Player.class));
         verify(gameWithFourPlayers, times(1)).retrieveCharacters();
         List<Player> players = gameWithFourPlayers.players;
         for (Player player : players) {

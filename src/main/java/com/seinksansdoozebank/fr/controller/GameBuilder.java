@@ -47,8 +47,8 @@ public class GameBuilder {
      * Check if the number of players is not too high, if it is, throw an exception
      */
     void checkNbPlayers() {
-        if (getPlayerListSize() > 6) {
-            throw new IllegalStateException("You can't add more than 6 players to the game");
+        if (getPlayerListSize() > Game.NB_PLAYER_MAX) {
+            throw new IllegalStateException("You can't add more than " + Game.NB_PLAYER_MAX + " players to the game");
         }
     }
 

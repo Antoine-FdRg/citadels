@@ -27,9 +27,9 @@ import java.util.Optional;
 
 public class Game {
     protected static final int NB_PLAYER_MAX = 6;
-    protected static final int NB_PLAYER_MIN = 4;
+    protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private boolean findFirstPlayerWithEightDistricts = false;
+    private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
     protected List<Player> playersInInitialOrder;
@@ -99,7 +99,7 @@ public class Game {
                 player.play();
             }
             //We set the attribute to true if player is the first who has eight districts
-            isTheFirstOneToHaveEightDistricts(player);
+            isTheFirstOneToHaveAllDistricts(player);
         }
         retrieveCharacters();
         finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
@@ -186,6 +186,9 @@ public class Game {
                 new Condottiere()));
         if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
+        }
+        if (nbPlayers == 3) {
+            notMandatoryCharacters.remove(0);
         }
         Collections.shuffle(notMandatoryCharacters);
         // the king must always be available
@@ -275,15 +278,21 @@ public class Game {
     }
 
     /**
-     * Method which sets the attribute isFirstToHaveEightDistrict at true if it's the case
+     * Method which sets the attribute isTheFirstOneToHaveAllDistricts at true if it's the case
      *
      * @param player who added a card to his deck
      */
-    public void isTheFirstOneToHaveEightDistricts(Player player) {
-        if (player.getCitadel().size() == 8 && !findFirstPlayerWithEightDistricts) {
+    public void isTheFirstOneToHaveAllDistricts(Player player) {
+        if (this.getPlayers().size() == 3 && player.getCitadel().size() == 10 && !findFirstPlayerWithAllDistricts) {
+            //we mark the bot as true if it is first to have 10 districts
+            player.setIsFirstToHaveAllDistricts();
+            findFirstPlayerWithAllDistricts = true;
+            return;
+        }
+        if (player.getCitadel().size() == 8 && !findFirstPlayerWithAllDistricts) {
             //we mark the bot as true if it is first to have 8 districts
-            player.setIsFirstToHaveEightDistricts();
-            findFirstPlayerWithEightDistricts = true;
+            player.setIsFirstToHaveAllDistricts();
+            findFirstPlayerWithAllDistricts = true;
         }
     }
 
@@ -301,7 +310,7 @@ public class Game {
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
             if (player.getCitadel().size() == 8) {
-                if (player.getIsFirstToHaveEightDistricts()) {
+                if (player.getIsFirstToHaveAllDistricts()) {
                     player.addBonus(2);
                     view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre 8 quartiers");
                 }
