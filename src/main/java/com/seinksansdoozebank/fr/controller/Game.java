@@ -29,6 +29,7 @@ public class Game {
     protected static final int NB_PLAYER_MAX = 6;
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
+    private int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
@@ -54,6 +55,11 @@ public class Game {
         this.crownedPlayer = null;
         this.finished = false;
         this.bank = bank;
+        if (playerList.size() == 3) {
+            nbOfDistrictsInCitadel = 10;
+        } else {
+            nbOfDistrictsInCitadel = 8;
+        }
     }
 
     /**
@@ -283,13 +289,7 @@ public class Game {
      * @param player who added a card to his deck
      */
     public void isTheFirstOneToHaveAllDistricts(Player player) {
-        if (this.getPlayers().size() == 3 && player.getCitadel().size() == 10 && !findFirstPlayerWithAllDistricts) {
-            //we mark the bot as true if it is first to have 10 districts
-            player.setIsFirstToHaveAllDistricts();
-            findFirstPlayerWithAllDistricts = true;
-            return;
-        }
-        if (player.getCitadel().size() == 8 && !findFirstPlayerWithAllDistricts) {
+        if (player.getCitadel().size() == nbOfDistrictsInCitadel && !findFirstPlayerWithAllDistricts) {
             //we mark the bot as true if it is first to have 8 districts
             player.setIsFirstToHaveAllDistricts();
             findFirstPlayerWithAllDistricts = true;
