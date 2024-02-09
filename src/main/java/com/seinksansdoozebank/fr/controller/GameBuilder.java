@@ -39,6 +39,7 @@ public class GameBuilder {
      * @param view the view
      * @param deck the deck
      * @param bank the bank
+     * @param numberOfDistrictsNeeded the number of districts needed to win
      */
     public GameBuilder(IView view, Deck deck, Bank bank, int numberOfDistrictsNeeded) {
         playerList = new ArrayList<>();
