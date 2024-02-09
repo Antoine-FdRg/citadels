@@ -9,6 +9,10 @@
 
 #### b. Fonctionnalités semaine de sprint ####
 
+- **Configuration d'exécutions**
+  ![image](images/statistiquesMilleParties.png)
+- **Statistiques en CSV**
+- **Le RichardBot**
 #### c. Logs ####
 
 #### d. Statistiques ####
@@ -30,6 +34,7 @@
 
 #### Comparaison des bots  ####
 
+![image](images/statistiquesCinqCentMilleParties.png)
 
 ## 2. Architecture et qualité 
 
@@ -41,6 +46,7 @@
 
 #### a. Parties bien optimisées ####
 
+![image](images/sonarCube.png)
 
 #### b. Parties à refactor/améliorer ####
 
@@ -51,3 +57,6 @@
 
 ### 3.2 Organisation de l'équipe sur GitHub ###
 
+![image](images/boardGithub.png)
+
+![image](images/stratégieDeBranche.png)
