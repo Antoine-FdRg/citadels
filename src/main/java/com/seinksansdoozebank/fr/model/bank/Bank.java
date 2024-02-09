@@ -1,7 +1,7 @@
 package com.seinksansdoozebank.fr.model.bank;
 
 /**
- * The bank is a singleton that ensure that there is only 30 coins in the game.
+ * The bank ensure that there is only 30 coins in the game.
  */
 public class Bank {
     /**
@@ -18,10 +18,18 @@ public class Bank {
      */
     private int nbOfAvailableCoins;
 
+    /**
+     * Bank constructor
+     */
     public Bank() {
         this.nbOfAvailableCoins = MAX_COIN;
     }
 
+    /**
+     * Get the number of available coins in the bank
+     *
+     * @return the number of available coins
+     */
     public int getNbOfAvailableCoins() {
         return nbOfAvailableCoins;
     }

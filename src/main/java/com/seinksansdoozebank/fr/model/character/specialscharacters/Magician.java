@@ -7,8 +7,13 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 
 import java.util.List;
 
+/**
+ * The magician character
+ */
 public class Magician extends Character {
-
+    /**
+     * Magician constructor
+     */
     public Magician() {
         super(Role.MAGICIAN);
     }
@@ -16,6 +21,8 @@ public class Magician extends Character {
     /**
      * Switch the hand of the player with the hand of the target player
      * If the target player is not present, the player will switch his hand with the deck
+     *
+     * @param magicianTarget the target of the magician
      */
     public void useEffect(MagicianTarget magicianTarget) {
         Opponent targetOpponent = magicianTarget.targetOpponent();

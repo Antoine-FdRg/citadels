@@ -5,9 +5,18 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
+/**
+ * Represents a common character in the game
+ */
 public abstract class CommonCharacter extends Character {
     private final DistrictType target;
 
+    /**
+     * CommonCharacter constructor
+     *
+     * @param role   the role of the character
+     * @param target the target type of the character
+     */
     protected CommonCharacter(Role role, DistrictType target) {
         super(role);
         this.target = target;

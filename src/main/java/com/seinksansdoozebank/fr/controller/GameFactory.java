@@ -28,6 +28,7 @@ public class GameFactory {
      * Create a game with the given number of random bots
      *
      * @param view      the view to use
+     * @param bank      the bank to use
      * @param nbPlayers the number of random bots to add to the game
      * @return the game created
      */
@@ -43,6 +44,14 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
+    /**
+     * Create a game with the given number of smart bots
+     *
+     * @param view      the view to use
+     * @param bank      the bank to use
+     * @param nbPlayers the number of smart bots to add to the game
+     * @return the game created
+     */
     public static Game createGameOfSmartBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
@@ -54,6 +63,13 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
+    /**
+     * Create a game with the given number of custom bots
+     * @param view the view to use
+     * @param bank the bank to use
+     * @param nbPlayers the number of custom bots to add to the game
+     * @return the game created
+     */
     public static Game createGameOfCustomBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
@@ -72,6 +88,13 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
+    /**
+     * Create a game with the given number of Richard bots
+     * @param view the view to use
+     * @param bank the bank to use
+     * @param nbPlayers the number of Richard bots to add to the game
+     * @return the game created
+     */
     public static Game createGameOfRichardBot(IView view, Bank bank, int nbPlayers) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
@@ -83,6 +106,12 @@ public class GameFactory {
         return gameBuilder.build();
     }
 
+    /**
+     * Create a game with the given number of Builder bots
+     * @param view the view to use
+     * @param bank the bank to use
+     * @return the game created
+     */
     public static Game createGameOfAllTypeOfBot(IView view, Bank bank) {
         GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
         gameBuilder.addRandomBot();
@@ -109,6 +138,9 @@ public class GameFactory {
      * @param numRandomBots The number of random bots to be added to the game.
      * @param numSmartBots  The number of smart bots to be added to the game.
      * @param numCustomBots The number of custom bots to be added to the game.
+     * @param numRichardBots The number of Richard bots to be added to the game.
+     * @param numBuilderBots The number of Builder bots to be added to the game.
+     * @param numOpportunistBots The number of Opportunist bots to be added to the game.
      * @return The newly created game instance.
      */
     public static Game createCustomGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {

@@ -3,8 +3,14 @@ package com.seinksansdoozebank.fr.model.character.specialscharacters;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
+/**
+ * Represents the assassin character
+ */
 public class Assassin extends Character {
 
+    /**
+     * Assassin constructor
+     */
     public Assassin() {
         super(Role.ASSASSIN);
     }

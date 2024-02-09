@@ -3,8 +3,14 @@ package com.seinksansdoozebank.fr.model.character.specialscharacters;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 
+/**
+ * The thief character
+ */
 public class Thief extends Character {
 
+    /**
+     * Thief constructor
+     */
     public Thief() {
         super(Role.THIEF);
     }
