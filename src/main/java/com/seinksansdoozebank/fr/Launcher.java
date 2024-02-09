@@ -1,6 +1,7 @@
 package com.seinksansdoozebank.fr;
 
 import com.beust.jcommander.JCommander;
+import com.seinksansdoozebank.fr.jcommander.CommandLineArgs;
 import com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer;
 
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
@@ -18,23 +19,17 @@ public class Launcher {
                 .build()
                 .parse(args);
 
-        if (cmdArgs.isDemo() && !cmdArgs.isCsv()) {
-            launcher.runDemo(false);
-        } else if (cmdArgs.isDemo() && cmdArgs.isCsv()) {
-            launcher.runDemo(true);
-        } else if (cmdArgs.is2Thousands() && !cmdArgs.isCsv()) {
-            launcher.twoThousand(false);
-        } else if (cmdArgs.is2Thousands() && cmdArgs.isCsv()) {
-            launcher.twoThousand(true);
-        } else if (cmdArgs.isCsv()) {
-            launcher.runDemo(true);
+        if (cmdArgs.isDemo()) {
+            launcher.runDemo(cmdArgs.isCsv(), cmdArgs.isVariante());
+        } else if (cmdArgs.is2Thousands()) {
+            launcher.twoThousand(cmdArgs.isCsv());
         }
     }
 
 
-    public void runDemo(boolean saveInCsv) {
+    public void runDemo(boolean saveInCsv,boolean isVariante) {
         GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
-        analyzer.runDemo();
+        analyzer.runDemo(isVariante);
     }
 
     public void twoThousand(boolean saveInCsv) {

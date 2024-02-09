@@ -60,10 +60,11 @@ public class GameStatisticsAnalyzer {
         this(0, saveStatsToCsv, DEMO_GAME);
     }
 
-    public void runDemo() {
+    public void runDemo(boolean isVariante) {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Player.resetIdCounter();
         Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
+        game.setVariante(isVariante);
         game.run();
         analyzeGameResults(game);
         logAggregatedStatistics();

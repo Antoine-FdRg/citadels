@@ -43,6 +43,8 @@ public class Game {
     private int nbCurrentRound;
     private boolean finished;
 
+    private boolean isVariante;
+
     protected Game(IView view, Deck deck, Bank bank, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
@@ -60,6 +62,15 @@ public class Game {
         } else {
             nbOfDistrictsInCitadel = 8;
         }
+    }
+
+    public void setVariante(boolean variante) {
+        isVariante = variante;
+    }
+
+
+    public boolean isVariante() {
+        return isVariante;
     }
 
     /**
@@ -103,6 +114,8 @@ public class Game {
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
+            }else if (this.isVariante()){
+                this.updateCrownedPlayer(player);
             }
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveAllDistricts(player);
