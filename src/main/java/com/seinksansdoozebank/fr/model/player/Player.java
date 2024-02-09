@@ -37,7 +37,10 @@ public abstract class Player implements Opponent {
     final Bank bank;
     final List<Card> hand;
     final List<Card> citadel;
-    final IView view;
+    /**
+     * The current view
+     */
+    protected final IView view;
     Random random = new Random();
     Character character;
     private int positionInDrawToPickACharacter;
