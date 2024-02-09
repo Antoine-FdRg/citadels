@@ -13,7 +13,7 @@ variante de Citadelles qui autorise le roi, même s’il se fait assassiner à p
 mort et à pouvoir choisir son rôle en premier lors du prochain round. Cette variante s'applique à la partie exécutée à
 l'aide de l'argument `--variante`.
 Il y a aussi la mise en place de la partie rapide, qui permet de définir le nombre
-de districtes nécessaires dans la citadelle pour finir la partie (6 ou 7), pour faire cela il suffis de rajouter
+de districtes nécessaires dans la citadelle pour finir la partie (6 ou 7), pour faire cela il suffit de rajouter
 l'argument suivant : `--quick 6` ou `--quick 7`
 g
 Cependant, il reste quelques fonctionnalités que nous n’avons pas eues le temps d’implémenter. D’abord, nos parties ne
