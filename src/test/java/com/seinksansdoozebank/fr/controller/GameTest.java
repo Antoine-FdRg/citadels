@@ -387,7 +387,7 @@ class GameTest {
     }
 
     @Test
-    void kingPlayerIsNUpdatedWhilePlayingARoundANdKingIsDead() {
+    void kingPlayerIsUpdatedWhenPlayingARoundAndKingIsDead() {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
@@ -395,7 +395,7 @@ class GameTest {
         gameWithFourPlayers.setVariante(true);
         gameWithFourPlayers.playARound();
 
-        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size() )).updateCrownedPlayer(any(Player.class));
+        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size())).updateCrownedPlayer(any(Player.class));
         assertNotNull(gameWithFourPlayers.crownedPlayer);
     }
 

@@ -27,7 +27,7 @@ public class Launcher {
     }
 
 
-    public void runDemo(boolean saveInCsv,boolean isVariante) {
+    public void runDemo(boolean saveInCsv, boolean isVariante) {
         GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
         analyzer.runDemo(isVariante);
     }
