@@ -6,6 +6,7 @@ import com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer;
 
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_BOTS_AGAINST;
+import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.DEMO_GAME;
 
 /**
  * The main class of the application
@@ -31,6 +32,8 @@ public class Launcher {
             launcher.runDemo(cmdArgs.isCsv(), cmdArgs.isVariante());
         } else if (cmdArgs.is2Thousands()) {
             launcher.twoThousand(cmdArgs.isCsv());
+        } else if (cmdArgs.isCsv()) {
+            launcher.csvDemo();
         }
     }
 
@@ -52,5 +55,10 @@ public class Launcher {
         analyzer.runAndAnalyze(1, 1, 1, 1, 1, 1);
         analyzer = new GameStatisticsAnalyzer(1000, saveInCsv, BEST_BOTS_AGAINST);
         analyzer.runAndAnalyze(0, 6, 0, 0, 0, 0);
+    }
+
+    public void csvDemo() {
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(100, true, DEMO_GAME);
+        analyzer.runAndAnalyze(1, 1, 1, 1, 1, 1);
     }
 }
