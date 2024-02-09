@@ -32,12 +32,12 @@ public class GameFactory {
      * @param nbPlayers the number of random bots to add to the game
      * @return the game created
      */
-    public static Game createGameOfRandomBot(IView view, Bank bank, int nbPlayers) {
+    public static Game createGameOfRandomBot(IView view, Bank bank, int nbPlayers, int numberOfDistrictsNeeded) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
 
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank, numberOfDistrictsNeeded);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addRandomBot();
         }
@@ -52,11 +52,11 @@ public class GameFactory {
      * @param nbPlayers the number of smart bots to add to the game
      * @return the game created
      */
-    public static Game createGameOfSmartBot(IView view, Bank bank, int nbPlayers) {
+    public static Game createGameOfSmartBot(IView view, Bank bank, int nbPlayers, int numberOfDistrictsNeeded) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank,numberOfDistrictsNeeded);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addSmartBot();
         }
@@ -70,11 +70,11 @@ public class GameFactory {
      * @param nbPlayers the number of custom bots to add to the game
      * @return the game created
      */
-    public static Game createGameOfCustomBot(IView view, Bank bank, int nbPlayers) {
+    public static Game createGameOfCustomBot(IView view, Bank bank, int nbPlayers, int numberOfDistrictsNeeded) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank, numberOfDistrictsNeeded);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addCustomBot(
                     null,
@@ -95,11 +95,11 @@ public class GameFactory {
      * @param nbPlayers the number of Richard bots to add to the game
      * @return the game created
      */
-    public static Game createGameOfRichardBot(IView view, Bank bank, int nbPlayers) {
+    public static Game createGameOfRichardBot(IView view, Bank bank, int nbPlayers, int numberOfDistrictsNeeded) {
         if (nbPlayers < Game.NB_PLAYER_MIN || nbPlayers > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank, numberOfDistrictsNeeded);
         for (int i = 0; i < nbPlayers; i++) {
             gameBuilder.addRichardBot();
         }
@@ -112,8 +112,8 @@ public class GameFactory {
      * @param bank the bank to use
      * @return the game created
      */
-    public static Game createGameOfAllTypeOfBot(IView view, Bank bank) {
-        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank);
+    public static Game createGameOfAllTypeOfBot(IView view, Bank bank, int numberOfDistrictsNeeded) {
+        GameBuilder gameBuilder = new GameBuilder(view, new Deck(), bank, numberOfDistrictsNeeded);
         gameBuilder.addRandomBot();
         gameBuilder.addSmartBot();
         gameBuilder.addCustomBot(
@@ -143,11 +143,11 @@ public class GameFactory {
      * @param numOpportunistBots The number of Opportunist bots to be added to the game.
      * @return The newly created game instance.
      */
-    public static Game createCustomGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {
+    public static Game createCustomGame(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots, int numberOfDistrictsNeeded) {
         if (numRandomBots + numSmartBots + numCustomBots + numRichardBots + numBuilderBots + numOpportunistBots < Game.NB_PLAYER_MIN || numRandomBots + numSmartBots + numCustomBots + numRichardBots + numBuilderBots + numOpportunistBots > Game.NB_PLAYER_MAX) {
             throw new IllegalArgumentException(NUMBER_OF_PLAYER_BETWEEN);
         }
-        GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck(), new Bank());
+        GameBuilder gameBuilder = new GameBuilder(new Cli(), new Deck(), new Bank(), numberOfDistrictsNeeded);
         for (int i = 0; i < numRandomBots; i++) {
             gameBuilder.addRandomBot();
         }

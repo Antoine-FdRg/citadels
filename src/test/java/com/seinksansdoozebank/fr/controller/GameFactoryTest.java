@@ -28,13 +28,13 @@ class GameFactoryTest {
 
     @Test
     void createGameOfRandomBotWithLessThan3BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @ParameterizedTest
-    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
-    void createGameOfRandomBotWithNBot(int nbPlayers, int expected) {
-        Game game = GameFactory.createGameOfRandomBot(view, bank, nbPlayers);
+    @CsvSource({"3, 3, 10", "4, 4, 8", "5, 5, 8", "6, 6, 8"})
+    void createGameOfRandomBotWithNBot(int nbPlayers, int expected, int numberOfDistrictsNeeded) {
+        Game game = GameFactory.createGameOfRandomBot(view, bank, nbPlayers, numberOfDistrictsNeeded);
         assertEquals(expected, game.players.size());
         // Check the type of the players
         game.players.forEach(player -> assertInstanceOf(RandomBot.class, player));
@@ -42,18 +42,18 @@ class GameFactoryTest {
 
     @Test
     void createGameOfRandomBotWithMoreThan6BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, bank, 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void createGameOfSmartBotWithLessThan3BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @ParameterizedTest
-    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
-    void createGameOfSmartBotWithXBots(int nbPlayers, int expected) {
-        Game game = GameFactory.createGameOfSmartBot(view, bank, nbPlayers);
+    @CsvSource({"3, 3, 10", "4, 4, 8", "5, 5, 8", "6, 6, 8"})
+    void createGameOfSmartBotWithXBots(int nbPlayers, int expected, int numberOfDistrictsNeeded) {
+        Game game = GameFactory.createGameOfSmartBot(view, bank, nbPlayers, numberOfDistrictsNeeded);
         assertEquals(expected, game.players.size());
         // Check the type of the players
         game.players.forEach(player -> assertInstanceOf(SmartBot.class, player));
@@ -61,18 +61,18 @@ class GameFactoryTest {
 
     @Test
     void createGameOfSmartBotWithMoreThan6BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfSmartBot(view, bank, 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void createGameOfCustomBotWithLessThan3BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @ParameterizedTest
-    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
-    void createGameOfCustomBotWith4Bot(int nbPlayers, int expected) {
-        Game game = GameFactory.createGameOfCustomBot(view, bank, nbPlayers);
+    @CsvSource({"3, 3, 10", "4, 4, 8", "5, 5, 8", "6, 6, 8"})
+    void createGameOfCustomBotWith4Bot(int nbPlayers, int expected, int numberOfDistrictsNeeded) {
+        Game game = GameFactory.createGameOfCustomBot(view, bank, nbPlayers, numberOfDistrictsNeeded);
         assertEquals(expected, game.players.size());
         // Check the type of the players
         game.players.forEach(player -> assertInstanceOf(CustomBot.class, player));
@@ -80,18 +80,18 @@ class GameFactoryTest {
 
     @Test
     void createGameOfCustomBotWithMoreThan6BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfCustomBot(view, bank, 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void createGameOfRichardBotWithLessThan3BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @ParameterizedTest
-    @CsvSource({"3, 3", "4, 4", "5, 5", "6, 6"})
-    void createGameOfRichardBotWith4Bot(int nbPlayers, int expected) {
-        Game game = GameFactory.createGameOfRichardBot(view, bank, nbPlayers);
+    @CsvSource({"3, 3, 10", "4, 4, 8", "5, 5, 8", "6, 6, 8"})
+    void createGameOfRichardBotWith4Bot(int nbPlayers, int expected, int numberOfDistrictsNeeded) {
+        Game game = GameFactory.createGameOfRichardBot(view, bank, nbPlayers, numberOfDistrictsNeeded);
         assertEquals(expected, game.players.size());
         // Check the type of the players
         game.players.forEach(player -> assertInstanceOf(RichardBot.class, player));
@@ -99,31 +99,31 @@ class GameFactoryTest {
 
     @Test
     void createGameOfRichardBotWithMoreThan6BotThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRichardBot(view, bank, 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @ParameterizedTest
     @CsvSource(
             {
-                    "1, 1, 1, 1, 1, 1, 6", // Game of 6 players
-                    "1, 1, 1, 1, 1, 0, 5", // Game of 5 players
-                    "1, 1, 1, 0, 1, 1, 5", // Game of 5 players
-                    "1, 1, 1, 1, 0, 0, 4", // Game of 4 players
-                    "1, 2, 0, 1, 0, 0, 4", // Game of 5 players
-                    "1, 0, 0, 1, 4, 0, 6", // Game of 6 players
+                    "1, 1, 1, 1, 1, 1, 6, 8", // Game of 6 players
+                    "1, 1, 1, 1, 1, 0, 5, 8", // Game of 5 players
+                    "1, 1, 1, 0, 1, 1, 5, 8", // Game of 5 players
+                    "1, 1, 1, 1, 0, 0, 4, 8", // Game of 4 players
+                    "1, 2, 0, 1, 0, 0, 4, 8", // Game of 5 players
+                    "1, 0, 0, 1, 4, 0, 6, 8", // Game of 6 players
             })
-    void createCustomGameWithNPlayers(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots, int expected) {
-        Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
+    void createCustomGameWithNPlayers(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots, int expected, int numberOfDistrictsNeeded) {
+        Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots, numberOfDistrictsNeeded);
         assertEquals(expected, game.players.size());
     }
 
     @Test
     void createCustomGameWith7PlayersThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(1, 1, 1, 1, 1, 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(1, 1, 1, 1, 1, 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void createCustomGameWith2PlayersThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(0, 1, 0, 0, 1, 0));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createCustomGame(0, 1, 0, 0, 1, 0, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 }

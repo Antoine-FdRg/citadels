@@ -21,7 +21,7 @@ public class Warlord extends CommonCharacter {
 
     @Override
     public void applyEffect() {
-        List<Opponent> opponentsFocusableForWarlord = getOpponentsFocusableForWarlord(this.getPlayer().getOpponents());
+        List<Opponent> opponentsFocusableForWarlord = getOpponentsFocusableForWarlord(this.getPlayer().getOpponents(), this.getPlayer().getNumberOfDistrictsNeeded());
         if (opponentsFocusableForWarlord.isEmpty()) {
             return;
         }
@@ -37,10 +37,10 @@ public class Warlord extends CommonCharacter {
      * @param playerOpponents the opponents of the player
      * @return the opponents that the warlord can destroy a district
      */
-    public static List<Opponent> getOpponentsFocusableForWarlord(List<Opponent> playerOpponents) {
+    public static List<Opponent> getOpponentsFocusableForWarlord(List<Opponent> playerOpponents, int numberOfDistrictsNeeded) {
         return playerOpponents.stream()
                 .filter(opponent ->
-                        opponent.getCitadel().size() < 8
+                        opponent.getCitadel().size() < numberOfDistrictsNeeded
                                 && (opponent.getOpponentCharacter() == null || !opponent.getOpponentCharacter().getRole().equals(Role.BISHOP))).toList();
     }
 
@@ -70,7 +70,7 @@ public class Warlord extends CommonCharacter {
         if (district.equals(District.DONJON)) {
             throw new IllegalArgumentException("The player can't destroy the donjon");
         }
-        if (opponent.getCitadel().size() >= 8) {
+        if (opponent.getCitadel().size() >= this.getPlayer().getNumberOfDistrictsNeeded()) {
             throw new IllegalArgumentException("The player can't destroy a district if the player has a complete citadel");
         }
         opponent.destroyDistrict(this.getPlayer(), district);

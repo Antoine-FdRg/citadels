@@ -6,9 +6,9 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
@@ -38,7 +38,8 @@ public class Game {
      */
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private final int nbOfDistrictsInCitadel;
+    public static final int NORMAL_NB_DISTRICT_TO_WIN = 8;
+    private int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
@@ -82,7 +83,7 @@ public class Game {
         if (playerList.size() == 3) {
             nbOfDistrictsInCitadel = 10;
         } else {
-            nbOfDistrictsInCitadel = 8;
+            nbOfDistrictsInCitadel = NORMAL_NB_DISTRICT_TO_WIN;
         }
     }
 
@@ -147,7 +148,7 @@ public class Game {
             isTheFirstOneToHaveAllDistricts(player);
         }
         retrieveCharacters();
-        finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
+        finished = players.stream().anyMatch(player -> player.getCitadel().size() >= this.getNumberOfDistrictsNeeded());
         this.nbCurrentRound++;
     }
 
@@ -359,13 +360,13 @@ public class Game {
                 player.addBonus(3);
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
-            if (player.getCitadel().size() == 8) {
+            if (player.getCitadel().size() == this.getNumberOfDistrictsNeeded()) {
                 if (player.getIsFirstToHaveAllDistricts()) {
                     player.addBonus(2);
-                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre 8 quartiers");
+                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre " + this.getNumberOfDistrictsNeeded() + " quartiers");
                 }
                 player.addBonus(2);
-                view.displayPlayerGetBonus(player, 2, "8 quartiers");
+                view.displayPlayerGetBonus(player, 2, this.getNumberOfDistrictsNeeded() + " quartiers");
             }
             checkUniversityOrPortForDragonsInCitadel(player);
             view.displayPlayerScore(player);
@@ -423,5 +424,13 @@ public class Game {
      */
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void setNbOfDistrictsInCitadel(int nbOfDistrictsInCitadel) {
+        this.nbOfDistrictsInCitadel = nbOfDistrictsInCitadel;
+    }
+
+    public int getNumberOfDistrictsNeeded() {
+        return nbOfDistrictsInCitadel;
     }
 }

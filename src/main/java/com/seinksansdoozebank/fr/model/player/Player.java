@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -64,6 +65,8 @@ public abstract class Player implements Opponent {
      */
     public static final int NB_MAX_CHARACTER_CHOSEN_IN_A_ROW = 3;
     private Character lastCharacterChosen;
+    private int numberOfDistrictsNeeded = Game.NORMAL_NB_DISTRICT_TO_WIN;
+
 
     /**
      * Player constructor
@@ -962,5 +965,13 @@ public abstract class Player implements Opponent {
      */
     public void setNbCharacterChosenInARow(int nbCharacterChosenInARow) {
         this.nbCharacterChosenInARow = nbCharacterChosenInARow;
+    }
+
+    public void setNumberOfDistrictsNeeded(int numberOfDistrictsNeeded) {
+        this.numberOfDistrictsNeeded = numberOfDistrictsNeeded;
+    }
+
+    public int getNumberOfDistrictsNeeded() {
+        return this.numberOfDistrictsNeeded;
     }
 }

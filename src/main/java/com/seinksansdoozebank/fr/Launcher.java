@@ -28,7 +28,9 @@ public class Launcher {
                 .build()
                 .parse(args);
 
-        if (cmdArgs.isDemo()) {
+        if (cmdArgs.getQuickValue() != null) {
+            launcher.runQuickDemo(Integer.parseInt(cmdArgs.getQuickValue()), cmdArgs.isCsv());
+        } else if (cmdArgs.isDemo()) {
             launcher.runDemo(cmdArgs.isCsv(), cmdArgs.isVariante());
         } else if (cmdArgs.is2Thousands()) {
             launcher.twoThousand(cmdArgs.isCsv());
@@ -39,15 +41,28 @@ public class Launcher {
 
     /**
      * Run the demo
+     *
      * @param saveInCsv true if the results should be saved in a csv file
      */
-    public void runDemo(boolean saveInCsv, boolean isVariante) {
+    public void runDemo(boolean saveInCsv, boolean variante) {
         GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
-        analyzer.runDemo(isVariante);
+        analyzer.runDemo(variante);
+    }
+
+    /**
+     * Run a quick demo
+     *
+     * @param nbDistricts the number of districts
+     * @param saveInCsv   true if the results should be saved in a csv file
+     */
+    public void runQuickDemo(int nbDistricts, boolean saveInCsv) {
+        GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
+        analyzer.runQuickDemo(nbDistricts);
     }
 
     /**
      * Run two thousand games
+     *
      * @param saveInCsv true if the results should be saved in a csv file
      */
     public void twoThousand(boolean saveInCsv) {

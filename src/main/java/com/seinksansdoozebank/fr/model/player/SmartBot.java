@@ -252,10 +252,7 @@ public class SmartBot extends Player {
      * couleurs de districtType sinon il joue comme un joueur normal
      */
     protected void useEffectOfTheArchitect() {
-        int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
-        if (this.getOpponents().size() == 3) {
-            numberOfCardsNeededToFinishTheGame = 10 - this.getCitadel().size();
-        }
+        int numberOfCardsNeededToFinishTheGame = this.getNumberOfDistrictsNeeded() - this.getCitadel().size();
         //On regarde s'il peut finir la partie en un coup en vérifiant si la citadelle a plus de 4 cartes, si dans sa main il a au moins 3 cartes
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
         int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();

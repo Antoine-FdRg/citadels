@@ -19,8 +19,11 @@ import com.seinksansdoozebank.fr.model.player.RandomBot;
 import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.IView;
+import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -50,11 +54,11 @@ import static org.mockito.Mockito.when;
 
 class GameTest {
 
-    Game gameWithFivePlayers;
-    Game gameWithThreePlayers;
-    Game gameWithFourPlayers;
-    Game gameWithSixPlayers;
-    Game gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
+    Game normalGameWithFivePlayers;
+    Game normalGameWithThreePlayers;
+    Game normalGameWithFourPlayers;
+    Game normalGameWithSixPlayers;
+    Game normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition;
     Player playerWIthEightDistrictsAndFiveDistrictTypes;
     Player playerWithNoBonus;
     Player playerWithEightDistricts;
@@ -65,10 +69,10 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        gameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, new Bank(), 5));
+        normalGameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, new Bank(), 5, Game.NORMAL_NB_DISTRICT_TO_WIN));
 
         Bank threePlayersGameBank = new Bank();
-        gameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4);
+        normalGameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4, Game.NORMAL_NB_DISTRICT_TO_WIN);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view, threePlayersGameBank));
         List<Card> citadelWithEightDistrictsAndFiveDistrictTypes = new ArrayList<>(List.
@@ -102,11 +106,11 @@ class GameTest {
                         new Card(District.TAVERN)));
 
         when(playerWithEightDistricts.getCitadel()).thenReturn(citadelWithEightDistricts);
-        gameWithThreePlayers.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
+        normalGameWithThreePlayers.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
 
         fourPlayersGameBank = mock(Bank.class);
-        gameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, fourPlayersGameBank, 4));
-        gameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, mock(Bank.class), 6));
+        normalGameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, fourPlayersGameBank, 4, Game.NORMAL_NB_DISTRICT_TO_WIN));
+        normalGameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, mock(Bank.class), 6, Game.NORMAL_NB_DISTRICT_TO_WIN));
 
         charactersList = List.of(
                 new Assassin(),
@@ -131,20 +135,20 @@ class GameTest {
         when(p3.getScore()).thenReturn(7);
         Player p4 = mock(Player.class);
         when(p4.getScore()).thenReturn(6);
-        gameWithFivePlayers.setPlayers(
+        normalGameWithFivePlayers.setPlayers(
                 new ArrayList<>(
                         List.of(p1, p2, p3, p4)
                 )
         );
-        assertEquals(p3, gameWithFivePlayers.getWinner());
+        assertEquals(p3, normalGameWithFivePlayers.getWinner());
     }
 
     @Test
     void playersChoseCharactersMakeAllPlayersChooseADifferentCharacter() {
-        List<Player> players = gameWithFivePlayers.players;
-        gameWithFivePlayers.getAvailableCharacters().addAll(charactersList);
+        List<Player> players = normalGameWithFivePlayers.players;
+        normalGameWithFivePlayers.getAvailableCharacters().addAll(charactersList);
 
-        gameWithFivePlayers.playersChooseCharacters();
+        normalGameWithFivePlayers.playersChooseCharacters();
 
         for (Player player : players) {
             assertNotNull(player.getCharacter());
@@ -160,7 +164,7 @@ class GameTest {
     void retrieveCharactersRetrieveAllCharacters() {
         // Test the playersChooseCharacters method
         int nbCharactersInitial = charactersList.size();
-        List<Player> players = gameWithFivePlayers.players;
+        List<Player> players = normalGameWithFivePlayers.players;
         for (int i = 0; i < players.size(); i++) {
             Player currentPlayer = players.get(i);
             Character currentCharacter = charactersList.get(i);
@@ -169,7 +173,7 @@ class GameTest {
         }
 
         // Reset the available characters list
-        gameWithFivePlayers.retrieveCharacters();
+        normalGameWithFivePlayers.retrieveCharacters();
 
         // Check if the available characters list is equal to charactersList
         assertEquals(nbCharactersInitial, charactersList.size());
@@ -182,10 +186,10 @@ class GameTest {
     @Test
     void isFirstBotToHaveEightDistrictsTest() {
         //playerWithEightDistrictsAndFiveDistrictTypes is the first who has eight districts in that game so +7 in bonus
-        gameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
+        normalGameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWIthEightDistrictsAndFiveDistrictTypes);
         //playerWithEightDistricts is not the first who has eight districts +2 in bonus
-        gameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWithEightDistricts);
-        gameWithThreePlayers.updatePlayersBonus();
+        normalGameWithThreePlayers.isTheFirstOneToHaveAllDistricts(playerWithEightDistricts);
+        normalGameWithThreePlayers.updatePlayersBonus();
 
         assertEquals(7, playerWIthEightDistrictsAndFiveDistrictTypes.getBonus());
         assertEquals(2, playerWithEightDistricts.getBonus());
@@ -197,7 +201,7 @@ class GameTest {
     @Test
     void hasDifferentDistrictTypeTestWithPlayerHavingFiveTypesShouldReturnTrue() {
         //botWithFiveDifferentDistrictType
-        gameWithThreePlayers.updatePlayersBonus();
+        normalGameWithThreePlayers.updatePlayersBonus();
         assertTrue(playerWIthEightDistrictsAndFiveDistrictTypes.hasFiveDifferentDistrictTypes());
     }
 
@@ -206,7 +210,7 @@ class GameTest {
      */
     @Test
     void hasDifferentDistrictTypeWithPlayerNotHavingFiveTypesShouldFalse() {
-        gameWithThreePlayers.updatePlayersBonus();
+        normalGameWithThreePlayers.updatePlayersBonus();
         assertFalse(playerWithNoBonus.hasFiveDifferentDistrictTypes());
     }
 
@@ -215,36 +219,36 @@ class GameTest {
      */
     @Test
     void botWithEightDistrictInItCitadelTest() {
-        gameWithThreePlayers.updatePlayersBonus();
+        normalGameWithThreePlayers.updatePlayersBonus();
         assertEquals(2, playerWithEightDistricts.getBonus());
     }
 
     @Test
     void orderPlayerBeforePlaying() {
-        gameWithFourPlayers.createCharacters();
-        List<Character> availableCharacters = new ArrayList<>(gameWithFourPlayers.getAvailableCharacters());
+        normalGameWithFourPlayers.createCharacters();
+        List<Character> availableCharacters = new ArrayList<>(normalGameWithFourPlayers.getAvailableCharacters());
         availableCharacters.sort(Comparator.comparing(Character::getRole));
-        gameWithFourPlayers.playersChooseCharacters();
-        availableCharacters.removeAll(gameWithFourPlayers.getAvailableCharacters());
-        gameWithFourPlayers.orderPlayerBeforePlaying();
+        normalGameWithFourPlayers.playersChooseCharacters();
+        availableCharacters.removeAll(normalGameWithFourPlayers.getAvailableCharacters());
+        normalGameWithFourPlayers.orderPlayerBeforePlaying();
         int size = availableCharacters.size();
-        assertEquals(size, gameWithFourPlayers.players.size());
+        assertEquals(size, normalGameWithFourPlayers.players.size());
         for (int i = 0; i < size; i++) {
-            assertEquals(gameWithFourPlayers.players.get(i).getCharacter(), availableCharacters.get(i));
+            assertEquals(normalGameWithFourPlayers.players.get(i).getCharacter(), availableCharacters.get(i));
         }
     }
 
     @Test
     void runGameShouldHave65CardsBeforeAndAfter() {
-        int nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
-        for (Player player : gameWithFourPlayers.players) {
+        int nbCardInGame = normalGameWithFourPlayers.deck.getDeck().size();
+        for (Player player : normalGameWithFourPlayers.players) {
             nbCardInGame += player.getHand().size();
             nbCardInGame += player.getCitadel().size();
         }
         assertEquals(65, nbCardInGame);
-        gameWithFourPlayers.run();
-        nbCardInGame = gameWithFourPlayers.deck.getDeck().size();
-        for (Player player : gameWithFourPlayers.players) {
+        normalGameWithFourPlayers.run();
+        nbCardInGame = normalGameWithFourPlayers.deck.getDeck().size();
+        for (Player player : normalGameWithFourPlayers.players) {
             nbCardInGame += player.getHand().size();
             nbCardInGame += player.getCitadel().size();
         }
@@ -253,9 +257,9 @@ class GameTest {
 
     @Test
     void runGameAndCheckThatNoCardAreDuplicated() {
-        gameWithFourPlayers.run();
-        Set<Card> allCards = new HashSet<>(gameWithFourPlayers.deck.getDeck());
-        for (Player player : gameWithFourPlayers.players) {
+        normalGameWithFourPlayers.run();
+        Set<Card> allCards = new HashSet<>(normalGameWithFourPlayers.deck.getDeck());
+        for (Player player : normalGameWithFourPlayers.players) {
             allCards.addAll(player.getHand());
             allCards.addAll(player.getCitadel());
         }
@@ -264,41 +268,41 @@ class GameTest {
 
     @Test
     void runGame() {
-        gameWithFourPlayers.run();
-        verify(gameWithFourPlayers, times(1)).init();
-        int nbRoundPlayed = gameWithFourPlayers.getNbCurrentRound() - 1;
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
+        normalGameWithFourPlayers.run();
+        verify(normalGameWithFourPlayers, times(1)).init();
+        int nbRoundPlayed = normalGameWithFourPlayers.getNbCurrentRound() - 1;
+        verify(normalGameWithFourPlayers, times(nbRoundPlayed)).createCharacters();
         verify(view, times(nbRoundPlayed)).displayRound(anyInt());
-        verify(gameWithFourPlayers, times(nbRoundPlayed)).playARound();
-        verify(gameWithFourPlayers, atMost(nbRoundPlayed + 1)).isStuck();
+        verify(normalGameWithFourPlayers, times(nbRoundPlayed)).playARound();
+        verify(normalGameWithFourPlayers, atMost(nbRoundPlayed + 1)).isStuck();
         verify(view, atMost(1)).displayGameFinished();
         verify(view, atMost(1)).displayGameStuck();
-        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
+        verify(normalGameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
 
     @Test
     void runAStuckGameShouldDisplayStuckGame() {
-        when(gameWithFourPlayers.isStuck()).thenReturn(true);
-        gameWithFourPlayers.run();
-        verify(gameWithFourPlayers, times(1)).init();
+        when(normalGameWithFourPlayers.isStuck()).thenReturn(true);
+        normalGameWithFourPlayers.run();
+        verify(normalGameWithFourPlayers, times(1)).init();
         verify(view, times(0)).displayGameFinished();
         verify(view, times(1)).displayGameStuck();
-        verify(gameWithFourPlayers, times(1)).updatePlayersBonus();
+        verify(normalGameWithFourPlayers, times(1)).updatePlayersBonus();
         verify(view, times(1)).displayWinner(any(Player.class));
     }
 
     @Test
     void playARound() {
-        gameWithFourPlayers.createCharacters();
-        gameWithFourPlayers.playARound();
-        verify(gameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
-        verify(gameWithFourPlayers, times(1)).playersChooseCharacters();
-        verify(gameWithFourPlayers, times(1)).orderPlayerBeforePlaying();
-        verify(gameWithFourPlayers, atMost(gameWithFourPlayers.players.size())).isTheFirstOneToHaveAllDistricts(any(Player.class));
-        verify(gameWithFourPlayers, atLeast(gameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveAllDistricts(any(Player.class));
-        verify(gameWithFourPlayers, times(1)).retrieveCharacters();
-        List<Player> players = gameWithFourPlayers.players;
+        normalGameWithFourPlayers.createCharacters();
+        normalGameWithFourPlayers.playARound();
+        verify(normalGameWithFourPlayers, times(1)).orderPlayerBeforeChoosingCharacter();
+        verify(normalGameWithFourPlayers, times(1)).playersChooseCharacters();
+        verify(normalGameWithFourPlayers, times(1)).orderPlayerBeforePlaying();
+        verify(normalGameWithFourPlayers, atMost(normalGameWithFourPlayers.players.size())).isTheFirstOneToHaveAllDistricts(any(Player.class));
+        verify(normalGameWithFourPlayers, atLeast(normalGameWithFourPlayers.players.size() - 1)).isTheFirstOneToHaveAllDistricts(any(Player.class));
+        verify(normalGameWithFourPlayers, times(1)).retrieveCharacters();
+        List<Player> players = normalGameWithFourPlayers.players;
         for (Player player : players) {
             assertNull(player.getCharacter());
         }
@@ -319,12 +323,12 @@ class GameTest {
 
     @Test
     void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, mock(Bank.class), 4);
+        normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, mock(Bank.class), 4, Game.NORMAL_NB_DISTRICT_TO_WIN);
         Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = getPlayerWithCourtyard();
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
+        normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
         // Update the bonus of all players
-        gameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
+        normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.updatePlayersBonus();
         // Check that the player with the courtyard of miracle get the bonus
         assertEquals(0, playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.getBonus());
     }
@@ -358,20 +362,20 @@ class GameTest {
         when(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getCitadel()).thenReturn(citadelWithFourDifferentDistrictAndTheCourtyardOfMiracle);
 
 
-        gameWithFourPlayers.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
+        normalGameWithFourPlayers.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracle));
         // Update the bonus of all players
-        gameWithFourPlayers.updatePlayersBonus();
+        normalGameWithFourPlayers.updatePlayersBonus();
         // Check that the player with the courtyard of miracle get the bonus
         assertEquals(3, playerWithFourDifferentDistrictAndTheCourtyardOfMiracle.getBonus());
     }
 
     @Test
     void crownedPlayerIsUpdatedWhilePlayingARoundANdKingIsAlive() {
-        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Warlord()));
+        normalGameWithFourPlayers.getAvailableCharacters().addAll(List.of(new King(), new Bishop(), new Merchant(), new Warlord()));
 
-        gameWithFourPlayers.playARound();
+        normalGameWithFourPlayers.playARound();
 
-        assertEquals(gameWithFourPlayers.players.get(0), gameWithFourPlayers.crownedPlayer);
+        assertEquals(normalGameWithFourPlayers.players.get(0), normalGameWithFourPlayers.crownedPlayer);
     }
 
     @Test
@@ -379,11 +383,12 @@ class GameTest {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
-        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
-        gameWithFourPlayers.playARound();
+        normalGameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
 
-        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size() - 1)).updateCrownedPlayer(any(Player.class));
-        assertNull(gameWithFourPlayers.crownedPlayer);
+        normalGameWithFourPlayers.playARound();
+
+        verify(normalGameWithFourPlayers, times(normalGameWithFourPlayers.players.size() - 1)).updateCrownedPlayer(any(Player.class));
+        assertNull(normalGameWithFourPlayers.crownedPlayer);
     }
 
     @Test
@@ -391,45 +396,45 @@ class GameTest {
         King king = new King();
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
-        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
-        gameWithFourPlayers.setVariante(true);
-        gameWithFourPlayers.playARound();
+        normalGameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
+        normalGameWithFourPlayers.setVariante(true);
+        normalGameWithFourPlayers.playARound();
 
-        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size())).updateCrownedPlayer(any(Player.class));
-        assertNotNull(gameWithFourPlayers.crownedPlayer);
+        verify(normalGameWithFourPlayers, times(normalGameWithFourPlayers.players.size())).updateCrownedPlayer(any(Player.class));
+        assertNotNull(normalGameWithFourPlayers.crownedPlayer);
     }
 
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 2));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 7));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void createCharactersWithFourPlayers() {
-        gameWithFourPlayers.createCharacters();
-        assertEquals(6, gameWithFourPlayers.getAvailableCharacters().size());
-        assertTrue(gameWithFourPlayers.getAvailableCharacters().contains(new King()));
+        normalGameWithFourPlayers.createCharacters();
+        assertEquals(6, normalGameWithFourPlayers.getAvailableCharacters().size());
+        assertTrue(normalGameWithFourPlayers.getAvailableCharacters().contains(new King()));
         verify(view, times(charactersList.size() - 6)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithFivePlayers() {
-        gameWithFivePlayers.createCharacters();
-        assertEquals(7, gameWithFivePlayers.getAvailableCharacters().size());
+        normalGameWithFivePlayers.createCharacters();
+        assertEquals(7, normalGameWithFivePlayers.getAvailableCharacters().size());
         verify(view, times(charactersList.size() - 7)).displayUnusedCharacterInRound(any(Character.class));
     }
 
     @Test
     void createCharactersWithSixPlayers() {
-        gameWithSixPlayers.createCharacters();
-        assertEquals(8, gameWithSixPlayers.getAvailableCharacters().size());
-        assertTrue(gameWithSixPlayers.getAvailableCharacters().contains(new King()));
+        normalGameWithSixPlayers.createCharacters();
+        assertEquals(8, normalGameWithSixPlayers.getAvailableCharacters().size());
+        assertTrue(normalGameWithSixPlayers.getAvailableCharacters().contains(new King()));
         verify(view, times(0)).displayUnusedCharacterInRound(any(Character.class));
     }
 
@@ -449,11 +454,11 @@ class GameTest {
         thief.setPlayer(playerThief);
         when(playerThief.getCharacter()).thenReturn(thief);
 
-        gameWithFivePlayers.setPlayers(List.of(playerThief, playerArchitect));
+        normalGameWithFivePlayers.setPlayers(List.of(playerThief, playerArchitect));
         //The player architect is present in the game
-        assertEquals(Optional.of(playerArchitect), gameWithFivePlayers.getPlayerByRole(Role.ARCHITECT));
+        assertEquals(Optional.of(playerArchitect), normalGameWithFivePlayers.getPlayerByRole(Role.ARCHITECT));
         //The player merchant is not present in the game
-        assertEquals(Optional.empty(), gameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
+        assertEquals(Optional.empty(), normalGameWithFivePlayers.getPlayerByRole(Role.MERCHANT));
     }
 
     /**
@@ -469,10 +474,10 @@ class GameTest {
         when(smartBotWithNoPrestige.getCitadel()).thenReturn(List.of(new Card(District.TAVERN)));
         Player smartBotWithBothDistricts = spy(new SmartBot(3, new Deck(), view, fourPlayersGameBank));
         when(smartBotWithBothDistricts.getCitadel()).thenReturn(List.of(new Card(District.PORT_FOR_DRAGONS), new Card(District.UNIVERSITY)));
-        gameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
+        normalGameWithFourPlayers.setPlayers(List.of(smartBotWithPortForDragons, smartBotWithUniversity, smartBotWithBothDistricts));
 
-        for (Player player : gameWithFourPlayers.players) {
-            gameWithFourPlayers.checkUniversityOrPortForDragonsInCitadel(player);
+        for (Player player : normalGameWithFourPlayers.players) {
+            normalGameWithFourPlayers.checkUniversityOrPortForDragonsInCitadel(player);
         }
 
         assertEquals(2, smartBotWithPortForDragons.getBonus());
@@ -488,25 +493,25 @@ class GameTest {
      */
     @Test
     void checkIfUpdatePlayersBonusCallsSpellcheckUniversityOrPortForDragonsInCitadelTest() {
-        gameWithFourPlayers.updatePlayersBonus();
-        verify(gameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
+        normalGameWithFourPlayers.updatePlayersBonus();
+        verify(normalGameWithFourPlayers, atLeast(4)).checkUniversityOrPortForDragonsInCitadel(any());
     }
 
     @Test
     void createCharactersWithTooMuchPlayers() {
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
-        gameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
-        assertThrows(UnsupportedOperationException.class, () -> gameWithFourPlayers.createCharacters());
+        normalGameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        normalGameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        normalGameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        normalGameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        normalGameWithFourPlayers.players.add(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
+        assertThrows(UnsupportedOperationException.class, () -> normalGameWithFourPlayers.createCharacters());
     }
 
     @Test
     void isStuckWithStuckGameShouldReturnTrue() {
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class))
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -536,7 +541,7 @@ class GameTest {
     void isStuckWithNotEmptyDeckShouldReturnFalse() {
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class))
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -551,7 +556,7 @@ class GameTest {
         Bank bank = new Bank();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, bank)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, bank, Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -563,7 +568,7 @@ class GameTest {
 
     @Test
     void isStuckWithCardsInPlayersHandShouldReturnFalse() {
-        Game stuckGame = new GameBuilder(mock(IView.class), new Deck(), mock(Bank.class))
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck(), mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -584,11 +589,11 @@ class GameTest {
         Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
         when(player4.getScore()).thenReturn(5);
         List<Player> players = List.of(player1, player2, player3, player4);
-        when(gameWithFourPlayers.getPlayers()).thenReturn(
+        when(normalGameWithFourPlayers.getPlayers()).thenReturn(
                 new ArrayList<>(players)
         );
-        gameWithFourPlayers.orderPlayersByPoints();
-        assertEquals(players, gameWithFourPlayers.getPlayers());
+        normalGameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, normalGameWithFourPlayers.getPlayers());
     }
 
     @Test
@@ -602,11 +607,11 @@ class GameTest {
         Player player4 = spy(new RandomBot(5, new Deck(), view, fourPlayersGameBank));
         when(player4.getScore()).thenReturn(5);
         List<Player> players = List.of(player1, player2, player3, player4);
-        when(gameWithFourPlayers.getPlayers()).thenReturn(
+        when(normalGameWithFourPlayers.getPlayers()).thenReturn(
                 new ArrayList<>(List.of(player4, player3, player2, player1))
         );
-        gameWithFourPlayers.orderPlayersByPoints();
-        assertEquals(players, gameWithFourPlayers.getPlayers());
+        normalGameWithFourPlayers.orderPlayersByPoints();
+        assertEquals(players, normalGameWithFourPlayers.getPlayers());
     }
 
     @Test
@@ -629,10 +634,10 @@ class GameTest {
 
         List<Player> expectedOrder = List.of(player1, player2, player3, player4);
 
-        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
-        gameWithFourPlayers.orderPlayersByPoints();
+        when(normalGameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        normalGameWithFourPlayers.orderPlayersByPoints();
 
-        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
+        assertEquals(expectedOrder, normalGameWithFourPlayers.getPlayers());
     }
 
     @Test
@@ -655,10 +660,44 @@ class GameTest {
 
         List<Player> expectedOrder = List.of(player1, player2, player4, player3);
 
-        when(gameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
-        gameWithFourPlayers.orderPlayersByPoints();
+        when(normalGameWithFourPlayers.getPlayers()).thenReturn(new ArrayList<>(List.of(player4, player3, player2, player1)));
+        normalGameWithFourPlayers.orderPlayersByPoints();
 
-        assertEquals(expectedOrder, gameWithFourPlayers.getPlayers());
+        assertEquals(expectedOrder, normalGameWithFourPlayers.getPlayers());
+    }
+
+
+    @ParameterizedTest
+    @CsvSource(
+            {"8, 8", "6, 6", "7, 7", "10, 10"}
+    )
+    void testGameWithSpecificNumberOfDistrictsNeeded(int numberOfDistrictsNeeded, int expected) {
+        Game game = new GameBuilder(mock(IView.class), new Deck(), new Bank(), numberOfDistrictsNeeded)
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .addRandomBot()
+                .build();
+        game.setNbOfDistrictsInCitadel(numberOfDistrictsNeeded);
+        assertEquals(expected, game.getNumberOfDistrictsNeeded());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            {"8, 8", "6, 6", "7, 7", "10, 10"}
+    )
+    void testGameWithSpecificNumberOfDistrictsNeededWinner(int numberOfDistrictsNeeded, int expected) {
+        Game game = new GameBuilder(mock(IView.class), new Deck(), new Bank(), numberOfDistrictsNeeded)
+                .addSmartBot()
+                .addSmartBot()
+                .addSmartBot()
+                .addSmartBot()
+                .build();
+        game.setNbOfDistrictsInCitadel(numberOfDistrictsNeeded);
+        CustomLogger.setLevel(Level.OFF);
+        game.run();
+        // for each player in the game if there is one that have a citadel size >= expected then the test is valid
+        assertTrue(game.getPlayers().stream().anyMatch(player -> player.getCitadel().size() >= expected));
     }
 
 }
