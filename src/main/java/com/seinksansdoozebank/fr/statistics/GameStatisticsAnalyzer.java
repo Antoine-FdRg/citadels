@@ -4,21 +4,9 @@ package com.seinksansdoozebank.fr.statistics;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.seinksansdoozebank.fr.controller.Game;
-import com.seinksansdoozebank.fr.controller.GameBuilder;
 import com.seinksansdoozebank.fr.controller.GameFactory;
 import com.seinksansdoozebank.fr.model.bank.Bank;
-import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.player.Player;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.CardChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.UsingCondottiereEffectToTargetFirstPlayer;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.UsingMurdererEffectToFocusRusher;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.UsingThiefEffectToFocusRusher;
 import com.seinksansdoozebank.fr.view.Cli;
 import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import com.seinksansdoozebank.fr.view.logger.CustomStatisticsLogger;
@@ -35,21 +23,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import static com.seinksansdoozebank.fr.controller.Game.NORMAL_NB_DISTRICT_TO_WIN;
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.DEMO_GAME;
 
-
+/**
+ * The GameStatisticsAnalyzer class is responsible for analyzing game statistics and logging aggregated statistics.
+ */
 public class GameStatisticsAnalyzer {
 
+    /**
+     * The category of the CSV file to save the statistics to.
+     */
     public enum CsvCategory {
-        BEST_AGAINST_SECOND("BestAgainstSecondAndOthers.csv"), BEST_BOTS_AGAINST("BestBotsAgainstBestBot.csv"),
+        /**
+         * BestAgainstSecondAndOthers.csv
+         */
+        BEST_AGAINST_SECOND("BestAgainstSecondAndOthers.csv"),
+        /**
+         * BestBotsAgainstBestBot.csv
+         */
+        BEST_BOTS_AGAINST("BestBotsAgainstBestBot.csv"),
+        /**
+         * gamestats.csv
+         */
         DEMO_GAME("gamestats.csv");
 
         private final String fileName;
 
+        /**
+         * CsvCategory constructor
+         *
+         * @param fileName the name of the file
+         */
         CsvCategory(String fileName) {
             this.fileName = fileName;
         }
 
+        /**
+         * Get the name of the file
+         *
+         * @return the name of the file
+         */
         public String getFileName() {
             return fileName;
         }
@@ -61,6 +75,13 @@ public class GameStatisticsAnalyzer {
     static final String FOLDER_DEFAULT_PATH = "src/main/resources/stats/";
     private final CsvCategory csvCategory;
 
+    /**
+     * GameStatisticsAnalyzer constructor
+     *
+     * @param numSessions    the number of game sessions
+     * @param saveStatsToCsv boolean to save the stats to a csv file
+     * @param csvCategory    the category of the CSV file to save the statistics to
+     */
     public GameStatisticsAnalyzer(int numSessions, boolean saveStatsToCsv, CsvCategory csvCategory) {
         this.numSessions = numSessions;
         this.playerStatisticsMap = new HashMap<>();
@@ -68,14 +89,33 @@ public class GameStatisticsAnalyzer {
         this.csvCategory = csvCategory;
     }
 
+    /**
+     * GameStatisticsAnalyzer constructor
+     *
+     * @param saveStatsToCsv boolean to save the stats to a csv file
+     */
     public GameStatisticsAnalyzer(boolean saveStatsToCsv) {
         this(0, saveStatsToCsv, DEMO_GAME);
     }
 
-    public void runDemo() {
+    /**
+     * Runs a demo game session with all types of bots and analyzes the results.
+     */
+    public void runDemo(boolean isVariante) {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Player.resetIdCounter();
-        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank(), NORMAL_NB_DISTRICT_TO_WIN);
+        game.run();
+        game.setVariante(isVariante);
+        analyzeGameResults(game);
+        logAggregatedStatistics();
+    }
+
+    public void runQuickDemo(int nbDistricts) {
+        CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
+        Player.resetIdCounter();
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank(), nbDistricts);
+        game.setNbOfDistrictsInCitadel(nbDistricts);
         game.run();
         analyzeGameResults(game);
         logAggregatedStatistics();
@@ -87,18 +127,19 @@ public class GameStatisticsAnalyzer {
      * creates a new game instance, runs the game, logs the completion of each game session,
      * analyzes the results of each game, logs aggregated statistics, and optionally saves statistics to a CSV file.
      *
-     * @param numRandomBots The number of random bots to be included in each game session.
-     * @param numSmartBots  The number of smart bots to be included in each game session.
-     * @param numCustomBots The number of custom bots to be included in each game session.
-     * @param numRichardBots The number of richard bots to be included in each game session.
-     * @param numBuilderBots The number of builder bots to be included in each game session.
+     * @param numRandomBots      The number of random bots to be included in each game session.
+     * @param numSmartBots       The number of smart bots to be included in each game session.
+     * @param numCustomBots      The number of custom bots to be included in each game session.
+     * @param numRichardBots     The number of richard bots to be included in each game session.
+     * @param numBuilderBots     The number of builder bots to be included in each game session.
+     * @param numOpportunistBots The number of opportunist bots to be included in each game session.
      */
     public void runAndAnalyze(int numRandomBots, int numSmartBots, int numCustomBots, int numRichardBots, int numBuilderBots, int numOpportunistBots) {
         CustomStatisticsLogger.setLevel(Level.INFO);
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
-            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
+            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots, Game.NORMAL_NB_DISTRICT_TO_WIN);
             game.run();
             CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);
@@ -279,11 +320,11 @@ public class GameStatisticsAnalyzer {
             // Create the file if it doesn't exist
             File file = new File(FOLDER_DEFAULT_PATH + this.getCsvCategory().getFileName());
             if (!file.exists()) {
-                 if (file.createNewFile()) {
+                if (file.createNewFile()) {
                     CustomStatisticsLogger.log(Level.FINE, "File created: {0}", new Object[]{file.getName()});
-                 } else {
+                } else {
                     CustomStatisticsLogger.log(Level.FINE, "File already exists.");
-                 }
+                }
             }
         } catch (IOException e) {
             CustomStatisticsLogger.log(Level.SEVERE, "Error occurred while creating file: {0}", new Object[]{e.getMessage()});
@@ -380,18 +421,38 @@ public class GameStatisticsAnalyzer {
         }
     }
 
+    /**
+     * Get the map of player statistics
+     *
+     * @return the map of player statistics
+     */
     public Map<Player, PlayerStatistics> getPlayerStatisticsMap() {
         return playerStatisticsMap;
     }
 
+    /**
+     * Get the boolean to save the stats to a csv file
+     *
+     * @return the boolean to save the stats to a csv file
+     */
     public boolean isSaveStatsToCsv() {
         return saveStatsToCsv;
     }
 
+    /**
+     * Gets the number of game sessions to run and analyze.
+     *
+     * @return the number of game sessions
+     */
     public int getNumSessions() {
         return numSessions;
     }
 
+    /**
+     * Get the category of the CSV file to save the statistics to
+     *
+     * @return the category of the CSV file to save the statistics to
+     */
     public CsvCategory getCsvCategory() {
         return csvCategory;
     }

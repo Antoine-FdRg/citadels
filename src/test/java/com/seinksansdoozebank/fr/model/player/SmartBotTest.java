@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -7,7 +8,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -88,7 +89,7 @@ class SmartBotTest {
         when(spySmartBot.getHand()).thenReturn(List.of(cardCostFive));
         when(spySmartBot.hasACardToPlay()).thenReturn(false, false, true);
         doReturn(Optional.of(cardCostThree)).when(spySmartBot).playACard();
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Warlord())));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
@@ -104,7 +105,7 @@ class SmartBotTest {
         List<Card> hand = new ArrayList<>(List.of(cardCostFive));
         when(spySmartBot.getHand()).thenReturn(hand);
         when(spySmartBot.hasACardToPlay()).thenReturn(true);
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Condottiere())));
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Bishop(), new King(), new Merchant(), new Warlord())));
         spySmartBot.play();
 
         verify(view, times(1)).displayPlayerStartPlaying(spySmartBot);
@@ -204,13 +205,13 @@ class SmartBotTest {
         Bishop bishop = new Bishop();
         King king = new King();
         Merchant merchant = new Merchant();
-        Condottiere condottiere = new Condottiere();
+        Warlord warlord = new Warlord();
 
         List<Character> characters = new ArrayList<>();
         characters.add(bishop);
         characters.add(king);
         characters.add(merchant);
-        characters.add(condottiere);
+        characters.add(warlord);
 
         return characters;
     }
@@ -262,7 +263,7 @@ class SmartBotTest {
     void chooseCharacterWhenMostOwnedDistrictTypeCharacterIsNotAvailableAndSecondNeither() {
         List<Character> characters = createCharactersList();
         characters.remove(1); // Remove the king
-        characters.remove(2); // Remove the condottiere
+        characters.remove(2); // Remove the warlord
         Card manorCard = new Card(District.MANOR);
         Card castleCard = new Card(District.CASTLE);
         Card palaceCard = new Card(District.PALACE);
@@ -348,22 +349,22 @@ class SmartBotTest {
     }
 
     @Test
-    void useEffectTestCondottiereWithEmptyOpponents() {
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+    void useEffectTestWarlordWithEmptyOpponents() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         spySmartBot.getCharacter().applyEffect();
-        verify(spySmartBot, times(0)).chooseCondottiereTarget(any());
+        verify(spySmartBot, times(0)).chooseWarlordTarget(any());
     }
 
     @Test
-    void useEffectTestCondottiereWithOpponents() {
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+    void useEffectTestWarlordWithOpponents() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         Player opponent = spy(new SmartBot(10, deck, view, bank));
         opponent.chooseCharacter(new ArrayList<>(List.of(new Merchant())));
         when(opponent.getCitadel()).thenReturn(List.of(new Card(District.MARKET_PLACE)));
         opponent.reveal();
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
         spySmartBot.getCharacter().applyEffect();
-        verify(spySmartBot, times(1)).chooseCondottiereTarget(any());
+        verify(spySmartBot, times(1)).chooseWarlordTarget(any());
     }
 
     @Test
@@ -732,8 +733,8 @@ class SmartBotTest {
 
 
     @Test
-    void testUseEffectCondottiere() {
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+    void testUseEffectWarlord() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         Player opponent = spy(new SmartBot(10, deck, view, bank));
@@ -750,8 +751,8 @@ class SmartBotTest {
     }
 
     @Test
-    void testUseEffectCondottiereAtSecondCard() {
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+    void testUseEffectWarlordAtSecondCard() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.DONJON), new Card(District.OBSERVATORY)));
         Player opponent = spy(new SmartBot(10, deck, view, bank));
@@ -769,8 +770,8 @@ class SmartBotTest {
 
 
     @Test
-    void testCantUseEffectCondottiere() {
-        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Condottiere())));
+    void testCantUseEffectWarlord() {
+        spySmartBot.chooseCharacter(new ArrayList<>(List.of(new Warlord())));
         // construct Opponent Citadel
         List<Card> opponentCitadel = new ArrayList<>(List.of(new Card(District.MARKET_PLACE)));
         Player opponent = spy(new SmartBot(10, deck, view, bank));
@@ -781,7 +782,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.chooseCondottiereTarget(Condottiere.getOpponentsFocusableForCondottiere(List.of(opponent)));
+        spySmartBot.chooseWarlordTarget(Warlord.getOpponentsFocusableForWarlord(List.of(opponent), Game.NORMAL_NB_DISTRICT_TO_WIN));
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }

@@ -6,6 +6,9 @@ import com.seinksansdoozebank.fr.model.player.Player;
 import java.util.Comparator;
 import java.util.Optional;
 
+/**
+ * Represents a strategy to choose a card to add to the citadel
+ */
 public class CardChoosingStrategy implements ICardChoosingStrategy {
 
     /**

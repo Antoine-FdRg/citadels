@@ -6,9 +6,9 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Assassin;
@@ -25,14 +25,31 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Game class represents a game of Citadels
+ */
 public class Game {
+    /**
+     * The maximum number of players
+     */
     protected static final int NB_PLAYER_MAX = 6;
-    protected static final int NB_PLAYER_MIN = 4;
+    /**
+     * The minimum number of players
+     */
+    protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
-    private boolean findFirstPlayerWithEightDistricts = false;
+    public static final int NORMAL_NB_DISTRICT_TO_WIN = 8;
+    private int nbOfDistrictsInCitadel;
+    private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
+    /**
+     * The list of players in the initial order
+     */
     protected List<Player> playersInInitialOrder;
+    /**
+     * The list of players
+     */
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
@@ -41,7 +58,16 @@ public class Game {
     private final IView view;
     private int nbCurrentRound;
     private boolean finished;
+    private boolean isVariante;
 
+    /**
+     * Constructor of the Game class
+     *
+     * @param view       the view
+     * @param deck       the deck of cards
+     * @param bank       the bank
+     * @param playerList the list of players
+     */
     protected Game(IView view, Deck deck, Bank bank, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
@@ -54,6 +80,20 @@ public class Game {
         this.crownedPlayer = null;
         this.finished = false;
         this.bank = bank;
+        if (playerList.size() == 3) {
+            nbOfDistrictsInCitadel = 10;
+        } else {
+            nbOfDistrictsInCitadel = NORMAL_NB_DISTRICT_TO_WIN;
+        }
+    }
+
+    public void setVariante(boolean variante) {
+        isVariante = variante;
+    }
+
+
+    public boolean isVariante() {
+        return isVariante;
     }
 
     /**
@@ -76,6 +116,10 @@ public class Game {
         view.displayWinner(this.getWinner());
     }
 
+    /**
+     * Check if the game is stuck
+     * @return true if the game is stuck
+     */
     protected boolean isStuck() {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
@@ -97,23 +141,36 @@ public class Game {
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
+            }else if (this.isVariante()){
+                this.updateCrownedPlayer(player);
             }
             //We set the attribute to true if player is the first who has eight districts
-            isTheFirstOneToHaveEightDistricts(player);
+            isTheFirstOneToHaveAllDistricts(player);
         }
         retrieveCharacters();
-        finished = players.stream().anyMatch(player -> player.getCitadel().size() > 7);
+        finished = players.stream().anyMatch(player -> player.getCitadel().size() >= this.getNumberOfDistrictsNeeded());
         this.nbCurrentRound++;
     }
 
+    /**
+     * Update the crowned player
+     * @param player the player to update
+     */
     void updateCrownedPlayer(Player player) {
         crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
     }
 
+    /**
+     * Get the number of the current round
+     * @return the number of the current round
+     */
     protected int getNbCurrentRound() {
         return nbCurrentRound;
     }
 
+    /**
+     * Order the players before playing
+     */
     void orderPlayerBeforePlaying() {
         players.sort(Comparator.comparing(player -> player.getCharacter().getRole()));
     }
@@ -183,9 +240,12 @@ public class Game {
                 new Bishop(),
                 new Merchant(),
                 new Architect(),
-                new Condottiere()));
+                new Warlord()));
         if (nbPlayers + 1 > notMandatoryCharacters.size()) {
             throw new UnsupportedOperationException("The number of players is too high for the number of characters implemented");
+        }
+        if (nbPlayers == 3) {
+            notMandatoryCharacters.remove(0);
         }
         Collections.shuffle(notMandatoryCharacters);
         // the king must always be available
@@ -275,15 +335,15 @@ public class Game {
     }
 
     /**
-     * Method which sets the attribute isFirstToHaveEightDistrict at true if it's the case
+     * Method which sets the attribute isTheFirstOneToHaveAllDistricts at true if it's the case
      *
      * @param player who added a card to his deck
      */
-    public void isTheFirstOneToHaveEightDistricts(Player player) {
-        if (player.getCitadel().size() == 8 && !findFirstPlayerWithEightDistricts) {
+    public void isTheFirstOneToHaveAllDistricts(Player player) {
+        if (player.getCitadel().size() == nbOfDistrictsInCitadel && !findFirstPlayerWithAllDistricts) {
             //we mark the bot as true if it is first to have 8 districts
-            player.setIsFirstToHaveEightDistricts();
-            findFirstPlayerWithEightDistricts = true;
+            player.setIsFirstToHaveAllDistricts();
+            findFirstPlayerWithAllDistricts = true;
         }
     }
 
@@ -300,13 +360,13 @@ public class Game {
                 player.addBonus(3);
                 view.displayPlayerGetBonus(player, 3, "5 quartiers de types différents");
             }
-            if (player.getCitadel().size() == 8) {
-                if (player.getIsFirstToHaveEightDistricts()) {
+            if (player.getCitadel().size() == this.getNumberOfDistrictsNeeded()) {
+                if (player.getIsFirstToHaveAllDistricts()) {
                     player.addBonus(2);
-                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre 8 quartiers");
+                    view.displayPlayerGetBonus(player, 2, "premier joueur a atteindre " + this.getNumberOfDistrictsNeeded() + " quartiers");
                 }
                 player.addBonus(2);
-                view.displayPlayerGetBonus(player, 2, "8 quartiers");
+                view.displayPlayerGetBonus(player, 2, this.getNumberOfDistrictsNeeded() + " quartiers");
             }
             checkUniversityOrPortForDragonsInCitadel(player);
             view.displayPlayerScore(player);
@@ -358,7 +418,19 @@ public class Game {
         }
     }
 
+    /**
+     * Get the list of players
+     * @return the list of players
+     */
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void setNbOfDistrictsInCitadel(int nbOfDistrictsInCitadel) {
+        this.nbOfDistrictsInCitadel = nbOfDistrictsInCitadel;
+    }
+
+    public int getNumberOfDistrictsNeeded() {
+        return nbOfDistrictsInCitadel;
     }
 }

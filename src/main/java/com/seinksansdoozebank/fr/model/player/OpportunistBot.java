@@ -13,7 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The OpportunistBot class represents a bot that makes decisions to maximize its own gain.
+ */
 public class OpportunistBot extends SmartBot {
+    /**
+     * OpportunistBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public OpportunistBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -21,7 +32,7 @@ public class OpportunistBot extends SmartBot {
     /**
      * Chooses a character based on the player's current state and strategy.
      * Prioritizes the Bishop if the player has at least one religious district.
-     * If the player has more than 1 gold, selects the Condottiere.
+     * If the player has more than 1 gold, selects the Warlord.
      * If any opponent has 4 or more gold, opts for the Thief.
      * Otherwise, makes a random choice from the available characters.
      *
@@ -37,8 +48,8 @@ public class OpportunistBot extends SmartBot {
             choice = characters.stream().filter(c -> c.getRole().equals(Role.BISHOP)).findFirst().orElse(null);
         }
         if (this.getNbGold() > 1 && choice == null) {
-            // Search for the Condottiere character
-            choice = characters.stream().filter(c -> c.getRole().equals(Role.CONDOTTIERE)).findFirst().orElse(null);
+            // Search for the Warlord character
+            choice = characters.stream().filter(c -> c.getRole().equals(Role.WARLORD)).findFirst().orElse(null);
         }
         // if there is a player with equal or more than 4 gold, search for the Thief character
         if (this.getOpponents().stream().anyMatch(o -> o.getNbGold() >= 4)) {

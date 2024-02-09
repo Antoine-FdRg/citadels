@@ -13,8 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * BuilderBot is a SmartBot that prioritizes building a citadel.
+ */
 public class BuilderBot extends SmartBot {
-
+    /**
+     * BuilderBot constructor
+     *
+     * @param nbGold The number of gold pieces the player has.
+     * @param deck   The deck of cards.
+     * @param view   The view.
+     * @param bank   The bank.
+     */
     public BuilderBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }

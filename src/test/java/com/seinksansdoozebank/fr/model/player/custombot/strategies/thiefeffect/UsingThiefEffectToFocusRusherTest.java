@@ -2,7 +2,7 @@ package com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect;
 
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.King;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
@@ -32,7 +32,7 @@ class UsingThiefEffectToFocusRusherTest {
         spyThief = spy(Thief.class);
         characters = new ArrayList<>(List.of(new Bishop(),
                 spyThief,
-                new Condottiere()));
+                new Warlord()));
         strategy = new UsingThiefEffectToFocusRusher();
         mockPlayer = mock(Player.class);
     }

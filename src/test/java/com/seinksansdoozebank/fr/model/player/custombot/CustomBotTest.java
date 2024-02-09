@@ -12,7 +12,7 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ChoosingCharacterToTargetFirstPlayer;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -40,7 +40,7 @@ class CustomBotTest {
     ICharacterChoosingStrategy mockCharacterChoosingStrategy;
     IUsingThiefEffectStrategy mockUsingThiefEffectStrategy;
     IUsingMurdererEffectStrategy mockUsingMurdererEffectStrategy;
-    IUsingCondottiereEffectStrategy mockUsingCondottiereEffectStrategy;
+    IUsingWarlordEffectStrategy mockUsingWarlordEffectStrategy;
     ICardChoosingStrategy mockCardChoosingStrategy;
     IView mockView;
 
@@ -51,14 +51,14 @@ class CustomBotTest {
         mockCharacterChoosingStrategy = mock(ICharacterChoosingStrategy.class);
         mockUsingThiefEffectStrategy = mock(IUsingThiefEffectStrategy.class);
         mockUsingMurdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
-        mockUsingCondottiereEffectStrategy = mock(IUsingCondottiereEffectStrategy.class);
+        mockUsingWarlordEffectStrategy = mock(IUsingWarlordEffectStrategy.class);
         mockCardChoosingStrategy = mock(ICardChoosingStrategy.class);
         spyCustomBot = spy(new CustomBot(2, new Deck(), mockView, mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy));
     }
 
@@ -119,18 +119,18 @@ class CustomBotTest {
     }
 
     @Test
-    void useCondottiereEffectWithAUsingCondottiereEffectStrategyShouldUseTheUsingCondottiereEffectStrategyMethod() {
+    void useWarlordEffectWithAUsingWarlordEffectStrategyShouldUseTheUsingWarlordEffectStrategyMethod() {
         Opponent mockOpponent = mock(Opponent.class);
-        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
-        verify(mockUsingCondottiereEffectStrategy).apply(spyCustomBot, List.of(mockOpponent));
+        spyCustomBot.chooseWarlordTarget(List.of(mockOpponent));
+        verify(mockUsingWarlordEffectStrategy).apply(spyCustomBot, List.of(mockOpponent));
     }
 
     @Test
-    void useCondottiereEffectWithoutAUsingCondottiereEffectStrategyShouldCallTheSuperMethod() {
-        spyCustomBot.usingCondottiereEffectStrategy = null;
+    void useWarlordEffectWithoutAUsingWarlordEffectStrategyShouldCallTheSuperMethod() {
+        spyCustomBot.usingWarlordEffectStrategy = null;
         Opponent mockOpponent = mock(Opponent.class);
-        spyCustomBot.chooseCondottiereTarget(List.of(mockOpponent));
-        verify(spyCustomBot).randomUseCondottiereEffect(List.of(mockOpponent));
+        spyCustomBot.chooseWarlordTarget(List.of(mockOpponent));
+        verify(spyCustomBot).randomUseWarlordEffect(List.of(mockOpponent));
     }
 
     @Test
@@ -141,7 +141,7 @@ class CustomBotTest {
                 spyChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         Opponent opponent = mock(Opponent.class);
         when(opponent.getNbGold()).thenReturn(2);
@@ -165,14 +165,14 @@ class CustomBotTest {
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         assertNotEquals(customBot1, customBot2);
     }
@@ -191,14 +191,14 @@ class CustomBotTest {
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 null,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         assertNotEquals(customBot1, customBot2);
     }
@@ -210,7 +210,7 @@ class CustomBotTest {
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         Character assassin = new Assassin();
         assertNotEquals(customBot1, assassin);
@@ -223,14 +223,14 @@ class CustomBotTest {
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         CustomBot customBot2 = new CustomBot(2, new Deck(), mock(IView.class), mock(Bank.class),
                 mockPickingStrategy,
                 mockCharacterChoosingStrategy,
                 mockUsingThiefEffectStrategy,
                 mockUsingMurdererEffectStrategy,
-                mockUsingCondottiereEffectStrategy,
+                mockUsingWarlordEffectStrategy,
                 mockCardChoosingStrategy);
         assertNotEquals(customBot1.hashCode(), customBot2.hashCode()); // the two bots are differents
     }

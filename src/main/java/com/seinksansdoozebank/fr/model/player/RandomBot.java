@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
 import com.seinksansdoozebank.fr.view.IView;
@@ -17,8 +17,18 @@ import java.util.Optional;
 
 import static java.util.Collections.shuffle;
 
+/**
+ * The RandomBot class represents a bot that makes random decisions.
+ */
 public class RandomBot extends Player {
-
+    /**
+     * RandomBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public RandomBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -31,6 +41,11 @@ public class RandomBot extends Player {
         this.chooseWhenToPickACard(nbDistrictsToBuild);
     }
 
+    /**
+     * Choose when to pick a card
+     *
+     * @param nbDistrictsToBuild the number of districts the bot choose to build
+     */
     public void chooseWhenToPickACard(int nbDistrictsToBuild) {
         if (random.nextBoolean()) {
             this.pickBeforePlaying(nbDistrictsToBuild);
@@ -162,13 +177,13 @@ public class RandomBot extends Player {
     }
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
-        // if the value is 0, the bot is not using the condottiere effect, else it is using it
+    public WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable) {
+        // if the value is 0, the bot is not using the warlord effect, else it is using it
         if (random.nextBoolean()) {
             Opponent opponentToDestroyDistrict = opponentsFocusable.get(random.nextInt(opponentsFocusable.size()));
             List<Card> opponentCitadel = opponentToDestroyDistrict.getCitadel()
                     .stream().filter(card -> !card.getDistrict().equals(District.DONJON)).toList();
-            // if the player has no district, the bot will not use the condottiere effect
+            // if the player has no district, the bot will not use the warlord effect
             if (opponentCitadel.isEmpty()) {
                 return null;
             }
@@ -179,7 +194,7 @@ public class RandomBot extends Player {
             // Check if the number of golds of the player is enough to destroy the district
             if (this.getNbGold() >= districtToDestroy.getCost() - 1) {
                 // destroy the district
-                return new CondottiereTarget(opponentToDestroyDistrict, districtToDestroy);
+                return new WarlordTarget(opponentToDestroyDistrict, districtToDestroy);
             }
         }
         return null;

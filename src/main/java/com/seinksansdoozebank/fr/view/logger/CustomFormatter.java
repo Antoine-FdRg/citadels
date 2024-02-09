@@ -4,6 +4,9 @@ import java.text.MessageFormat;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * The CustomFormatter class is a custom formatter for the logger
+ */
 public class CustomFormatter extends Formatter {
     @Override
     public String format(LogRecord logRecord) {

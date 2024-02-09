@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -41,21 +40,21 @@ class StrategyUtilsTest {
     @Test
     void isRoleInCharacterListWithRoleNotInCharacterListShouldBeFalse() {
         List<Character> characters = List.of(new Assassin(), new Magician(), new Thief());
-        assertFalse(StrategyUtils.isRoleInCharacterList(Role.CONDOTTIERE, characters));
+        assertFalse(StrategyUtils.isRoleInCharacterList(Role.WARLORD, characters));
         assertFalse(StrategyUtils.isRoleInCharacterList(Role.ARCHITECT, characters));
     }
 
     @Test
     void getCharacterFromRoleInLIstWithRoleInCharacterListShouldBeCharacter() {
-        assertEquals(assassin, StrategyUtils.getCharacterFromRoleInLIst(Role.ASSASSIN, characters));
-        assertEquals(magician, StrategyUtils.getCharacterFromRoleInLIst(Role.MAGICIAN, characters));
-        assertEquals(thief, StrategyUtils.getCharacterFromRoleInLIst(Role.THIEF, characters));
+        assertEquals(assassin, StrategyUtils.getCharacterFromRoleInList(Role.ASSASSIN, characters));
+        assertEquals(magician, StrategyUtils.getCharacterFromRoleInList(Role.MAGICIAN, characters));
+        assertEquals(thief, StrategyUtils.getCharacterFromRoleInList(Role.THIEF, characters));
     }
 
     @Test
-    void getCharacterFromRoleInLIstWithRoleNotInCharacterListShouldThrowException() {
-        assertThrows(NoSuchElementException.class, () -> StrategyUtils.getCharacterFromRoleInLIst(Role.CONDOTTIERE, characters));
-        assertThrows(NoSuchElementException.class, () -> StrategyUtils.getCharacterFromRoleInLIst(Role.ARCHITECT, characters));
+    void getCharacterFromRoleInLIstWithRoleNotInCharacterListShouldReturnNull() {
+        assertNull(StrategyUtils.getCharacterFromRoleInList(Role.WARLORD, characters));
+        assertNull(StrategyUtils.getCharacterFromRoleInList(Role.ARCHITECT, characters));
     }
 
 

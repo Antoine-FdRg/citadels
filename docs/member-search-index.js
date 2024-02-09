@@ -1,0 +1,2246 @@
+memberSearchIndex = [{
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "addBonus(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addBuilderBot()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addCustomBot(IPickingStrategy, ICharacterChoosingStrategy, IUsingThiefEffectStrategy, IUsingMurdererEffectStrategy, IUsingWarlordEffectStrategy, ICardChoosingStrategy)",
+    "u": "addCustomBot(com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addOpportunistBot()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addRandomBot()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addRichardBot()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "addScore(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "addSmartBot()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "analyzeGameResults(Game)",
+    "u": "analyzeGameResults(com.seinksansdoozebank.fr.controller.Game)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing",
+    "c": "ChoosingCharacterToTargetFirstPlayer",
+    "l": "apply(CustomBot, List<Character>)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.custombot.CustomBot,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing",
+    "c": "ICharacterChoosingStrategy",
+    "l": "apply(CustomBot, List<Character>)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.custombot.CustomBot,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing",
+    "c": "CardChoosingStrategy",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing",
+    "c": "ICardChoosingStrategy",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "IPickingStrategy",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysDistrict",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysGold",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect",
+    "c": "IUsingThiefEffectStrategy",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect",
+    "c": "UsingThiefEffectToFocusRusher",
+    "l": "apply(Player)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect",
+    "c": "IUsingMurdererEffectStrategy",
+    "l": "apply(Player, IView)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect",
+    "c": "UsingMurdererEffectToFocusRusher",
+    "l": "apply(Player, IView)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect",
+    "c": "IUsingWarlordEffectStrategy",
+    "l": "apply(Player, List<Opponent>)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect",
+    "c": "UsingWarlordEffectToTargetFirstPlayer",
+    "l": "apply(Player, List<Opponent>)",
+    "u": "apply(com.seinksansdoozebank.fr.model.player.Player,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "applyColor(Player, String)",
+    "u": "applyColor(com.seinksansdoozebank.fr.model.player.Player,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Bishop",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "King",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Merchant",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Architect",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Assassin",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Magician",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Thief",
+    "l": "applyEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "ARCHITECT"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Architect",
+    "l": "Architect()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "architectTryToCompleteFiveDistrictTypes()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "ASSASSIN"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Assassin",
+    "l": "Assassin()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "averageOpponentCitadelSize()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "Bank()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "BARRACK"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "BEST_AGAINST_SECOND"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "BEST_BOTS_AGAINST"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "BISHOP"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Bishop",
+    "l": "Bishop()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "build()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "build()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "BuilderBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "buyACardAndAddItToCitadel(Card)",
+    "u": "buyACardAndAddItToCitadel(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "buyXCardsAndAddThemToCitadel(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "canPlayCard(Card)",
+    "u": "canPlayCard(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "Card(District)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.model.cards.District)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing",
+    "c": "CardChoosingStrategy",
+    "l": "CardChoosingStrategy()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "cardsToSwitchWithDeck()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "CASTLE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "CATHEDRAL"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "CEMETERY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "Character(Role)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.model.character.roles.Role)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "checkPlayerStolen(Player)",
+    "u": "checkPlayerStolen(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "checkUniversityOrPortForDragonsInCitadel(Player)",
+    "u": "checkUniversityOrPortForDragonsInCitadel(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseAssassinTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "chooseAssassinTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseAssassinTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "OpportunistBot",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseCardToDiscardForLaboratoryEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseCardToDiscardForLaboratoryEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseCardToDiscardForLaboratoryEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseCharacter(List<Character>)",
+    "u": "chooseCharacter(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "OpportunistBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseCharacterImpl(List<Character>)",
+    "u": "chooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseColorCourtyardOfMiracle()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseColorCourtyardOfMiracle()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseColorCourtyardOfMiracle()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseThiefTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "chooseThiefTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseThiefTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "chooseWarlordTarget(List<Opponent>)",
+    "u": "chooseWarlordTarget(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "chooseWarlordTarget(List<Opponent>)",
+    "u": "chooseWarlordTarget(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseWarlordTarget(List<Opponent>)",
+    "u": "chooseWarlordTarget(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "chooseWarlordTarget(List<Opponent>)",
+    "u": "chooseWarlordTarget(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "chooseWhenToPickACard(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing",
+    "c": "ChoosingCharacterToTargetFirstPlayer",
+    "l": "ChoosingCharacterToTargetFirstPlayer()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "CHURCH"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "Cli()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "CommonCharacter",
+    "l": "CommonCharacter(Role, DistrictType)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.model.character.roles.Role,com.seinksansdoozebank.fr.model.cards.DistrictType)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "CORNER_SHOP"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "COURTYARD_OF_MIRACLE"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "createCharacters()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createCustomGame(int, int, int, int, int, int)",
+    "u": "createCustomGame(int,int,int,int,int,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createGameOfAllTypeOfBot(IView, Bank)",
+    "u": "createGameOfAllTypeOfBot(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createGameOfCustomBot(IView, Bank, int)",
+    "u": "createGameOfCustomBot(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createGameOfRandomBot(IView, Bank, int)",
+    "u": "createGameOfRandomBot(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createGameOfRichardBot(IView, Bank, int)",
+    "u": "createGameOfRichardBot(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameFactory",
+    "l": "createGameOfSmartBot(IView, Bank, int)",
+    "u": "createGameOfSmartBot(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "CustomBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "CustomBot(int, Deck, IView, Bank, IPickingStrategy, ICharacterChoosingStrategy, IUsingThiefEffectStrategy, IUsingMurdererEffectStrategy, IUsingWarlordEffectStrategy, ICardChoosingStrategy)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank,com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy,com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "CustomBotBuilder(int, IView, Deck, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomFormatter",
+    "l": "CustomFormatter()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Deck",
+    "l": "Deck()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "decreaseGold(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "DEMO_GAME"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "destroyDistrict(Player, District)",
+    "u": "destroyDistrict(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.District)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "destroyDistrict(Player, District)",
+    "u": "destroyDistrict(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.District)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Deck",
+    "l": "discard(Card)",
+    "u": "discard(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "discardACard(Card)",
+    "u": "discardACard(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "discardFromHand(Card)",
+    "u": "discardFromHand(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayActualNumberOfGold(Player)",
+    "u": "displayActualNumberOfGold(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayActualNumberOfGold(Player)",
+    "u": "displayActualNumberOfGold(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayGameFinished()"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayGameFinished()"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayGameStuck()"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayGameStuck()"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayGoldCollectedFromDistrictType(Player, int, DistrictType)",
+    "u": "displayGoldCollectedFromDistrictType(com.seinksansdoozebank.fr.model.player.Player,int,com.seinksansdoozebank.fr.model.cards.DistrictType)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayGoldCollectedFromDistrictType(Player, int, DistrictType)",
+    "u": "displayGoldCollectedFromDistrictType(com.seinksansdoozebank.fr.model.player.Player,int,com.seinksansdoozebank.fr.model.cards.DistrictType)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayGoldCollectedFromMerchant(Player)",
+    "u": "displayGoldCollectedFromMerchant(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayGoldCollectedFromMerchant(Player)",
+    "u": "displayGoldCollectedFromMerchant(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerChooseCharacter(Player)",
+    "u": "displayPlayerChooseCharacter(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerChooseCharacter(Player)",
+    "u": "displayPlayerChooseCharacter(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerDiscardCard(Player, Card)",
+    "u": "displayPlayerDiscardCard(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerDiscardCard(Player, Card)",
+    "u": "displayPlayerDiscardCard(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerError(Player, String)",
+    "u": "displayPlayerError(com.seinksansdoozebank.fr.model.player.Player,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerError(Player, String)",
+    "u": "displayPlayerError(com.seinksansdoozebank.fr.model.player.Player,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerGetBonus(Player, int, String)",
+    "u": "displayPlayerGetBonus(com.seinksansdoozebank.fr.model.player.Player,int,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerGetBonus(Player, int, String)",
+    "u": "displayPlayerGetBonus(com.seinksansdoozebank.fr.model.player.Player,int,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerHasGotObservatory(Player)",
+    "u": "displayPlayerHasGotObservatory(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerHasGotObservatory(Player)",
+    "u": "displayPlayerHasGotObservatory(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerInfo(Player)",
+    "u": "displayPlayerInfo(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerInfo(Player)",
+    "u": "displayPlayerInfo(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerKeepBothCardsBecauseOfLibrary(Player)",
+    "u": "displayPlayerKeepBothCardsBecauseOfLibrary(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerKeepBothCardsBecauseOfLibrary(Player)",
+    "u": "displayPlayerKeepBothCardsBecauseOfLibrary(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerPickCards(Player, int)",
+    "u": "displayPlayerPickCards(com.seinksansdoozebank.fr.model.player.Player,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerPickCards(Player, int)",
+    "u": "displayPlayerPickCards(com.seinksansdoozebank.fr.model.player.Player,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerPicksGold(Player, int)",
+    "u": "displayPlayerPicksGold(com.seinksansdoozebank.fr.model.player.Player,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerPicksGold(Player, int)",
+    "u": "displayPlayerPicksGold(com.seinksansdoozebank.fr.model.player.Player,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerPlaysCard(Player, Card)",
+    "u": "displayPlayerPlaysCard(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerPlaysCard(Player, Card)",
+    "u": "displayPlayerPlaysCard(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerRevealCharacter(Player)",
+    "u": "displayPlayerRevealCharacter(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerRevealCharacter(Player)",
+    "u": "displayPlayerRevealCharacter(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerScore(Player)",
+    "u": "displayPlayerScore(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerScore(Player)",
+    "u": "displayPlayerScore(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerStartPlaying(Player)",
+    "u": "displayPlayerStartPlaying(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerStartPlaying(Player)",
+    "u": "displayPlayerStartPlaying(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerStrategy(Player, String)",
+    "u": "displayPlayerStrategy(com.seinksansdoozebank.fr.model.player.Player,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerStrategy(Player, String)",
+    "u": "displayPlayerStrategy(com.seinksansdoozebank.fr.model.player.Player,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseAssassinEffect(Player, Character)",
+    "u": "displayPlayerUseAssassinEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseAssassinEffect(Player, Character)",
+    "u": "displayPlayerUseAssassinEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseCemeteryEffect(Player, Card)",
+    "u": "displayPlayerUseCemeteryEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseCemeteryEffect(Player, Card)",
+    "u": "displayPlayerUseCemeteryEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseLaboratoryEffect(Player)",
+    "u": "displayPlayerUseLaboratoryEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseLaboratoryEffect(Player)",
+    "u": "displayPlayerUseLaboratoryEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseMagicianEffect(Player, Opponent)",
+    "u": "displayPlayerUseMagicianEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.player.Opponent)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseMagicianEffect(Player, Opponent)",
+    "u": "displayPlayerUseMagicianEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.player.Opponent)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseManufactureEffect(Player)",
+    "u": "displayPlayerUseManufactureEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseManufactureEffect(Player)",
+    "u": "displayPlayerUseManufactureEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseThiefEffect(Player)",
+    "u": "displayPlayerUseThiefEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseThiefEffect(Player)",
+    "u": "displayPlayerUseThiefEffect(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayPlayerUseWarlordDistrict(Player, Player, District)",
+    "u": "displayPlayerUseWarlordDistrict(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.District)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayPlayerUseWarlordDistrict(Player, Player, District)",
+    "u": "displayPlayerUseWarlordDistrict(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.model.cards.District)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayRound(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayRound(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayStolenCharacter(Character)",
+    "u": "displayStolenCharacter(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayStolenCharacter(Character)",
+    "u": "displayStolenCharacter(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayUnusedCharacterInRound(Character)",
+    "u": "displayUnusedCharacterInRound(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayUnusedCharacterInRound(Character)",
+    "u": "displayUnusedCharacterInRound(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "Cli",
+    "l": "displayWinner(Player)",
+    "u": "displayWinner(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view",
+    "c": "IView",
+    "l": "displayWinner(Player)",
+    "u": "displayWinner(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "district()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "DONJON"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "CommonCharacter",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing",
+    "c": "CardChoosingStrategy",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing",
+    "c": "ChoosingCharacterToTargetFirstPlayer",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect",
+    "c": "UsingMurdererEffectToFocusRusher",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysDistrict",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysGold",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect",
+    "c": "UsingThiefEffectToFocusRusher",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect",
+    "c": "UsingWarlordEffectToTargetFirstPlayer",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "equals(Object)",
+    "u": "equals(java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "findDistrictTypesMissingInCitadel()"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomFormatter",
+    "l": "format(LogRecord)",
+    "u": "format(java.util.logging.LogRecord)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "FORTRESS"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "Game(IView, Deck, Bank, List<Player>)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.model.bank.Bank,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "GameBuilder",
+    "l": "GameBuilder(IView, Deck, Bank)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "GameStatisticsAnalyzer(boolean)",
+    "u": "%3Cinit%3E(boolean)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "GameStatisticsAnalyzer(int, boolean, GameStatisticsAnalyzer.CsvCategory)",
+    "u": "%3Cinit%3E(int,boolean,com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getActiveEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "getAvailableCharacters()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getAvailableCharacters()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getAverageScore()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getBonus()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getCharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies",
+    "c": "StrategyUtils",
+    "l": "getCharacterFromRoleInList(Role, List<Character>)",
+    "u": "getCharacterFromRoleInList(com.seinksansdoozebank.fr.model.character.roles.Role,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getCharactersNotInRound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getCharactersSeenInRound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "getCheaperCard(List<Card>)",
+    "u": "getCheaperCard(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "getCitadel()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getCitadel()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getColorCourtyardOfMiracleType()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getCost()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "getCsvCategory()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Deck",
+    "l": "getDeck()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getDetailedPlacement()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "getDistrict()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getDistrictByOrdinal(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getDistrictType()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "getDistrictTypeByString(String)",
+    "u": "getDistrictTypeByString(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "getDistrictTypeFrequencyList(List<Card>)",
+    "u": "getDistrictTypeFrequencyList(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getDistrictWithName(String)",
+    "u": "getDistrictWithName(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "getFileName()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getGamesLost()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getGamesWon()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getHand()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "getHandSize()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getHandSize()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getId()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getIsFirstToHaveAllDistricts()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getLastCharacterChosen()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies",
+    "c": "StrategyUtils",
+    "l": "getLeadingOpponent(List<Opponent>)",
+    "u": "getLeadingOpponent(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "getMostExpensiveCard(List<Card>)",
+    "u": "getMostExpensiveCard(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getName()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "getName()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "getName()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getNbCharacterChosenInARow()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "getNbCurrentRound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "getNbDistrictsCanBeBuild()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getNbDistrictsCanBeBuild()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "getNbGold()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getNbGold()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "getNbOfAvailableCoins()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "getNumberOfAppearance()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "getNumSessions()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "getOpponentCharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getOpponentCharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getOpponents()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "getOpponentsFocusableForWarlord(List<Opponent>)",
+    "u": "getOpponentsFocusableForWarlord(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getOpponentsWhichHasChosenCharacterBefore()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "getPlayer()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "getPlayerByRole(Role)",
+    "u": "getPlayerByRole(com.seinksansdoozebank.fr.model.character.roles.Role)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "getPlayers()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "getPlayerStatisticsMap()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "getPositionInDrawToPickACharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getPositionInDrawToPickACharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "getPriceOfNumbersOfCheaperCards(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies",
+    "c": "StrategyUtils",
+    "l": "getRandomCharacterFromList(List<Character>)",
+    "u": "getRandomCharacterFromList(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "getRole()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "getSavedThief()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "getScore()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "CommonCharacter",
+    "l": "getTarget()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getTotalGames()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getTotalScore()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "getWinner()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "getWinningPercentage()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "CommonCharacter",
+    "l": "goldCollectedFromDistrictType()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hasACardToPlay()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hasCourtyardOfMiracleAndItsNotTheLastCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hasFiveDifferentDistrictTypes()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "CommonCharacter",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing",
+    "c": "CardChoosingStrategy",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing",
+    "c": "ChoosingCharacterToTargetFirstPlayer",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect",
+    "c": "UsingMurdererEffectToFocusRusher",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysDistrict",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysGold",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect",
+    "c": "UsingThiefEffectToFocusRusher",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect",
+    "c": "UsingWarlordEffectToTargetFirstPlayer",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hashCode()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hasPlayed()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "hide()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "id"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "id"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "increaseGold(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "incrementGamesLost()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "incrementGamesWon()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "incrementTotalGames()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "init()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "isAboutToWin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "isAboutToWin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "isCharacterIsRevealed()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "isDead()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "isLastCardPlacedCourtyardOfMiracle()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "isLate()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "isLibraryPresent()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies",
+    "c": "StrategyUtils",
+    "l": "isRoleInCharacterList(Role, List<Character>)",
+    "u": "isRoleInCharacterList(com.seinksansdoozebank.fr.model.character.roles.Role,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "isSaveStatsToCsv()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "isStolen()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "isStuck()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "isTheFirstOneToHaveAllDistricts(Player)",
+    "u": "isTheFirstOneToHaveAllDistricts(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "isUsingCemeteryEffect(Card)",
+    "u": "isUsingCemeteryEffect(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "isUsingCemeteryEffect(Card)",
+    "u": "isUsingCemeteryEffect(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "JAIL"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "keepOneDiscardOthers(List<Card>)",
+    "u": "keepOneDiscardOthers(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "keepOneDiscardOthers(List<Card>)",
+    "u": "keepOneDiscardOthers(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "keepOneDiscardOthers(List<Card>)",
+    "u": "keepOneDiscardOthers(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "keepOneDiscardOthers(List<Card>)",
+    "u": "keepOneDiscardOthers(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "kill()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "KING"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "King",
+    "l": "King()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "LABORATORY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "LaboratoryEffect",
+    "l": "LaboratoryEffect()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr",
+    "c": "Launcher",
+    "l": "Launcher()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "LIBRARY"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "log(Level, String)",
+    "u": "log(java.util.logging.Level,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomStatisticsLogger",
+    "l": "log(Level, String)",
+    "u": "log(java.util.logging.Level,java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "log(Level, String, Object)",
+    "u": "log(java.util.logging.Level,java.lang.String,java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomStatisticsLogger",
+    "l": "log(Level, String, Object)",
+    "u": "log(java.util.logging.Level,java.lang.String,java.lang.Object)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomStatisticsLogger",
+    "l": "log(Level, String, Object[])",
+    "u": "log(java.util.logging.Level,java.lang.String,java.lang.Object[])"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "log(Level, String, Object[], Player)",
+    "u": "log(java.util.logging.Level,java.lang.String,java.lang.Object[],com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "MAGICIAN"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Magician",
+    "l": "Magician()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "MagicianTarget(Opponent, List<Card>)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.model.player.Opponent,java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr",
+    "c": "Launcher",
+    "l": "main(String[])",
+    "u": "main(java.lang.String[])"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "MANOR"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "MANUFACTURE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "ManufactureEffect",
+    "l": "ManufactureEffect()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "MARKET_PLACE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "MAX_COIN"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "MERCHANT"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Merchant",
+    "l": "Merchant()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "MONASTERY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "ManufactureEffect",
+    "l": "NB_GOLD_TO_PAY_TO_USE_EFFECT"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "NB_MAX_CHARACTER_CHOSEN_IN_A_ROW"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "NB_PLAYER_MAX"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "NB_PLAYER_MIN"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "nbDistrictsInCitadel()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "nbDistrictsInCitadel()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "NOBILITY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "numberOfCardsToPick()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "OBSERVATORY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "opponent()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "OpportunistBot",
+    "l": "OpportunistBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "orderPlayersByPoints()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "PALACE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Deck",
+    "l": "pick()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "pickACard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "pickBeforePlaying(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "pickCardsKeepSomeAndDiscardOthers()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "pickGold()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "pickGold(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysDistrict",
+    "l": "PickingAlwaysDistrict()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.picking",
+    "c": "PickingAlwaysGold",
+    "l": "PickingAlwaysGold()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "pickSomething()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "pickSomething()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "pickSomething()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "pickSomething()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "pickXCoin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "pickXCoin(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "play()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "playACard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "playARound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "playARound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "playARound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "playARound()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "playBeforePicking(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "Player(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "players"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "playersChooseCharacters()"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "playersInInitialOrder"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "PlayerStatistics()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "PORT"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "PORT_FOR_DRAGONS"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "PRESTIGE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies",
+    "c": "StrategyUtils",
+    "l": "RANDOM"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "RandomBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomChooseCard()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomChooseCharacterImpl(List<Character>)",
+    "u": "randomChooseCharacterImpl(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomPickSomething()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomUseMurdererEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomUseThiefEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "randomUseWarlordEffect(List<Opponent>)",
+    "u": "randomUseWarlordEffect(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "recordPlacement(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "RELIGION"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "resetAvailableColors()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "resetCounterId()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "resetIdCounter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "resurrect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "retrieveCharacter()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.bank",
+    "c": "Bank",
+    "l": "retrieveCoin(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "returnGoldToBank(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "reveal()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "RichardBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "run()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "runAndAnalyze(int, int, int, int, int, int)",
+    "u": "runAndAnalyze(int,int,int,int,int,int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer",
+    "l": "runDemo()"
+}, {
+    "p": "com.seinksansdoozebank.fr",
+    "c": "Launcher",
+    "l": "runDemo(boolean)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "SCHOOL_OF_MAGIC"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setAvailableCharacters(List<Character>)",
+    "u": "setAvailableCharacters(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "setAverageScore(double)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setCardChoosingStrategy(ICardChoosingStrategy)",
+    "u": "setCardChoosingStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setCharacterChoosingStrategy(ICharacterChoosingStrategy)",
+    "u": "setCharacterChoosingStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setCharactersNotInRound(List<Character>)",
+    "u": "setCharactersNotInRound(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setColorCourtyardOfMiracleType(DistrictType)",
+    "u": "setColorCourtyardOfMiracleType(com.seinksansdoozebank.fr.model.cards.DistrictType)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "setDetailedPlacement(Map<Integer, Integer>)",
+    "u": "setDetailedPlacement(java.util.Map)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "setGamesLost(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "setGamesWon(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setHasPlayed(boolean)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setIsFirstToHaveAllDistricts()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setLastCardPlacedCourtyardOfMiracle(boolean)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setLastCharacterChosen(Character)",
+    "u": "setLastCharacterChosen(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "setLevel(Level)",
+    "u": "setLevel(java.util.logging.Level)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomStatisticsLogger",
+    "l": "setLevel(Level)",
+    "u": "setLevel(java.util.logging.Level)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setNbCharacterChosenInARow(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setOpponents(List<Opponent>)",
+    "u": "setOpponents(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setOpponentsWhichHasChosenCharacterBefore(List<Opponent>)",
+    "u": "setOpponentsWhichHasChosenCharacterBefore(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setPickingStrategy(IPickingStrategy)",
+    "u": "setPickingStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "setPlayer(Player)",
+    "u": "setPlayer(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.view.logger",
+    "c": "CustomLogger",
+    "l": "setPlayerColors(Player)",
+    "u": "setPlayerColors(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "setPlayers(List<Player>)",
+    "u": "setPlayers(java.util.List)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setPositionInDrawToPickACharacter(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "setRandom(Random)",
+    "u": "setRandom(java.util.Random)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "setSavedThief(Player)",
+    "u": "setSavedThief(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "setTotalGames(int)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setUsingMurdererEffectStrategy(IUsingMurdererEffectStrategy)",
+    "u": "setUsingMurdererEffectStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setUsingThiefEffectStrategy(IUsingThiefEffectStrategy)",
+    "u": "setUsingThiefEffectStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBotBuilder",
+    "l": "setUsingWarlordEffectStrategy(IUsingWarlordEffectStrategy)",
+    "u": "setUsingWarlordEffectStrategy(com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Deck",
+    "l": "shuffle()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "SmartBot(int, Deck, IView, Bank)",
+    "u": "%3Cinit%3E(int,com.seinksansdoozebank.fr.model.cards.Deck,com.seinksansdoozebank.fr.view.IView,com.seinksansdoozebank.fr.model.bank.Bank)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "SOLDIERLY"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Opponent",
+    "l": "switchHandWith(Player)",
+    "u": "switchHandWith(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "switchHandWith(Player)",
+    "u": "switchHandWith(com.seinksansdoozebank.fr.model.player.Player)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "targetOpponent()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "TAVERN"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "TEMPLE"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "THIEF"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Thief",
+    "l": "Thief()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "Card",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.abstracts",
+    "c": "Character",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "MagicianTarget",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "BuilderBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "OpportunistBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "PlayerStatistics",
+    "l": "toString()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "TOWN_HALL"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "TRADE_AND_CRAFTS"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "TRADING_POST"
+}, {
+    "p": "com.seinksansdoozebank.fr",
+    "c": "Launcher",
+    "l": "twoThousand(boolean)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "UNIVERSITY"
+}, {
+    "p": "com.seinksansdoozebank.fr.controller",
+    "c": "Game",
+    "l": "updatePlayersBonus()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "ActiveEffect",
+    "l": "use(Player, IView)",
+    "u": "use(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "LaboratoryEffect",
+    "l": "use(Player, IView)",
+    "u": "use(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards.effect",
+    "c": "ManufactureEffect",
+    "l": "use(Player, IView)",
+    "u": "use(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "useActiveEffect(Player, IView)",
+    "u": "useActiveEffect(com.seinksansdoozebank.fr.model.player.Player,com.seinksansdoozebank.fr.view.IView)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "useCommonCharacterEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Merchant",
+    "l": "useEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Assassin",
+    "l": "useEffect(Character)",
+    "u": "useEffect(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Thief",
+    "l": "useEffect(Character)",
+    "u": "useEffect(com.seinksansdoozebank.fr.model.character.abstracts.Character)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.specialscharacters",
+    "c": "Magician",
+    "l": "useEffect(MagicianTarget)",
+    "u": "useEffect(com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "useEffect(WarlordTarget)",
+    "u": "useEffect(com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "useEffectArchitect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "useEffectAssassin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "useEffectAssassin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "useEffectAssassin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "useEffectAssassin()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "useEffectMagician()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "useEffectMagician()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RichardBot",
+    "l": "useEffectMagician()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "useEffectMagician()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "useEffectOfTheArchitect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot",
+    "c": "CustomBot",
+    "l": "useEffectThief()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "useEffectThief()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "usePrestigesEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect",
+    "c": "UsingMurdererEffectToFocusRusher",
+    "l": "UsingMurdererEffectToFocusRusher()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect",
+    "c": "UsingThiefEffectToFocusRusher",
+    "l": "UsingThiefEffectToFocusRusher()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect",
+    "c": "UsingWarlordEffectToTargetFirstPlayer",
+    "l": "UsingWarlordEffectToTargetFirstPlayer()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "valueOf(String)",
+    "u": "valueOf(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "valueOf(String)",
+    "u": "valueOf(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "valueOf(String)",
+    "u": "valueOf(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "valueOf(String)",
+    "u": "valueOf(java.lang.String)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "District",
+    "l": "values()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.cards",
+    "c": "DistrictType",
+    "l": "values()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "values()"
+}, {
+    "p": "com.seinksansdoozebank.fr.statistics",
+    "c": "GameStatisticsAnalyzer.CsvCategory",
+    "l": "values()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "wantToUseCemeteryEffect(Card)",
+    "u": "wantToUseCemeteryEffect(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "wantToUseCemeteryEffect(Card)",
+    "u": "wantToUseCemeteryEffect(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "wantToUseCemeteryEffect(Card)",
+    "u": "wantToUseCemeteryEffect(com.seinksansdoozebank.fr.model.cards.Card)"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "Player",
+    "l": "wantToUseManufactureEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "RandomBot",
+    "l": "wantToUseManufactureEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.player",
+    "c": "SmartBot",
+    "l": "wantToUseManufactureEffect()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.roles",
+    "c": "Role",
+    "l": "WARLORD"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "Warlord",
+    "l": "Warlord()",
+    "u": "%3Cinit%3E()"
+}, {
+    "p": "com.seinksansdoozebank.fr.model.character.commoncharacters",
+    "c": "WarlordTarget",
+    "l": "WarlordTarget(Opponent, District)",
+    "u": "%3Cinit%3E(com.seinksansdoozebank.fr.model.player.Opponent,com.seinksansdoozebank.fr.model.cards.District)"
+}, {"p": "com.seinksansdoozebank.fr.model.cards", "c": "District", "l": "WATCH_TOWER"}];
+updateSearchResults();

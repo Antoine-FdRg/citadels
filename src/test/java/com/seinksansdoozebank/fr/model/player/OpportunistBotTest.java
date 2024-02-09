@@ -6,7 +6,7 @@ import com.seinksansdoozebank.fr.model.cards.Deck;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.Condottiere;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.Warlord;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Merchant;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Thief;
@@ -62,7 +62,7 @@ class OpportunistBotTest {
     void testChooseCharacterImplWithReligiousDistrict() {
         List<Character> characters = new ArrayList<>(List.of(
                 new Bishop(),
-                new Condottiere(),
+                new Warlord(),
                 new Thief(),
                 new Merchant()
         ));
@@ -77,7 +77,7 @@ class OpportunistBotTest {
     void testChooseCharacterImplWithEnoughGoldAndNoReligiousDistrict() {
         List<Character> characters = new ArrayList<>(List.of(
                 new Bishop(),
-                new Condottiere(),
+                new Warlord(),
                 new Thief(),
                 new Merchant()
         ));
@@ -86,14 +86,14 @@ class OpportunistBotTest {
 
         Character chosenCharacter = spyOpportunistBot.chooseCharacter(characters);
 
-        assertEquals(Role.CONDOTTIERE, chosenCharacter.getRole());
+        assertEquals(Role.WARLORD, chosenCharacter.getRole());
     }
 
     @Test
     void testChooseCharacterImplWithEnoughGoldAndNoReligiousDistrictAndOpponentWithEnoughGold() {
         List<Character> characters = new ArrayList<>(List.of(
                 new Bishop(),
-                new Condottiere(),
+                new Warlord(),
                 new Thief(),
                 new Merchant()
         ));
@@ -112,7 +112,7 @@ class OpportunistBotTest {
     void testCharacterImplWithoutAnyCriteria() {
         List<Character> characters = new ArrayList<>(List.of(
                 new Bishop(),
-                new Condottiere(),
+                new Warlord(),
                 new Thief(),
                 new Merchant()
         ));

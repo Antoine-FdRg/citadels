@@ -10,6 +10,9 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The CustomLogger class is a custom logger for the game
+ */
 public class CustomLogger {
 
     private static final Logger logger = Logger.getLogger(CustomLogger.class.getName());
@@ -45,6 +48,11 @@ public class CustomLogger {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Set the color of the player
+     *
+     * @param player the player to set the color
+     */
     protected static void setPlayerColors(Player player) {
         if (playerColors.containsKey(player)) {
             return;
@@ -56,20 +64,44 @@ public class CustomLogger {
         playerColors.put(player, randomColor);
     }
 
+    /**
+     * Apply the color to the message
+     * @param player the player
+     * @param message the message
+     * @return the message with the color
+     */
     protected static String applyColor(Player player, String message) {
         setPlayerColors(player);
         return playerColors.getOrDefault(player, "") + message + "\u001B[0m";
     }
 
+    /**
+     * Log a message
+     * @param level the level of the message
+     * @param message the message
+     */
     public static void log(Level level, String message) {
         logger.log(level, message);
     }
 
+    /**
+     * Log a message with a player
+     * @param level the level of the message
+     * @param message the message
+     * @param params the parameters of the message
+     * @param colorPlayer the player to apply the color
+     */
     public static void log(Level level, String message, Object[] params, Player colorPlayer) {
         message = applyColor(colorPlayer, message);
         logger.log(level, message, params);
     }
 
+    /**
+     * Log a message with a player
+     * @param level the level of the message
+     * @param message the message
+     * @param param the parameter of the message
+     */
     public static void log(Level level, String message, Object param) {
         if (param instanceof Player player) {
             message = applyColor(player, message);
@@ -77,6 +109,9 @@ public class CustomLogger {
         logger.log(level, message, param);
     }
 
+    /**
+     * Reset the available colors
+     */
     public static void resetAvailableColors() {
         availableColors = new ArrayList<>(List.of(
                 "\u001B[38;5;21m", // dark blue
@@ -90,6 +125,10 @@ public class CustomLogger {
         ));
     }
 
+    /**
+     * Set the level of the logger
+     * @param level the level to set
+     */
     public static void setLevel(Level level) {
         logger.setLevel(level);
     }

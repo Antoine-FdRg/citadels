@@ -12,7 +12,7 @@ import com.seinksansdoozebank.fr.model.player.SmartBot;
 import com.seinksansdoozebank.fr.model.player.custombot.CustomBotBuilder;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.cardchoosing.ICardChoosingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.characterchoosing.ICharacterChoosingStrategy;
-import com.seinksansdoozebank.fr.model.player.custombot.strategies.condottiereeffect.IUsingCondottiereEffectStrategy;
+import com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect.IUsingWarlordEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.murderereffect.IUsingMurdererEffectStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.picking.IPickingStrategy;
 import com.seinksansdoozebank.fr.model.player.custombot.strategies.thiefeffect.IUsingThiefEffectStrategy;
@@ -30,15 +30,29 @@ public class GameBuilder {
     private final IView view;
     private final Deck deck;
     private final Bank bank;
+    private final int numberOfDistrictsNeeded;
     private final List<Player> playerList;
 
-    public GameBuilder(IView view, Deck deck, Bank bank) {
+    /**
+     * Constructor of the game builder
+     *
+     * @param view the view
+     * @param deck the deck
+     * @param bank the bank
+     * @param numberOfDistrictsNeeded the number of districts needed to win
+     */
+    public GameBuilder(IView view, Deck deck, Bank bank, int numberOfDistrictsNeeded) {
         playerList = new ArrayList<>();
         this.view = view;
         this.deck = deck;
         this.bank = bank;
+        this.numberOfDistrictsNeeded = numberOfDistrictsNeeded;
     }
 
+    /**
+     * Get the size of the player list
+     * @return the size of the player list
+     */
     int getPlayerListSize() {
         return playerList.size();
     }
@@ -47,8 +61,8 @@ public class GameBuilder {
      * Check if the number of players is not too high, if it is, throw an exception
      */
     void checkNbPlayers() {
-        if (getPlayerListSize() > 6) {
-            throw new IllegalStateException("You can't add more than 6 players to the game");
+        if (getPlayerListSize() > Game.NB_PLAYER_MAX) {
+            throw new IllegalStateException("You can't add more than " + Game.NB_PLAYER_MAX + " players to the game");
         }
     }
 
@@ -74,11 +88,21 @@ public class GameBuilder {
         return this;
     }
 
+    /**
+     * Add a custom bot to the game
+     * @param pickingStrategy the picking strategy
+     * @param characterChoosingStrategy the character choosing strategy
+     * @param thiefEffectStrategy the thief effect strategy
+     * @param murdererEffectStrategy the murderer effect strategy
+     * @param warlordEffectStrategy the warlord effect strategy
+     * @param cardChosingStrategy the card chosing strategy
+     * @return the GameBuilder
+     */
     public GameBuilder addCustomBot(IPickingStrategy pickingStrategy,
                                     ICharacterChoosingStrategy characterChoosingStrategy,
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
                                     IUsingMurdererEffectStrategy murdererEffectStrategy,
-                                    IUsingCondottiereEffectStrategy condottiereEffectStrategy,
+                                    IUsingWarlordEffectStrategy warlordEffectStrategy,
                                     ICardChoosingStrategy cardChosingStrategy) {
         checkNbPlayers();
         playerList.add(new CustomBotBuilder(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.view, this.deck, this.bank)
@@ -86,24 +110,36 @@ public class GameBuilder {
                 .setCharacterChoosingStrategy(characterChoosingStrategy)
                 .setUsingThiefEffectStrategy(thiefEffectStrategy)
                 .setUsingMurdererEffectStrategy(murdererEffectStrategy)
-                .setUsingCondottiereEffectStrategy(condottiereEffectStrategy)
+                .setUsingWarlordEffectStrategy(warlordEffectStrategy)
                 .setCardChoosingStrategy(cardChosingStrategy)
                 .build());
         return this;
     }
 
+    /**
+     * Add a richard bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addRichardBot() {
         checkNbPlayers();
         playerList.add(new RichardBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
+    /**
+     * Add a builder bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addBuilderBot() {
         checkNbPlayers();
         playerList.add(new BuilderBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
+    /**
+     * Add an opportunist bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addOpportunistBot() {
         checkNbPlayers();
         playerList.add(new OpportunistBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
@@ -125,6 +161,7 @@ public class GameBuilder {
             opponents.remove(player);
             Collections.shuffle(opponents);
             player.setOpponents(opponents);
+            player.setNumberOfDistrictsNeeded(numberOfDistrictsNeeded);
         }
         return new Game(this.view, this.deck, this.bank, this.playerList);
     }

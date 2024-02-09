@@ -7,7 +7,7 @@ import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.cards.DistrictType;
 import com.seinksansdoozebank.fr.model.character.abstracts.Character;
 import com.seinksansdoozebank.fr.model.character.abstracts.CommonCharacter;
-import com.seinksansdoozebank.fr.model.character.commoncharacters.CondottiereTarget;
+import com.seinksansdoozebank.fr.model.character.commoncharacters.WarlordTarget;
 import com.seinksansdoozebank.fr.model.character.roles.Role;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.Architect;
 import com.seinksansdoozebank.fr.model.character.specialscharacters.MagicianTarget;
@@ -29,7 +29,14 @@ import java.util.stream.Stream;
  * in its hand in order to finish its citadel as fast as possible
  */
 public class SmartBot extends Player {
-
+    /**
+     * SmartBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public SmartBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -126,6 +133,7 @@ public class SmartBot extends Player {
     /**
      * Returns the cheaper district in the hand if there is one or an empty optional
      *
+     * @param notAlreadyPlayedCardList the list of cards that are not already in the citadel
      * @return the cheaper district in the hand if there is one or an empty optional
      */
     protected Optional<Card> getCheaperCard(List<Card> notAlreadyPlayedCardList) {
@@ -191,7 +199,7 @@ public class SmartBot extends Player {
 
 
     @Override
-    public CondottiereTarget chooseCondottiereTarget(List<Opponent> opponentsFocusable) {
+    public WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable) {
         // Get the player with the most districts
         Optional<Opponent> playerWithMostDistricts = opponentsFocusable.stream()
                 .max(Comparator.comparing(player -> player.getCitadel().size()));
@@ -206,7 +214,7 @@ public class SmartBot extends Player {
         // Destroy the district with the lowest cost, if not possible destroy the district with the second lowest cost, etc...
         for (Card card : cardOfPlayerSortedByCost) {
             if (this.getNbGold() >= card.getDistrict().getCost() - 1) {
-                return new CondottiereTarget(playerWithMostDistricts.get(), card.getDistrict());
+                return new WarlordTarget(playerWithMostDistricts.get(), card.getDistrict());
             }
         }
         return null;
@@ -244,7 +252,7 @@ public class SmartBot extends Player {
      * couleurs de districtType sinon il joue comme un joueur normal
      */
     protected void useEffectOfTheArchitect() {
-        int numberOfCardsNeededToFinishTheGame = 8 - this.getCitadel().size();
+        int numberOfCardsNeededToFinishTheGame = this.getNumberOfDistrictsNeeded() - this.getCitadel().size();
         //On regarde s'il peut finir la partie en un coup en vérifiant si la citadelle a plus de 4 cartes, si dans sa main il a au moins 3 cartes
         //On vérifie s'il peut acheter les x districts manquant en choisissant les moins chèrs
         int nbDistrictsCanBeBuild = this.getNbDistrictsCanBeBuild();
@@ -372,6 +380,11 @@ public class SmartBot extends Player {
         return averageOpponentCitadelSize() > this.getCitadel().size();
     }
 
+    /**
+     * Returns the average size of the citadel of the opponents
+     *
+     * @return the average size of the citadel of the opponents
+     */
     public double averageOpponentCitadelSize() {
         OptionalDouble average = this.getOpponents().stream().mapToInt(opponent -> opponent.getCitadel().size()).average();
         if (average.isEmpty()) {
