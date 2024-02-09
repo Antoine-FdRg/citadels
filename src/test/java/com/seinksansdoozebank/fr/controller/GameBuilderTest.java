@@ -32,7 +32,7 @@ class GameBuilderTest {
         view = mock(IView.class);
         deck = mock(Deck.class);
         bank = new Bank();
-        normalGameBuilder = spy(new GameBuilder(view, deck, bank, 8));
+        normalGameBuilder = spy(new GameBuilder(view, deck, bank, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test

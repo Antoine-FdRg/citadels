@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player;
 
+import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.model.bank.Bank;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.Deck;
@@ -781,7 +782,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.chooseWarlordTarget(Warlord.getOpponentsFocusableForWarlord(List.of(opponent), 8));
+        spySmartBot.chooseWarlordTarget(Warlord.getOpponentsFocusableForWarlord(List.of(opponent), Game.NORMAL_NB_DISTRICT_TO_WIN));
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }

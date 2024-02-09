@@ -69,10 +69,10 @@ class GameTest {
     @BeforeEach
     public void setUp() {
         view = mock(Cli.class);
-        normalGameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, new Bank(), 5, 8));
+        normalGameWithFivePlayers = spy(GameFactory.createGameOfRandomBot(view, new Bank(), 5, Game.NORMAL_NB_DISTRICT_TO_WIN));
 
         Bank threePlayersGameBank = new Bank();
-        normalGameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4, 8);
+        normalGameWithThreePlayers = GameFactory.createGameOfRandomBot(view, threePlayersGameBank, 4, Game.NORMAL_NB_DISTRICT_TO_WIN);
         //Set player 1 with eight districts in its citadel and five different districtTypes
         playerWIthEightDistrictsAndFiveDistrictTypes = spy(new RandomBot(5, new Deck(), view, threePlayersGameBank));
         List<Card> citadelWithEightDistrictsAndFiveDistrictTypes = new ArrayList<>(List.
@@ -109,8 +109,8 @@ class GameTest {
         normalGameWithThreePlayers.setPlayers(List.of(playerWIthEightDistrictsAndFiveDistrictTypes, playerWithNoBonus, playerWithEightDistricts));
 
         fourPlayersGameBank = mock(Bank.class);
-        normalGameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, fourPlayersGameBank, 4, 8));
-        normalGameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, mock(Bank.class), 6, 8));
+        normalGameWithFourPlayers = spy(GameFactory.createGameOfRandomBot(view, fourPlayersGameBank, 4, Game.NORMAL_NB_DISTRICT_TO_WIN));
+        normalGameWithSixPlayers = spy(GameFactory.createGameOfRandomBot(view, mock(Bank.class), 6, Game.NORMAL_NB_DISTRICT_TO_WIN));
 
         charactersList = List.of(
                 new Assassin(),
@@ -323,7 +323,7 @@ class GameTest {
 
     @Test
     void testThatThePlayerWithFourDifferentDistrictAndTheCourtyardOfMiracleDontGetTheBonusBecauseHePlacedTheCourtyardOfMiracleInTheLastPosition() {
-        normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, mock(Bank.class), 4, 8);
+        normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition = GameFactory.createGameOfRandomBot(view, mock(Bank.class), 4, Game.NORMAL_NB_DISTRICT_TO_WIN);
         Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = getPlayerWithCourtyard();
         playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition.setLastCardPlacedCourtyardOfMiracle(true);
         normalGameWithPlayerThatHasCourtyardOfMiracleAndPlacedItInTheLastPosition.setPlayers(List.of(playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition));
@@ -407,12 +407,12 @@ class GameTest {
 
     @Test
     void newGameWithTwoPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 2, 8));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 2, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
     void newGameWithSevenPlayers() {
-        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 7, 8));
+        assertThrows(IllegalArgumentException.class, () -> GameFactory.createGameOfRandomBot(view, mock(Bank.class), 7, Game.NORMAL_NB_DISTRICT_TO_WIN));
     }
 
     @Test
@@ -511,7 +511,7 @@ class GameTest {
     void isStuckWithStuckGameShouldReturnTrue() {
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), 8)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -541,7 +541,7 @@ class GameTest {
     void isStuckWithNotEmptyDeckShouldReturnFalse() {
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>(List.of(new Card(District.TEMPLE))));
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), 8)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -556,7 +556,7 @@ class GameTest {
         Bank bank = new Bank();
         Deck mockDeck = mock(Deck.class);
         when(mockDeck.getDeck()).thenReturn(new ArrayList<>());
-        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, bank, 8)
+        Game stuckGame = new GameBuilder(mock(IView.class), mockDeck, bank, Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()
@@ -568,7 +568,7 @@ class GameTest {
 
     @Test
     void isStuckWithCardsInPlayersHandShouldReturnFalse() {
-        Game stuckGame = new GameBuilder(mock(IView.class), new Deck(), mock(Bank.class), 8)
+        Game stuckGame = new GameBuilder(mock(IView.class), new Deck(), mock(Bank.class), Game.NORMAL_NB_DISTRICT_TO_WIN)
                 .addRandomBot()
                 .addRandomBot()
                 .addRandomBot()

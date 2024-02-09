@@ -1,5 +1,6 @@
 package com.seinksansdoozebank.fr.model.player.custombot.strategies.warlordeffect;
 
+import com.seinksansdoozebank.fr.controller.Game;
 import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.cards.District;
 import com.seinksansdoozebank.fr.model.character.commoncharacters.Bishop;
@@ -135,7 +136,7 @@ class UsingWarlordEffectToTargetFirstPlayerTest {
         Card destroyableCard = new Card(District.TAVERN);
         when(mockOpponent2.getCitadel()).thenReturn(List.of(destroyableCard));
         opponentList.add(mockOpponent2);
-        when(mockPlayer.getNumberOfDistrictsNeeded()).thenReturn(8);
+        when(mockPlayer.getNumberOfDistrictsNeeded()).thenReturn(Game.NORMAL_NB_DISTRICT_TO_WIN);
         assertEquals(strategy.apply(mockPlayer, opponentList), new WarlordTarget(mockOpponent2, destroyableCard.getDistrict()));
     }
 }

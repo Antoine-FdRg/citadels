@@ -38,6 +38,7 @@ public class Game {
      */
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
+    public static final int NORMAL_NB_DISTRICT_TO_WIN = 8;
     private int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
@@ -82,7 +83,7 @@ public class Game {
         if (playerList.size() == 3) {
             nbOfDistrictsInCitadel = 10;
         } else {
-            nbOfDistrictsInCitadel = 8;
+            nbOfDistrictsInCitadel = NORMAL_NB_DISTRICT_TO_WIN;
         }
     }
 
