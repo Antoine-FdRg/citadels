@@ -57,6 +57,7 @@ public class Game {
     private final IView view;
     private int nbCurrentRound;
     private boolean finished;
+    private boolean isVariante;
 
     /**
      * Constructor of the Game class
@@ -83,6 +84,15 @@ public class Game {
         } else {
             nbOfDistrictsInCitadel = 8;
         }
+    }
+
+    public void setVariante(boolean variante) {
+        isVariante = variante;
+    }
+
+
+    public boolean isVariante() {
+        return isVariante;
     }
 
     /**
@@ -130,6 +140,8 @@ public class Game {
                 this.updateCrownedPlayer(player);
                 checkPlayerStolen(player);
                 player.play();
+            }else if (this.isVariante()){
+                this.updateCrownedPlayer(player);
             }
             //We set the attribute to true if player is the first who has eight districts
             isTheFirstOneToHaveAllDistricts(player);

@@ -304,7 +304,6 @@ class GameTest {
         }
     }
 
-
     private Player getPlayerWithCourtyard() {
         Player playerWithFourDifferentDistrictAndTheCourtyardOfMiracleButPLacedInTheLastPosition = spy(new SmartBot(5, new Deck(), view, mock(Bank.class)));
         ArrayList<Card> citadelWithFourDifferentDistrictAndTheCourtyardOfMiraclePlaceInTheLastPosition = new ArrayList<>(
@@ -381,12 +380,25 @@ class GameTest {
         Assassin assassin = new Assassin();
         assassin.useEffect(king);
         gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
-
         gameWithFourPlayers.playARound();
 
         verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size() - 1)).updateCrownedPlayer(any(Player.class));
         assertNull(gameWithFourPlayers.crownedPlayer);
     }
+
+    @Test
+    void kingPlayerIsUpdatedWhenPlayingARoundAndKingIsDead() {
+        King king = new King();
+        Assassin assassin = new Assassin();
+        assassin.useEffect(king);
+        gameWithFourPlayers.getAvailableCharacters().addAll(List.of(king, new Bishop(), new Merchant(), new Warlord()));
+        gameWithFourPlayers.setVariante(true);
+        gameWithFourPlayers.playARound();
+
+        verify(gameWithFourPlayers, times(gameWithFourPlayers.players.size())).updateCrownedPlayer(any(Player.class));
+        assertNotNull(gameWithFourPlayers.crownedPlayer);
+    }
+
 
     @Test
     void newGameWithTwoPlayers() {
