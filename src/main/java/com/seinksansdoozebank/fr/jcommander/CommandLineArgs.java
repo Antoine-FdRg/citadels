@@ -1,9 +1,10 @@
-package com.seinksansdoozebank.fr;
+package com.seinksansdoozebank.fr.jcommander;
 
 import com.beust.jcommander.Parameter;
+import com.seinksansdoozebank.fr.jcommander.validator.QuickValueValidator;
 
 // Class to hold command-line parameters
-class CommandLineArgs {
+public class CommandLineArgs {
     @Parameter(names = "--2thousands", description = "Enable 2thousands option")
     private boolean is2Thousands;
 
@@ -12,6 +13,9 @@ class CommandLineArgs {
 
     @Parameter(names = "--csv", description = "Enable CSV option")
     private boolean isCsv;
+
+    @Parameter(names = "--quick", description = "Enable quick option", arity = 1, validateWith = QuickValueValidator.class)
+    private String quickValue;
 
     // Getter methods if needed
     public boolean is2Thousands() {
@@ -24,5 +28,9 @@ class CommandLineArgs {
 
     public boolean isCsv() {
         return isCsv;
+    }
+
+    public String getQuickValue() {
+        return quickValue;
     }
 }

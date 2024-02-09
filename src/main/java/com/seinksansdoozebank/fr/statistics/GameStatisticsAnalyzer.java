@@ -69,6 +69,16 @@ public class GameStatisticsAnalyzer {
         logAggregatedStatistics();
     }
 
+    public void runQuickDemo(int nbDistricts) {
+        CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
+        Player.resetIdCounter();
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
+        game.setNbOfDistrictsInCitadel(nbDistricts);
+        game.run();
+        analyzeGameResults(game);
+        logAggregatedStatistics();
+    }
+
     /**
      * Runs and analyzes multiple game sessions with the specified number of random bots, smart bots, and custom bots.
      * This method runs multiple game sessions, resets player IDs and the bank for each session,
