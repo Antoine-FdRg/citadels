@@ -3,8 +3,13 @@ package com.seinksansdoozebank.fr.model.cards.effect;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 
+/**
+ * The effect of manufacture district
+ */
 public class ManufactureEffect implements ActiveEffect {
-
+    /**
+     * The number of gold to pay to use the manufacture effect
+     */
     public static final int NB_GOLD_TO_PAY_TO_USE_EFFECT = 3;
 
     /**
