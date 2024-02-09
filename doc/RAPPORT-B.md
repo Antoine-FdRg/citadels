@@ -34,7 +34,7 @@
 
 #### Comparaison des bots  ####
 
-![image](images/statistiquesCinqCentMilleParties.png)
+![image](images/statistiquesCinqCentmilleParties.png)
 
 ## 2. Architecture et qualité 
 
@@ -57,6 +57,6 @@
 
 ### 3.2 Organisation de l'équipe sur GitHub ###
 
-![image](images/boardGithub.png)
+![image](images/boardGitHub.png)
 
 ![image](images/stratégieDeBranche.png)
