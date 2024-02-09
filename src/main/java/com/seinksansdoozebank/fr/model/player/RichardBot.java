@@ -13,9 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * The RichardBot class represents a bot that makes decisions to adapt to strategy of community
+ */
 public class RichardBot extends SmartBot {
-
+    /**
+     * RichardBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public RichardBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }

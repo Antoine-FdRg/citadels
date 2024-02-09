@@ -6,6 +6,16 @@ import com.seinksansdoozebank.fr.model.player.Player;
 
 import java.util.List;
 
+/**
+ * Represent a strategy to use the effect of the warlord
+ */
 public interface IUsingWarlordEffectStrategy {
+    /**
+     * Apply the Warlord Effect strategy
+     *
+     * @param player    the player to apply the strategy on
+     * @param opponents the opponents
+     * @return the chosen target
+     */
     WarlordTarget apply(Player player, List<Opponent> opponents);
 }

@@ -13,7 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The OpportunistBot class represents a bot that makes decisions to maximize its own gain.
+ */
 public class OpportunistBot extends SmartBot {
+    /**
+     * OpportunistBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public OpportunistBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
