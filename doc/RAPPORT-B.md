@@ -19,7 +19,8 @@ Nous avons ajouté deux options d’exécution (détectées grâce à la JComman
 D’une part, il est possible de rajouter l’argument --demo à la commande mvn exec:java. Ce paramètre lance une partie avec tous les logs activés, pour pouvoir observer son déroulement.
 
 D’autre part, l’option --2thousands lance deux fois 1 000 parties. Le premier millier de parties permet de faire s’affronter notre meilleur bot (SmartBot) contre le deuxième meilleur (Richard Bot), dans une partie comprenant tous nos différents bots. Le deuxième millier voit s’affronter six clones de notre meilleur bot (SmartBot). Ainsi, à la fin de chaque millier de parties, des statistiques de la forme suivante sont affichées :
-  ![image](images/statistiquesMilleParties.png)
+  
+![image](images/statistiquesMilleParties.png)
 
 - **Statistiques en CSV**
 Nous avons aussi ajouté la possibilité de sauvegarder les statistiques de parties jouées dans un fichier CSV stocké dans /ressources/stats/. Cette fonctionnalité s’active grâce à l’argument de commande --csv. Dans ce mode, 100 parties sont exécutées, sans aucun log. Les statistiques tirées de cette partie sont agrégées à celles déjà stockées et sauvegardées dans le fichier gamesstats.csv. Le contenu de ce fichier est affiché à la fin de la partie.
@@ -57,6 +58,7 @@ Dans chaque fichier, nous sauvegardons pour chaque joueur : le nombre de parties
 #### Comparaison des bots  ####
 
 Pour comparer nos bots, nous avons lancé un grand nombre de parties et récupéré le tableau de statistiques ci-dessous.
+
 ![image](images/statistiquesCinqCentmilleParties.png)
 
 D’après nos statistiques, basées sur 500 000 parties, nos deux bots les plus forts sont le RichardBot et le SmartBot. Notre bot le moins bon est le RandomBot. Ces statistiques peuvent donc se justifier par les stratégies que nous avons introduites aux deux bots les plus forts. Ils sont tous les deux basés sur le SmartBot qui vise à rusher jusqu’à la victoire en posant le plus de districts de coût le plus faible possible. 
@@ -86,6 +88,7 @@ Les informations importantes concernant notre jeu ainsi que les instructions d�
 #### a. Parties bien optimisées ####
 
 Premièrement, la solidité et la fiabilité de notre code sont des éléments sur lesquels nous avons pu compter sans réserve, une assurance renforcée par l'ensemble des analyses rigoureuses effectuées via SonarCube (capture d’écran de l’analyse ci-dessous). Ces analyses valident la qualité de notre travail et aussi soulignent notre engagement envers le respect des bonnes pratiques en Java.
+
 ![image](images/sonarCube.png)
 
 De plus, la bonne organisation de notre équipe tout au long de ce projet a joué un rôle clé dans notre réussite. La gestion efficace du temps, la définition claire des étapes à travers la création de milestones et la gestion proactive des issues ont facilité une progression fluide et structurée. Cette organisation méticuleuse nous a permis de maintenir une vision claire de nos objectifs et d'adapter notre planification en conséquence pour répondre efficacement aux défis rencontrés.
@@ -111,9 +114,11 @@ Le pilier principal de notre organisation est l’utilisation de milestones. Nou
 Dans chacune de nos milestones, des issues de fonctionnalités été créées au début de celle-ci. 
 
 Cependant, nous nous laissions le droit de rajouter durant la réalisation de la milestone des issues concernant des bugs trouvés ou des fonctionnalités manquantes et urgentes. Nous nous assignions donc les tâches déjà créées au début de la milestone. Pour les réaliser, il fallait créer une branche pour chaque issue. Enfin, nous pouvions visualiser et gérer efficacement toutes nos issues de la milestone actuelle grâce au board GitHub ci-dessous.
+
 ![image](images/boardGitHub.png)
 
 Enfin concernant notre stratégie de branche, nous avons choisi Gitflow. Ainsi, nous avions une branche principale master qui était stable à tout moment et une branche de développement develop. Elles étaient toutes les 2 protégées et devait donc être alimentées via des pull requests (devant être validées par au moins un autre développeur) créées depuis nos branches de feature (utilisées pour ajouter des fonctionnalités) ou de fix (utilisées pour corriger des bugs). Un exemple de notre graphique à la fin de la milestone 7 est ci-dessous.
+
 ![image](images/stratégieDeBranche.png)
 
 Pour nous assurer de la consistance de nos commits dans les branches de fix et de feature, nous avons ajouté un hook qui nous empêche de commit en cas d’oubli de la précision du numéro d’issue avec par exemple un #123.
