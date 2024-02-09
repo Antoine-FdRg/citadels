@@ -49,7 +49,7 @@ public abstract class Player implements Opponent {
     private int nbCharacterChosenInARow;
     public static final int NB_MAX_CHARACTER_CHOSEN_IN_A_ROW = 3;
     private Character lastCharacterChosen;
-
+    private int numberOfDistrictsNeeded = 8;
 
     protected Player(int nbGold, Deck deck, IView view, Bank bank) {
         this.id = counter++;
@@ -679,5 +679,13 @@ public abstract class Player implements Opponent {
 
     public void setNbCharacterChosenInARow(int nbCharacterChosenInARow) {
         this.nbCharacterChosenInARow = nbCharacterChosenInARow;
+    }
+
+    public void setNumberOfDistrictsNeeded(int numberOfDistrictsNeeded) {
+        this.numberOfDistrictsNeeded = numberOfDistrictsNeeded;
+    }
+
+    public int getNumberOfDistrictsNeeded() {
+        return this.numberOfDistrictsNeeded;
     }
 }

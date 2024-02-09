@@ -30,13 +30,15 @@ public class GameBuilder {
     private final IView view;
     private final Deck deck;
     private final Bank bank;
+    private final int numberOfDistrictsNeeded;
     private final List<Player> playerList;
 
-    public GameBuilder(IView view, Deck deck, Bank bank) {
+    public GameBuilder(IView view, Deck deck, Bank bank, int numberOfDistrictsNeeded) {
         playerList = new ArrayList<>();
         this.view = view;
         this.deck = deck;
         this.bank = bank;
+        this.numberOfDistrictsNeeded = numberOfDistrictsNeeded;
     }
 
     int getPlayerListSize() {
@@ -125,6 +127,7 @@ public class GameBuilder {
             opponents.remove(player);
             Collections.shuffle(opponents);
             player.setOpponents(opponents);
+            player.setNumberOfDistrictsNeeded(numberOfDistrictsNeeded);
         }
         return new Game(this.view, this.deck, this.bank, this.playerList);
     }

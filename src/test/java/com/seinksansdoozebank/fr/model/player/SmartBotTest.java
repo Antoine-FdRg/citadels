@@ -781,7 +781,7 @@ class SmartBotTest {
         when(spySmartBot.getOpponents()).thenReturn(List.of(opponent));
 
         int lastGold = spySmartBot.getNbGold();
-        spySmartBot.chooseWarlordTarget(Warlord.getOpponentsFocusableForWarlord(List.of(opponent)));
+        spySmartBot.chooseWarlordTarget(Warlord.getOpponentsFocusableForWarlord(List.of(opponent), 8));
         assertEquals(1, opponent.getCitadel().size());
         assertEquals(lastGold, spySmartBot.getNbGold());
     }

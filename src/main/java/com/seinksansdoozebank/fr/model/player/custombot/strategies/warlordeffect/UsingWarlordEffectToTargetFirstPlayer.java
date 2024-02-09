@@ -20,7 +20,7 @@ public class UsingWarlordEffectToTargetFirstPlayer implements IUsingWarlordEffec
     @Override
     public WarlordTarget apply(Player player, List<Opponent> opponents) {
         Opponent targetOpponent = StrategyUtils.getLeadingOpponent(opponents);
-        if ((targetOpponent.getOpponentCharacter() != null && targetOpponent.getOpponentCharacter().getRole() == Role.BISHOP) || targetOpponent.nbDistrictsInCitadel() >= 8) {
+        if ((targetOpponent.getOpponentCharacter() != null && targetOpponent.getOpponentCharacter().getRole() == Role.BISHOP) || targetOpponent.nbDistrictsInCitadel() >= player.getNumberOfDistrictsNeeded()) {
             return null;
         }
         Optional<Card> cheaperCardToDestroy = targetOpponent.getCitadel().stream()

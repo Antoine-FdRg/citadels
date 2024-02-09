@@ -96,7 +96,7 @@ class GameStatisticsAnalyzerTest {
         // Mock necessary dependencies
         Player.resetIdCounter(); // Ensure Player ID counter is reset
 
-        Game game = new GameBuilder(new Cli(), new Deck(), new Bank())
+        Game game = new GameBuilder(new Cli(), new Deck(), new Bank(), 8)
                 .addRandomBot()
                 .addRandomBot()
                 .addBuilderBot()

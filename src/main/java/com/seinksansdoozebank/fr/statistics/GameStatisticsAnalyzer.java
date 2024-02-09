@@ -63,7 +63,7 @@ public class GameStatisticsAnalyzer {
     public void runDemo() {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Player.resetIdCounter();
-        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank(), 8);
         game.run();
         analyzeGameResults(game);
         logAggregatedStatistics();
@@ -72,7 +72,7 @@ public class GameStatisticsAnalyzer {
     public void runQuickDemo(int nbDistricts) {
         CustomLogger.setLevel(isSaveStatsToCsv() ? Level.OFF : Level.INFO);
         Player.resetIdCounter();
-        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank());
+        Game game = GameFactory.createGameOfAllTypeOfBot(new Cli(), new Bank(), nbDistricts);
         game.setNbOfDistrictsInCitadel(nbDistricts);
         game.run();
         analyzeGameResults(game);
@@ -96,7 +96,7 @@ public class GameStatisticsAnalyzer {
         CustomLogger.setLevel(Level.OFF);
         for (int i = 0; i < this.getNumSessions(); i++) {
             Player.resetIdCounter();
-            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots);
+            Game game = GameFactory.createCustomGame(numRandomBots, numSmartBots, numCustomBots, numRichardBots, numBuilderBots, numOpportunistBots, 8);
             game.run();
             CustomStatisticsLogger.log(Level.FINE, "Game {0} completed", new Object[]{i + 1});
             analyzeGameResults(game);

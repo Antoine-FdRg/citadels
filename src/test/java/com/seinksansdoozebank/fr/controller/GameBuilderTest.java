@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 class GameBuilderTest {
 
-    GameBuilder gameBuilder;
+    GameBuilder normalGameBuilder;
     IView view;
     Deck deck;
     Bank bank;
@@ -32,33 +32,33 @@ class GameBuilderTest {
         view = mock(IView.class);
         deck = mock(Deck.class);
         bank = new Bank();
-        gameBuilder = spy(new GameBuilder(view, deck, bank));
+        normalGameBuilder = spy(new GameBuilder(view, deck, bank, 8));
     }
 
     @Test
     void checkNbPlayersThrowsErrorWithTooManyPlayers() {
-        when(gameBuilder.getPlayerListSize()).thenReturn(7);
-        assertThrows(IllegalStateException.class, () -> gameBuilder.checkNbPlayers());
+        when(normalGameBuilder.getPlayerListSize()).thenReturn(7);
+        assertThrows(IllegalStateException.class, () -> normalGameBuilder.checkNbPlayers());
     }
 
     @Test
     void checkNbPlayersDoesNotThrowErrorWithLessThanSixPlayers() {
-        when(gameBuilder.getPlayerListSize()).thenReturn(5);
-        assertDoesNotThrow(() -> gameBuilder.checkNbPlayers());
+        when(normalGameBuilder.getPlayerListSize()).thenReturn(5);
+        assertDoesNotThrow(() -> normalGameBuilder.checkNbPlayers());
     }
 
     @Test
     void addSmartBotMakesPlayerListSizeIncrementByOne() {
-        int playerListSize = gameBuilder.getPlayerListSize();
-        gameBuilder.addSmartBot();
-        assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
+        int playerListSize = normalGameBuilder.getPlayerListSize();
+        normalGameBuilder.addSmartBot();
+        assertEquals(playerListSize + 1, normalGameBuilder.getPlayerListSize());
     }
 
     @Test
     void addRandomBotMakesPlayerListSizeIncrementByOne() {
-        int playerListSize = gameBuilder.getPlayerListSize();
-        gameBuilder.addRandomBot();
-        assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
+        int playerListSize = normalGameBuilder.getPlayerListSize();
+        normalGameBuilder.addRandomBot();
+        assertEquals(playerListSize + 1, normalGameBuilder.getPlayerListSize());
     }
 
     @Test
@@ -69,25 +69,25 @@ class GameBuilderTest {
         IUsingMurdererEffectStrategy murdererEffectStrategy = mock(IUsingMurdererEffectStrategy.class);
         IUsingWarlordEffectStrategy warlordEffectStrategy = mock(IUsingWarlordEffectStrategy.class);
         ICardChoosingStrategy cardChosingStrategy = mock(ICardChoosingStrategy.class);
-        int playerListSize = gameBuilder.getPlayerListSize();
-        gameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy, warlordEffectStrategy, cardChosingStrategy);
-        assertEquals(playerListSize + 1, gameBuilder.getPlayerListSize());
+        int playerListSize = normalGameBuilder.getPlayerListSize();
+        normalGameBuilder.addCustomBot(pickingStrategy, characterChoosingStrategy, thiefEffectStrategy, murdererEffectStrategy, warlordEffectStrategy, cardChosingStrategy);
+        assertEquals(playerListSize + 1, normalGameBuilder.getPlayerListSize());
     }
 
     @Test
     void buildThrowsErrorWithNoPlayers() {
-        assertThrows(IllegalStateException.class, () -> gameBuilder.build());
+        assertThrows(IllegalStateException.class, () -> normalGameBuilder.build());
     }
 
     @Test
     void buildWorksWell() {
         int nbPlayers = 5;
         for (int i = 0; i < nbPlayers; i++) {
-            gameBuilder.addSmartBot();
+            normalGameBuilder.addSmartBot();
         }
 
-        assertDoesNotThrow(() -> gameBuilder.build());
-        Game game = gameBuilder.build();
+        assertDoesNotThrow(() -> normalGameBuilder.build());
+        Game game = normalGameBuilder.build();
 
         assertEquals(nbPlayers, game.players.size());
         List<Player> players = game.players;
