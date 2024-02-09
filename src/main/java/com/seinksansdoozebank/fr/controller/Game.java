@@ -25,15 +25,30 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The Game class represents a game of Citadels
+ */
 public class Game {
+    /**
+     * The maximum number of players
+     */
     protected static final int NB_PLAYER_MAX = 6;
+    /**
+     * The minimum number of players
+     */
     protected static final int NB_PLAYER_MIN = 3;
     private static final int NB_CARD_BY_PLAYER = 4;
     private final int nbOfDistrictsInCitadel;
     private boolean findFirstPlayerWithAllDistricts = false;
     final Deck deck;
     final Bank bank;
+    /**
+     * The list of players in the initial order
+     */
     protected List<Player> playersInInitialOrder;
+    /**
+     * The list of players
+     */
     protected List<Player> players;
     Player crownedPlayer;
     private List<Character> availableCharacters;
@@ -43,6 +58,14 @@ public class Game {
     private int nbCurrentRound;
     private boolean finished;
 
+    /**
+     * Constructor of the Game class
+     *
+     * @param view       the view
+     * @param deck       the deck of cards
+     * @param bank       the bank
+     * @param playerList the list of players
+     */
     protected Game(IView view, Deck deck, Bank bank, List<Player> playerList) {
         if (playerList.size() > NB_PLAYER_MAX || playerList.size() < NB_PLAYER_MIN) {
             throw new IllegalArgumentException("The number of players must be between " + NB_PLAYER_MIN + " and " + NB_PLAYER_MAX);
@@ -82,6 +105,10 @@ public class Game {
         view.displayWinner(this.getWinner());
     }
 
+    /**
+     * Check if the game is stuck
+     * @return true if the game is stuck
+     */
     protected boolean isStuck() {
         boolean aPlayerCanPlay = players.stream()
                 .anyMatch(player -> player.getHand().stream()
@@ -112,14 +139,25 @@ public class Game {
         this.nbCurrentRound++;
     }
 
+    /**
+     * Update the crowned player
+     * @param player the player to update
+     */
     void updateCrownedPlayer(Player player) {
         crownedPlayer = player.getCharacter().getRole().equals(Role.KING) ? player : crownedPlayer;
     }
 
+    /**
+     * Get the number of the current round
+     * @return the number of the current round
+     */
     protected int getNbCurrentRound() {
         return nbCurrentRound;
     }
 
+    /**
+     * Order the players before playing
+     */
     void orderPlayerBeforePlaying() {
         players.sort(Comparator.comparing(player -> player.getCharacter().getRole()));
     }
@@ -367,6 +405,10 @@ public class Game {
         }
     }
 
+    /**
+     * Get the list of players
+     * @return the list of players
+     */
     public List<Player> getPlayers() {
         return players;
     }
