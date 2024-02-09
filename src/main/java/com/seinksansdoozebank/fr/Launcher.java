@@ -7,7 +7,15 @@ import com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer;
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_AGAINST_SECOND;
 import static com.seinksansdoozebank.fr.statistics.GameStatisticsAnalyzer.CsvCategory.BEST_BOTS_AGAINST;
 
+/**
+ * The main class of the application
+ */
 public class Launcher {
+    /**
+     * The main method of the application
+     *
+     * @param args the command-line arguments
+     */
     public static void main(String[] args) {
         // Define a class to hold your command-line parameters
         Launcher launcher = new Launcher();
@@ -18,19 +26,19 @@ public class Launcher {
                 .addObject(cmdArgs)
                 .build()
                 .parse(args);
+
         if (cmdArgs.getQuickValue() != null) {
             launcher.runQuickDemo(Integer.parseInt(cmdArgs.getQuickValue()), cmdArgs.isCsv());
         } else if (cmdArgs.isDemo()) {
-            launcher.runDemo(cmdArgs.isCsv());
+            launcher.runDemo(cmdArgs.isCsv(), cmdArgs.isVariante());
         } else if (cmdArgs.is2Thousands()) {
             launcher.twoThousand(cmdArgs.isCsv());
         }
     }
 
-
-    public void runDemo(boolean saveInCsv) {
+    public void runDemo(boolean saveInCsv, boolean variante) {
         GameStatisticsAnalyzer analyzer = new GameStatisticsAnalyzer(saveInCsv);
-        analyzer.runDemo();
+        analyzer.runDemo(variante);
     }
 
     public void runQuickDemo(int nbDistricts, boolean saveInCsv) {

@@ -17,6 +17,9 @@ public class CommandLineArgs {
     @Parameter(names = "--quick", description = "Enable quick option", arity = 1, validateWith = QuickValueValidator.class)
     private String quickValue;
 
+    @Parameter(names= "--variante", description="Enable King To Have Crown whereas he is dead")
+    private boolean isVariante;
+
     // Getter methods if needed
     public boolean is2Thousands() {
         return is2Thousands;
@@ -33,4 +36,6 @@ public class CommandLineArgs {
     public String getQuickValue() {
         return quickValue;
     }
+
+    public boolean isVariante(){return isVariante;}
 }

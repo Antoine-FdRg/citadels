@@ -29,7 +29,14 @@ import java.util.stream.Stream;
  * in its hand in order to finish its citadel as fast as possible
  */
 public class SmartBot extends Player {
-
+    /**
+     * SmartBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public SmartBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -126,6 +133,7 @@ public class SmartBot extends Player {
     /**
      * Returns the cheaper district in the hand if there is one or an empty optional
      *
+     * @param notAlreadyPlayedCardList the list of cards that are not already in the citadel
      * @return the cheaper district in the hand if there is one or an empty optional
      */
     protected Optional<Card> getCheaperCard(List<Card> notAlreadyPlayedCardList) {
@@ -372,6 +380,11 @@ public class SmartBot extends Player {
         return averageOpponentCitadelSize() > this.getCitadel().size();
     }
 
+    /**
+     * Returns the average size of the citadel of the opponents
+     *
+     * @return the average size of the citadel of the opponents
+     */
     public double averageOpponentCitadelSize() {
         OptionalDouble average = this.getOpponents().stream().mapToInt(opponent -> opponent.getCitadel().size()).average();
         if (average.isEmpty()) {

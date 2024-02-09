@@ -75,7 +75,7 @@ class GameStatisticsAnalyzerTest {
     void testRunDemo() {
         when(analyzer.isSaveStatsToCsv()).thenReturn(true, false);
 
-        analyzer.runDemo();
+        analyzer.runDemo(false);
 
         Mockito.verify(analyzer, Mockito.times(1)).analyzeGameResults(any());
         Mockito.verify(analyzer, Mockito.times(1)).logAggregatedStatistics();

@@ -18,19 +18,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * Represents a player in the game
+ */
 public abstract class Player implements Opponent {
+    /**
+     * Counter to give a unique id to each player
+     */
     private static int counter = 1;
+    /**
+     * The id of the player
+     */
     protected final int id;
     private int nbGold;
     private int bonus;
     private boolean isFirstToHaveAllDistricts;
-    protected Deck deck;
-    protected Bank bank;
-    protected final List<Card> hand;
-    private final List<Card> citadel;
+    final Deck deck;
+    final Bank bank;
+    final List<Card> hand;
+    final List<Card> citadel;
+    /**
+     * The current view
+     */
     protected final IView view;
-    protected Random random = new Random();
-    protected Character character;
+    Random random = new Random();
+    Character character;
     private int positionInDrawToPickACharacter;
 
     /**
@@ -47,10 +59,22 @@ public abstract class Player implements Opponent {
     private List<Character> charactersNotInRound;
     private List<Character> charactersSeenInRound;
     private int nbCharacterChosenInARow;
+    /**
+     * Max number of character chosen in a row
+     */
     public static final int NB_MAX_CHARACTER_CHOSEN_IN_A_ROW = 3;
     private Character lastCharacterChosen;
     private int numberOfDistrictsNeeded = 8;
 
+
+    /**
+     * Player constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     protected Player(int nbGold, Deck deck, IView view, Bank bank) {
         this.id = counter++;
         this.nbGold = nbGold;
@@ -65,10 +89,20 @@ public abstract class Player implements Opponent {
         this.bank = bank;
     }
 
+    /**
+     * Get the position in the draw to pick a character
+     *
+     * @return the position in the draw to pick a character
+     */
     public int getPositionInDrawToPickACharacter() {
         return this.positionInDrawToPickACharacter;
     }
 
+    /**
+     * Set the position in the draw to pick a character
+     *
+     * @param rank the position in the draw to pick a character
+     */
     public void setPositionInDrawToPickACharacter(int rank) {
         this.positionInDrawToPickACharacter = rank;
     }
@@ -89,6 +123,9 @@ public abstract class Player implements Opponent {
         view.displayPlayerInfo(this);
     }
 
+    /**
+     * Use the effect of the prestige districts
+     */
     public void usePrestigesEffect() {
         // for every prestiges that the player has, and has effect, we use it
         this.citadel.stream().filter(
@@ -99,6 +136,9 @@ public abstract class Player implements Opponent {
                 );
     }
 
+    /**
+     * Play a round of the game
+     */
     public abstract void playARound();
 
     /**
@@ -125,6 +165,11 @@ public abstract class Player implements Opponent {
         return (listDifferentDistrictType.size() == 5);
     }
 
+    /**
+     * Return true if the player has the courtyard of miracle in its citadel and it's not the last card
+     *
+     * @return true if the player has the courtyard of miracle in its citadel and it's not the last card
+     */
     public boolean hasCourtyardOfMiracleAndItsNotTheLastCard() {
         return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.COURTYARD_OF_MIRACLE))
                 && !this.isLastCardPlacedCourtyardOfMiracle();
@@ -144,10 +189,20 @@ public abstract class Player implements Opponent {
         return listOfDistrictTypeMissing;
     }
 
+    /**
+     * Set if the player has played
+     *
+     * @param hasPlayed true if the player has played, false otherwise
+     */
     public void setHasPlayed(boolean hasPlayed) {
         this.hasPlayed = hasPlayed;
     }
 
+    /**
+     * Get if the player has played
+     *
+     * @return true if the player has played, false otherwise
+     */
     public boolean hasPlayed() {
         return hasPlayed;
     }
@@ -170,10 +225,15 @@ public abstract class Player implements Opponent {
             this.view.displayPlayerPickCards(this, 1);
             Card chosenCard = keepOneDiscardOthers(pickedCards);
             this.hand.add(chosenCard);
-            pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(card -> this.deck.discard(card));
+            pickedCards.stream().filter(card -> card.hashCode() != chosenCard.hashCode()).forEach(this.deck::discard);
         }
     }
 
+    /**
+     * Pick a card from the deck and add it to the list of picked cards
+     *
+     * @param pickedCards the list of picked cards
+     */
     void pickCardFromDeck(List<Card> pickedCards) {
         Optional<Card> cardPick = this.deck.pick();
         cardPick.ifPresent(pickedCards::add);
@@ -193,6 +253,12 @@ public abstract class Player implements Opponent {
         return 2;
     }
 
+    /**
+     * The player keeps one card and discard the others
+     *
+     * @param pickedCards the list of cards to choose from
+     * @return the card to keep
+     */
     protected abstract Card keepOneDiscardOthers(List<Card> pickedCards);
 
     /**
@@ -202,6 +268,11 @@ public abstract class Player implements Opponent {
         pickCardFromDeck(this.getHand());
     }
 
+    /**
+     * Represents the phase where the player discard a card from his hand
+     *
+     * @param card the card to discard
+     */
     public final void discardACard(Card card) {
         this.getHand().remove(card);
         this.deck.discard(card);
@@ -226,6 +297,11 @@ public abstract class Player implements Opponent {
         return optChosenCard;
     }
 
+    /**
+     * Represents the phase where the player build x districts chosen by chooseDistrict()
+     *
+     * @param numberOfCards the number of cards to play
+     */
     public void buyXCardsAndAddThemToCitadel(int numberOfCards) {
         setHasPlayed(true);
         if (numberOfCards <= 0) {
@@ -241,6 +317,8 @@ public abstract class Player implements Opponent {
 
     /**
      * make the player play the Card given in argument by removing it from its hand, adding it to its citadel and decreasing golds
+     *
+     * @param card the card to play
      */
     public void buyACardAndAddItToCitadel(Card card) {
         if (!canPlayCard(card)) {
@@ -260,7 +338,7 @@ public abstract class Player implements Opponent {
         if (this.getCharacter() instanceof CommonCharacter commonCharacter) {
             int nbGoldSave = this.getNbGold();
             commonCharacter.goldCollectedFromDistrictType();
-            if(this.getCharacter().getRole()==Role.MERCHANT){
+            if (this.getCharacter().getRole() == Role.MERCHANT) {
                 view.displayGoldCollectedFromMerchant(this);
             }
             if (this.getNbGold() - nbGoldSave > 0)
@@ -282,18 +360,36 @@ public abstract class Player implements Opponent {
         view.displayPlayerPickCards(this, i);
     }
 
+    /**
+     * Use the effect of the magician
+     *
+     * @return the target of the magician
+     */
     public abstract MagicianTarget useEffectMagician();
 
+    /**
+     * Use the effect of the assassin
+     *
+     * @return the character to kill
+     */
     public abstract Character useEffectAssassin();
 
     abstract Character chooseAssassinTarget();
 
+    /**
+     * Choose a character to kill for warlord character
+     *
+     * @param opponentsFocusable the list of opponents to choose from
+     * @return the chosen character
+     */
     public abstract WarlordTarget chooseWarlordTarget(List<Opponent> opponentsFocusable);
 
     abstract Optional<Character> chooseThiefTarget();
 
     /**
-     * Le voleur choisit en priorité le marchand et l'architecte et s'il n'est pas disponible dans les opponents il prend un personnage en aléatoire
+     * Use the thief effect
+     *
+     * @return the character to steal from
      */
     public Character useEffectThief() {
         Optional<Character> victim = this.chooseThiefTarget();
@@ -304,6 +400,11 @@ public abstract class Player implements Opponent {
         return null;
     }
 
+    /**
+     * Check if the player has a card to play
+     *
+     * @return true if the player has a card to play, false otherwise
+     */
     protected boolean hasACardToPlay() {
         return this.hand.stream().anyMatch(this::canPlayCard);
     }
@@ -326,10 +427,20 @@ public abstract class Player implements Opponent {
                 && this.getCitadel().stream().noneMatch(c -> c.getDistrict().equals(card.getDistrict()));
     }
 
+    /**
+     * Decrease the number of gold of the player
+     *
+     * @param gold the number of gold coins to decrease
+     */
     public void decreaseGold(int gold) {
         this.nbGold -= gold;
     }
 
+    /**
+     * Increase the number of gold of the player
+     *
+     * @param gold the number of gold coins to increase
+     */
     public void increaseGold(int gold) {
         this.nbGold += gold;
     }
@@ -365,28 +476,55 @@ public abstract class Player implements Opponent {
         }
     }
 
-
+    /**
+     * Get the hand of the player
+     *
+     * @return the hand of the player
+     */
     public List<Card> getHand() {
         return this.hand;
     }
 
+    /**
+     * Get the citadel of the player
+     *
+     * @return the citadel of the player
+     */
     public List<Card> getCitadel() {
         return Collections.unmodifiableList(this.citadel);
     }
 
+    /**
+     * Set the citadel of the player
+     *
+     * @param citadel the citadel of the player
+     */
     void setCitadel(List<Card> citadel) {
         this.citadel.clear();
         this.citadel.addAll(citadel);
     }
 
+    /**
+     * Get the number of gold of the player
+     *
+     * @return the number of gold
+     */
     public int getNbGold() {
         return this.nbGold;
     }
 
+    /**
+     * Get the id of the player
+     *
+     * @return the id of the player
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     * Reset the counter of the id of the player
+     */
     public static void resetIdCounter() {
         counter = 1;
     }
@@ -425,6 +563,11 @@ public abstract class Player implements Opponent {
         this.isFirstToHaveAllDistricts = true;
     }
 
+    /**
+     * Get the score of the player
+     *
+     * @return the score of the player
+     */
     public final int getScore() {
         //calcule de la somme du cout des quartiers de la citadelle et rajoute les bonus s'il y en a
         return (getCitadel().stream().mapToInt(card -> card.getDistrict().getCost()).sum()) + getBonus();
@@ -453,14 +596,29 @@ public abstract class Player implements Opponent {
      */
     protected abstract Character chooseCharacterImpl(List<Character> characters);
 
+    /**
+     * Get the character of the player
+     *
+     * @return the character of the player
+     */
     public Character getCharacter() {
         return this.character;
     }
 
+    /**
+     * Get the number of districts the player can build
+     *
+     * @return the number of districts the player can build
+     */
     public int getNbDistrictsCanBeBuild() {
         return this.getCharacter().getRole().getNbDistrictsCanBeBuild();
     }
 
+    /**
+     * Retrieve the character of the player
+     *
+     * @return the character of the player
+     */
     public Character retrieveCharacter() {
         if (this.character == null) {
             throw new IllegalStateException("No character to retrieve");
@@ -513,21 +671,46 @@ public abstract class Player implements Opponent {
         return false;
     }
 
+    /**
+     * Check if the player wants to use the cemetery effect
+     *
+     * @param card the card to retrieve
+     * @return true if the player wants to use the cemetery effect, false otherwise
+     */
     protected abstract boolean wantToUseCemeteryEffect(Card card);
 
+    /**
+     * Get opponents of the player
+     *
+     * @return the opponents of the player
+     */
     public List<Opponent> getOpponents() {
         return Collections.unmodifiableList(this.opponents);
     }
 
+    /**
+     * Set the opponents of the player
+     *
+     * @param opponents the opponents of the player
+     */
     public void setOpponents(List<Opponent> opponents) {
         this.opponents = opponents;
     }
 
-
+    /**
+     * Get the opponents of the player which has chosen a character before
+     *
+     * @return the opponents of the player which has chosen a character before
+     */
     public List<Opponent> getOpponentsWhichHasChosenCharacterBefore() {
         return opponentsWhichHasChosenCharacterBefore;
     }
 
+    /**
+     * Set the opponents of the player which has chosen a character before
+     *
+     * @param opponentsWhichHasChosenCharacterBefore the opponents of the player which has chosen a character before
+     */
     public void setOpponentsWhichHasChosenCharacterBefore(List<Opponent> opponentsWhichHasChosenCharacterBefore) {
         this.opponentsWhichHasChosenCharacterBefore = opponentsWhichHasChosenCharacterBefore;
     }
@@ -541,30 +724,66 @@ public abstract class Player implements Opponent {
         magician.getHand().addAll(handToSwitch);
     }
 
+    /**
+     * Choose the color of the courtyard of miracle
+     */
     public abstract void chooseColorCourtyardOfMiracle();
 
+    /**
+     * Get the last card placed in the courtyard of miracle
+     *
+     * @return true if the last card placed in the courtyard of miracle is the courtyard of miracle, false otherwise
+     */
     public boolean isLastCardPlacedCourtyardOfMiracle() {
         return this.lastCardPlacedCourtyardOfMiracle;
     }
 
+    /**
+     * Set the last card placed in the courtyard of miracle
+     *
+     * @param lastCardPlacedCourtyardOfMiracle true if the last card placed in the courtyard of miracle is the courtyard of miracle, false otherwise
+     */
     public void setLastCardPlacedCourtyardOfMiracle(boolean lastCardPlacedCourtyardOfMiracle) {
         this.lastCardPlacedCourtyardOfMiracle = lastCardPlacedCourtyardOfMiracle;
     }
 
+    /**
+     * Get the color of the courtyard of miracle
+     *
+     * @return the color of the courtyard of miracle
+     */
     public DistrictType getColorCourtyardOfMiracleType() {
         return this.colorCourtyardOfMiracleType;
     }
 
+    /**
+     * Set the color of the courtyard of miracle
+     *
+     * @param colorCourtyardOfMiracleType the color of the courtyard of miracle
+     */
     public void setColorCourtyardOfMiracleType(DistrictType colorCourtyardOfMiracleType) {
         this.colorCourtyardOfMiracleType = colorCourtyardOfMiracleType;
     }
 
+    /**
+     * Check if we want to use the manufacture effect
+     *
+     * @return true if we want to use the manufacture effect, false otherwise
+     */
     public abstract boolean wantToUseManufactureEffect();
 
+    /**
+     * Check if the character is revealed
+     *
+     * @return true if the character is revealed, false otherwise
+     */
     public boolean isCharacterIsRevealed() {
         return this.characterIsRevealed;
     }
 
+    /**
+     * Reveal the character
+     */
     public void reveal() {
         if (this.characterIsRevealed) {
             throw new IllegalStateException("The player is already revealed");
@@ -573,6 +792,9 @@ public abstract class Player implements Opponent {
         this.characterIsRevealed = true;
     }
 
+    /**
+     * Hide the character
+     */
     public void hide() {
         if (!this.characterIsRevealed && !this.character.isDead()) {
             throw new IllegalStateException("The player is already hidden");
@@ -594,28 +816,56 @@ public abstract class Player implements Opponent {
         return this.getCitadel().size();
     }
 
+    /**
+     * Get the available characters
+     *
+     * @return the available characters
+     */
     public List<Character> getAvailableCharacters() {
         return availableCharacters;
     }
 
+    /**
+     * Set the available characters
+     *
+     * @param availableCharacters the available characters
+     */
     public void setAvailableCharacters(List<Character> availableCharacters) {
         this.availableCharacters = availableCharacters;
     }
 
+    /**
+     * Set the characters not in the round
+     *
+     * @param charactersNotInRound the characters not in the round
+     */
     public void setCharactersNotInRound(List<Character> charactersNotInRound) {
         this.charactersNotInRound = charactersNotInRound;
     }
 
+    /**
+     * Get the characters not in the round
+     *
+     * @return the characters not in the round
+     */
     public List<Character> getCharactersNotInRound() {
         return this.charactersNotInRound;
     }
 
+    /**
+     * Get the characters seen in the round
+     *
+     * @return the characters seen in the round
+     */
     public List<Character> getCharactersSeenInRound() {
         return this.charactersSeenInRound;
     }
 
     /**
      * Discard a card from the hand of the player (for laboratory effect)
+     *
+     * @param card the card to discard
+     * @return true if the card has been discarded, false otherwise
      */
     public boolean discardFromHand(Card card) {
         if (this.hand.isEmpty()) {
@@ -627,8 +877,18 @@ public abstract class Player implements Opponent {
         return true;
     }
 
+    /**
+     * Choose a card to discard from the hand of the player (for laboratory effect)
+     *
+     * @return the card to discard
+     */
     public abstract Card chooseCardToDiscardForLaboratoryEffect();
 
+    /**
+     * Check if the player has the library in its citadel
+     *
+     * @return true if the player has the library in its citadel, false otherwise
+     */
     public boolean isLibraryPresent() {
         return this.getCitadel().stream().anyMatch(card -> card.getDistrict().equals(District.LIBRARY));
     }
@@ -661,22 +921,47 @@ public abstract class Player implements Opponent {
         return this.getCitadel().size() == 7;
     }
 
+    /**
+     * Set the random
+     *
+     * @param mockRandom the random
+     */
     public void setRandom(Random mockRandom) {
         this.random = mockRandom;
     }
 
+    /**
+     * Set the last character chosen
+     *
+     * @param lastCharacterChosen the last character chosen
+     */
     protected void setLastCharacterChosen(Character lastCharacterChosen) {
         this.lastCharacterChosen = lastCharacterChosen;
     }
 
+    /**
+     * Get the last character chosen
+     *
+     * @return the last character chosen
+     */
     public Character getLastCharacterChosen() {
         return this.lastCharacterChosen;
     }
 
+    /**
+     * Get the number of character chosen in a row
+     *
+     * @return the number of character chosen in a row
+     */
     public int getNbCharacterChosenInARow() {
         return this.nbCharacterChosenInARow;
     }
 
+    /**
+     * Set the number of character chosen in a row
+     *
+     * @param nbCharacterChosenInARow the number of character chosen in a row
+     */
     public void setNbCharacterChosenInARow(int nbCharacterChosenInARow) {
         this.nbCharacterChosenInARow = nbCharacterChosenInARow;
     }

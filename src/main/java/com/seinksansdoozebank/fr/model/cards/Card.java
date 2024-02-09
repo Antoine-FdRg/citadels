@@ -1,8 +1,14 @@
 package com.seinksansdoozebank.fr.model.cards;
 
+/**
+ * Represents a card (for a district)
+ */
 public class Card {
     private final District district;
     private static int counter = 1;
+    /**
+     * The id of the card
+     */
     protected final int id;
 
     /**
@@ -16,6 +22,9 @@ public class Card {
         counter++;
     }
 
+    /**
+     * Reset the counter of the id
+     */
     public static void resetCounterId() {
         counter = 1;
     }
