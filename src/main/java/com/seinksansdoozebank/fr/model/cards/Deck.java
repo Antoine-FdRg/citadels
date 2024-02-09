@@ -2,6 +2,9 @@ package com.seinksansdoozebank.fr.model.cards;
 
 import java.util.*;
 
+/**
+ * The Deck class represents the deck of cards
+ */
 public class Deck {
     private final List<Card> cardsList;
     private final Random random;

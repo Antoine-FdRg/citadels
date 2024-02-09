@@ -11,7 +11,9 @@ import com.seinksansdoozebank.fr.view.logger.CustomLogger;
 import java.util.List;
 import java.util.logging.Level;
 
-
+/**
+ * The Cli class is the view of the game. It displays the game state and the actions of the players.
+ */
 public class Cli implements IView {
 
     static final String ANSI_DEFAULT_STYLE_START = "\u001B[38;5;232m\u001B[48;5;255m";

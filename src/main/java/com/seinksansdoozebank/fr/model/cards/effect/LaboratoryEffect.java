@@ -4,8 +4,14 @@ import com.seinksansdoozebank.fr.model.cards.Card;
 import com.seinksansdoozebank.fr.model.player.Player;
 import com.seinksansdoozebank.fr.view.IView;
 
+/**
+ * Effect of laboratory district
+ */
 public class LaboratoryEffect implements ActiveEffect {
 
+    /**
+     * The number of gold to pick with laboratory effect
+     */
     private static final int NB_GOLD_PICK_BY_LABORATORY_EFFECT = 1;
 
     /**

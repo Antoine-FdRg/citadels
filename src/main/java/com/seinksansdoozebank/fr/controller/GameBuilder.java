@@ -32,6 +32,13 @@ public class GameBuilder {
     private final Bank bank;
     private final List<Player> playerList;
 
+    /**
+     * Constructor of the game builder
+     *
+     * @param view the view
+     * @param deck the deck
+     * @param bank the bank
+     */
     public GameBuilder(IView view, Deck deck, Bank bank) {
         playerList = new ArrayList<>();
         this.view = view;
@@ -39,6 +46,10 @@ public class GameBuilder {
         this.bank = bank;
     }
 
+    /**
+     * Get the size of the player list
+     * @return the size of the player list
+     */
     int getPlayerListSize() {
         return playerList.size();
     }
@@ -74,6 +85,16 @@ public class GameBuilder {
         return this;
     }
 
+    /**
+     * Add a custom bot to the game
+     * @param pickingStrategy the picking strategy
+     * @param characterChoosingStrategy the character choosing strategy
+     * @param thiefEffectStrategy the thief effect strategy
+     * @param murdererEffectStrategy the murderer effect strategy
+     * @param warlordEffectStrategy the warlord effect strategy
+     * @param cardChosingStrategy the card chosing strategy
+     * @return the GameBuilder
+     */
     public GameBuilder addCustomBot(IPickingStrategy pickingStrategy,
                                     ICharacterChoosingStrategy characterChoosingStrategy,
                                     IUsingThiefEffectStrategy thiefEffectStrategy,
@@ -92,18 +113,30 @@ public class GameBuilder {
         return this;
     }
 
+    /**
+     * Add a richard bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addRichardBot() {
         checkNbPlayers();
         playerList.add(new RichardBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
+    /**
+     * Add a builder bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addBuilderBot() {
         checkNbPlayers();
         playerList.add(new BuilderBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));
         return this;
     }
 
+    /**
+     * Add an opportunist bot to the game
+     * @return the GameBuilder
+     */
     public GameBuilder addOpportunistBot() {
         checkNbPlayers();
         playerList.add(new OpportunistBot(this.bank.pickXCoin(PLAYER_NB_GOLD_INIT), this.deck, this.view, this.bank));

@@ -17,8 +17,18 @@ import java.util.Optional;
 
 import static java.util.Collections.shuffle;
 
+/**
+ * The RandomBot class represents a bot that makes random decisions.
+ */
 public class RandomBot extends Player {
-
+    /**
+     * RandomBot constructor
+     *
+     * @param nbGold the number of gold
+     * @param deck   the deck
+     * @param view   the view
+     * @param bank   the bank
+     */
     public RandomBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -31,6 +41,11 @@ public class RandomBot extends Player {
         this.chooseWhenToPickACard(nbDistrictsToBuild);
     }
 
+    /**
+     * Choose when to pick a card
+     *
+     * @param nbDistrictsToBuild the number of districts the bot choose to build
+     */
     public void chooseWhenToPickACard(int nbDistrictsToBuild) {
         if (random.nextBoolean()) {
             this.pickBeforePlaying(nbDistrictsToBuild);

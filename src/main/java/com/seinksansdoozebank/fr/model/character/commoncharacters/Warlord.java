@@ -8,8 +8,13 @@ import com.seinksansdoozebank.fr.model.player.Opponent;
 
 import java.util.List;
 
+/**
+ * The warlord character
+ */
 public class Warlord extends CommonCharacter {
-
+    /**
+     * Warlord constructor
+     */
     public Warlord() {
         super(Role.WARLORD, DistrictType.SOLDIERLY);
     }

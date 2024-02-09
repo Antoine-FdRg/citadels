@@ -1,14 +1,37 @@
 package com.seinksansdoozebank.fr.model.cards;
 
+/**
+ * The DistrictType enum represents the type of a district
+ */
 public enum DistrictType {
+    /**
+     * The district type religion
+     */
     RELIGION("Religion"),
+    /**
+     * The district type nobility
+     */
     NOBILITY("Noblesse"),
+    /**
+     * The district type trade and crafts
+     */
     TRADE_AND_CRAFTS("Commerce et artisanat"),
+    /**
+     * The district type soldiery
+     */
     SOLDIERLY("Soldatesque"),
+    /**
+     * The district type prestige
+     */
     PRESTIGE("Prestige");
 
     private final String name;
 
+    /**
+     * DistrictType constructor
+     *
+     * @param name the name of the districtType
+     */
     DistrictType(String name) {
         this.name = name;
     }

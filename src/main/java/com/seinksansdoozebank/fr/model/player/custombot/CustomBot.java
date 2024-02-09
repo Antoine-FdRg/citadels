@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The CustomBot class represents a bot on a random base that can be customized with different strategies
+ */
 public class CustomBot extends RandomBot {
 
     IPickingStrategy pickingStrategy;
@@ -28,6 +31,20 @@ public class CustomBot extends RandomBot {
     IUsingWarlordEffectStrategy usingWarlordEffectStrategy;
     ICardChoosingStrategy cardChoosingStrategy;
 
+    /**
+     * CustomBot constructor with strategies
+     *
+     * @param nbGold                      The number of gold pieces the player has.
+     * @param deck                        The deck of cards.
+     * @param view                        The view
+     * @param bank                        The bank
+     * @param pickingStrategy             The picking strategy
+     * @param characterChoosingStrategy   The character choosing strategy
+     * @param usingThiefEffectStrategy    The thief effect strategy
+     * @param usingMurdererEffectStrategy the murderer effect strategy
+     * @param usingWarlordEffectStrategy  the warlord effect strategy
+     * @param cardChoosingStrategy        the card chosing strategy
+     */
     protected CustomBot(int nbGold, Deck deck, IView view, Bank bank,
                         IPickingStrategy pickingStrategy,
                         ICharacterChoosingStrategy characterChoosingStrategy,
@@ -44,6 +61,14 @@ public class CustomBot extends RandomBot {
         this.cardChoosingStrategy = cardChoosingStrategy;
     }
 
+    /**
+     * CustomBot constructor without strategies (random bot)
+     *
+     * @param nbGold The number of gold pieces the player has.
+     * @param deck   The deck of cards.
+     * @param view   The view
+     * @param bank   The bank
+     */
     public CustomBot(int nbGold, Deck deck, IView view, Bank bank) {
         super(nbGold, deck, view, bank);
     }
@@ -57,6 +82,9 @@ public class CustomBot extends RandomBot {
         }
     }
 
+    /**
+     * Pick something randomly
+     */
     protected void randomPickSomething() {
         super.pickSomething();
     }
@@ -74,6 +102,11 @@ public class CustomBot extends RandomBot {
 
     }
 
+    /**
+     * Choose a character randomly
+     * @param characters the available characters
+     * @return the chosen character
+     */
     protected Character randomChooseCharacterImpl(List<Character> characters) {
         return super.chooseCharacterImpl(characters);
     }
@@ -88,6 +121,10 @@ public class CustomBot extends RandomBot {
         }
     }
 
+    /**
+     * Use the thief effect randomly
+     * @return the character to steal from
+     */
     protected Character randomUseThiefEffect() {
         return super.useEffectThief();
     }
@@ -101,6 +138,10 @@ public class CustomBot extends RandomBot {
         }
     }
 
+    /**
+     * Use the murderer effect randomly
+     * @return the chosen character
+     */
     protected Character randomUseMurdererEffect() {
         return super.useEffectAssassin();
     }
@@ -114,6 +155,11 @@ public class CustomBot extends RandomBot {
         }
     }
 
+    /**
+     * Use the warlord effect randomly
+     * @param opponentsFocusable The opponent the warlord can choose
+     * @return The warlord target
+     */
     protected WarlordTarget randomUseWarlordEffect(List<Opponent> opponentsFocusable) {
         return super.chooseWarlordTarget(opponentsFocusable);
     }
@@ -147,6 +193,10 @@ public class CustomBot extends RandomBot {
         return this.cardChoosingStrategy.apply(this);
     }
 
+    /**
+     * Choose a card randomly
+     * @return the chosen card
+     */
     protected Optional<Card> randomChooseCard() {
         return super.chooseCard();
     }
