@@ -1,10 +1,9 @@
 # Rapport projet PS5 Citadelles
 
-
 ## 1. Point d'avancement
 
 ### 1.1 Couverture du jeu
- 
+
 #### a. Fonctionnalités  ####
 
 Pour ce projet, nous avons eu le temps d’implémenter la quasi-totalité des règles et fonctionnalités du jeu Citadelles.
@@ -13,14 +12,25 @@ assurons qu’à chaque moment de la partie, seules 65 cartes et 30 pièces sont
 variante de Citadelles qui autorise le roi, même s’il se fait assassiner à prendre la couronne pendant le tour où il est
 mort et à pouvoir choisir son rôle en premier lors du prochain round. Cette variante s'applique à la partie exécutée à
 l'aide de l'argument `--variante`.
-
-Cependant, il reste quelques fonctionnalités que nous n’avons pas eues le temps d’implémenter. D’abord, nos parties ne supportent pas les règles particulières pour sept joueurs. De plus, nos bots ne sont pas aussi libres durant leur tour que des joueurs sont sensés l’être. En effet, ils sont obligés d’essayer d’utiliser l’effet de leur personnage durant leur tour. Enfin, l’ordre d’utilisation de leurs actions durant un tour est fixé (hormis le choix de piocher de l’or avant ou après avoir joué qui est implémenté pour quelques bots). Par exemple, l’utilisation de l’effet du personnage est toujours réalisée au début du tour du joueur.
+Il y a aussi la mise en place de la partie rapide, qui permet de définir le nombre
+de districtes nécessaires dans la citadelle pour finir la partie (6 ou 7), pour faire cela il suffis de rajouter
+l'argument suivant : `--quick 6` ou `--quick 7`
+g
+Cependant, il reste quelques fonctionnalités que nous n’avons pas eues le temps d’implémenter. D’abord, nos parties ne
+supportent pas les règles particulières pour sept joueurs. De plus, nos bots ne sont pas aussi libres durant leur tour
+que des joueurs sont sensés l’être. En effet, ils sont obligés d’essayer d’utiliser l’effet de leur personnage durant
+leur tour. Enfin, l’ordre d’utilisation de leurs actions durant un tour est fixé (hormis le choix de piocher de l’or
+avant ou après avoir joué qui est implémenté pour quelques bots). Par exemple, l’utilisation de l’effet du personnage
+est toujours réalisée au début du tour du joueur.
 
 #### b. Fonctionnalités du dernier sprint ####
-Durant le dernier sprint que nous avons réalisé, trois nouvelles fonctionnalités ont été rajoutées dans les spécifications et nous avons pu les implémenter avec succès.
+
+Durant le dernier sprint que nous avons réalisé, trois nouvelles fonctionnalités ont été rajoutées dans les
+spécifications et nous avons pu les implémenter avec succès.
 
 ##### Configuration d'exécutions
-Nous avons ajouté deux options d’exécution (détectées grâce à la JCommander). 
+
+Nous avons ajouté deux options d’exécution (détectées grâce à la JCommander).
 
 D’une part, il est possible de rajouter l’argument `--demo` à la commande `mvn exec:java`. Ce paramètre lance une partie
 avec tous les logs activés, pour pouvoir observer son déroulement.
@@ -29,7 +39,7 @@ D’autre part, l’option `--2thousands` lance deux fois 1 000 parties. Le prem
 s’affronter notre meilleur bot (SmartBot) contre le deuxième meilleur (Richard Bot), dans une partie comprenant tous nos
 différents bots. Le deuxième millier voit s’affronter six clones de notre meilleur bot (SmartBot). Ainsi, à la fin de
 chaque millier de parties, des statistiques de la forme suivante sont affichées :
-  
+
 ![image](images/statistiquesMilleParties.png)
 
 ##### Statistiques en CSV
@@ -47,11 +57,17 @@ statistiques sont, ici aussi, agrégées à celles qui étaient déjà présente
 
 ##### Le RichardBot
 
-Le bot utilisant la stratégie décrite par les utilisateurs du forum TricTrac Richard et tt-22a5e3f98e5243b9f1135d1caadc4cc7 a été implémenté le plus fidèlement possible. Ici, nous avons suivi au plus proche les conseils donnés par les 2 utilisateurs.
+Le bot utilisant la stratégie décrite par les utilisateurs du forum TricTrac Richard et
+tt-22a5e3f98e5243b9f1135d1caadc4cc7 a été implémenté le plus fidèlement possible. Ici, nous avons suivi au plus proche
+les conseils donnés par les 2 utilisateurs.
 
 #### c. Logs
 
-Concernant les logs, nous avons attribué une couleur à chaque joueur. De cette manière, la lecture de la partie est bien lisible. Les logs nous informent sur le début et la fin d'une partie, le début et la fin d'un round. Nous affichons également toutes les informations sur un joueur tel que sa main, sa citadelle, son nombre de pièces d'or avant et après son tour ainsi que l’effet de son personnage. Enfin, des logs affichant les stratégies existent, mais sont configuré à un niveau de log moins important que les autres pour qu’ils soient invisibles lors de l’exécution en mode démo.
+Concernant les logs, nous avons attribué une couleur à chaque joueur. De cette manière, la lecture de la partie est bien
+lisible. Les logs nous informent sur le début et la fin d'une partie, le début et la fin d'un round. Nous affichons
+également toutes les informations sur un joueur tel que sa main, sa citadelle, son nombre de pièces d'or avant et après
+son tour ainsi que l’effet de son personnage. Enfin, des logs affichant les stratégies existent, mais sont configuré à
+un niveau de log moins important que les autres pour qu’ils soient invisibles lors de l’exécution en mode démo.
 
 #### d. Statistiques
 
@@ -60,7 +76,11 @@ stockées dans trois fichiers différents : _gamestats.csv_, _BestBotsAgainstBes
 _BestAgainstSecondAndOthers.csv_. Nous avons donc un fichier pour les statistiques des 100 parties du mode `--csv` et un
 pour chaque millier de parties lancé en mode `--2thousands`.
 
-Dans chaque fichier, nous sauvegardons pour chaque joueur : le nombre de parties qu’il a joué, le nombre de parties qu’il a gagné et perdu, son score moyen, son pourcentage de victoire et le nombre de fois qu’il a terminé à chaque position du classement. Le code prend en charge la lecture et la vérification des données CSV existantes, afin d'ajuster les nouvelles statistiques en fonction des résultats précédents en les agrégeant. Il crée également les fichiers CSV s'ils n'existent pas déjà.
+Dans chaque fichier, nous sauvegardons pour chaque joueur : le nombre de parties qu’il a joué, le nombre de parties
+qu’il a gagné et perdu, son score moyen, son pourcentage de victoire et le nombre de fois qu’il a terminé à chaque
+position du classement. Le code prend en charge la lecture et la vérification des données CSV existantes, afin d'ajuster
+les nouvelles statistiques en fonction des résultats précédents en les agrégeant. Il crée également les fichiers CSV
+s'ils n'existent pas déjà.
 
 #### e. Bots implémentés ####
 
@@ -111,15 +131,23 @@ Pour comparer nos bots, nous avons lancé un grand nombre de parties et récupé
 
 ![image](images/statistiquesCinqCentmilleParties.png)
 
-D’après nos statistiques, basées sur 500 000 parties, nos deux bots les plus forts sont le RichardBot et le SmartBot. Notre bot le moins bon est le RandomBot. Ces statistiques peuvent donc se justifier par les stratégies que nous avons introduites aux deux bots les plus forts. Ils sont tous les deux basés sur le SmartBot qui vise à rusher jusqu’à la victoire en posant le plus de districts de coût le plus faible possible. 
+D’après nos statistiques, basées sur 500 000 parties, nos deux bots les plus forts sont le RichardBot et le SmartBot.
+Notre bot le moins bon est le RandomBot. Ces statistiques peuvent donc se justifier par les stratégies que nous avons
+introduites aux deux bots les plus forts. Ils sont tous les deux basés sur le SmartBot qui vise à rusher jusqu’à la
+victoire en posant le plus de districts de coût le plus faible possible.
 
-La différence de pourcentage de victoire entre le SmartBot et le RichardBot est liée aux stratégies agressives du RichardBot. Il alors va abandonner son développement personnel si un des bots est sur le point de poser sa 8e carte. Les bots aléatoires jouent de manière aléatoire donc avec peu de chances de réussite. Le CustomBot implémente un design pattern Stratégie, il peut s’apparenter à un bot agressif, il ne pense pas à son développement personnel, mais plus à contrer les joueurs les plus avancé ce qui ne lui permet pas de gagner non plus. 
+La différence de pourcentage de victoire entre le SmartBot et le RichardBot est liée aux stratégies agressives du
+RichardBot. Il alors va abandonner son développement personnel si un des bots est sur le point de poser sa 8e carte. Les
+bots aléatoires jouent de manière aléatoire donc avec peu de chances de réussite. Le CustomBot implémente un design
+pattern Stratégie, il peut s’apparenter à un bot agressif, il ne pense pas à son développement personnel, mais plus à
+contrer les joueurs les plus avancé ce qui ne lui permet pas de gagner non plus.
 
-Enfin, nous pouvons voir qu’en faisant des parties uniquement avec notre meilleur bot, les moyennes de victoire sont toutes identiques ce qui est très cohérent étant donné qu’ils utilisent la même stratégie. 
+Enfin, nous pouvons voir qu’en faisant des parties uniquement avec notre meilleur bot, les moyennes de victoire sont
+toutes identiques ce qui est très cohérent étant donné qu’ils utilisent la même stratégie.
 
-## 2. Architecture et qualité 
+## 2. Architecture et qualité
 
-### 2.1 Architecture et sa justification 
+### 2.1 Architecture et sa justification
 
 L’architecture de base que nous avons choisie se base sur le modèle MVC. Nous avons donc un package _model_ qui stocke
 toutes les données et les comportements des joueurs, des cartes quartier, des personnages. Le package controller inclut
@@ -128,7 +156,11 @@ avons donc une interface `IView` qui expose toutes les méthodes requises pour l
 implémente cette interface en affichant dans la console via un logger. L’ajout d’une nouvelle interface graphique serait
 donc assez facile puisqu’il suffit d’ajouter une implémentation de `IView`.
 
-Pour les personnages, une super-classe abstraite Character gère les données et comportements communs à tous les personnages. Cette classe est étendue par celles des personnages n’ayant pas de couleur et par la classe abstraite CommonCharacter. Celle-ci généralise le comportement de chaque personnage qui a une couleur attribuée : le roi, l’évêque, le marchand et le condottiere. Il existe donc une classe pour chacun de ces personnages qui étend CustomCharacter.
+Pour les personnages, une super-classe abstraite Character gère les données et comportements communs à tous les
+personnages. Cette classe est étendue par celles des personnages n’ayant pas de couleur et par la classe abstraite
+CommonCharacter. Celle-ci généralise le comportement de chaque personnage qui a une couleur attribuée : le roi,
+l’évêque, le marchand et le condottiere. Il existe donc une classe pour chacun de ces personnages qui étend
+CustomCharacter.
 
 Pour les bots, nous avons une super-classe `Player` qui est étendue par tous nos différents bots. De cette manière,
 ajouter un bot ou même un joueur contrôlé par un utilisateur est simple puisque le comportement commun à tous les
@@ -141,23 +173,34 @@ Nous avons aussi utilisé ce dernier pattern et le
 pattern [Factory](https://fr.wikipedia.org/wiki/Fabrique_(patron_de_conception)) pour créer nos parties dans les classes
 GameBuilder et GameFactory.
 
-### 2.2  Informations importantes 
+### 2.2  Informations importantes
 
 Les informations importantes concernant notre jeu ainsi que les instructions d’installation et d’utilisation se trouvent
 dans le README. Pour plus de détails techniques, notamment pour les développeurs, la javadoc est disponible dans le
 dossier _/docs_.
 
-### 2.3 État de la base du code 
+### 2.3 État de la base du code
 
 #### a. Parties bien optimisées ####
 
-Premièrement, la solidité et la fiabilité de notre code sont des éléments sur lesquels nous avons pu compter sans réserve, une assurance renforcée par l'ensemble des analyses rigoureuses effectuées via SonarCube (capture d’écran de l’analyse ci-dessous). Ces analyses valident la qualité de notre travail et aussi soulignent notre engagement envers le respect des bonnes pratiques en Java.
+Premièrement, la solidité et la fiabilité de notre code sont des éléments sur lesquels nous avons pu compter sans
+réserve, une assurance renforcée par l'ensemble des analyses rigoureuses effectuées via SonarCube (capture d’écran de
+l’analyse ci-dessous). Ces analyses valident la qualité de notre travail et aussi soulignent notre engagement envers le
+respect des bonnes pratiques en Java.
 
 ![image](images/sonarCube.png)
 
-De plus, la bonne organisation de notre équipe tout au long de ce projet a joué un rôle clé dans notre réussite. La gestion efficace du temps, la définition claire des étapes à travers la création de milestones et la gestion proactive des issues ont facilité une progression fluide et structurée. Cette organisation méticuleuse nous a permis de maintenir une vision claire de nos objectifs et d'adapter notre planification en conséquence pour répondre efficacement aux défis rencontrés.
+De plus, la bonne organisation de notre équipe tout au long de ce projet a joué un rôle clé dans notre réussite. La
+gestion efficace du temps, la définition claire des étapes à travers la création de milestones et la gestion proactive
+des issues ont facilité une progression fluide et structurée. Cette organisation méticuleuse nous a permis de maintenir
+une vision claire de nos objectifs et d'adapter notre planification en conséquence pour répondre efficacement aux défis
+rencontrés.
 
-Enfin, l'adoption d'un design pattern double dispatch entre les joueurs et les personnages représente une innovation majeure dans notre approche de la conception du jeu. En déléguant la décision concernant l'effet à utiliser à chaque personnage plutôt qu'au joueur, nous avons instauré un mécanisme plus logique et cohérent de gestion des responsabilités. Cette méthode a non seulement simplifié la logique de jeu, mais a également enrichi l'interaction entre les éléments du jeu, conduisant à une expérience de développement plus efficace.
+Enfin, l'adoption d'un design pattern double dispatch entre les joueurs et les personnages représente une innovation
+majeure dans notre approche de la conception du jeu. En déléguant la décision concernant l'effet à utiliser à chaque
+personnage plutôt qu'au joueur, nous avons instauré un mécanisme plus logique et cohérent de gestion des
+responsabilités. Cette méthode a non seulement simplifié la logique de jeu, mais a également enrichi l'interaction entre
+les éléments du jeu, conduisant à une expérience de développement plus efficace.
 
 #### b. Parties à refactor/améliorer ####
 
@@ -175,15 +218,22 @@ d’un joueur.
 
 ### 3.1 Répartitions des tâches ###
 
-Chaque membre de l’équipe a codé sur tous les aspects du projet (architecture, règles et déroulement du jeu, stratégies, bots, logs, JavaDoc, tests). De cette manière, nous nous sommes assurés que chacun ait une bonne compréhension et bonne vision d’ensemble du projet.
+Chaque membre de l’équipe a codé sur tous les aspects du projet (architecture, règles et déroulement du jeu, stratégies,
+bots, logs, JavaDoc, tests). De cette manière, nous nous sommes assurés que chacun ait une bonne compréhension et bonne
+vision d’ensemble du projet.
 
 ### 3.2 Organisation de l'équipe sur GitHub ###
 
-Le pilier principal de notre organisation est l’utilisation de milestones. Nous en réalisions une par semaine. Elles nous permettaient d’inclure dans chacune d’elle des avancements réguliers sur chacun des aspects du jeu : rôles, bots, cartes merveilles, …
+Le pilier principal de notre organisation est l’utilisation de milestones. Nous en réalisions une par semaine. Elles
+nous permettaient d’inclure dans chacune d’elle des avancements réguliers sur chacun des aspects du jeu : rôles, bots,
+cartes merveilles, …
 
-Dans chacune de nos milestones, des issues de fonctionnalités été créées au début de celle-ci. 
+Dans chacune de nos milestones, des issues de fonctionnalités été créées au début de celle-ci.
 
-Cependant, nous nous laissions le droit de rajouter durant la réalisation de la milestone des issues concernant des bugs trouvés ou des fonctionnalités manquantes et urgentes. Nous nous assignions donc les tâches déjà créées au début de la milestone. Pour les réaliser, il fallait créer une branche pour chaque issue. Enfin, nous pouvions visualiser et gérer efficacement toutes nos issues de la milestone actuelle grâce au board GitHub ci-dessous.
+Cependant, nous nous laissions le droit de rajouter durant la réalisation de la milestone des issues concernant des bugs
+trouvés ou des fonctionnalités manquantes et urgentes. Nous nous assignions donc les tâches déjà créées au début de la
+milestone. Pour les réaliser, il fallait créer une branche pour chaque issue. Enfin, nous pouvions visualiser et gérer
+efficacement toutes nos issues de la milestone actuelle grâce au board GitHub ci-dessous.
 
 ![image](images/boardGitHub.png)
 
@@ -195,6 +245,10 @@ pour corriger des bugs). Un exemple de notre graphique à la fin de la milestone
 
 ![image](images/stratégieDeBranche.png)
 
-Pour nous assurer de la consistance de nos commits dans les branches de fix et de feature, nous avons ajouté un hook qui nous empêche de commit en cas d’oubli de la précision du numéro d’issue avec par exemple un #123.
+Pour nous assurer de la consistance de nos commits dans les branches de fix et de feature, nous avons ajouté un hook qui
+nous empêche de commit en cas d’oubli de la précision du numéro d’issue avec par exemple un #123.
 
-Nous disposons également d'un pipeline opérationnel à chaque nouvelle pull request et à chaque push sur les branches dev et master. De plus, lors d'un merge dans la branche master, le pipeline générera automatiquement une release indiquant la version avec un fichier JAR associé. Le nom de la release sera la version du fichier pom.xml. Cette version est mise à jour après chaque push/merge dans master.
+Nous disposons également d'un pipeline opérationnel à chaque nouvelle pull request et à chaque push sur les branches dev
+et master. De plus, lors d'un merge dans la branche master, le pipeline générera automatiquement une release indiquant
+la version avec un fichier JAR associé. Le nom de la release sera la version du fichier pom.xml. Cette version est mise
+à jour après chaque push/merge dans master.
